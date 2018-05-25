@@ -46,10 +46,10 @@ class TransCompany extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'name' => 'Name',
+            'name' => 'Nombre',
             'ruc' => 'Ruc',
-            'address' => 'Address',
-            'active' => 'Active',
+            'address' => 'Dirección',
+            'active' => 'Activo',
         ];
     }
 

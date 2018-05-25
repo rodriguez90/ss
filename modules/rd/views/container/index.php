@@ -7,7 +7,7 @@ use yii\widgets\Pjax;
 /* @var $searchModel app\modules\rd\models\ContainerSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Containers';
+$this->title = 'Contenedores';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="container-index">
@@ -17,7 +17,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Create Container', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Crear Contenedor', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= GridView::widget([
@@ -36,3 +36,5 @@ $this->params['breadcrumbs'][] = $this->title;
     ]); ?>
     <?php Pjax::end(); ?>
 </div>
+
+

@@ -14,9 +14,10 @@ use yii\filters\VerbFilter;
  */
 class WarehouseController extends Controller
 {
-    /**
+    /*
      * {@inheritdoc}
      */
+
     public function behaviors()
     {
         return [

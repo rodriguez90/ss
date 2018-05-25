@@ -41,9 +41,9 @@ class Container extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'code' => 'Code',
-            'tonnage' => 'Tonnage',
-            'active' => 'Active',
+            'code' => 'Código',
+            'tonnage' => 'Tonelaje',
+            'active' => 'Activo',
         ];
     }
 }

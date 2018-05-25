@@ -6,8 +6,8 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\modules\rd\models\Container */
 
-$this->title = 'Create Container';
-$this->params['breadcrumbs'][] = ['label' => 'Containers', 'url' => ['index']];
+$this->title = 'Nuevo';
+$this->params['breadcrumbs'][] = ['label' => 'Contenedores', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="container-create">

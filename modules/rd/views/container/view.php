@@ -7,7 +7,7 @@ use yii\widgets\DetailView;
 /* @var $model app\modules\rd\models\Container */
 
 $this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Containers', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Contenedores', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="container-view">

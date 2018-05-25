@@ -42,9 +42,9 @@ class Agency extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'name' => 'Name',
-            'code' => 'Code',
-            'active' => 'Active',
+            'name' => 'Nombre',
+            'code' => 'Código',
+            'active' => 'Activo',
         ];
     }
 }
