@@ -12,21 +12,18 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'name')->textInput() ?>
 
-    <?= $form->field($model, 'code_oce')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'code_oce')->textInput() ?>
 
-    <?= $form->field($model, 'active')->textInput(['type'=>'checkbox',
-                                                           'data-render'=>'switchery',
-                                                           'data-theme'=>'default']) ?>
+    <?= $form->field($model, 'ruc')->textInput() ?>
+
+    <?= $form->field($model, 'active')->checkbox(['data-render'=>"switchery"], false) ?>
+
     <div class="form-group">
-        <?= Html::submitButton('Guardar', ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>
 
 </div>
-<?php
-//    $this->registerJsFile('@web/js/form-slider-switcher.demo.min.js', ['depends' => ['app\assets\SystemAsset']]);
-//?>
-

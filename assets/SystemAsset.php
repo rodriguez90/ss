@@ -24,7 +24,7 @@ class SystemAsset extends  AssetBundle
         'plugins/switchery/switchery.min.css',
     ];
     public $js = [
-        'plugins/jquery/jquery-1.9.1.min.js',
+        //'plugins/jquery/jquery-1.9.1.min.js',
         'plugins/jquery/jquery-migrate-1.1.0.min.js',
         'plugins/jquery-ui/ui/minified/jquery-ui.min.js',
         'plugins/bootstrap/js/bootstrap.min.js',
@@ -33,11 +33,15 @@ class SystemAsset extends  AssetBundle
         'plugins/gritter/js/jquery.gritter.js',
         'plugins/bootstrap-datepicker/js/bootstrap-datepicker.js',
         'plugins/switchery/switchery.min.js',
-        'js/form-slider-switcher.demo.min.js',
+        //'js/form-slider-switcher.demo.min.js',
         'js/apps.js',
+        'js/form-slider-switcher.demo.js',
+
     ];
     public $depends = [
-        //'yii\web\YiiAsset',
+        'yii\web\YiiAsset',
         //'yii\bootstrap\BootstrapAsset',
+        //'yii\bootstrap\BootstrapPluginAsset',
     ];
+
 }

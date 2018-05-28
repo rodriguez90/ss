@@ -8,6 +8,7 @@ use Yii;
  * This is the model class for table "container".
  *
  * @property int $id
+ * @property string $name
  * @property string $code
  * @property int $tonnage
  * @property int $active
@@ -28,9 +29,9 @@ class Container extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['code', 'tonnage', 'active'], 'required'],
+            [['name', 'code', 'tonnage'], 'required'],
+            [['name', 'code'], 'string'],
             [['tonnage', 'active'], 'integer'],
-            [['code'], 'string', 'max' => 3],
         ];
     }
 
@@ -41,9 +42,10 @@ class Container extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'code' => 'Código',
-            'tonnage' => 'Tonelaje',
-            'active' => 'Activo',
+            'name' => 'Name',
+            'code' => 'Code',
+            'tonnage' => 'Tonnage',
+            'active' => 'Active',
         ];
     }
 }

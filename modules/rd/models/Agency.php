@@ -9,7 +9,8 @@ use Yii;
  *
  * @property int $id
  * @property string $name
- * @property string $code
+ * @property string $code_oce
+ * @property string $ruc
  * @property int $active
  */
 class Agency extends \yii\db\ActiveRecord
@@ -28,10 +29,9 @@ class Agency extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'code', 'active'], 'required'],
-            [['active'], 'integer'],
-            [['name'], 'string', 'max' => 255],
-            [['code'], 'string', 'max' => 10],
+            [['name', 'code_oce', 'ruc', 'active'], 'required'],
+            [['name', 'code_oce', 'ruc'], 'string'],
+            [['active'], 'boolean'],
         ];
     }
 
@@ -42,9 +42,10 @@ class Agency extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'name' => 'Nombre',
-            'code' => 'Código',
-            'active' => 'Activo',
+            'name' => 'Name',
+            'code_oce' => 'Code Oce',
+            'ruc' => 'Ruc',
+            'active' => 'Active',
         ];
     }
 }

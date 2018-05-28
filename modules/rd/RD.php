@@ -7,6 +7,7 @@ namespace app\modules\rd;
  */
 class RD extends \yii\base\Module
 {
+
     /**
      * {@inheritdoc}
      */

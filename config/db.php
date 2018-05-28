@@ -1,10 +1,24 @@
 <?php
+//MS SQL Server (mediante sqlsrv driver): sqlsrv:Server=localhost;Database=mydatabase
+//MS SQL Server (mediante dblib driver): dblib:host=localhost;dbname=mydatabase
+//MS SQL Server (mediante mssql driver): mssql:host=localhost;dbname=mydatabase
+
+//sqlsrv driver
+//'sqlsrv:Server=localhost;Database=mydatabase'
+
+//dblib driver
+//'dblib:host=localhost;dbname=mydatabase'
+
+//mssql driver
+//'mssql:host=localhost;dbname=mydatabase'
 
 return [
     'class' => 'yii\db\Connection',
-    'dsn' => 'mysql:host=localhost;dbname=sgt',
-    'username' => 'root',
-    'password' => 'Root*2018',
+//    'dsn' => 'mssql:host=localhost;dbname=sgt',
+    'dsn'=>'sqlsrv:Server=PEDRO-PC\SQLEXPRESS;Database=sgt',
+//    'dsn'=>'sqlsrv:Server=127.0.0.1;Database=sgt',
+    'username' => '',
+    'password' => '', //Root*2018
     'charset' => 'utf8',
 
     // Schema cache options (for production environment)

@@ -18,8 +18,8 @@ class WarehouseSearch extends Warehouse
     public function rules()
     {
         return [
-            [['name', 'code_oce'], 'safe'],
-            [['active'], 'integer'],
+            [['id', 'active'], 'integer'],
+            [['code_oce', 'name', 'ruc'], 'safe'],
         ];
     }
 
@@ -59,11 +59,13 @@ class WarehouseSearch extends Warehouse
 
         // grid filtering conditions
         $query->andFilterWhere([
+            'id' => $this->id,
             'active' => $this->active,
         ]);
 
-        $query->andFilterWhere(['like', 'name', $this->name])
-            ->andFilterWhere(['like', 'code_oce', $this->code_oce]);
+        $query->andFilterWhere(['like', 'code_oce', $this->code_oce])
+            ->andFilterWhere(['like', 'name', $this->name])
+            ->andFilterWhere(['like', 'ruc', $this->ruc]);
 
         return $dataProvider;
     }

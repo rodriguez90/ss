@@ -14,10 +14,9 @@ use yii\filters\VerbFilter;
  */
 class WarehouseController extends Controller
 {
-    /*
+    /**
      * {@inheritdoc}
      */
-
     public function behaviors()
     {
         return [
@@ -47,7 +46,7 @@ class WarehouseController extends Controller
 
     /**
      * Displays a single Warehouse model.
-     * @param string $id
+     * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
@@ -79,7 +78,7 @@ class WarehouseController extends Controller
     /**
      * Updates an existing Warehouse model.
      * If update is successful, the browser will be redirected to the 'view' page.
-     * @param string $id
+     * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
@@ -88,7 +87,7 @@ class WarehouseController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->name]);
+            return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('update', [
@@ -99,7 +98,7 @@ class WarehouseController extends Controller
     /**
      * Deletes an existing Warehouse model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param string $id
+     * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
@@ -113,7 +112,7 @@ class WarehouseController extends Controller
     /**
      * Finds the Warehouse model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param string $id
+     * @param integer $id
      * @return Warehouse the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */

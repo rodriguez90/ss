@@ -12,8 +12,6 @@ use Yii;
  * @property string $ruc
  * @property string $address
  * @property int $active
- *
- * @property TransCompanyPhone $transCompanyPhone
  */
 class TransCompany extends \yii\db\ActiveRecord
 {
@@ -31,11 +29,9 @@ class TransCompany extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'ruc', 'address', 'active'], 'required'],
-            [['address'], 'string'],
+            [['name', 'ruc', 'address'], 'required'],
+            [['name', 'ruc', 'address'], 'string'],
             [['active'], 'integer'],
-            [['name'], 'string', 'max' => 255],
-            [['ruc'], 'string', 'max' => 13],
         ];
     }
 
@@ -46,18 +42,10 @@ class TransCompany extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'name' => 'Nombre',
+            'name' => 'Name',
             'ruc' => 'Ruc',
-            'address' => 'Dirección',
-            'active' => 'Activo',
+            'address' => 'Address',
+            'active' => 'Active',
         ];
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getTransCompanyPhone()
-    {
-        return $this->hasOne(TransCompanyPhone::className(), ['id' => 'id']);
     }
 }

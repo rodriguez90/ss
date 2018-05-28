@@ -7,7 +7,7 @@ use yii\widgets\Pjax;
 /* @var $searchModel app\modules\rd\models\AgencySearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Agencias';
+$this->title = 'Agencies';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="agency-index">
@@ -17,7 +17,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Nueva', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Create Agency', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= GridView::widget([
@@ -28,7 +28,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
             'id',
             'name',
-            'code',
+            'code_oce',
+            'ruc',
             'active',
 
             ['class' => 'yii\grid\ActionColumn'],

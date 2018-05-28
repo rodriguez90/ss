@@ -19,7 +19,7 @@ class AgencySearch extends Agency
     {
         return [
             [['id', 'active'], 'integer'],
-            [['name', 'code'], 'safe'],
+            [['name', 'code_oce', 'ruc'], 'safe'],
         ];
     }
 
@@ -64,7 +64,8 @@ class AgencySearch extends Agency
         ]);
 
         $query->andFilterWhere(['like', 'name', $this->name])
-            ->andFilterWhere(['like', 'code', $this->code]);
+            ->andFilterWhere(['like', 'code_oce', $this->code_oce])
+            ->andFilterWhere(['like', 'ruc', $this->ruc]);
 
         return $dataProvider;
     }

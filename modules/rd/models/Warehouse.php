@@ -8,9 +8,10 @@ use Yii;
  * This is the model class for table "warehouse".
  *
  * @property int $id
- * @property string $name
  * @property string $code_oce
+ * @property string $name
  * @property int $active
+ * @property string $ruc
  */
 class Warehouse extends \yii\db\ActiveRecord
 {
@@ -28,10 +29,9 @@ class Warehouse extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'code_oce', 'active'], 'required'],
+            [['code_oce', 'name', 'ruc'], 'required'],
+            [['code_oce', 'name', 'ruc'], 'string'],
             [['active'], 'integer'],
-            [['name'], 'string', 'max' => 250],
-            [['code_oce'], 'string', 'max' => 10],
         ];
     }
 
@@ -42,9 +42,10 @@ class Warehouse extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'name' => 'Nombre',
-            'code_oce' => 'Código Oce',
-            'active' => 'Activo',
+            'code_oce' => 'Code Oce',
+            'name' => 'Name',
+            'active' => 'Active',
+            'ruc' => 'Ruc',
         ];
     }
 }

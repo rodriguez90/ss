@@ -12,12 +12,13 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'name')->textInput() ?>
 
-    <?= $form->field($model, 'code')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'code_oce')->textInput() ?>
 
-    <?= $form->field($model, 'active')->textInput(['class'=>'switchery',
-                                                            'value'=>false]) ?>
+    <?= $form->field($model, 'ruc')->textInput() ?>
+
+    <?= $form->field($model, 'active')->checkbox(['data-render'=>"switchery"], false) ?>
 
     <div class="form-group">
         <?= Html::submitButton('Guardar', ['class' => 'btn btn-success']) ?>
