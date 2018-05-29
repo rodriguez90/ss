@@ -5,6 +5,7 @@
 
 use app\widgets\Alert;
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
@@ -29,38 +30,43 @@ SystemAsset::register($this)
 <?php $this->beginBody() ?>
 
 <div class="wrap">
-    <div id="page-container" class="fade page-sidebar-fixed page-header-fixed">
-        <?php
-        NavBar::begin([
-            'brandLabel' => Yii::$app->name,
-            'brandUrl' => Yii::$app->homeUrl,
-            'options' => [
-                'class' => 'navbar-inverse navbar-fixed-top',
-            ],
-        ]);
-        echo Nav::widget([
-            'options' => ['class' => 'navbar-nav navbar-right'],
-            'items' => [
-                ['label' => 'Inicio', 'url' => ['/site/index']],
-                ['label' => 'Acerca ?', 'url' => ['/site/about']],
-                ['label' => 'Contactenos', 'url' => ['/site/contact']],
-                Yii::$app->user->isGuest ? (
-                    ['label' => 'Entrar', 'url' => ['/site/login']]
-                ) : (
-                    '<li>'
-                    . Html::beginForm(['/site/logout'], 'post')
-                    . Html::submitButton(
-                        'Salir (' . Yii::$app->user->identity->username . ')',
-                        ['class' => 'btn btn-link logout']
-                    )
-                    . Html::endForm()
-                    . '</li>'
-                )
-            ],
-        ]);
 
-        NavBar::end();
-        ?>
+    <div id="page-container" class="fade page-sidebar-fixed page-header-fixed">
+
+        <div id="header" class="header navbar navbar-default navbar-fixed-top">
+            <!-- begin container-fluid -->
+            <div class="container-fluid">
+                <!-- begin mobile sidebar expand / collapse button -->
+                <div class="navbar-header">
+                    <a href="<?php echo Yii::$app->homeUrl ?>" class="navbar-brand"><span class="navbar-logo"></span> <?php echo Yii::$app->name ?></a>
+                    <button type="button" class="navbar-toggle" data-click="sidebar-toggled">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                </div>
+                <!-- end mobile sidebar expand / collapse button -->
+
+                <!-- begin header navigation right -->
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown navbar-user">
+                        <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
+                            <img src="/img/user-13.jpg" alt="" />
+                            <span class="hidden-xs">Pepe Perez</span> <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu animated fadeInLeft">
+                            <li class="arrow"></li>
+                            <li><a href="javascript:;">Editar Perficl</a></li>
+                            <li><a href="javascript:;">Calendario</a></li>
+                            <li><a href="javascript:;">Configuraciones</a></li>
+                            <li class="divider"></li>
+                            <li><a href="<?php echo Url::to(['/site/logout']);?>"> Salir</a></li>
+                        </ul>
+                        <!-- end header navigation right -->
+                    </li>
+                </ul>
+            </div>
+        </div>
 
     <!--begin sidebar-->
         <div id="sidebar" class="sidebar">
@@ -78,27 +84,27 @@ SystemAsset::register($this)
                         </div>
                     </li>
                     <li class="has-sub">
-                        <a href="<?php use yii\helpers\Url; echo Url::to(['/rd/warehouse']);?>"/> <i class="fa fa-building"></i>
+                        <a href="<?php echo Url::to(['/rd/warehouse']);?>"/> <i class="fa fa-building"></i>
                             <span> Depósito</span>
                         </a>
                     </li>
                     <li class="has-sub">
-                        <a href="/rd/agency"> <i class="fa fa-institution alias"></i>
+                        <a href="<?php echo Url::to(['/rd/agency']);?>"> <i class="fa fa-institution alias"></i>
                             <span> Agencias</span>
                         </a>
                     </li>
                     <li class="has-sub">
-                        <a href="/rd/container"> <i class="fa fa-cubes"></i>
+                        <a href="<?php echo Url::to(['/rd/container']);?>"> <i class="fa fa-cubes"></i>
                             <span> Contenedores</span>
                         </a>
                     </li>
                     <li class="has-sub">
-                        <a href="/rd/trans-company"> <i class="fa fa-truck"></i>
+                        <a href="<?php echo Url::to(['/rd/trans-company']);?>"> <i class="fa fa-truck"></i>
                             <span> Transporte</span>
                         </a>
                     </li>
                     <li class="has-sub">
-                        <a href="javascript:;"> <i class="fa fa-file-o"></i>
+                        <a href="<?php echo Url::to(['/rd/reception']);?>"> <i class="fa fa-file-o"></i>
                             <span> Recepción</span>
                         </a>
                     </li>
@@ -118,6 +124,7 @@ SystemAsset::register($this)
         <div class="sidebar-bg"></div>
     <!--end sidebar-->
 
+        <!-- begin conten -->
         <div id="content" class="content">
             <?= Breadcrumbs::widget([
                 'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
@@ -125,15 +132,23 @@ SystemAsset::register($this)
             <?= Alert::widget() ?>
             <?= $content ?>
         </div>
+        <!-- end conten -->
 
-        <!-- begin #footer -->
+
+        <!-- begin scroll to top btn -->
+        <a href="javascript:;" class="btn btn-icon btn-circle btn-success btn-scroll-to-top fade" data-click="scroll-top"><i class="fa fa-angle-up"></i></a>
+        <!-- end scroll to top btn -->
+
+        <!-- begin footer -->
         <div id="footer" class="footer">
             &copy; <?= date('Y') ?> Xedrux S.A | GUAYAQUIL Todos los Derechos Reservados.
         </div>
-        <!-- end #footer -->
+        <!-- end footer -->
 
     </div>
+    <!-- end page container -->
 </div>
+<!-- end wrap -->
 <?php $this->endBody() ?>
 </body>
 </html>

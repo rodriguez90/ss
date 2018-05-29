@@ -6,8 +6,8 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\modules\rd\models\Agency */
 
-$this->title = 'Create Agency';
-$this->params['breadcrumbs'][] = ['label' => 'Agencies', 'url' => ['index']];
+$this->title = Yii::t('app', 'Create Agency');
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Agencies'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="agency-create">

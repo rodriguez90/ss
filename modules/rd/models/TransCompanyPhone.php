@@ -8,10 +8,10 @@ use Yii;
  * This is the model class for table "trans_company_phone".
  *
  * @property int $id
- * @property string $number
+ * @property resource $phone_number
  * @property int $trans_company_id
  *
- * @property TransCompany $id0
+ * @property TransCompany $transCompany
  */
 class TransCompanyPhone extends \yii\db\ActiveRecord
 {
@@ -29,10 +29,10 @@ class TransCompanyPhone extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['number', 'trans_company_id'], 'required'],
+            [['phone_number', 'trans_company_id'], 'required'],
+            [['phone_number'], 'string'],
             [['trans_company_id'], 'integer'],
-            [['number'], 'string', 'max' => 12],
-            [['id'], 'exist', 'skipOnError' => true, 'targetClass' => TransCompany::className(), 'targetAttribute' => ['id' => 'id']],
+            [['trans_company_id'], 'exist', 'skipOnError' => true, 'targetClass' => TransCompany::className(), 'targetAttribute' => ['trans_company_id' => 'id']],
         ];
     }
 
@@ -43,7 +43,7 @@ class TransCompanyPhone extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'number' => 'Number',
+            'phone_number' => 'Phone Number',
             'trans_company_id' => 'Trans Company ID',
         ];
     }
@@ -51,8 +51,8 @@ class TransCompanyPhone extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getId0()
+    public function getTransCompany()
     {
-        return $this->hasOne(TransCompany::className(), ['id' => 'id']);
+        return $this->hasOne(TransCompany::className(), ['id' => 'trans_company_id']);
     }
 }

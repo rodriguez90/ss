@@ -21,10 +21,10 @@ class SystemAsset extends  AssetBundle
         'plugins/bootstrap-datepicker/css/datepicker3.css',
         'plugins/gritter/css/jquery.gritter.css',
         'plugins/morris/morris.css',
-        'plugins/switchery/switchery.min.css',
+//        'plugins/switchery/switchery.min.css',
     ];
     public $js = [
-        //'plugins/jquery/jquery-1.9.1.min.js',
+        'plugins/jquery/jquery-1.9.1.min.js',
         'plugins/jquery/jquery-migrate-1.1.0.min.js',
         'plugins/jquery-ui/ui/minified/jquery-ui.min.js',
         'plugins/bootstrap/js/bootstrap.min.js',
@@ -32,15 +32,14 @@ class SystemAsset extends  AssetBundle
         'plugins/jquery-cookie/jquery.cookie.js',
         'plugins/gritter/js/jquery.gritter.js',
         'plugins/bootstrap-datepicker/js/bootstrap-datepicker.js',
-        'plugins/switchery/switchery.min.js',
-        //'js/form-slider-switcher.demo.min.js',
+//        'plugins/switchery/switchery.min.js',
+//        //'js/form-slider-switcher.demo.min.js',
+//        'js/form-slider-switcher.demo.js',
         'js/apps.js',
-        'js/form-slider-switcher.demo.js',
-
     ];
     public $depends = [
         'yii\web\YiiAsset',
-        //'yii\bootstrap\BootstrapAsset',
+        //'yii\bootstrap\B  ootstrapAsset',
         //'yii\bootstrap\BootstrapPluginAsset',
     ];
 

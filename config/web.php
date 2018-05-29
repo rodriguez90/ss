@@ -12,6 +12,11 @@ $config = [
         '@npm'   => '@vendor/npm-asset',
     ],
     'name'=>'SGT',
+    // set target language to be Russian
+    'language' => 'es',
+
+    // set source language to be English
+//    'sourceLanguage' => 'en',
     'components' => [
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
@@ -51,6 +56,19 @@ $config = [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+            ],
+        ],
+        'i18n' => [
+            'translations' => [
+                'app*' => [
+                    'class' => 'yii\i18n\PhpMessageSource',
+                    //'basePath' => '@app/messages',
+                    //'sourceLanguage' => 'en-US',
+                    'fileMap' => [
+                        'app' => 'app.php',
+                        'app/error' => 'error.php',
+                    ],
+                ],
             ],
         ],
     ],

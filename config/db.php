@@ -3,15 +3,6 @@
 //MS SQL Server (mediante dblib driver): dblib:host=localhost;dbname=mydatabase
 //MS SQL Server (mediante mssql driver): mssql:host=localhost;dbname=mydatabase
 
-//sqlsrv driver
-//'sqlsrv:Server=localhost;Database=mydatabase'
-
-//dblib driver
-//'dblib:host=localhost;dbname=mydatabase'
-
-//mssql driver
-//'mssql:host=localhost;dbname=mydatabase'
-
 return [
     'class' => 'yii\db\Connection',
 //    'dsn' => 'mssql:host=localhost;dbname=sgt',

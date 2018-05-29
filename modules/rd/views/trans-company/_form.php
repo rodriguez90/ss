@@ -6,6 +6,10 @@ use yii\widgets\ActiveForm;
 /* @var $this yii\web\View */
 /* @var $model app\modules\rd\models\TransCompany */
 /* @var $form yii\widgets\ActiveForm */
+
+use app\assets\FormAsset;
+FormAsset::register($this);
+
 ?>
 
 <div class="trans-company-form">
