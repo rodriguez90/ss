@@ -26,7 +26,7 @@ $config = [
             'class' => 'yii\caching\FileCache',
         ],
         'user' => [
-            'identityClass' => 'app\models\User',
+            'identityClass' => 'app\modules\administracion\models\AdmUser',
             'enableAutoLogin' => true,
         ],
         'errorHandler' => [
@@ -73,7 +73,10 @@ $config = [
         ],
     ],
     'modules' => [
-        'rd' => 'app\modules\rd\RD'
+        'rd' => 'app\modules\rd\RD',
+        'administracion' => [
+            'class' => 'app\modules\administracion\Administracion',
+        ],
     ],
     'params' => $params,
 ];

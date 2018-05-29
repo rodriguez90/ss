@@ -21,7 +21,8 @@ class SystemAsset extends  AssetBundle
         'plugins/bootstrap-datepicker/css/datepicker3.css',
         'plugins/gritter/css/jquery.gritter.css',
         'plugins/morris/morris.css',
-//        'plugins/switchery/switchery.min.css',
+        //yopt
+        'plugins/password-indicator/css/password-indicator.css',
     ];
     public $js = [
         'plugins/jquery/jquery-1.9.1.min.js',
@@ -32,9 +33,12 @@ class SystemAsset extends  AssetBundle
         'plugins/jquery-cookie/jquery.cookie.js',
         'plugins/gritter/js/jquery.gritter.js',
         'plugins/bootstrap-datepicker/js/bootstrap-datepicker.js',
-//        'plugins/switchery/switchery.min.js',
-//        //'js/form-slider-switcher.demo.min.js',
-//        'js/form-slider-switcher.demo.js',
+
+        //yopt
+        "plugins/jquery-ui/ui/minified/jquery-ui.min.js",
+        'plugins/parsley/dist/parsley.js',
+        'plugins/password-indicator/js/password-indicator.js',
+
         'js/apps.js',
     ];
     public $depends = [
