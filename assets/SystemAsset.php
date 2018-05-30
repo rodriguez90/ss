@@ -25,7 +25,7 @@ class SystemAsset extends  AssetBundle
         'plugins/password-indicator/css/password-indicator.css',
     ];
     public $js = [
-        'plugins/jquery/jquery-1.9.1.min.js',
+//        'plugins/jquery/jquery-1.9.1.min.js',
         'plugins/jquery/jquery-migrate-1.1.0.min.js',
         'plugins/jquery-ui/ui/minified/jquery-ui.min.js',
         'plugins/bootstrap/js/bootstrap.min.js',
@@ -43,7 +43,7 @@ class SystemAsset extends  AssetBundle
     ];
     public $depends = [
         'yii\web\YiiAsset',
-        //'yii\bootstrap\B  ootstrapAsset',
+        //'yii\bootstrap\BootstrapAsset',
         //'yii\bootstrap\BootstrapPluginAsset',
     ];
 
