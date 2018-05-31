@@ -43,12 +43,22 @@ TableAsset::register($this);
                                 </div>
                                 <div class="panel-body">
 
-                                    <form class="form-inline" action="/" method="POST">
-                                        <div class="form-group m-r-10">
-                                            <input type="text" class="form-control" id="blCode" placeholder="Código" />
+                                    <div class="row">
+                                        <div class="row">
+                                            <div class="col col-md-10">
+                                                <input type="text" class="form-control" id="blCode" placeholder="Código" />
+                                            </div>
+                                            <div class="col col-md-2">
+                                                <button id="search-container" class="btn btn-sm btn-primary">Buscar</button>
+                                            </div>
                                         </div>
-                                        <button type="submit" class="btn btn-sm btn-primary m-r-5">Buscar</button>
-                                    </form>
+                                    </div>
+<!--                                    <form class="form-inline" action="/" method="POST">-->
+<!--                                        <div class="form-group m-r-10">-->
+<!--                                            <input type="text" class="form-control" id="blCode" placeholder="Código" />-->
+<!--                                        </div>-->
+<!--                                        <button type="submit" class="btn btn-sm btn-primary m-r-5">Buscar</button>-->
+<!--                                    </form>-->
                                 </div>
                             </div>
                         </div>
@@ -62,16 +72,20 @@ TableAsset::register($this);
                                 </div>
                                 <div class="panel-body">
                                     <div class="row">
+<!--                                        <div class="stats-info">-->
+<!--                                            <p>00:12:23</p>-->
+<!--                                        </div>-->
+
                                         <div class="col-md-2">
-                                            <h5>00</h5>
+                                            <h5 id="hours">00</h5>
                                             <h5>Horas</h5>
                                         </div>
                                         <div class="col-md-2">
-                                            <h5>00</h5>
+                                            <h5 id="minutes">30</h5>
                                             <h5>Minutos</h5>
                                         </div>
                                         <div class="col-md-2">
-                                            <h5>00</h5>
+                                            <h5 id="seconds">59</h5>
                                             <h5>Segundos</h5>
                                         </div>
                                     </div>
@@ -133,7 +147,8 @@ TableAsset::register($this);
                                                                 <table id="data-table" class="table table-striped table-bordered nowrap" width="100%">
                                                                     <thead>
                                                                     <tr>
-                                                                        <th>Seleccionar</th>
+
+                                                                        <th>Seleccione <input type="checkbox" name="select_all" value="1" id="select-all"></th>
                                                                         <th>Contenedores</th>
                                                                         <th>Tipo</th>
                                                                         <th>Fecha Límite</th>
@@ -153,7 +168,7 @@ TableAsset::register($this);
                                                 <fieldset>
                                                     <!-- begin row -->
                                                     <div class="row">
-                                                        <!-- begin from BL search-->
+                                                        <!-- begin search agency-->
                                                         <div class="col-md-6">
                                                             <div class="panel panel-default">
                                                                 <!--                                                                <div class="panel-heading">-->
@@ -161,12 +176,14 @@ TableAsset::register($this);
                                                                 <!--                                                                </div>-->
                                                                 <div class="panel-body">
 
-                                                                    <form class="form-inline" action="/" method="POST">
-                                                                        <div class="form-group m-r-10">
-                                                                            <input type="text" class="form-control" id="companyName" placeholder="Compañia de Transporte" />
+                                                                    <div class="row">
+                                                                        <div class="col col-md-10">
+                                                                            <input type="text" class="form-control" id="agencyName" placeholder="Código" />
                                                                         </div>
-                                                                        <button type="submit" class="btn btn-sm btn-primary m-r-5">Buscar</button>
-                                                                    </form>
+                                                                        <div class="col col-md-2">
+                                                                            <button id="search-agency" class="btn btn-sm btn-primary">Buscar</button>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -259,5 +276,7 @@ TableAsset::register($this);
     </div>
 </div>
 
-<?php $this->registerJsFile('@web/js/form-wizards-validation-to-agency.demo.js', ['depends' => ['app\assets\WizardAsset']]) ?>
+<?php $this->registerJsFile('@web/js/modules/rd/form-wizards-validation-to-agency.demo.js', ['depends' => ['app\assets\WizardAsset']]) ?>
+<?php $this->registerJsFile('@web/js/modules/rd/table-manage-select.demo.js', ['depends' => ['app\assets\SystemAsset']]) ?>
+<?php $this->registerJsFile('@web/js/modules/rd/reception-agency.js', ['depends' => ['app\assets\SystemAsset']]) ?>
 

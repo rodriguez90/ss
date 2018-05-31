@@ -24,7 +24,6 @@ class WizardAsset extends AssetBundle
     public $js = [
         'plugins/parsley/dist/parsley.js',
         'plugins/bootstrap-wizard/js/bwizard.js',
-//        'js/form-wizards.demo.min.js'
     ];
 
     public $depends = [

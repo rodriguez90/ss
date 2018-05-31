@@ -18,6 +18,7 @@ class TableAsset extends AssetBundle
 
     public $css = [
 	'plugins/DataTables/media/css/dataTables.bootstrap.min.css',
+    'plugins/DataTables/extensions/Buttons/css/buttons.bootstrap.min.css',
 	'plugins/DataTables/extensions/Select/css/select.bootstrap.min.css',
 	'plugins/DataTables/extensions/Responsive/css/responsive.bootstrap.min.css'	,
     ];
@@ -25,9 +26,14 @@ class TableAsset extends AssetBundle
     public $js = [
 	'plugins/DataTables/media/js/jquery.dataTables.js',
 	'plugins/DataTables/media/js/dataTables.bootstrap.min.js',
+    'plugins/DataTables/extensions/Buttons/js/dataTables.buttons.min.js',
+    'plugins/DataTables/extensions/Buttons/js/buttons.bootstrap.min.js',
+    'plugins/DataTables/extensions/Buttons/js/buttons.print.min.js',
+    'plugins/DataTables/extensions/Buttons/js/buttons.flash.min.js',
+    'plugins/DataTables/extensions/Buttons/js/buttons.html5.min.js',
+    'plugins/DataTables/extensions/Buttons/js/buttons.colvis.min.js',
 	'plugins/DataTables/extensions/Select/js/dataTables.select.min.js',
 	'plugins/DataTables/extensions/Responsive/js/dataTables.responsive.min.js',
-	'js/table-manage-select.demo.js',
     ];
 
     public $depends = [

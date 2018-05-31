@@ -2,9 +2,11 @@
 
 namespace app\modules\rd\controllers;
 
+use Codeception\Util\JsonArray;
 use Yii;
 use app\modules\rd\models\Container;
 use app\modules\rd\models\ContainerSearch;
+use yii\helpers\Json;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -107,6 +109,25 @@ class ContainerController extends Controller
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
+    }
+
+    public function actionGetContainerJson($blCode)
+    {
+        $data =  [];
+        $types = ["DRY", "RRF"];
+        $tonnages = ["20", "40"];
+        // alert("Random: " +);;
+
+        for ($i = 0; $i < 10; $i++)
+        {
+            $container = [
+                'name'=>"Contenedor " + $i,
+                'type'=>"Type " + $i,
+                'deliver_date'=>new DateTime(),
+                'agency'=>"Agencia " + $i,
+            ];
+//            data.
+        }
     }
 
     /**

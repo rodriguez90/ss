@@ -55,7 +55,7 @@ $this->title = 'SGT';
                 <div class="stats-icon"><i class="fa fa-clock-o"></i></div>
                 <div class="stats-info">
                     <h4>CUPOS</h4>
-                    <p>00:12:23</p>
+                    <p>1,291,922</p>
                 </div>
                 <div class="stats-link">
                     <a href="javascript:;">View Detail <i class="fa fa-arrow-circle-o-right"></i></a>

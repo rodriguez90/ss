@@ -74,9 +74,10 @@ $config = [
     ],
     'modules' => [
         'rd' => 'app\modules\rd\RD',
-        'administracion' => [
-            'class' => 'app\modules\administracion\Administracion',
-        ],
+        'administracion' => 'app\modules\rd\RD',
+//        'administracion' => [
+//            'class' => 'app\modules\administracion\Administracion',
+//        ],
     ],
     'params' => $params,
 ];

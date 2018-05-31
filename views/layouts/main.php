@@ -120,7 +120,7 @@ SystemAsset::register($this)
                             <span>Administración</span>
                         </a>
                         <ul style="" class="sub-menu">
-                            <li><a href="<?= Url::to(['administracion/user/index']) ?>">Usuarios</a></li>
+                            <li><a href="<?= Url::to(['administracion/user']) ?>">Usuarios</a></li>
                             <li><a href="ui_typography.html">Roles</a></li>
                             <li><a href="ui_tabs_accordions.html">Permisos</a></li>
                         </ul>
