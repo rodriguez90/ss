@@ -2,6 +2,7 @@
  * Created by yopt on 12/05/18.
  */
 
+
 var handleFormPasswordIndicator = function() {
     "use strict";
     $('#password-indicator-default').passwordStrength();
@@ -10,30 +11,7 @@ var handleFormPasswordIndicator = function() {
 
 
 var handleJqueryAutocomplete = function() {
-    var availableTags = [
-        'ActionScript',
-        'AppleScript',
-        'Asp',
-        'BASIC',
-        'C',
-        'C++',
-        'Clojure',
-        'COBOL',
-        'ColdFusion',
-        'Erlang',
-        'Fortran',
-        'Groovy',
-        'Haskell',
-        'Java',
-        'JavaScript',
-        'Lisp',
-        'Perl',
-        'PHP',
-        'Python',
-        'Ruby',
-        'Scala',
-        'Scheme'
-    ];
+
     $('#jquery-autocomplete').autocomplete({
         source: function(request,response){
             $.ajax({
@@ -44,16 +22,72 @@ var handleJqueryAutocomplete = function() {
                 },
                 success:function(data){
                    response($.map(data,function(item){
+
                        return item.name
                    }));
+
+
                 }
             });
 
-        },minLength:5
+        },minLength:2
+    });
+};
+
+
+
+var handleJqueryAutocomplete2 = function() {
+
+    $('#input-type').autocomplete({
+        source: function(request,response){
+            $.ajax({
+
+                url: homeUrl+ "administracion/user/getagencias",
+                dataType:'json',
+                data:{
+                    term:request.term
+                },
+                success:function(data){
+                    response($.map(data,function(item){
+
+                        return item.name
+                    }));
+                }
+            });
+
+        },minLength:2
     });
 };
 
 $(function () {
+
     handleFormPasswordIndicator();
     handleJqueryAutocomplete();
+    handleJqueryAutocomplete2();
+
+    $('#jquery-autocomplete').change(function(event){
+        var label = $("#label-type");
+        switch ($(this).val()){
+            case 'Importador_Exportador':
+                label.text("Agencia*");
+
+                break;
+            case 'Administrador_depósito':
+
+                label.text("Depósito*");
+                break;
+            case 'Cia_transporte':
+
+                label.text("Compañía de Transporte*");
+                break;
+
+        }
+
+
+    });
+
+
+
+
+
 });

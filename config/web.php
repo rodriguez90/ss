@@ -12,8 +12,8 @@ $config = [
         '@npm'   => '@vendor/npm-asset',
     ],
     'name'=>'SGT',
-    // set target language to be Russian
-    'language' => 'es',
+    // set target language to be Spanish
+//    'language' => 'es',
 
     // set source language to be English
 //    'sourceLanguage' => 'en',
@@ -55,6 +55,7 @@ $config = [
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
+//            'baseUrl' => 'http://localhost/web',
             'rules' => [
             ],
         ],
@@ -74,7 +75,7 @@ $config = [
     ],
     'modules' => [
         'rd' => 'app\modules\rd\RD',
-        'administracion' => 'app\modules\rd\RD',
+        'administracion' => 'app\modules\administracion\Administracion',
 //        'administracion' => [
 //            'class' => 'app\modules\administracion\Administracion',
 //        ],

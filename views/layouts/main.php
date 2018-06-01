@@ -3,6 +3,7 @@
 /* @var $this \yii\web\View */
 /* @var $content string */
 
+use app\modules\administracion\models\AdmUser;
 use app\widgets\Alert;
 use yii\helpers\Html;
 use yii\helpers\Url;
@@ -52,7 +53,17 @@ SystemAsset::register($this)
                     <li class="dropdown navbar-user">
                         <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
                             <img src="/img/user-13.jpg" alt="" />
-                            <span class="hidden-xs">Pepe Perez</span> <b class="caret"></b>
+                            <span class="hidden-xs">
+
+                                <?php
+                                if(Yii::$app->user->isGuest){
+                                   echo("Login");
+                                }else{
+                                    echo( AdmUser::findOne(['id'=>Yii::$app->user->getId()])->username);
+                                }
+                                ?>
+
+                            </span> <b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu animated fadeInLeft">
                             <li class="arrow"></li>
@@ -60,11 +71,21 @@ SystemAsset::register($this)
                             <li><a href="javascript:;">Calendario</a></li>
                             <li><a href="javascript:;">Configuraciones</a></li>
                             <li class="divider"></li>
-                            <li><a href="<?php echo Url::to(['/site/logout']);?>"> Salir</a></li>
+
+                            <?php
+                            if(Yii::$app->user->isGuest ){
+                                echo("<li><a href='". Url::to(["/site/login"]). "'> Login</a></li>");
+                            }else{
+                                echo("<li><a href='". Url::to(["/site/logout"]). "'> Salir</a></li>");
+                            }
+                            ?>
+
                         </ul>
                         <!-- end header navigation right -->
                     </li>
                 </ul>
+
+
             </div>
         </div>
 
@@ -85,7 +106,7 @@ SystemAsset::register($this)
                     </li>
                     <li class="has-sub">
                         <a href="<?php echo Url::to(['/rd/warehouse']);?>"/> <i class="fa fa-building"></i>
-                            <span> Depósito</span>
+                        <span> Depósito</span>
                         </a>
                     </li>
                     <li class="has-sub">
@@ -113,18 +134,27 @@ SystemAsset::register($this)
                             <span> Despacho</span>
                         </a>
                     </li>
-                    <li class="has-sub">
-                        <a href="javascript:;">
-                            <b class="caret pull-right"></b>
-                            <i class="fa fa-suitcase"></i>
-                            <span>Administración</span>
-                        </a>
-                        <ul style="" class="sub-menu">
-                            <li><a href="<?= Url::to(['administracion/user']) ?>">Usuarios</a></li>
-                            <li><a href="ui_typography.html">Roles</a></li>
-                            <li><a href="ui_tabs_accordions.html">Permisos</a></li>
-                        </ul>
-                    </li>
+
+
+
+                    <?php
+                        if(Yii::$app->user->can("Admin_mod")){
+                           echo "<li class='has-sub'>";
+                           echo "<a href='javascript:;'> <b class='caret pull-right'></b> <i class='fa fa-suitcase'></i> <span>Administración</span> </a>";
+                           echo "<ul style='' class='sub-menu'>";
+                           echo "<li><a href=". Url::toRoute(['/administracion/user/']) .">Usuarios</a></li>";
+                           echo "<li><a href=". Url::toRoute(['/administracion/item','type'=> 1]) .">Roles</a></li>";
+                           echo "<li><a href=". Url::toRoute(['/administracion/item','type'=> 2]) .">Permisos</a></li>";
+                           echo "<li><a href=". Url::toRoute(['/administracion/authitemchild/']) .">Grupos</a></li>";
+
+                           echo "</ul>";
+                           echo "</li>";
+                        }
+                    ?>
+
+
+
+
                     <!-- begin sidebar minify button -->
                     <li><a href="javascript:;" class="sidebar-minify-btn" data-click="sidebar-minify"><i class="fa fa-angle-double-left"></i></a></li>
                     <!-- end sidebar minify button -->
@@ -160,6 +190,26 @@ SystemAsset::register($this)
     </div>
     <!-- end page container -->
 </div>
+
+
+<?php
+
+
+echo "<script>";
+echo "homeUrl = '" . Yii::$app->homeUrl . "';";
+
+/*
+foreach (Yii::$app->params as $key => $param)
+{
+    echo "$key = '$param';";
+}*/
+
+echo "</script>";
+
+
+?>
+
+
 <!-- end wrap -->
 <?php $this->endBody() ?>
 </body>

@@ -4,11 +4,13 @@ namespace app\controllers;
 
 use Yii;
 use yii\filters\AccessControl;
+use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
+
 
 class SiteController extends Controller
 {
@@ -23,7 +25,7 @@ class SiteController extends Controller
                 'only' => ['logout'],
                 'rules' => [
                     [
-                        'actions' => ['logout'],
+                        'actions' => ['logout', 'contact', 'about', 'index'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -32,7 +34,7 @@ class SiteController extends Controller
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'logout' => ['post'],
+                   // 'logout' => ['post','get'],
                 ],
             ],
         ];
@@ -61,6 +63,11 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
+        if (Yii::$app->user->isGuest)
+        {
+            return $this->goHome();
+        }
+
         return $this->render('index');
     }
 
@@ -71,19 +78,29 @@ class SiteController extends Controller
      */
     public function actionLogin()
     {
+        $this->layout = '@app/views/layouts/login';
+
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
         }
 
         $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
+        if ($model->load(Yii::$app->request->post()))
+        {
+            if ($model->login())
+            {
+                return $this->redirect(Yii::$app->homeUrl . '/site/index');
+            }
+            else
+            {
+                return $this->render('login', ['model' => $model]);
+            }
+
+        }else{
+            return $this->render('login', ['model' => $model]);
         }
 
-        $model->password = '';
-        return $this->render('login', [
-            'model' => $model,
-        ]);
+
     }
 
     /**
@@ -94,8 +111,8 @@ class SiteController extends Controller
     public function actionLogout()
     {
         Yii::$app->user->logout();
-
-        return $this->goHome();
+        return $this->redirect(   Url::to(["/site/login"]) );
+        //return $this->goHome();
     }
 
     /**

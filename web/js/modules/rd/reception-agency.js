@@ -10,8 +10,6 @@ $(document).ready(function () {
     // init tables
     TableManageTableSelect.init()
 
-
-
     // cronometer
     setInterval(function () {
         var m = $("#minutes");

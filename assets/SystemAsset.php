@@ -23,6 +23,7 @@ class SystemAsset extends  AssetBundle
         'plugins/morris/morris.css',
         //yopt
         'plugins/password-indicator/css/password-indicator.css',
+        'plugins/jstree/dist/themes/default/style.min.css',
     ];
     public $js = [
 //        'plugins/jquery/jquery-1.9.1.min.js',
@@ -38,6 +39,7 @@ class SystemAsset extends  AssetBundle
         "plugins/jquery-ui/ui/minified/jquery-ui.min.js",
         'plugins/parsley/dist/parsley.js',
         'plugins/password-indicator/js/password-indicator.js',
+        'plugins/jstree/dist/jstree.min.js',
 
         'js/apps.js',
     ];

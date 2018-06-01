@@ -1,13 +1,20 @@
 <?php
 
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
 /* @var $model app\modules\administracion\models\User */
 /* @var $form yii\widgets\ActiveForm */
 /* @var $roles */
+
+
+
+
 ?>
+
+
 
 <div class="user-form">
 
@@ -65,7 +72,7 @@ use yii\widgets\ActiveForm;
 
 
                         <div class="form-group">
-                            <label class="control-label col-md-4 col-sm-4" for="website">Nombre * :</label>
+                            <label class="control-label col-md-4 col-sm-4" for="website">Nombre* :</label>
                             <div class="col-md-8 col-sm-8">
                                 <input class="form-control" name="AdmUser[nombre]"   placeholder="Nombre" data-parsley-required="true" type="text" value="<?= $model['nombre'] ?>">
                                 <ul  class="parsley-errors-list"></ul>
@@ -73,7 +80,7 @@ use yii\widgets\ActiveForm;
                         </div>
 
                         <div class="form-group">
-                            <label class="control-label col-md-4 col-sm-4" for="website">Apellidos * :</label>
+                            <label class="control-label col-md-4 col-sm-4" for="website">Apellidos* :</label>
                             <div class="col-md-8 col-sm-8">
                                 <input class="form-control" name="AdmUser[apellidos]"   placeholder="Apellidos" data-parsley-required="true" type="text" value="<?= $model['apellidos'] ?>">
                                 <ul  class="parsley-errors-list"></ul>
@@ -88,7 +95,7 @@ use yii\widgets\ActiveForm;
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-md-4 col-sm-4" for="email">Email * :</label>
+                            <label class="control-label col-md-4 col-sm-4" for="email">Email* :</label>
                             <div class="col-md-8 col-sm-8">
                                 <input class="form-control" name="AdmUser[email]" data-parsley-type="email" placeholder="Email" data-parsley-required="true" type="text" value="<?= $model['email'] ?>">
                                 <ul  class="parsley-errors-list"></ul>
@@ -96,9 +103,9 @@ use yii\widgets\ActiveForm;
                         </div>
 
                         <div class="form-group">
-                            <label class="control-label col-md-4 col-sm-4">Contrase&ntilde;a</label>
+                            <label class="control-label col-md-4 col-sm-4">Contrase&ntilde;a*</label>
                             <div class="col-md-8 col-sm-8">
-                                <input name="AdmUser[password]" id="password-indicator-default"  type="password" class="form-control m-b-5" />
+                                <input name="AdmUser[password]" id="password-indicator-default"  type="password"   class="form-control m-b-5" />
                                 <div id="passwordStrengthDiv" class="is0 m-t-5"></div>
                             </div>
                         </div>
@@ -106,7 +113,7 @@ use yii\widgets\ActiveForm;
                         <div class="form-group">
                             <label class="control-label col-md-4 col-sm-4"> Confirmar contrase&ntilde;a </label>
                             <div class="col-md-8 col-sm-8">
-                                <input name="AdmUser[passwordConfirm]" id="password-passwordConfirm"  type="password" class="form-control" />
+                                <input name="AdmUser[passwordConfirm]" id="password-passwordConfirm"  type="password"  class="form-control" />
 
                             </div>
                         </div>
@@ -117,17 +124,23 @@ use yii\widgets\ActiveForm;
                                 <input  type="checkbox" <?= isset($model['status']) || $model->isNewRecord ? 'checked' : '' ?>
                                     name="AdmUser[status]"
                                     value="1"/>
-
                             </div>
                         </div>
-
 
 
 
                         <div class="form-group">
                             <label class="control-label col-md-4">Rol</label>
                             <div class="col-md-8">
-                                <input type="text" name="rol" id="jquery-autocomplete" class="form-control" />
+                                <input type="text" name="rol" id="jquery-autocomplete" data-parsley-required="true" class="form-control" value="<?= $rol_actual?>"/>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group" id="div-type" >
+                            <label class="control-label col-md-4" id="label-type">---</label>
+                            <div class="col-md-8">
+                                <input type="text" name="" id="input-type"  class="form-control" />
                             </div>
                         </div>
 
@@ -157,9 +170,12 @@ use yii\widgets\ActiveForm;
 
 
 <?php
+
+
+
+
 $this->registerJsFile('@web/js/modules/administracion/user.js', ['depends' => ['app\assets\AppAsset']]);
 ?>
-
 
 
 

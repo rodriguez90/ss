@@ -3,20 +3,25 @@
 namespace app\modules\administracion\controllers;
 
 use app\modules\administracion\models\AdmUser;
+use app\modules\administracion\models\Agency;
+use app\modules\administracion\models\AuthAssignment;
 use app\modules\administracion\models\AuthItem;
 use Yii;
 
 use app\modules\administracion\models\UserSearch;
+use yii\rbac\Role;
 use yii\web\Controller;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
 
 /**
  * UserController implements the CRUD actions for User model.
  */
 class UserController extends Controller
 {
+
     /**
      * {@inheritdoc}
      */
@@ -66,6 +71,7 @@ class UserController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
+
     public function actionCreate()
     {
         if ( \Yii::$app->user->can('User_create')) {
@@ -74,11 +80,12 @@ class UserController extends Controller
         $model = new AdmUser();
 
 
+
         if ($model->load(Yii::$app->request->post()) ) {
 
         $rol = Yii::$app->request->post("rol");
 
-        if($rol=="---" ||  $rol ==null){
+        if( $rol ==null){
             $model->addError('error', 'Seleccione almenos un rol.');
         }
 
@@ -89,6 +96,9 @@ class UserController extends Controller
         if (!$model->hasErrors())
             {
                 $model->setPassword($model->password);
+                $model->created_at = time();
+                $model->updated_at = time();
+                $model->creado_por = Yii::$app->user->identity->username;
                 if ($model->save())
                 {
                     $auth =  Yii::$app->authManager;
@@ -98,10 +108,10 @@ class UserController extends Controller
                 }
 
             }
-            return $this->render('create', ['model' => $model ]);
+
         }
 
-        return $this->render('create', [ 'model' => $model ]);
+        return $this->render('create', [ 'model' => $model,'rol_actual'=>'']);
 
         }
         else{
@@ -119,40 +129,57 @@ class UserController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $old_password = $model->password;
+        $auth =  Yii::$app->authManager;
         $confirm = Yii::$app->request->post('AdmUser')["passwordConfirm"];
+
+        $actual = AuthAssignment::find()
+            ->innerJoin("adm_user","auth_assignment.user_id = adm_user.id")
+            ->where(['adm_user.id'=>$model->id])
+            ->one();
+
+
+        $rol_actual = $auth->getRole($actual->item_name);
 
         if ($model->load(Yii::$app->request->post()) ) {
 
             $rol = Yii::$app->request->post("rol");
 
-            if($rol=="---" ||  $rol ==null){
+            if($rol ==null){
                 $model->addError('error', 'Seleccione almenos un rol.');
             }
 
-            if( $confirm!=null && $model->password != $confirm){
-                $model->addError('error', 'Las contraseñas no son iguales.');
-            }
+                if( $confirm!=null && $model->password != $confirm){
+                    $model->addError('error', 'Las contraseñas no son iguales.');
+                }
+
 
             if (!$model->hasErrors())
             {
-                $model->setPassword($model->password);
+                if($model->password!=""){
+                    $model->setPassword($model->password);
+                }else
+                    $model->password = $old_password;
+
+                $model->updated_at = time();
+
                 if ($model->save())
                 {
-                    $auth =  Yii::$app->authManager;
                     $new_rol = $auth->createRole($rol);
-                    $rol_actual=$auth->getRolesByUser($model->id);
 
-                    $auth->revoke($rol_actual,$model->id);
-
-                    $auth->assign($new_rol,$model->id);
+                    if(  $new_rol->name!= $rol_actual->name ){
+                        $auth->revoke($rol_actual,$model->id);
+                        $auth->assign($new_rol,$model->id);
+                    }
+                    return $this->redirect(['view', 'id' => $model->id]);
                 }
 
             }
-            return $this->redirect(['view', 'id' => $model->id]);
+
         }
 
         return $this->render('update', [
-            'model' => $model
+            'model' => $model,'rol_actual'=>$rol_actual->name
         ]);
     }
 
@@ -185,4 +212,24 @@ class UserController extends Controller
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
+
+
+
+
+    public function actionGetagencias($term){
+
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $result = Agency::find()->where(['like','name',$term])
+            ->select("name")
+            ->all();
+
+        if($result!=null)
+            return $result;
+
+        return false;
+
+    }
+
+
 }

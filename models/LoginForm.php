@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use app\modules\administracion\models\AdmUser;
 use Yii;
 use yii\base\Model;
 
@@ -60,7 +61,7 @@ class LoginForm extends Model
     public function login()
     {
         if ($this->validate()) {
-            return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600*24*30 : 0);
+            return Yii::$app->user->login($this->getUser(), $this->rememberMe == 'on' ? 3600 * 24 * 30 : 0);
         }
         return false;
     }
@@ -73,7 +74,7 @@ class LoginForm extends Model
     public function getUser()
     {
         if ($this->_user === false) {
-            $this->_user = User::findByUsername($this->username);
+            $this->_user = AdmUser::findByUsername($this->username);
         }
 
         return $this->_user;

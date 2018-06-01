@@ -5,14 +5,12 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\modules\administracion\models\AuthItem */
 
-$this->title = 'Update Auth Item: ' . $model->name;
-$this->params['breadcrumbs'][] = ['label' => 'Auth Items', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->name, 'url' => ['view', 'id' => $model->name]];
-$this->params['breadcrumbs'][] = 'Update';
+$this->title = $type == 1 ? 'Actualizar Rol':'Actualizar Permiso';
+$this->params['breadcrumbs'][] = ['label' => $type == 1 ? 'Gestión de Roles' : 'Gestión de Permisos', 'url' => ['index','type'=>$type]];
+$this->params['breadcrumbs'][] = $this->title;
+
 ?>
 <div class="auth-item-update">
-
-    <h1><?= Html::encode($this->title) ?></h1>
 
     <?= $this->render('_form', [
         'model' => $model,

@@ -65,6 +65,11 @@ class AuthItemSearch extends AuthItem
         ]);
 
 
+        $query->andFilterWhere([
+            'type' => $params['type'],
+        ]);
+
+        /*
         if(isset($this->type) && !empty($this->type)){
 
             if(strstr("rol",strtolower($this->type)) == true)
@@ -76,7 +81,7 @@ class AuthItemSearch extends AuthItem
             }
 
         }
-
+        */
 
 
 
