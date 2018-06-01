@@ -18,8 +18,8 @@ class UserSearch extends AdmUser
     public function rules()
     {
         return [
-            [['id', 'status'], 'integer'],
-            [['username', 'password', 'authKey', 'created_at', 'email', 'nombre', 'apellidos'], 'safe'],
+            [['id', 'created_at', 'updated_at'], 'integer'],
+            [['username', 'auth_key', 'password', 'email', 'nombre', 'apellidos', 'creado_por', 'password_reset_token', 'cedula','status'], 'safe'],
         ];
     }
 
@@ -52,9 +52,21 @@ class UserSearch extends AdmUser
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'status' => $this->status,
+            //'status' => $this->status,
             'created_at' => $this->created_at,
         ]);
+
+        if(isset($this->status) && !empty($this->status)){
+
+            if(strstr("activo",strtolower($this->status)) == true)
+            {
+                $query->andFilterWhere(['status' =>1]);
+            }else if(strstr("inactivo",strtolower($this->status)) == true)
+            {
+                $query->andFilterWhere(['status' =>0]);
+            }
+
+        }
 
         $query->andFilterWhere(['like', 'username', $this->username])
 

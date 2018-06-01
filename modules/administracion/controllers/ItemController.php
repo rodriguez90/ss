@@ -96,7 +96,7 @@ class ItemController extends Controller
                 try{
                     $auth->add($item);
                 }catch (\yii\db\Exception $ex){
-                    $error_msg = $type == 1 ? 'Ya existe el rol ( '.$model->name." )" :'Ya existe el permiso ( '.$model->name." )";
+                    $error_msg = $type == 1 ? 'Ya existe el rol ( '.$model->name." )" :'Ya existe el permiso ( '.$model->name." ) ". $ex->getMessage();
                     $model->addError('error',$error_msg );
                     return $this->render('create', [ 'model' => $model, 'type' =>$type, ]);
                 }

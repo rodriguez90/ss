@@ -99,7 +99,7 @@ TableAsset::register($this);
                         <!--        <div class="form-group">-->
                         <label class="col-md-2 control-label">Déposito destino:</label>
                         <div class="col-md-10">
-                            <select class="form-control">
+                            <select class="form-control" disabled>
                                 <option>TPG</option>
                             </select>
                         </div>
@@ -178,7 +178,11 @@ TableAsset::register($this);
 
                                                                     <div class="row">
                                                                         <div class="col col-md-10">
-                                                                            <input type="text" class="form-control" id="agencyName" placeholder="Código" />
+<!--                                                                            <input type="text" class="form-control" id="agencia" placeholder="Agencia" />-->
+<!--                                                                            <select id="select-agency" class="form-control selectpicker" data-live-search="true">-->
+                                                                            <select id="select-agency"  class="form-control">
+                                                                            </select>
+<!--                                                                            <input type="text" class="form-control" id="agencyName" placeholder="Código" />-->
                                                                         </div>
                                                                         <div class="col col-md-2">
                                                                             <button id="search-agency" class="btn btn-sm btn-primary">Buscar</button>
@@ -244,7 +248,7 @@ TableAsset::register($this);
                                                             </div>
                                                             <div class="panel-body">
                                                                 <!--                                                                <label class="label label-default"> Xedrux</label>-->
-                                                                <h5><strong>Xedrux </strong></h5>
+                                                                <h5><strong id="trans_company"> -- </strong></h5>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -252,7 +256,7 @@ TableAsset::register($this);
                                                     <div class="row">
                                                         <div class="checkbox">
                                                             <label>
-                                                                <input type="checkbox"> Confirmar y notificar
+                                                                <input id="confirming" type="checkbox"> Confirmar Información
                                                             </label>
                                                         </div>
                                                     </div>
@@ -260,6 +264,15 @@ TableAsset::register($this);
                                                 </fieldset>
                                             </div>
                                             <!-- end wizard step-3 -->
+                                            <!-- begin wizard step-4 -->
+                                            <div>
+                                                <div class="jumbotron m-b-0 text-center">
+                                                    <h1>Proceso Completado</h1>
+                                                    <p>Los datos han sido enviados al servidor.</p>
+<!--                                                    <p><a class="btn btn-success btn-lg" role="button"></a> </p>-->
+                                                </div>
+                                            </div>
+                                            <!-- end wizard step-4 -->
                                         </div>
                                     </form>
                                 </div>
@@ -278,5 +291,5 @@ TableAsset::register($this);
 
 <?php $this->registerJsFile('@web/js/modules/rd/form-wizards-validation-to-agency.demo.js', ['depends' => ['app\assets\WizardAsset']]) ?>
 <?php $this->registerJsFile('@web/js/modules/rd/table-manage-select.demo.js', ['depends' => ['app\assets\SystemAsset']]) ?>
-<?php $this->registerJsFile('@web/js/modules/rd/reception-agency.js', ['depends' => ['app\assets\SystemAsset']]) ?>
+<?php $this->registerJsFile('@web/js/modules/rd/reception-agency.js', ['depends' => ['app\assets\SystemAsset', 'app\assets\FormAsset']]) ?>
 

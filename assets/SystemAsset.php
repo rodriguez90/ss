@@ -40,6 +40,7 @@ class SystemAsset extends  AssetBundle
         'plugins/parsley/dist/parsley.js',
         'plugins/password-indicator/js/password-indicator.js',
         'plugins/jstree/dist/jstree.min.js',
+        'plugins/pace/pace.min.js',
 
         'js/apps.js',
     ];

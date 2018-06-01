@@ -13,14 +13,16 @@ $config = [
     ],
     'name'=>'SGT',
     // set target language to be Spanish
-//    'language' => 'es',
+    'language' => 'es',
 
     // set source language to be English
 //    'sourceLanguage' => 'en',
     'components' => [
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
+//            'cookieValidationKey' => 'UJgqjPGCLE05wVUyL3Ts2z-j7i_S2IRu',
             'cookieValidationKey' => 'UJgqjPGCLE05wVUyL3Ts2z-j7i_S2IRu',
+            'parsers'  => ['application/json' => 'yii\web\JsonParser'],
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
@@ -28,6 +30,7 @@ $config = [
         'user' => [
             'identityClass' => 'app\modules\administracion\models\AdmUser',
             'enableAutoLogin' => true,
+//            'loginUrl' => ['site/login'],
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',
@@ -54,8 +57,8 @@ $config = [
         ],
         'urlManager' => [
             'enablePrettyUrl' => true,
-            'showScriptName' => false,
-//            'baseUrl' => 'http://localhost/web',
+            'showScriptName' => true,
+            'baseUrl' => 'http://localhost:8080/web',
             'rules' => [
             ],
         ],

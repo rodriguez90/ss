@@ -3,12 +3,18 @@
 namespace app\modules\administracion\controllers;
 
 use app\modules\administracion\models\AdmUser;
-use app\modules\administracion\models\Agency;
+use app\modules\administracion\models\AdmuserSearch;
 use app\modules\administracion\models\AuthAssignment;
 use app\modules\administracion\models\AuthItem;
+use app\modules\administracion\models\UserSearch;
+use app\modules\rd\models\Agency;
+use app\modules\rd\models\Warehouse;
+use app\modules\rd\models\TransCompany;
+
 use Yii;
 
-use app\modules\administracion\models\UserSearch;
+
+use yii\filters\AccessControl;
 use yii\rbac\Role;
 use yii\web\Controller;
 use yii\web\ForbiddenHttpException;
@@ -76,22 +82,22 @@ class UserController extends Controller
     {
         if ( \Yii::$app->user->can('User_create')) {
 
+        $auth =  Yii::$app->authManager;
         $confirm = Yii::$app->request->post('AdmUser')["passwordConfirm"];
         $model = new AdmUser();
-
-
 
         if ($model->load(Yii::$app->request->post()) ) {
 
         $rol = Yii::$app->request->post("rol");
 
-        if( $rol ==null){
-            $model->addError('error', 'Seleccione almenos un rol.');
-        }
-
         if( $confirm!=null && $model->password != $confirm){
             $model->addError('error', 'Las contraseñas no son iguales.');
         }
+
+        if( $rol==null ||  $auth->getRole($rol) ==null){
+            $model->addError('error', "Seleccione un rol válido." );
+        }
+
 
         if (!$model->hasErrors())
             {
@@ -101,9 +107,9 @@ class UserController extends Controller
                 $model->creado_por = Yii::$app->user->identity->username;
                 if ($model->save())
                 {
-                    $auth =  Yii::$app->authManager;
                     $rol_user = $auth->createRole($rol);
                     $auth->assign($rol_user,$model->id);
+
                     return $this->redirect(['view', 'id' => $model->id]);
                 }
 
@@ -230,6 +236,43 @@ class UserController extends Controller
         return false;
 
     }
+
+
+
+
+
+    public function actionGetdeposito($term){
+
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $result = Warehouse::find()->where(['like','name',$term])
+            ->select("name")
+            ->all();
+
+        if($result!=null)
+            return $result;
+
+        return false;
+
+    }
+
+
+
+    public function actionGetagenciastrans($term){
+
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $result = TransCompany::find()->where(['like','name',$term])
+            ->select("name")
+            ->all();
+
+        if($result!=null)
+            return $result;
+
+        return false;
+
+    }
+
 
 
 }

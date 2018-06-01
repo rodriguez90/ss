@@ -61,8 +61,32 @@ var handleDataTableSelect = function() {
 
     if ($('#data-table2').length !== 0) {
         $('#data-table2').DataTable({
-            select: true,
-            responsive: true
+            "columns": [
+                { "title": "Contenedor",
+                    "data":"name",
+                },
+                { "title": "Tipo",
+                    "data":"type",
+                },
+                { "title": "Fecha Limite",
+                    "data":"deliveryDate",
+                },
+                { "title": "Agencia",
+                    "data":"agency"
+                },
+            ],
+            processing:true,
+            lengthMenu: [5, 10, 15],
+            "pageLength": 5,
+            "language": {
+                "lengthMenu": "Mostrar _MENU_ filas por página",
+                "zeroRecords": "No hay datos que mostrat - disculpe",
+                "info": "Página _PAGE_ de _PAGES_",
+                "infoEmpty": "No hay información que mostrar",
+                // "infoFiltered": "(encontrados from _MAX_ total records)"
+            },
+            responsive: true,
+            // language: {url: 'web/plugins/DataTables/i18/Spanish.json'
         });
     }
 };

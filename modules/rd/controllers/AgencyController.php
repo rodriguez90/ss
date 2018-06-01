@@ -5,6 +5,7 @@ namespace app\modules\rd\controllers;
 use Yii;
 use app\modules\rd\models\Agency;
 use app\modules\rd\models\AgencySearch;
+use yii\rest\ActiveController;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;

@@ -36,13 +36,26 @@ var handleJqueryAutocomplete = function() {
 
 
 
-var handleJqueryAutocomplete2 = function() {
+var handleJqueryAutocomplete2 = function(op) {
+
+    var action = '';
+    switch (op){
+        case 1:
+            action = "administracion/user/getagencias";
+            break;
+        case 2:
+            action = "administracion/user/getdeposito";
+            break;
+        case 3:
+            action = "administracion/user/getagenciastrans";
+            break;
+    }
+
 
     $('#input-type').autocomplete({
         source: function(request,response){
             $.ajax({
-
-                url: homeUrl+ "administracion/user/getagencias",
+                url: homeUrl+ action,
                 dataType:'json',
                 data:{
                     term:request.term
@@ -63,24 +76,32 @@ $(function () {
 
     handleFormPasswordIndicator();
     handleJqueryAutocomplete();
-    handleJqueryAutocomplete2();
 
     $('#jquery-autocomplete').change(function(event){
         var label = $("#label-type");
+        var input = $('#input-type');
         switch ($(this).val()){
             case 'Importador_Exportador':
                 label.text("Agencia*");
-
+                handleJqueryAutocomplete2(1);
+                input.removeAttr('disabled');
                 break;
             case 'Administrador_depósito':
-
                 label.text("Depósito*");
+                handleJqueryAutocomplete2(2);
+                input.removeAttr('disabled');
+
                 break;
             case 'Cia_transporte':
-
                 label.text("Compañía de Transporte*");
+                handleJqueryAutocomplete2(3);
+                input.removeAttr('disabled');
                 break;
 
+            default :
+                label.text("---");
+                input.attr('disabled','disabled');
+                break;
         }
 
 

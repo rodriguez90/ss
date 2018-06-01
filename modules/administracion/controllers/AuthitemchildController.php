@@ -54,7 +54,7 @@ class AuthitemchildController extends Controller
             }
         }
 
-        //var_dump($tree);die;
+        
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -188,10 +188,12 @@ class AuthitemchildController extends Controller
             $aux_rol = $auth->createRole($rol);
             $aux_permiso= $auth->createPermission($item->name);
             if(!$auth->hasChild($aux_rol,$aux_permiso)){
-               // array_push($result,$item);
-               $result [] = $item;
+               // array_push($result,$aux_permiso);
+              $result [] = $item;
             }
         }
+
+
         if($result!=null)
             return $result;
 

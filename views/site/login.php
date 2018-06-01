@@ -55,11 +55,11 @@ $this->params['breadcrumbs'][] = $this->title;
                 </div>
                 <div class="checkbox m-b-20">
                     <label>
-                        <input type="checkbox" /> Remember Me
+                        <input type="checkbox" /> Recordarme
                     </label>
                 </div>
                 <div class="login-buttons">
-                    <button type="submit" class="btn btn-success btn-block btn-lg">Sign me in</button>
+                    <button type="submit" class="btn btn-success btn-block btn-lg">Entrar</button>
                 </div>
 
             <?php ActiveForm::end(); ?>

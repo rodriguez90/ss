@@ -140,7 +140,7 @@ SystemAsset::register($this)
                     <?php
                         if(Yii::$app->user->can("Admin_mod")){
                            echo "<li class='has-sub'>";
-                           echo "<a href='javascript:;'> <b class='caret pull-right'></b> <i class='fa fa-suitcase'></i> <span>Administración</span> </a>";
+                           echo "<a href='javascript:;'> <b class='caret pull-right'></b> <i class='fa fa-cog'></i> <span>Administración</span> </a>";
                            echo "<ul style='' class='sub-menu'>";
                            echo "<li><a href=". Url::toRoute(['/administracion/user/']) .">Usuarios</a></li>";
                            echo "<li><a href=". Url::toRoute(['/administracion/item','type'=> 1]) .">Roles</a></li>";

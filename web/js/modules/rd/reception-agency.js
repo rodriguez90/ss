@@ -10,6 +10,7 @@ $(document).ready(function () {
     // init tables
     TableManageTableSelect.init()
 
+
     // cronometer
     setInterval(function () {
         var m = $("#minutes");
@@ -61,6 +62,12 @@ $(document).ready(function () {
         var table = $('#data-table').DataTable();
 
         // table.rows().delete();
+
+        // var rows = table
+        //     .rows()
+        //     .remove()
+        //     .draw();
+
         table
             .clear()
             .draw();
@@ -68,7 +75,6 @@ $(document).ready(function () {
 
         for (var i = 0; i < 10; i++)
         {
-
             table.row.add(
                 {
                     checkbox:"",
@@ -95,10 +101,41 @@ $(document).ready(function () {
         return false;
     });
 
+    // select2 to agency
+    $("#select-agency").select2({
+        language: "es",
+        placeholder: 'Seleccione la compañia de transporte',
+        // allowClear: true,
+        // tags: true,
+        closeOnSelect: false,
+        ajax: {
+            url: 'http://localhost:8080/rd/api-trans-company',
+            dataType: 'json',
+            delay: 250,
+            processResults: function (data) {
+                // console.log(data);
+                var myResults  = [];
+                $.each(data, function (index, item) {
+                    // console.log(item);
+                    myResults .push({
+                        id: item.id,
+                        text: item.name
+                    });
+                });
+                return {
+                    results: myResults
+                };
+            },
+            cache: true,
+        },
+        // minimumInputLength: 2
+    });
+
     // search agency
     $('#search-agency').click( function() {
         // ajax resquest service for agency
-        alert("// ajax resquest service for agency");
+        // alert("// ajax resquest service for agency");
+
         return false;
     });
 });

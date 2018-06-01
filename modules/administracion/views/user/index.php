@@ -7,7 +7,7 @@ use yii\grid\GridView;
 /* @var $searchModel app\modules\administracion\models\UserSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Lista de usuarios';
+$this->title = 'Usuarios';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="user-index">
@@ -33,7 +33,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger"
                data-click="panel-remove"><i class="fa fa-times"></i></a>
         </div>
-        <h4 class="panel-title"><?= Html::encode($this->title) ?></h4>
+        <h4 class="panel-title">Lista de usuarios</h4>
 
     </div>
     <div class="panel-body">
@@ -49,6 +49,19 @@ $this->params['breadcrumbs'][] = $this->title;
                     'nombre',
                     'apellidos',
                     'email',
+
+                    [
+                        'attribute' => 'status',
+                        'format' => 'text',
+                        'content' => function ($data)
+                            {
+                                return $data->status ? '<span class="label label-success pull-left">Activo</span>' : '<span class="label label-danger">Inactivo</span>';
+                            },
+                        'filter' => Html::activeDropDownList($searchModel, 'status', [
+                                'activo' => 'Activo', 'inactivo' => 'Inactivo',
+                            ], ['class' => 'form-control', 'prompt'=>''])
+                    ],
+
 
                     //'password',
                     //'authKey',
