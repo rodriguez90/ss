@@ -55,8 +55,9 @@ class ApiReceptionController extends  ActiveController
 
         $response['success'] = false;
 
-        if($model->load(Yii::$app->request->post(), ''))
+        if($model->load(Yii::$app->request->post()))
         {
+//            die('2');
             if($model->save())
             {
                 $response['success'] = true;
@@ -67,6 +68,7 @@ class ApiReceptionController extends  ActiveController
                 $response['msg'] = Yii::t("app", "No fue posible procesar la recepción.");
             }
         }
+//        die('1');
 
         return json_encode($response);
 //        return $response;

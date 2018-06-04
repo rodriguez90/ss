@@ -10,10 +10,13 @@ $this->title = Yii::t('app', 'Create Reception');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Receptions'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="reception-create">
 
-    <?= $this->render('_formAgency', [
-        'model' => $model,
-    ]) ?>
+<div class="row">
+    <div class="col-md-12">
 
+        <?= $this->render('_formAgency', [
+            'model' => $model,
+        ]) ?>
+
+    </div>
 </div>

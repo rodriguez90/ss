@@ -159,11 +159,11 @@ var handleBootstrapWizardsValidation = function() {
 
 
                         var reception = {
-                            agency_id:1, // FIXME THIS DEFINE BY USER WITH ROLE AGENCY OR IMPORTER/EXPORTER
-                            bl:blCode,
-                            trans_company_id:trans_company.id,
-                            active:true,
-                            containers:containers,
+                            "Reception[agency_id]":1, // FIXME THIS DEFINE BY USER WITH ROLE AGENCY OR IMPORTER/EXPORTER
+                            "Reception[bl]":blCode,
+                            "Reception[trans_company_id]":trans_company.id,
+                            "Reception[active]":true,
+                            "Reception[containers]":containers
                         };
 
 
@@ -173,19 +173,19 @@ var handleBootstrapWizardsValidation = function() {
 
                         $.ajax({
                             async:false,
-                            url: homeUrl + "rd/api-reception/create",
+                            url: homeUrl + "/rd/api-reception/create",
                             type: "POST",
                             dataType: "json",
                             data:  reception,
-                            contentType: "application/json; charset=utf-8",
+//                            contentType: "application/json; charset=utf-8",
                             success: function (response) {
                                 // you will get response from your php page (what you echo or print)
                                 console.log(response)
                                 result = true;
                                 // return true;
                             },
-                            error: function(jqXHR, textStatus, errorThrown) {
-                                console.log(textStatus, errorThrown);
+                            error: function(data) {
+                                console.log(data.responseText);
                                 alert(textStatus);
                                 result = false;
                                 // return false;

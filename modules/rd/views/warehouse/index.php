@@ -7,7 +7,7 @@ use yii\widgets\Pjax;
 /* @var $searchModel app\modules\rd\models\WarehouseSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('app', 'Warehouses');
+$this->title = Yii::t('app', 'Depósitos');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="warehouse-index">
@@ -27,7 +27,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
             <p>
-                <?= Html::a(Yii::t('app', 'Create Warehouse'), ['create'], ['class' => 'btn btn-success']) ?>
+                <?= Html::a(Yii::t('app', 'Nuevo Depósito'), ['create'], ['class' => 'btn btn-success']) ?>
             </p>
 
             <?= GridView::widget([

@@ -10,6 +10,16 @@ $(document).ready(function () {
     // init tables
     TableManageTableSelect.init()
 
+    $('#blCode').parsley().on('field:success', function() {
+        $('#search-container').prop('disabled', false)
+    }).on('field:error', function () {
+        $('#search-container').prop('disabled', true)
+    });
+
+    $('#blCode').change(function () {
+        console.log($('#blCode').val());
+    });
+
 
     // cronometer
     setInterval(function () {
@@ -53,6 +63,10 @@ $(document).ready(function () {
     $('#search-container').click( function() {
         // ajax resquest service for container
         // alert("// ajax resquest service for container");
+
+        console.log("BL CODE: "  + $('#blCode').val());
+
+        $('#blCode').prop('disabled', true);
 
         var data = [];
         var types = ["DRY", "RRF"];
@@ -109,7 +123,7 @@ $(document).ready(function () {
         // tags: true,
         closeOnSelect: false,
         ajax: {
-            url: 'http://localhost:8080/rd/api-trans-company',
+            url: homeUrl + '/rd/api-trans-company',
             dataType: 'json',
             delay: 250,
             processResults: function (data) {

@@ -30,7 +30,7 @@ SystemAsset::register($this)
 <body>
 <?php $this->beginBody() ?>
 
-<div class="wrap">
+<!--<div class="wrap">-->
 
     <div id="page-container" class="fade page-sidebar-fixed page-header-fixed">
 
@@ -176,39 +176,22 @@ SystemAsset::register($this)
         </div>
         <!-- end conten -->
 
-
-        <!-- begin scroll to top btn -->
-        <a href="javascript:;" class="btn btn-icon btn-circle btn-success btn-scroll-to-top fade" data-click="scroll-top"><i class="fa fa-angle-up"></i></a>
-        <!-- end scroll to top btn -->
-
         <!-- begin footer -->
         <div id="footer" class="footer">
             &copy; <?= date('Y') ?> Xedrux S.A | GUAYAQUIL Todos los Derechos Reservados.
         </div>
         <!-- end footer -->
 
+        <!-- begin scroll to top btn -->
+        <a href="javascript:;" class="btn btn-icon btn-circle btn-success btn-scroll-to-top fade" data-click="scroll-top"><i class="fa fa-angle-up"></i></a>
+        <!-- end scroll to top btn -->
+
     </div>
     <!-- end page container -->
-</div>
+<!--</div>-->
 
 
-<?php
-
-
-echo "<script>";
-echo "homeUrl = '" . Yii::$app->homeUrl . "';";
-
-/*
-foreach (Yii::$app->params as $key => $param)
-{
-    echo "$key = '$param';";
-}*/
-
-echo "</script>";
-
-
-?>
-
+<script> homeUrl = "<?php Yii::$app->homeUrl; ?>";</script>
 
 <!-- end wrap -->
 <?php $this->endBody() ?>

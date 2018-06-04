@@ -68,5 +68,5 @@ $this->title = 'SGT';
 </div>
 
 <?php
-//   $this->registerJsFile('@web/js/modulos/descargas/cantidad.js', ['depends' => ['app\assets\SystemAsset']]);
-//?>
+   $this->registerJsFile('@web/js/dashboard.js', ['depends' => ['app\assets\SystemAsset']]);
+?>

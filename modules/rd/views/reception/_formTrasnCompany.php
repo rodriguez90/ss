@@ -83,7 +83,7 @@ TableAsset::register($this);
 
                         <div class="row">
                             <!--        <div class="form-group">-->
-                            <label class="col-md-2 control-label">Déposito destino:</label>
+                            <label class="col-md-2 control-label">Depósito destino:</label>
                             <div class="col-md-10">
                                 <select class="form-control">
                                     <option>TPG</option>
