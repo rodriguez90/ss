@@ -10,105 +10,108 @@ var handleFormPasswordIndicator = function() {
 };
 
 
-var handleJqueryAutocomplete = function() {
-
-    $('#jquery-autocomplete').autocomplete({
-        source: function(request,response){
-            $.ajax({
-                url: homeUrl+ "administracion/item/getroles",
-                dataType:'json',
-                data:{
-                    term:request.term
-                },
-                success:function(data){
-                   response($.map(data,function(item){
-
-                       return item.name
-                   }));
-
-
-                }
-            });
-
-        },minLength:2
-    });
-};
-
-
-
 var handleJqueryAutocomplete2 = function(op) {
 
     var action = '';
+    var option0 = '';
     switch (op){
         case 1:
-            action = "administracion/user/getagencias";
+            action = "/administracion/user/getagencias";
+            option0 = "<option value='' selected=''>Seleccione Agencia</option>";
             break;
         case 2:
-            action = "administracion/user/getdeposito";
+            action = "/administracion/user/getdeposito";
+            option0 = "<option value='' selected=''>Seleccione depósito</option>";
             break;
         case 3:
-            action = "administracion/user/getagenciastrans";
+            action = "/administracion/user/getagenciastrans";
+            option0 = "<option value='' selected=''>Seleccione agencia de transporte</option>";
             break;
     }
-
-
-    $('#input-type').autocomplete({
-        source: function(request,response){
             $.ajax({
                 url: homeUrl+ action,
-                dataType:'json',
-                data:{
-                    term:request.term
-                },
-                success:function(data){
-                    response($.map(data,function(item){
+                type: 'get',
+                dataType: "json",
+                data:{},
 
+                success:function(data){
+                    /*
+                    response($.map(data,function(item){
                         return item.name
                     }));
+                    */
+                    var div = $('#select-conten');
+                    div.empty();
+                    var aux = $('#aux').val();
+
+                    var conten = "<select id='selectpicker-type' name='type' class='form-control'  data-parsley-required='true'  data-size='10' data-live-search='true'>";
+                    conten += option0;
+                    var selected = '';
+                    $.each(data,function(i){
+                    selected = aux ==  data[i].id ? "selected=''": '';
+                    conten += "<option value='"+ data[i].id+"' "+ selected + ">"+data[i].name +"</option>";
+                    })
+                    conten+="</select>"
+                    div.append(conten);
+                    $("#selectpicker-type").selectpicker('render');
+
+                },
+                error: function(data) {
+                    console.log(data.responseText);
+                    alert(textStatus);
+                    result = false;
+                    // return false;
                 }
             });
 
-        },minLength:2
-    });
+
+
 };
 
-$(function () {
 
-    handleFormPasswordIndicator();
-    handleJqueryAutocomplete();
 
-    $('#jquery-autocomplete').change(function(event){
+var handleSelectpicker = function() {
+    var div = $('#select-conten');
+    $('#selectpicker-rol').change(function(){
         var label = $("#label-type");
-        var input = $('#input-type');
+        var input = $('#selectpicker-type');
+        input.empty();
         switch ($(this).val()){
             case 'Importador_Exportador':
                 label.text("Agencia*");
                 handleJqueryAutocomplete2(1);
-                input.removeAttr('disabled');
                 break;
             case 'Administrador_depósito':
                 label.text("Depósito*");
                 handleJqueryAutocomplete2(2);
-                input.removeAttr('disabled');
-
                 break;
             case 'Cia_transporte':
                 label.text("Compañía de Transporte*");
                 handleJqueryAutocomplete2(3);
-                input.removeAttr('disabled');
                 break;
 
             default :
                 label.text("---");
-                input.attr('disabled','disabled');
+                div.empty();
                 break;
         }
-
 
     });
 
 
+};
 
+
+
+$(function () {
+    $('.selectpicker').selectpicker('render');
+
+    handleFormPasswordIndicator();
+    handleSelectpicker();
+
+    if($('#selectpicker-rol').val() == 'Importador_Exportador'|| $('#selectpicker-rol').val() == 'Administrador_depósito' || $('#selectpicker-rol').val() == 'Cia_transporte' ){
+        $('#selectpicker-rol').change();
+    }
 
 
 });

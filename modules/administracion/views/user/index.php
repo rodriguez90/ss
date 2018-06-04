@@ -50,6 +50,8 @@ $this->params['breadcrumbs'][] = $this->title;
                     'apellidos',
                     'email',
 
+
+
                     [
                         'attribute' => 'status',
                         'format' => 'text',

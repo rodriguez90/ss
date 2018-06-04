@@ -41,6 +41,10 @@ class UserSearch extends AdmUser
             'query' => $query,
         ]);
 
+
+        //var_dump($query);die;
+
+
         $this->load($params);
 
         if (!$this->validate()) {

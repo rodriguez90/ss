@@ -9,6 +9,8 @@ use yii\widgets\ActiveForm;
 /* @var $form yii\widgets\ActiveForm */
 /* @var $roles */
 
+use app\assets\FormAsset;
+FormAsset::register($this);
 
 ?>
 
@@ -24,12 +26,10 @@ use yii\widgets\ActiveForm;
                 ?>
 
                 <div class="alert alert-danger fade in m-b-15">
-
                     <i class="fa fa-warning"></i>
                     <strong>Error!</strong> <?= $value[0]; ?>
                     <span class="close" data-dismiss="alert">×</span>
                 </div>
-
 
             <?php } ?>
         </section>
@@ -113,11 +113,12 @@ use yii\widgets\ActiveForm;
                         </div>
 
                         <div class="form-group">
+
                             <label class="control-label col-md-4 col-sm-4" for="fullname">Cedula* :</label>
 
                             <div class="col-md-8 col-sm-8">
                                 <input class="form-control" name="AdmUser[cedula]" placeholder=""
-                                       data-parsley-required="true" data-parsley-type="number" type="text" value="<?= $model['cedula'] ?>">
+                                       data-parsley-required="true"  data-parsley-type="number" type="text" value="<?= $model['cedula'] ?>">
                                 <ul class="parsley-errors-list"></ul>
                             </div>
                         </div>
@@ -166,18 +167,30 @@ use yii\widgets\ActiveForm;
                         <div class="form-group">
                             <label class="control-label col-md-4">Rol</label>
 
-                            <div class="col-md-8">
-                                <input type="text" name="rol" id="jquery-autocomplete" data-parsley-required="true"
-                                       class="form-control" value="<?= $rol_actual ?>"/>
-                            </div>
+
+                        <div class="col-md-8">
+                            <select id="selectpicker-rol" name="rol"  data-parsley-required="true" class="form-control selectpicker" data-size="10" data-live-search="true" >
+                                <?php
+
+                                echo "<option  value=''>Seleccione un Rol</option>";
+
+                                foreach($roles as $r){
+                                    $selected = $rol_actual == $r->name ? 'selected': '';
+                                    echo "<option ".$selected." value='".$r->name ."'>". $r->name ."</option>";
+                                }
+
+                                ?>
+                            </select>
+
+                        </div>
                         </div>
 
 
                         <div class="form-group" id="div-type">
                             <label class="control-label col-md-4" id="label-type">---</label>
 
-                            <div class="col-md-8">
-                                <input type="text" name="" id="input-type" disabled="" class="form-control"/>
+                            <div class="col-md-8" id="select-conten">
+
                             </div>
                         </div>
 
@@ -186,16 +199,18 @@ use yii\widgets\ActiveForm;
                             <label class="control-label col-md-4 col-sm-4">Activo</label>
 
                             <div class="col-md-8 col-sm-8" style="margin-top: 5px;margin-bottom: 5px;">
-                                <input
-                                    type="checkbox" <?= isset($model['status']) || $model->isNewRecord ? 'checked' : '' ?>
+                                <input type="checkbox" <?= isset($model['status']) || $model->isNewRecord ? 'checked' : '' ?>
                                     name="AdmUser[status]"
                                     value="1"/>
+
+
+
                             </div>
                         </div>
 
+                        <input style="visibility: hidden" name="aux" value="<?= $type ?>" id="aux" />
+
                     </div>
-
-
 
 
 

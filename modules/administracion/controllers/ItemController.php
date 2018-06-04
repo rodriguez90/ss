@@ -184,15 +184,18 @@ class ItemController extends Controller
     }
 
 
-    public function actionGetroles($term){
+    public function actionGetroles(){
 
         Yii::$app->response->format = Response::FORMAT_JSON;
-
+        /*
         $roles = AuthItem::find()->where(['like','name',$term])
             ->andWhere(['type'=>1])
             ->select("name")
             ->all();
-
+            */
+        $roles = AuthItem::find()->where(['type'=>1])
+                    ->select("name")
+                    ->all();
         if($roles!=null)
             return $roles;
 

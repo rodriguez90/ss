@@ -15,6 +15,7 @@ use yii\web\IdentityInterface;
  * @property string  $auth_key
  * @property string  $password
  * @property string  $email
+ * @property string  $cedula
  * @property string  $nombre
  * @property string  $apellidos
  * @property string  $creado_por
@@ -80,7 +81,7 @@ class AdmUser extends ActiveRecord implements IdentityInterface
         */
         return [
             [['username', 'password', 'email', 'nombre', 'apellidos', 'status', 'cedula'], 'required'],
-            [['username', 'auth_key', 'password', 'email', 'nombre', 'apellidos', 'creado_por', 'password_reset_token'], 'string'],
+            [['username', 'auth_key', 'password', 'email','cedula', 'nombre', 'apellidos', 'creado_por', 'password_reset_token'], 'string'],
             [['status', 'created_at', 'updated_at'], 'integer']
 
         ];

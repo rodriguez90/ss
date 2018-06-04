@@ -7,10 +7,16 @@ use app\modules\administracion\models\AdmuserSearch;
 use app\modules\administracion\models\AuthAssignment;
 use app\modules\administracion\models\AuthItem;
 use app\modules\administracion\models\UserSearch;
+
 use app\modules\rd\models\Agency;
 use app\modules\rd\models\Warehouse;
 use app\modules\rd\models\TransCompany;
+use app\modules\rd\models\UserAgency;
+use app\modules\rd\models\UserTranscompany;
+use app\modules\rd\models\UserWarehouse;
 
+
+use Faker\Provider\UserAgent;
 use Yii;
 
 
@@ -52,6 +58,7 @@ class UserController extends Controller
         $searchModel = new UserSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
+
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -85,10 +92,16 @@ class UserController extends Controller
         $auth =  Yii::$app->authManager;
         $confirm = Yii::$app->request->post('AdmUser')["passwordConfirm"];
         $model = new AdmUser();
+        $rol = '';
+        $type = -1;
 
         if ($model->load(Yii::$app->request->post()) ) {
 
         $rol = Yii::$app->request->post("rol");
+
+        if( $model->password==''){
+            $model->addError('error', 'La Contraseña no pueden ser vacía');
+        }
 
         if( $confirm!=null && $model->password != $confirm){
             $model->addError('error', 'Las contraseñas no son iguales.');
@@ -96,7 +109,34 @@ class UserController extends Controller
 
         if( $rol==null ||  $auth->getRole($rol) ==null){
             $model->addError('error', "Seleccione un rol válido." );
+        }else{
+            $type = Yii::$app->request->post("type");
+            switch($rol){
+                case 'Importador_Exportador':
+                    if($type == '')
+                    $model->addError('error', "Seleccione una agencia." );
+                    break;
+                case 'Administrador_depósito':
+                    if($type == '')
+                    $model->addError('error', "Seleccione un depósito." );
+                    break;
+                case 'Cia_transporte':
+                    if($type == '')
+                    $model->addError('error', "Seleccione una compañía de transporte." );
+                    break;
+                default :
+                    break;
+            }
         }
+
+        if(AdmUser::findOne(['username'=>$model->username])!=null){
+            $model->addError('error', "Ya existe el nombre de usuario." );
+        }
+
+        if (AdmUser::findOne(['cedula' => $model->cedula]) != null)
+            {
+                $model->addError('error', "La cédula {$model->cedula} ya fue registrada en el sistema" );
+            }
 
 
         if (!$model->hasErrors())
@@ -110,14 +150,41 @@ class UserController extends Controller
                     $rol_user = $auth->createRole($rol);
                     $auth->assign($rol_user,$model->id);
 
-                    return $this->redirect(['view', 'id' => $model->id]);
+                    //cambiar la comparacion a minuscula
+                    switch($rol){
+                        case 'Importador_Exportador':
+                            $userAgency = new UserAgency();
+                            $userAgency->user_id = $model->id;
+                            $userAgency->agency_id = $type;
+                            $userAgency->save();
+                            break;
+                        case 'Administrador_depósito':
+                            $userWarehouse = new UserWarehouse();
+                            $userWarehouse->user_id = $model->id;
+                            $userWarehouse->warehouse_id = $type;
+                            $userWarehouse->save();
+                            break;
+                        case 'Cia_transporte':
+                            $userTrans = new UserTranscompany();
+                            $userTrans->user_id = $model->id;
+                            $userTrans->transcompany_id = $type;
+                            $userTrans->save();
+                            break;
+                        default :
+                            break;
+                    }
+
+
+                    return $this->redirect(['index', 'id' => $model->id]);
                 }
 
             }
 
         }
 
-        return $this->render('create', [ 'model' => $model,'rol_actual'=>'']);
+        $roles  = $auth->getRoles();
+
+        return $this->render('create', [ 'model' => $model,'roles'=>$roles,'rol_actual'=>$rol,'type'=>$type]);
 
         }
         else{
@@ -134,30 +201,56 @@ class UserController extends Controller
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
+        $model = $this->findModel($id);//comprobar si model existe...
         $old_password = $model->password;
         $auth =  Yii::$app->authManager;
         $confirm = Yii::$app->request->post('AdmUser')["passwordConfirm"];
+        $rol = '';
+        $type = -1;
+        $error = '';
+        $type_actual=-1;
+
 
         $actual = AuthAssignment::find()
             ->innerJoin("adm_user","auth_assignment.user_id = adm_user.id")
             ->where(['adm_user.id'=>$model->id])
             ->one();
 
-
         $rol_actual = $auth->getRole($actual->item_name);
+
+
+        switch($rol_actual->name){
+            case 'Importador_Exportador':
+                $error  = "Seleccione una agencia.";
+                $type_actual =  UserAgency::findOne(['user_id'=>$model->id])->agency_id;
+                break;
+            case 'Administrador_depósito':
+                $error  ="Seleccione un depósito." ;
+                $type_actual =  UserWarehouse::findOne(['user_id'=>$model->id])->warehouse_id;
+                break;
+            case 'Cia_transporte':
+                $error  ="Seleccione una compañía de transporte.";
+                $type_actual =  UserTranscompany::findOne(['user_id'=>$model->id])->transcompany_id;
+                break;
+            default :
+
+                break;
+        }
+
 
         if ($model->load(Yii::$app->request->post()) ) {
 
             $rol = Yii::$app->request->post("rol");
+            $type = Yii::$app->request->post("type");
 
-            if($rol ==null){
-                $model->addError('error', 'Seleccione almenos un rol.');
+            if( $rol==null ||  $auth->getRole($rol) ==null){
+                $model->addError('error', "Seleccione un rol válido." );
             }
 
-                if( $confirm!=null && $model->password != $confirm){
-                    $model->addError('error', 'Las contraseñas no son iguales.');
-                }
+            if($type ==""){
+                $model->addError('error', $error );
+            }
+
 
 
             if (!$model->hasErrors())
@@ -173,19 +266,46 @@ class UserController extends Controller
                 {
                     $new_rol = $auth->createRole($rol);
 
-                    if(  $new_rol->name!= $rol_actual->name ){
+                    if(  $new_rol->name != $rol_actual->name ){
                         $auth->revoke($rol_actual,$model->id);
                         $auth->assign($new_rol,$model->id);
                     }
-                    return $this->redirect(['view', 'id' => $model->id]);
+
+                    if($type_actual!= $type) {
+                        switch($rol){
+                            case 'Importador_Exportador':
+                                $userAgency = UserAgency::findOne(['user_id'=>$model->id]);
+                                $userAgency->agency_id = $type;
+                                $userAgency->save();
+                                break;
+                            case 'Administrador_depósito':
+                                $userWarehouse = UserWarehouse::findOne(['user_id'=>$model->id]);
+                                $userWarehouse->warehouse_id = $type;
+                                $userWarehouse->save();
+
+                                break;
+                            case 'Cia_transporte':
+                                $userTrans = UserTranscompany::findOne(['user_id'=>$model->id]);
+                                $userTrans->transcompany_id = $type;
+                                $userWarehouse->save();
+                                break;
+                            default :
+                                break;
+                        }
+                    }
+
+
+                    return $this->redirect(['index']);
                 }
 
             }
 
         }
 
+        $roles  = $auth->getRoles();
+
         return $this->render('update', [
-            'model' => $model,'rol_actual'=>$rol_actual->name
+            'model' => $model,'rol_actual'=>$rol_actual->name,'roles'=>$roles,'type'=>$type_actual
         ]);
     }
 
@@ -198,7 +318,11 @@ class UserController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+        if ( \Yii::$app->user->can('Admin_mod') && $model->username != 'root' && $model->username != \Yii::$app->user) {
+
+            $this->findModel($id)->delete();
+        }
 
         return $this->redirect(['index']);
     }
@@ -222,12 +346,11 @@ class UserController extends Controller
 
 
 
-    public function actionGetagencias($term){
+    public function actionGetagencias(){
 
         Yii::$app->response->format = Response::FORMAT_JSON;
 
-        $result = Agency::find()->where(['like','name',$term])
-            ->select("name")
+        $result = Agency::find()
             ->all();
 
         if($result!=null)
@@ -241,12 +364,11 @@ class UserController extends Controller
 
 
 
-    public function actionGetdeposito($term){
+    public function actionGetdeposito(){
 
         Yii::$app->response->format = Response::FORMAT_JSON;
 
-        $result = Warehouse::find()->where(['like','name',$term])
-            ->select("name")
+        $result = Warehouse::find()
             ->all();
 
         if($result!=null)
@@ -258,12 +380,11 @@ class UserController extends Controller
 
 
 
-    public function actionGetagenciastrans($term){
+    public function actionGetagenciastrans(){
 
         Yii::$app->response->format = Response::FORMAT_JSON;
 
-        $result = TransCompany::find()->where(['like','name',$term])
-            ->select("name")
+        $result = TransCompany::find()
             ->all();
 
         if($result!=null)
