@@ -191,7 +191,7 @@ SystemAsset::register($this)
 <!--</div>-->
 
 
-<script> homeUrl = "<?php Yii::$app->homeUrl; ?>";</script>
+<script type="text/javascript"> var homeUrl = "<?php Yii::$app->homeUrl; ?>";</script>
 
 <!-- end wrap -->
 <?php $this->endBody() ?>

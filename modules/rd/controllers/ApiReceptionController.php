@@ -8,7 +8,8 @@
 
 namespace app\modules\rd\controllers;
 
-use app\modules\rd\models\Reception;
+use app\modules\administracion\models\AdmUser;
+use     app\modules\rd\models\Reception;
 use Yii;
 use yii\rest\ActiveController;
 use yii\web\Response;
@@ -57,10 +58,26 @@ class ApiReceptionController extends  ActiveController
 
         if($model->load(Yii::$app->request->post()))
         {
-//            die('2');
+            $remitente = AdmUser::findOne(['id'=>\Yii::$app->user->getId()]);
+            $destinatario = AdmUser::find()
+                ->innerJoin("user_transcompany","user_transcompany.user_id = adm_user.id ")
+                ->where(["user_transcompany.transcompany_id"=>$model->trans_company_id])
+                ->one();
+
+
+            Yii::$app->mailer->compose()
+                ->setFrom($remitente->email)
+                ->setTo($destinatario->email)
+                ->setSubject( "email de prueba." )
+                ->setHtmlBody("<div> <p>". " Body "."</p></div>" )
+                ->send();
+
+            die;
+
             if($model->save())
             {
-                $response['success'] = true;
+
+
 
             }
             else {
@@ -68,7 +85,7 @@ class ApiReceptionController extends  ActiveController
                 $response['msg'] = Yii::t("app", "No fue posible procesar la recepción.");
             }
         }
-//        die('1');
+
 
         return json_encode($response);
 //        return $response;

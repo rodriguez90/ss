@@ -21,7 +21,6 @@ class SystemAsset extends  AssetBundle
         'plugins/bootstrap-datepicker/css/datepicker.css',
         'plugins/bootstrap-datepicker/css/datepicker3.css',
         'plugins/gritter/css/jquery.gritter.css',
-        'plugins/morris/morris.css',
         //yopt
         'plugins/password-indicator/css/password-indicator.css',
         'plugins/jstree/dist/themes/default/style.min.css',
