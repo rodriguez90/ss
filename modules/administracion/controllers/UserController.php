@@ -55,14 +55,19 @@ class UserController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new UserSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        if ( \Yii::$app->user->can('User_list')) {
+
+            $searchModel = new UserSearch();
+            $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
 
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
+            return $this->render('index', [
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+            ]);
+        }else{
+            return $this->redirect(['/site/index']);
+        }
     }
 
     /**
@@ -73,7 +78,6 @@ class UserController extends Controller
      */
     public function actionView($id)
     {
-
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -116,9 +120,17 @@ class UserController extends Controller
                     if($type == '')
                     $model->addError('error', "Seleccione una agencia." );
                     break;
+                case 'Agencia':
+                    if($type == '')
+                        $model->addError('error', "Seleccione una agencia." );
+                    break;
                 case 'Administrador_depósito':
                     if($type == '')
                     $model->addError('error', "Seleccione un depósito." );
+                    break;
+                case 'Depósito':
+                    if($type == '')
+                        $model->addError('error', "Seleccione un depósito." );
                     break;
                 case 'Cia_transporte':
                     if($type == '')
@@ -158,7 +170,19 @@ class UserController extends Controller
                             $userAgency->agency_id = $type;
                             $userAgency->save();
                             break;
+                        case 'Agencia':
+                            $userAgency = new UserAgency();
+                            $userAgency->user_id = $model->id;
+                            $userAgency->agency_id = $type;
+                            $userAgency->save();
+                            break;
                         case 'Administrador_depósito':
+                            $userWarehouse = new UserWarehouse();
+                            $userWarehouse->user_id = $model->id;
+                            $userWarehouse->warehouse_id = $type;
+                            $userWarehouse->save();
+                            break;
+                        case 'Depósito':
                             $userWarehouse = new UserWarehouse();
                             $userWarehouse->user_id = $model->id;
                             $userWarehouse->warehouse_id = $type;
@@ -174,12 +198,9 @@ class UserController extends Controller
                             break;
                     }
 
-
                     return $this->redirect(['index', 'id' => $model->id]);
                 }
-
             }
-
         }
 
         $roles  = $auth->getRoles();
@@ -201,112 +222,135 @@ class UserController extends Controller
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);//comprobar si model existe...
-        $old_password = $model->password;
-        $auth =  Yii::$app->authManager;
-        $confirm = Yii::$app->request->post('AdmUser')["passwordConfirm"];
-        $rol = '';
-        $type = -1;
-        $error = '';
-        $type_actual=-1;
+
+        if ( \Yii::$app->user->can('User_update') || \Yii::$app->user->getId() == $id  ) {
+
+            $model = $this->findModel($id);//comprobar si model existe...
+            $old_password = $model->password;
+            $auth =  Yii::$app->authManager;
+            $confirm = Yii::$app->request->post('AdmUser')["passwordConfirm"];
+            $rol = '';
+            $type = -1;
+            $error = '';
+            $type_actual=-1;
 
 
-        $actual = AuthAssignment::find()
-            ->innerJoin("adm_user","auth_assignment.user_id = adm_user.id")
-            ->where(['adm_user.id'=>$model->id])
-            ->one();
+            $actual = AuthAssignment::find()
+                ->innerJoin("adm_user","auth_assignment.user_id = adm_user.id")
+                ->where(['adm_user.id'=>$model->id])
+                ->one();
 
-        $rol_actual = $auth->getRole($actual->item_name);
-
-
-        switch($rol_actual->name){
-            case 'Importador_Exportador':
-                $error  = "Seleccione una agencia.";
-                $type_actual =  UserAgency::findOne(['user_id'=>$model->id])->agency_id;
-                break;
-            case 'Administrador_depósito':
-                $error  ="Seleccione un depósito." ;
-                $type_actual =  UserWarehouse::findOne(['user_id'=>$model->id])->warehouse_id;
-                break;
-            case 'Cia_transporte':
-                $error  ="Seleccione una compañía de transporte.";
-                $type_actual =  UserTranscompany::findOne(['user_id'=>$model->id])->transcompany_id;
-                break;
-            default :
-
-                break;
-        }
+            $rol_actual = $auth->getRole($actual->item_name);
 
 
-        if ($model->load(Yii::$app->request->post()) ) {
+            switch($rol_actual->name){
+                case 'Importador_Exportador':
+                    $error  = "Seleccione una agencia.";
+                    $type_actual =  UserAgency::findOne(['user_id'=>$model->id])->agency_id;
+                    break;
+                case 'Agencia':
+                    $error  = "Seleccione una agencia.";
+                    $type_actual =  UserAgency::findOne(['user_id'=>$model->id])->agency_id;
+                    break;
+                case 'Administrador_depósito':
+                    $error  ="Seleccione un depósito." ;
+                    $type_actual =  UserWarehouse::findOne(['user_id'=>$model->id])->warehouse_id;
+                    break;
+                case 'Depósito':
+                    $error  ="Seleccione un depósito." ;
+                    $type_actual =  UserWarehouse::findOne(['user_id'=>$model->id])->warehouse_id;
+                    break;
+                case 'Cia_transporte':
+                    $error  ="Seleccione una compañía de transporte.";
+                    $type_actual =  UserTranscompany::findOne(['user_id'=>$model->id])->transcompany_id;
+                    break;
+                default :
 
-            $rol = Yii::$app->request->post("rol");
-            $type = Yii::$app->request->post("type");
-
-            if( $rol==null ||  $auth->getRole($rol) ==null){
-                $model->addError('error', "Seleccione un rol válido." );
-            }
-
-            if($type ==""){
-                $model->addError('error', $error );
+                    break;
             }
 
 
+            if ($model->load(Yii::$app->request->post()) ) {
 
-            if (!$model->hasErrors())
-            {
-                if($model->password!=""){
-                    $model->setPassword($model->password);
-                }else
-                    $model->password = $old_password;
+                $rol = Yii::$app->request->post("rol");
+                $type = Yii::$app->request->post("type");
 
-                $model->updated_at = time();
+                if( $rol==null ||  $auth->getRole($rol) ==null){
+                    $model->addError('error', "Seleccione un rol válido." );
+                }
 
-                if ($model->save())
+                if($type =="" && $rol_actual->name!="Administracion"){
+                    $model->addError('error', $error );
+                }
+
+
+
+                if (!$model->hasErrors())
                 {
-                    $new_rol = $auth->createRole($rol);
+                    if($model->password!=""){
+                        $model->setPassword($model->password);
+                    }else
+                        $model->password = $old_password;
 
-                    if(  $new_rol->name != $rol_actual->name ){
-                        $auth->revoke($rol_actual,$model->id);
-                        $auth->assign($new_rol,$model->id);
-                    }
+                    $model->updated_at = time();
 
-                    if($type_actual!= $type) {
-                        switch($rol){
-                            case 'Importador_Exportador':
-                                $userAgency = UserAgency::findOne(['user_id'=>$model->id]);
-                                $userAgency->agency_id = $type;
-                                $userAgency->save();
-                                break;
-                            case 'Administrador_depósito':
-                                $userWarehouse = UserWarehouse::findOne(['user_id'=>$model->id]);
-                                $userWarehouse->warehouse_id = $type;
-                                $userWarehouse->save();
+                    if ($model->save())
+                    {
+                        $new_rol = $auth->createRole($rol);
 
-                                break;
-                            case 'Cia_transporte':
-                                $userTrans = UserTranscompany::findOne(['user_id'=>$model->id]);
-                                $userTrans->transcompany_id = $type;
-                                $userWarehouse->save();
-                                break;
-                            default :
-                                break;
+                        if(  $new_rol->name != $rol_actual->name ){
+                            $auth->revoke($rol_actual,$model->id);
+                            $auth->assign($new_rol,$model->id);
                         }
+
+                        if($type_actual!= $type) {
+                            switch($rol){
+                                case 'Importador_Exportador':
+                                    $userAgency = UserAgency::findOne(['user_id'=>$model->id]);
+                                    $userAgency->agency_id = $type;
+                                    $userAgency->save();
+                                    break;
+                                case 'Agencia':
+                                    $userAgency = UserAgency::findOne(['user_id'=>$model->id]);
+                                    $userAgency->agency_id = $type;
+                                    $userAgency->save();
+                                    break;
+                                case 'Administrador_depósito':
+                                    $userWarehouse = UserWarehouse::findOne(['user_id'=>$model->id]);
+                                    $userWarehouse->warehouse_id = $type;
+                                    $userWarehouse->save();
+                                case 'Depósito':
+                                    $userWarehouse = UserWarehouse::findOne(['user_id'=>$model->id]);
+                                    $userWarehouse->warehouse_id = $type;
+                                    $userWarehouse->save();
+                                    break;
+                                case 'Cia_transporte':
+                                    $userTrans = UserTranscompany::findOne(['user_id'=>$model->id]);
+                                    $userTrans->transcompany_id = $type;
+                                    $userTrans->save();
+                                    break;
+                                default :
+                                    break;
+                            }
+                        }
+
+                        return $this->redirect(['index']);
                     }
 
-
-                    return $this->redirect(['index']);
                 }
 
             }
 
+            $roles  = $auth->getRoles();
+
+            return $this->render('update', [
+                'model' => $model,'rol_actual'=>$rol_actual->name,'roles'=>$roles,'type'=>$type_actual
+            ]);
+
+        }else{
+            throw new ForbiddenHttpException('Acceso denegado');
         }
 
-        $roles  = $auth->getRoles();
-
-        return $this->render('update', [
-            'model' => $model,'rol_actual'=>$rol_actual->name,'roles'=>$roles,'type'=>$type_actual
-        ]);
     }
 
     /**

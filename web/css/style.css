@@ -3725,8 +3725,7 @@ ul.tagit.inverse li.tagit-choice .tagit-close:focus .ui-icon-close:before {
     /*color: #fff;*/
 /*}*/
 .widget-stats .stats-link a:hover,
-.widget-stats .stats-link a:focus,
-.widget-stats .stats-link .active a {
+.widget-stats .stats-link a:focus {
     background: url(../img/transparent/black-0.6.png);
     background: rgba(0,0,0,0.6);
     color: #fff;

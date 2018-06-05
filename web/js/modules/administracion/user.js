@@ -77,11 +77,19 @@ var handleSelectpicker = function() {
         var input = $('#selectpicker-type');
         input.empty();
         switch ($(this).val()){
+            case 'Agencia':
+                label.text("Agencia*");
+                handleJqueryAutocomplete2(1);
+                break;
             case 'Importador_Exportador':
                 label.text("Agencia*");
                 handleJqueryAutocomplete2(1);
                 break;
             case 'Administrador_depósito':
+                label.text("Depósito*");
+                handleJqueryAutocomplete2(2);
+                break;
+            case 'Depósito':
                 label.text("Depósito*");
                 handleJqueryAutocomplete2(2);
                 break;
@@ -102,7 +110,6 @@ var handleSelectpicker = function() {
 };
 
 
-
 $(function () {
     $('.selectpicker').selectpicker('render');
 
@@ -112,6 +119,23 @@ $(function () {
     if($('#selectpicker-rol').val() == 'Importador_Exportador'|| $('#selectpicker-rol').val() == 'Administrador_depósito' || $('#selectpicker-rol').val() == 'Cia_transporte' ){
         $('#selectpicker-rol').change();
     }
+    var msg;
+    window.Parsley.addValidator(
+      'cedula',{
+          validateNumber:function (value) {
+             return validarCedula(value);
+          },
+          requirementType:'integer',
+            messages:{
+              es:"Cédula incorrecta.",
+              required: 'Por favor, escribir c&eacute;dula.',
+              minlength: 'La cédula debe tener 10 caracteres.',
+              maxlength: 'La cédula debe tener 10 caracteres.',
+              digits:'La cédula debe ser caracteres numéricos.'
+              //remote:'C&eacute;dula ya existe.'
+            }
+        }
+    );
 
 
 });

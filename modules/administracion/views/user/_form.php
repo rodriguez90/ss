@@ -49,8 +49,7 @@ FormAsset::register($this);
                            data-click="panel-reload"><i class="fa fa-repeat"></i></a>
                         <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning"
                            data-click="panel-collapse"><i class="fa fa-minus"></i></a>
-                        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger"
-                           data-click="panel-remove"><i class="fa fa-times"></i></a>
+
                     </div>
                     <h4 class="panel-title"> <?=  $this->title  ?> </h4>
                 </div>
@@ -58,7 +57,7 @@ FormAsset::register($this);
 
                     <?php $form = ActiveForm::begin(
                         [
-                            'id' => 'descargas-form',
+                            'id' => 'user-form',
                             'enableClientScript' => false,
                             'options' =>
                                 [
@@ -118,7 +117,7 @@ FormAsset::register($this);
 
                             <div class="col-md-8 col-sm-8">
                                 <input class="form-control" name="AdmUser[cedula]" placeholder=""
-                                       data-parsley-required="true"  data-parsley-type="number" type="text" value="<?= $model['cedula'] ?>">
+                                       data-parsley-cedula data-parsley-required="true"  data-parsley-type="number" data-parsley-maxlength="10" data-parsley-minlength="10"  type="text" value="<?= $model['cedula'] ?>">
                                 <ul class="parsley-errors-list"></ul>
                             </div>
                         </div>
@@ -213,15 +212,6 @@ FormAsset::register($this);
                     </div>
 
 
-
-
-
-
-
-
-
-
-
                     <?php ActiveForm::end(); ?>
 
 
@@ -239,9 +229,12 @@ FormAsset::register($this);
 
 
 
-
+$this->registerJsFile('@web/js/modules/utiles.js',              ['depends' => ['app\assets\AppAsset']]);
 $this->registerJsFile('@web/js/modules/administracion/user.js', ['depends' => ['app\assets\AppAsset']]);
+
 ?>
+
+
 
 
 

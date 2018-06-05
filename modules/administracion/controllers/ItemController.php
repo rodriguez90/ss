@@ -81,34 +81,39 @@ class ItemController extends Controller
      */
     public function actionCreate()
     {
-        $type = Yii::$app->request->get('type');
-        $auth =  Yii::$app->authManager;
-        $item= null;
-        $model = new AuthItem();
-        if ($model->load(Yii::$app->request->post())) {
-            if($type ==2){
-                $item =  $auth->createPermission($model->name);
-            }else{
-                $item =  $auth->createRole($model->name);
-            }
-            if($item !=null){
-                $item->description = $model->description;
-                try{
-                    $auth->add($item);
-                }catch (\yii\db\Exception $ex){
-                    $error_msg = $type == 1 ? 'Ya existe el rol ( '.$model->name." )" :'Ya existe el permiso ( '.$model->name." ) ". $ex->getMessage();
-                    $model->addError('error',$error_msg );
-                    return $this->render('create', [ 'model' => $model, 'type' =>$type, ]);
+        if(\Yii::$app->user->can('Admin_mod')){
+            $type = Yii::$app->request->get('type');
+            $auth =  Yii::$app->authManager;
+            $item= null;
+            $model = new AuthItem();
+            if ($model->load(Yii::$app->request->post())) {
+                if($type ==2){
+                    $item =  $auth->createPermission($model->name);
+                }else{
+                    $item =  $auth->createRole($model->name);
                 }
+                if($item !=null){
+                    $item->description = $model->description;
+                    try{
+                        $auth->add($item);
+                    }catch (\yii\db\Exception $ex){
+                        $error_msg = $type == 1 ? 'Ya existe el rol ( '.$model->name." )" :'Ya existe el permiso ( '.$model->name." ) ". $ex->getMessage();
+                        $model->addError('error',$error_msg );
+                        return $this->render('create', [ 'model' => $model, 'type' =>$type, ]);
+                    }
+                }
+
+                return $this->redirect(['index','type'=>$type]);
+
             }
-
-            return $this->redirect(['index','type'=>$type]);
-
+            return $this->render('create', [
+                'model' => $model,
+                'type' =>$type,
+            ]);
+        }else{
+            throw new ForbiddenHttpException('Acceso denegado');
         }
-        return $this->render('create', [
-            'model' => $model,
-            'type' =>$type,
-        ]);
+
     }
 
     /**
@@ -120,17 +125,22 @@ class ItemController extends Controller
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
+        if(\Yii::$app->user->can('Admin_mod')){
+            $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            //return $this->redirect(['view', 'id' => $model->name]);
-            return $this->redirect(['index','type'=>$model->type]);
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                //return $this->redirect(['view', 'id' => $model->name]);
+                return $this->redirect(['index','type'=>$model->type]);
+            }
+
+            return $this->render('update', [
+                'model' => $model,
+                'type' =>$model->type,
+            ]);
+        }else{
+            throw new ForbiddenHttpException('Acceso denegado');
         }
 
-        return $this->render('update', [
-            'model' => $model,
-            'type' =>$model->type,
-        ]);
     }
 
     /**
@@ -142,11 +152,16 @@ class ItemController extends Controller
      */
     public function actionDelete($id)
     {
-        $item = $this->findModel($id);
-        $type = $item->type;
-        $item->delete();
-        //preguntar si algun user tiene este rol y mandar msg de error...
-        return $this->redirect(['index','type'=>$type]);
+        if(\Yii::$app->user->can('Admin_mod')){
+            $item = $this->findModel($id);
+            $type = $item->type;
+            $item->delete();
+            //preguntar si algun user tiene este rol y mandar msg de error...
+            return $this->redirect(['index','type'=>$type]);
+        }else{
+            throw new ForbiddenHttpException('Acceso denegado');
+        }
+
     }
 
     /**
@@ -185,21 +200,20 @@ class ItemController extends Controller
 
 
     public function actionGetroles(){
+        if(\Yii::$app->user->can('Admin_mod')){
+            Yii::$app->response->format = Response::FORMAT_JSON;
 
-        Yii::$app->response->format = Response::FORMAT_JSON;
-        /*
-        $roles = AuthItem::find()->where(['like','name',$term])
-            ->andWhere(['type'=>1])
-            ->select("name")
-            ->all();
-            */
-        $roles = AuthItem::find()->where(['type'=>1])
-                    ->select("name")
-                    ->all();
-        if($roles!=null)
-            return $roles;
+            $roles = AuthItem::find()->where(['type'=>1])
+                ->select("name")
+                ->all();
+            if($roles!=null)
+                return $roles;
 
-        return false;
+            return false;
+        }else{
+            throw new ForbiddenHttpException('Acceso denegado');
+        }
+
 
     }
 

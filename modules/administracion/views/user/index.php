@@ -1,7 +1,10 @@
 <?php
 
+use kartik\export\ExportMenu;
 use yii\helpers\Html;
 use yii\grid\GridView;
+
+
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\modules\administracion\models\UserSearch */
@@ -30,14 +33,37 @@ $this->params['breadcrumbs'][] = $this->title;
                     class="fa fa-repeat"></i></a>
             <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning"
                data-click="panel-collapse"><i class="fa fa-minus"></i></a>
-            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger"
-               data-click="panel-remove"><i class="fa fa-times"></i></a>
+
         </div>
         <h4 class="panel-title">Lista de usuarios</h4>
 
     </div>
     <div class="panel-body">
         <div class="dataTables_wrapper form-inline dt-bootstrap no-footer" id="data-table_wrapper">
+
+            <?php
+            /*
+            $gridColumns = [
+               // ['class' => 'yii\grid\SerialColumn'],
+                'username',
+                'nombre',
+                'apellidos',
+                'publish_date',
+                'email',
+               // ['class' => 'yii\grid\ActionColumn'],
+            ];
+*/
+            ?>
+
+
+            <?php
+            /*
+            ExportMenu::widget([
+            'dataProvider' => $dataProvider,
+            'columns' => $gridColumns
+            ])
+
+            */ ?>
 
             <?= GridView::widget([
                 'dataProvider' => $dataProvider,

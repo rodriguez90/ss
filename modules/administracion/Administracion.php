@@ -36,11 +36,14 @@ class Administracion extends \yii\base\Module
         {
             return Yii::$app->controller->redirect( Url::to(['/site/login']) );
         }
-        else if(! \Yii::$app->user->can('Admin_mod'))
+
+        /*
+        else if(!\Yii::$app->user->can('Admin_mod')  || !\Yii::$app->user->can('User_update'))
         {
             throw new ForbiddenHttpException('Acceso denegado');
             //return  \Yii::$app->controller->redirect(\Yii::$app->homeUrl . '/site/login');
         }
+        */
         return true;
     }
 
