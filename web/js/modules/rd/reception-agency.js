@@ -70,7 +70,7 @@ $(document).ready(function () {
 
         var data = [];
         var types = ["DRY", "RRF"];
-        var tonnages = ["20", "40"];
+        var tonnages = [20, 40];
         // alert("Random: " +);
 
         var table = $('#data-table').DataTable();
@@ -89,13 +89,17 @@ $(document).ready(function () {
 
         for (var i = 0; i < 10; i++)
         {
+            var type = types[Math.round(Math.random())];
+            var tonnage = tonnages[Math.round(Math.random())]
             table.row.add(
                 {
                     checkbox:"",
                     name:"Contenedor " + i,
-                    type:types[Math.round(Math.random())] + tonnages[Math.round(Math.random())],
+                    type: type,
+                    tonnage: tonnage,
                     deliveryDate:new Date(),
                     agency:"Agency " + i,
+                    wharehouse:1
                 }
                 ).draw();
         }

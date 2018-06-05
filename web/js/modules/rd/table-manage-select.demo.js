@@ -19,7 +19,7 @@ var handleDataTableSelect = function() {
                    "data":"name",
                 },
                 { "title": "Tipo",
-                    "data":"type",
+                    // "data":"type_formate",
                 },
                 { "title": "Fecha Limite",
                   "data":"deliveryDate",
@@ -43,13 +43,25 @@ var handleDataTableSelect = function() {
             // language: {url: 'web/plugins/DataTables/i18/Spanish.json'
             //
             // },
-            columnDefs: [ {
-                orderable: false,
-                searchable: false,
-                className: 'select-checkbox',
-                targets:   0,
-                // data: null,
-            },],
+            columnDefs: [
+                {
+                    orderable: false,
+                    searchable: false,
+                    className: 'select-checkbox',
+                    targets:   [0],
+                    // data: null,
+                },
+                {
+                    targets: [2],
+                    title:"Tipo",
+                    data:null,
+                    render: function ( data, type, full, meta ) {
+                        // console.log("In render: " + data);
+                        return data.type + data.tonnage;
+                    },
+                },
+
+            ],
             select: {
                 // items: 'cells',
                 style:    'multi',
@@ -66,7 +78,7 @@ var handleDataTableSelect = function() {
                     "data":"name",
                 },
                 { "title": "Tipo",
-                    "data":"type",
+                    // "data":"type_formate",
                 },
                 { "title": "Fecha Limite",
                     "data":"deliveryDate",
@@ -86,6 +98,18 @@ var handleDataTableSelect = function() {
                 // "infoFiltered": "(encontrados from _MAX_ total records)"
             },
             responsive: true,
+            columnDefs: [
+                {
+                    targets: [1],
+                    title:"Tipo",
+                    data:null,
+                    render: function ( data, type, full, meta ) {
+                        // console.log("In render: " + data);
+                        return data.type + data.tonnage;
+                    },
+                },
+
+            ],
             // language: {url: 'web/plugins/DataTables/i18/Spanish.json'
         });
     }

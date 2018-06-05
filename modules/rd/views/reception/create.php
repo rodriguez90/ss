@@ -14,7 +14,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="row">
     <div class="col-md-12">
 
-        <?= $this->render('_formAgency', [
+        <?= $this->render('_form', [
             'model' => $model,
         ]) ?>
 

@@ -35,7 +35,7 @@ class ReceptionTransaction extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['reception_id', 'container_id', 'regiter_truck', 'register_driver', 'delivery_date', 'active'], 'required'],
+            [['reception_id', 'container_id', 'delivery_date', 'active'], 'required'],
             [['reception_id', 'container_id', 'active'], 'integer'],
             [['regiter_truck', 'register_driver'], 'string'],
             [['delivery_date'], 'safe'],

@@ -29,6 +29,10 @@ var handleWidgetOptions = function() {
 
 };
 
+var handleTableByOption = function () {
+
+};
+
 var Dashboard = function () {
 	"use strict";
     return {

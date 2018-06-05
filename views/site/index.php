@@ -43,7 +43,7 @@ $this->title = 'SGT';
                 <p>20.44%</p>
             </div>
             <div class="stats-link">
-                <a href="javascript:;">Realice una solocitud de despacho.<i class="fa fa-arrow-circle-o-right"></i></a>
+                <a id="" href="javascript:;">Realice una solocitud de despacho.<i class="fa fa-arrow-circle-o-right"></i></a>
             </div>
         </div>
     </div>

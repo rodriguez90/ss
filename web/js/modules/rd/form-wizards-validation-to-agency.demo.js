@@ -90,6 +90,8 @@ var handleBootstrapWizardsValidation = function() {
             },
             validating: function (e, ui) {
 
+                var result = false;
+
                 // back navigation no check validation
                 if(ui.index > ui.nextIndex)
                 {
@@ -107,7 +109,7 @@ var handleBootstrapWizardsValidation = function() {
 
                     var count = table.rows( { selected: true } ).count();
 
-                    var result = false;
+
                     if(count > 0)
                         result = true;
                     else {
@@ -156,19 +158,23 @@ var handleBootstrapWizardsValidation = function() {
                             "name": tran_company_name,
                         };
 
-
-
                         var reception = {
                             "Reception[agency_id]":1, // FIXME THIS DEFINE BY USER WITH ROLE AGENCY OR IMPORTER/EXPORTER
                             "Reception[bl]":blCode,
                             "Reception[trans_company_id]":trans_company.id,
-                            "Reception[active]":true,
-                            "Reception[containers]":containers
+                            "Reception[active]":1,
+                            "containers":containers
                         };
 
+                        // var reception = {
+                        //     "agency_id":1, // FIXME THIS DEFINE BY USER WITH ROLE AGENCY OR IMPORTER/EXPORTER
+                        //     "bl":blCode,
+                        //     "trans_company_id":trans_company.id,
+                        //     "active":1,
+                        //     "containers":containers
+                        // };
 
                         console.log(reception);
-
                         console.log(JSON.stringify(reception));
 
                         $.ajax({
@@ -180,8 +186,15 @@ var handleBootstrapWizardsValidation = function() {
 //                            contentType: "application/json; charset=utf-8",
                             success: function (response) {
                                 // you will get response from your php page (what you echo or print)
-                                console.log(response)
-                                result = true;
+                                var obj = JSON.parse(response);
+                                console.log(obj);
+
+                                if(obj.success)
+                                    result = true;
+                                else
+                                {
+                                    alert(obj.msg);
+                                }
                                 // return true;
                             },
                             error: function(data) {
@@ -191,6 +204,7 @@ var handleBootstrapWizardsValidation = function() {
                                 // return false;
                             }
                         });
+
                         return result;
                     }
 
@@ -198,13 +212,6 @@ var handleBootstrapWizardsValidation = function() {
                     return false;
                 }
             },
-            // show: function (e, ui) {
-            //     if(ui.index == 2)
-            //     {
-            //         $('#confirming').prop('checked', false);
-            //
-            //     }
-            // },
             backBtnText:'Anterior',
             nextBtnText: "Siguiente"
 	    }
