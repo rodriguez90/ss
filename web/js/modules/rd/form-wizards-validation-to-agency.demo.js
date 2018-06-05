@@ -190,7 +190,10 @@ var handleBootstrapWizardsValidation = function() {
                                 console.log(obj);
 
                                 if(obj.success)
+                                {
                                     result = true;
+                                    window.location.href = obj.url;
+                                }
                                 else
                                 {
                                     alert(obj.msg);

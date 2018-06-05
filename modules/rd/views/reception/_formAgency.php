@@ -41,7 +41,7 @@ TableAsset::register($this);
                         <div class="row">
                             <div class="row">
                                 <div class="col col-md-10">
-                                    <input class="form-control" type="text" id="blCode" name="blCode"  data-parsley-type="alphanum"  data-parsley-length="[13, 13]" data-parsley-focus="first" placeholder="Código"  data-parsley-trigger="keyup" data-parsley-required="true"/>
+                                    <input class="form-control" type="text" id="blCode" name="blCode"  data-parsley-type="alphanum"  data-parsley-length="[25, 25]" data-parsley-focus="first" placeholder="Código"  data-parsley-trigger="keyup" data-parsley-required="true"/>
 <!--                                                <input type="text" class="form-control" id="blCode" placeholder="Código" />-->
                                 </div>
                                 <div class="col col-md-2">

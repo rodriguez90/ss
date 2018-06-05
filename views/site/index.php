@@ -3,6 +3,10 @@
 /* @var $this yii\web\View */
 
 $this->title = 'SGT';
+$option = 1;
+
+use app\assets\TableAsset;
+TableAsset::register($this);
 ?>
 
 <div class="row">
@@ -14,7 +18,7 @@ $this->title = 'SGT';
                 <h4>CONTENEDORES</h4>
                 <p>3,291,922</p>
             </div>
-            <div class="stats-link">
+            <div class="stats-link active">
                 <a href="javascript:;">Ver Detalles <i class="fa fa-arrow-circle-o-right"></i></a>
             </div>
         </div>
@@ -23,7 +27,7 @@ $this->title = 'SGT';
     <!-- begin col-3 -->
     <div class="col-md-3 col-sm-6">
         <div class="widget widget-stats bg-blue">
-            <div class="stats-icon"><i class="fa fa-truck"></i></div>
+            <div class="stats-icon"><i class="fa fa-rotate-90 fa-sign-in"></i></div>
             <div class="stats-info">
                 <h4>RECEPCIONES</h4>
                 <p>20.44%</p>
@@ -37,7 +41,7 @@ $this->title = 'SGT';
     <!-- begin col-3 -->
     <div class="col-md-3 col-sm-6">
         <div class="widget widget-stats bg-blue">
-            <div class="stats-icon"><i class="fa fa-truck"></i></div>
+            <div class="stats-icon"><i class="fa fa-rotate-90 fa-sign-out"></i></div>
             <div class="stats-info">
                 <h4>DESPACHO</h4>
                 <p>20.44%</p>
@@ -51,9 +55,9 @@ $this->title = 'SGT';
     <!-- begin col-3 -->
     <div class="col-md-3 col-sm-6">
         <div class="widget widget-stats bg-purple">
-            <div class="stats-icon"><i class="fa fa-users"></i></div>
+            <div class="stats-icon"><i class="fa fa-building"></i></div>
             <div class="stats-info">
-                <h4>DEPOSITOS</h4>
+                <h4>DEPÓSITOS</h4>
                 <p>1,291,922</p>
             </div>
             <div class="stats-link">
@@ -65,7 +69,7 @@ $this->title = 'SGT';
     <!-- begin col-3 -->
     <div class="col-md-3 col-sm-6">
         <div class="widget widget-stats bg-red">
-            <div class="stats-icon"><i class="fa fa-clock-o"></i></div>
+            <div class="stats-icon"><i class="fa fa-ticket"></i></div>
             <div class="stats-info">
                 <h4>CUPOS</h4>
                 <p>1,291,922</p>
@@ -106,8 +110,9 @@ $this->title = 'SGT';
                 <h4 class="panel-title">Solicitudes realizadas</h4>
             </div>
             <div class="panel-body">
+                <table id="data-table" class="table table-striped table-bordered nowrap" width="100%">
 
-
+                </table>
             </div>
         </div>
     </div>

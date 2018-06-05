@@ -23,7 +23,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <!-- end #page-loader -->
 
 <div class="login-cover">
-    <div class="login-cover-image"><img src="assets/img/login-bg/bg-1.jpg" data-id="login-cover-image" alt="" /></div>
+<!--    <div class="login-cover-image"><img src=--><?php //echo \yii\helpers\Url::to("@web/img/login-bg/tpg-2.jpeg");?><!-- data-id="login-cover-image" alt="" /></div>-->
     <div class="login-cover-bg"></div>
 </div>
 

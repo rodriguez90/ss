@@ -29,9 +29,106 @@ var handleWidgetOptions = function() {
 
 };
 
-var handleTableByOption = function () {
 
+var handleTableByOption = function (option) {
+
+    switch (option)
+    {
+        case 1: // receptions
+        {
+
+            break;
+        }
+    }
 };
+
+
+var tableByOption = function(option)
+{
+    var table = $('#data-table').DataTable();
+    table.destroy();
+
+    var columns;
+
+    switch (option)
+    {
+        case 1: // reception
+        {
+            columns = [
+                ""
+            ];
+            break;
+        }
+        case 2: // dispatch
+        {
+            break;
+        }
+        case 3: // report
+        {
+            break;
+        }
+    }
+
+    $('#data-table').DataTable({
+        "columns": [
+            {
+                // "title": "Selecionar",
+                "data":'checkbox', // FIXME CHECK THIS
+            },
+            { "title": "Contenedor",
+                "data":"name",
+            },
+            { "title": "Tipo",
+            },
+            { "title": "Fecha Limite",
+                "data":"deliveryDate",
+            },
+            { "title": "Agencia",
+                "data":"agency"
+            },
+        ],
+        processing:true,
+        lengthMenu: [5, 10, 15],
+        "pageLength": 5,
+        "language": {
+            "lengthMenu": "Mostrar _MENU_ filas por página",
+            "zeroRecords": "No hay datos que mostrat - disculpe",
+            "info": "Página _PAGE_ de _PAGES_",
+            "infoEmpty": "No hay información que mostrar",
+            // "infoFiltered": "(encontrados from _MAX_ total records)"
+        },
+        // select: true,
+        responsive: true,
+        // language: {url: 'web/plugins/DataTables/i18/Spanish.json'
+        //
+        // },
+        columnDefs: [
+            {
+                orderable: false,
+                searchable: false,
+                className: 'select-checkbox',
+                targets:   [0],
+                // data: null,
+            },
+            {
+                targets: [2],
+                title:"Tipo",
+                data:null,
+                render: function ( data, type, full, meta ) {
+                    // console.log("In render: " + data);
+                    return data.type + data.tonnage;
+                },
+            },
+
+        ],
+        select: {
+            // items: 'cells',
+            style:    'multi',
+            selector: 'td:first-child'
+        },
+        order: [[ 1, 'asc' ]]
+    });
+}
 
 var Dashboard = function () {
 	"use strict";

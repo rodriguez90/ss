@@ -3714,8 +3714,19 @@ ul.tagit.inverse li.tagit-choice .tagit-close:focus .ui-icon-close:before {
     font-weight: 300;
     text-decoration: none;
 }
-.widget-stats .stats-link a:hover, 
-.widget-stats .stats-link a:focus {
+/*.widget-stats .stats-link .active a {*/
+    /*background: url(../img/transparent/black-0.6.png);*/
+    /*background: rgba(0,0,0,0.6);*/
+    /*color: #fff;*/
+/*}*/
+/*.widget-stats .stats-link a:active {*/
+    /*background: url(../img/transparent/black-0.6.png);*/
+    /*background: rgba(0,0,0,0.6);*/
+    /*color: #fff;*/
+/*}*/
+.widget-stats .stats-link a:hover,
+.widget-stats .stats-link a:focus,
+.widget-stats .stats-link .active a {
     background: url(../img/transparent/black-0.6.png);
     background: rgba(0,0,0,0.6);
     color: #fff;

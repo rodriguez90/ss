@@ -125,12 +125,12 @@ SystemAsset::register($this)
                         </a>
                     </li>
                     <li class="has-sub">
-                        <a href="<?php echo Url::to(['/rd/reception']);?>"> <i class="fa fa-file-o"></i>
+                        <a href="<?php echo Url::to(['/rd/reception']);?>"> <i class="fa fa-rotate-90 fa-sign-in"></i>
                             <span> Recepción</span>
                         </a>
                     </li>
                     <li class="has-sub">
-                        <a href="javascript:;"> <i class="fa fa-ticket"></i>
+                        <a href="javascript:;"> <i class="fa fa-rotate-90 fa-sign-out"></i>
                             <span> Despacho</span>
                         </a>
                     </li>

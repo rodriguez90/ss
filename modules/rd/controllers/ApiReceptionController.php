@@ -13,6 +13,7 @@ use app\modules\rd\models\Container;
 use app\modules\rd\models\Reception;
 use app\modules\rd\models\ReceptionTransaction;
 use Yii;
+use yii\helpers\Url;
 use yii\rest\ActiveController;
 use yii\web\Response;
 
@@ -126,8 +127,8 @@ class ApiReceptionController extends  ActiveController
 
                     $response['success'] = true;
                     $response['msg'] = Yii::t("app", "Recepción creada correctamente.");
+                    $response['url'] = Url::toRoute(['/site/index', 'option'=>1]);
                 }
-
             }
             else {
                 $response['success'] = false;

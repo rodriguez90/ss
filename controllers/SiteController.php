@@ -61,7 +61,7 @@ class SiteController extends Controller
      *
      * @return string
      */
-    public function actionIndex()
+    public function actionIndex($option=1)
     {
 //        if (Yii::$app->user->isGuest)
 //        {
@@ -69,7 +69,9 @@ class SiteController extends Controller
 //            return $this->redirect('site/login');
 //        }
 
-        return $this->render('index');
+        return $this->render('index',  [
+            'option' => $option
+        ]);
     }
 
     /**
