@@ -43,36 +43,15 @@ var handleTableByOption = function (option) {
 };
 
 
-var tableByOption = function(option)
-{
+var tableByOption = function() {
+    "use strict";
     var table = $('#data-table').DataTable();
     table.destroy();
-
-    var columns;
-
-    switch (option)
-    {
-        case 1: // reception
-        {
-            columns = [
-                ""
-            ];
-            break;
-        }
-        case 2: // dispatch
-        {
-            break;
-        }
-        case 3: // report
-        {
-            break;
-        }
-    }
 
     $('#data-table').DataTable({
         "columns": [
             {
-                // "title": "Selecionar",
+                "title": "No",
                 "data":'checkbox', // FIXME CHECK THIS
             },
             { "title": "Contenedor",
@@ -128,7 +107,7 @@ var tableByOption = function(option)
         },
         order: [[ 1, 'asc' ]]
     });
-}
+};
 
 var Dashboard = function () {
 	"use strict";
@@ -143,4 +122,15 @@ var Dashboard = function () {
 
 $(document).ready(function () {
     Dashboard.init();
+    //
+    // $('#panel-body').find('a').unbind().click(function(e)
+    // {
+    //     e.preventDefault();
+    //     e.stopPropagation();
+    //     alert('T');
+    //     return false;
+    //
+    // });
+    // $(document).pjax('a', '#panel-body');
+
 });

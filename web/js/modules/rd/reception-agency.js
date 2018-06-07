@@ -120,9 +120,11 @@ $(document).ready(function () {
     });
 
     // select2 to agency
-    $("#select-agency").select2({
+    $("#select-agency").select2(
+        {
         language: "es",
         placeholder: 'Seleccione la compañia de transporte',
+        width: 'auto',
         // allowClear: true,
         // tags: true,
         closeOnSelect: false,

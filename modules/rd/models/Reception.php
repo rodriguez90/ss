@@ -12,6 +12,7 @@ use Yii;
  * @property int $trans_company_id
  * @property int $agency_id
  * @property int $active
+ * @property string $created_at
  *
  * @property Agency $agency
  * @property TransCompany $transCompany
@@ -36,6 +37,7 @@ class Reception extends \yii\db\ActiveRecord
             [['bl', 'trans_company_id', 'agency_id', 'active'], 'required'],
             [['bl'], 'string'],
             [['trans_company_id', 'agency_id', 'active'], 'integer'],
+            [['created_at'], 'safe'],
             [['agency_id'], 'exist', 'skipOnError' => true, 'targetClass' => Agency::className(), 'targetAttribute' => ['agency_id' => 'id']],
             [['trans_company_id'], 'exist', 'skipOnError' => true, 'targetClass' => TransCompany::className(), 'targetAttribute' => ['trans_company_id' => 'id']],
         ];
@@ -47,11 +49,12 @@ class Reception extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'bl' => 'Bl',
-            'trans_company_id' => 'Trans Company ID',
-            'agency_id' => 'Agency ID',
-            'active' => 'Active',
+            'id' => Yii::t('app', 'ID'),
+            'bl' => Yii::t('app', 'Código BL'),
+            'trans_company_id' => Yii::t('app', 'Cia de Transporte'),
+            'agency_id' => Yii::t('app', 'Agencia'),
+            'active' => Yii::t('app', 'Active'),
+            'created_at' => Yii::t('app', 'Fecha de Envío'),
         ];
     }
 
@@ -60,7 +63,7 @@ class Reception extends \yii\db\ActiveRecord
      */
     public function getAgency()
     {
-        return $this->hasOne(Agency::className(), ['id' => 'agency_id']);
+        return $this->hasOne(Agency::class, ['id' => 'agency_id']);
     }
 
     /**
@@ -68,7 +71,7 @@ class Reception extends \yii\db\ActiveRecord
      */
     public function getTransCompany()
     {
-        return $this->hasOne(TransCompany::className(), ['id' => 'trans_company_id']);
+        return $this->hasOne(TransCompany::class, ['id' => 'trans_company_id']);
     }
 
     /**
@@ -76,6 +79,13 @@ class Reception extends \yii\db\ActiveRecord
      */
     public function getReceptionTransactions()
     {
-        return $this->hasMany(ReceptionTransaction::className(), ['reception_id' => 'id']);
+        return $this->hasMany(ReceptionTransaction::class, ['reception_id' => 'id']);
+    }
+
+
+    public function getContainerAmount()
+    {
+//        return $this->hasMany(ReceptionTransaction::className(), ['reception_id' => 'id'])->count();
+        return $this->getReceptionTransactions()->count();
     }
 }

@@ -32,7 +32,7 @@ class Administracion extends \yii\base\Module
         }
 
 
-        if (\Yii::$app->user->isGuest)
+        if (Yii::$app->user->isGuest)
         {
             return Yii::$app->controller->redirect( Url::to(['/site/login']) );
         }

@@ -27,6 +27,9 @@ $config = [
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
+        'session' => [
+            'class' => 'yii\web\CacheSession',
+        ],
         'user' => [
             'identityClass' => 'app\modules\administracion\models\AdmUser',
             'enableAutoLogin' => true,
@@ -78,8 +81,8 @@ $config = [
         ],
         'urlManager' => [
             'enablePrettyUrl' => true,
-            'showScriptName' => true,
-            'baseUrl' => 'http://localhost:8080/web',
+//            'showScriptName' => false,
+//            'baseUrl' => 'http://localhost:8080/',
             'rules' => [
             ],
         ],

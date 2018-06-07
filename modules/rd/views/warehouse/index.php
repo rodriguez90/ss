@@ -39,19 +39,18 @@ $this->params['breadcrumbs'][] = $this->title;
                     'id',
                     'code_oce',
                     'name',
-//                    'active',
                     [
                         'class' => 'yii\grid\DataColumn', // can be omitted, as it is the default
-                        'label' => Yii::t('app', "Active"),
+                        'label' => Yii::t('app', "Activo"),
                         'attribute' => 'active',
                         'value' => function ($data) {
-                            $value = Yii::t('app', "Off");
+                            $value = Yii::t('app', "No");
                             if($data->active)
-                                $value = Yii::t('app', "On");
+                                $value = Yii::t('app', "Si");
 
                             return $value; // $data['name'] for array data, e.g. using SqlDataProvider.
                         },
-                        'filter' => ['1' =>'On' , '0'=>'Off',],
+                        'filter' => ['1' =>'Si' , '0'=>'No',],
                     ],
                     'ruc',
 

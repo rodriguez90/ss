@@ -17,6 +17,12 @@ WizardAsset::register($this);
 FormAsset::register($this);
 TableAsset::register($this);
 ?>
+<style>
+    .select2.select2-container.select2-container--default.select2-container--below
+    {
+        width: 100% !important;
+    }
+</style>
 
 <div class="panel panel-inverse" data-sortable-id="ui-widget-1">
     <div class="panel-heading">

@@ -18,8 +18,8 @@ class ReceptionSearch extends Reception
     public function rules()
     {
         return [
-            [['id', 'trans_company_id', 'agency_id', 'active'], 'integer'],
-            [['bl'], 'safe'],
+            [['id', 'active'], 'integer'],
+            [['bl','trans_company_id', 'agency_id'], 'safe'],
         ];
     }
 
@@ -41,12 +41,20 @@ class ReceptionSearch extends Reception
      */
     public function search($params)
     {
-        $query = Reception::find();
+        $query = Reception::find()->where(['active'=>true]);
 
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'pagination' => [
+                'pageSize' => 5,
+            ],
+            'sort' => [
+                'defaultOrder' => [
+                    'created_at' => SORT_ASC,
+                ]
+            ],
         ]);
 
         $this->load($params);
@@ -60,12 +68,28 @@ class ReceptionSearch extends Reception
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'trans_company_id' => $this->trans_company_id,
-            'agency_id' => $this->agency_id,
+//            'trans_company_id' => $this->trans_company_id,
+//            'agency_id' => $this->agency_id,
             'active' => $this->active,
+            'created_at' => $this->created_at,
         ]);
 
         $query->andFilterWhere(['like', 'bl', $this->bl]);
+        if(isset($this->trans_company_id))
+        {
+            $filter = TransCompany::find()->select('id')->where(['like', 'name', $this->trans_company_id]);
+            $query->andFilterWhere(['trans_company_id'=>$filter]);
+//            $query->andFilterWhere(['like', 'trans_company.name', $this->trans_company_id]);
+
+        }
+
+        if(isset($this->agency_id))
+        {
+//            $filter = TransCompany::find()->select('id')->where(['like', 'name', $this->agency_id]);
+            $query->andFilterWhere(['like', 'agency.name', $this->agency_id]);
+
+
+        }
 
         return $dataProvider;
     }

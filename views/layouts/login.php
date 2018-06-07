@@ -5,12 +5,10 @@
 
 
 use yii\helpers\Html;
-
-
 use app\assets\SystemAsset;
 
-
 SystemAsset::register($this)
+
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>

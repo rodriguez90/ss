@@ -68,6 +68,4 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
     </div>
     <!-- end login -->
-
-
-    </div>
+</div>

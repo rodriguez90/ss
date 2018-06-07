@@ -10,11 +10,16 @@ use yii\helpers\Url;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
-//use app\assets\AppAsset;
 use app\assets\SystemAsset;
 
-//AppAsset::register($this);
-SystemAsset::register($this)
+SystemAsset::register($this);
+
+$user = null;
+//$userName = "Invitado";
+if(!Yii::$app->user->isGuest){
+    $user = AdmUser::findOne(['id'=>Yii::$app->user->getId()]);
+}
+
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -56,11 +61,8 @@ SystemAsset::register($this)
                             <span class="hidden-xs">
 
                                 <?php
-                                if(Yii::$app->user->isGuest){
-                                   echo("Login");
-                                }else{
-                                    echo( AdmUser::findOne(['id'=>Yii::$app->user->getId()])->username);
-                                }
+                                if($user)
+                                    echo $user->username;
                                 ?>
 
                             </span> <b class="caret"></b>
@@ -68,7 +70,6 @@ SystemAsset::register($this)
                         <ul class="dropdown-menu animated fadeInLeft">
                             <li class="arrow"></li>
                             <li><a href="javascript:;">Editar Perficl</a></li>
-                            <li><a href="javascript:;">Calendario</a></li>
                             <li><a href="javascript:;">Configuraciones</a></li>
                             <li class="divider"></li>
 
@@ -95,15 +96,6 @@ SystemAsset::register($this)
             <div data-scrollbar="true" data-height="100%">
                 <!-- begin sidebar nav -->
                 <ul class="nav">
-                    <li class="nav-profile">
-                        <div class="image">
-                            <a href="javascript:;"><img src="/img/user-13.jpg" alt="" /></a>
-                        </div>
-                        <div class="info">
-                            User Name
-                            <small>Company Name</small>
-                        </div>
-                    </li>
                     <li class="has-sub">
                         <a href="<?php echo Url::to(['/rd/warehouse']);?>"/> <i class="fa fa-building"></i>
                         <span> Depósito</span>
@@ -135,14 +127,12 @@ SystemAsset::register($this)
                         </a>
                     </li>
 
-
-
                     <?php
                         if(Yii::$app->user->can("Admin_mod")){
                            echo "<li class='has-sub'>";
                            echo "<a href='javascript:;'> <b class='caret pull-right'></b> <i class='fa fa-cog'></i> <span>Administración</span> </a>";
                            echo "<ul style='' class='sub-menu'>";
-                           echo "<li><a href=". Url::toRoute(['/administracion/user/']) .">Usuarios</a></li>";
+                           echo "<li><a href=". Url::toRoute(['/administracion/user']) .">Usuarios</a></li>";
                            echo "<li><a href=". Url::toRoute(['/administracion/item','type'=> 1]) .">Roles</a></li>";
                            echo "<li><a href=". Url::toRoute(['/administracion/item','type'=> 2]) .">Permisos</a></li>";
                            echo "<li><a href=". Url::toRoute(['/administracion/authitemchild/']) .">Grupos</a></li>";
@@ -151,9 +141,6 @@ SystemAsset::register($this)
                            echo "</li>";
                         }
                     ?>
-
-
-
 
                     <!-- begin sidebar minify button -->
                     <li><a href="javascript:;" class="sidebar-minify-btn" data-click="sidebar-minify"><i class="fa fa-angle-double-left"></i></a></li>

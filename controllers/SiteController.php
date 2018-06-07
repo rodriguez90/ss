@@ -2,6 +2,10 @@
 
 namespace app\controllers;
 
+use app\modules\administracion\models\AdmUser;
+use app\modules\rd\models\Reception;
+use app\modules\rd\models\ReceptionSearch;
+use app\modules\rd\models\ReceptionTransaction;
 use Yii;
 use yii\filters\AccessControl;
 use yii\helpers\Url;
@@ -21,7 +25,7 @@ class SiteController extends Controller
     {
         return [
             'access' => [
-                'class' => AccessControl::className(),
+                'class' => AccessControl::class,
                 'only' => ['logout'],
                 'rules' => [
                     [
@@ -32,7 +36,7 @@ class SiteController extends Controller
                 ],
             ],
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
                    // 'logout' => ['post','get'],
                 ],
@@ -61,16 +65,33 @@ class SiteController extends Controller
      *
      * @return string
      */
-    public function actionIndex($option=1)
+    public function actionIndex()
     {
-//        if (Yii::$app->user->isGuest)
-//        {
-////            return $this->goHome();
-//            return $this->redirect('site/login');
-//        }
+        $session = Yii::$app->session;
+        $user = $session->get('user', null);
 
-        return $this->render('index',  [
-            'option' => $option
+//        if($user)
+
+
+        if($user && $user->hasRol('Agencia'))
+        {
+            var_dump("Tiene el rol");
+        }
+        else {
+            var_dump("No Tiene el rol");
+        }
+
+//        die;
+
+        $searchModel = new ReceptionSearch();
+
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $receptionCount = $searchModel->search(Yii::$app->request->queryParams)->totalCount;
+
+        return $this->render('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+            'receptionCount'=>$receptionCount
         ]);
     }
 
@@ -87,12 +108,30 @@ class SiteController extends Controller
             return $this->goHome();
         }
 
+//        var_dump(Yii::$app->user->getReturnUrl());die;
+
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()))
         {
             if ($model->login())
             {
-                return $this->redirect(Yii::$app->homeUrl . '/site/index');
+                $session = Yii::$app->session;
+                $session->open();
+
+//                $urlBeforeLogin = Yii::$app->session->get('urlBeforeLogin');
+//                var_dump($urlBeforeLogin);die;
+//                if(!empty($urlBeforeLogin))
+//                {
+//                    Yii::$app->session->set('urlBeforeLogin', null);
+//
+////                    return $this->redirect('/rd/reception/trans-company?id=56');
+//                    return $this->redirect($urlBeforeLogin);
+//                }
+
+                $user = AdmUser::findOne(['id'=>Yii::$app->user->id]);
+                $session->set('user',$user);
+
+                return $this->redirect('/site/index');
             }
             else
             {
@@ -113,8 +152,8 @@ class SiteController extends Controller
      */
     public function actionLogout()
     {
-        Yii::$app->user->logout();
-        return $this->redirect(   Url::to(["/site/login"]) );
+        if(Yii::$app->user->logout())
+            return $this->redirect("/site/login" );
         //return $this->goHome();
     }
 

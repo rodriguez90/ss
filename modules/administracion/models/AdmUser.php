@@ -330,5 +330,21 @@ class AdmUser extends ActiveRecord implements IdentityInterface
         return $this->hasMany(AuthAssignment::className(), ['user_id' => 'id']);
     }
 
+    public function hasRol($rol)
+    {
+//        $rols =  Yii::$app->authManager->getRolesByUser($this->username);
+
+
+        $result = AdmUser::find()
+            ->innerJoin("auth_assignment","auth_assignment.user_id = adm_user.id")
+            ->where(['auth_assignment.item_name'=>$rol, 'auth_assignment.user_id' =>$this->id])
+            ->count();
+
+
+//        $count = $this->hasMany(AuthAssignment::class, ['user_id' => 'id', 'item_name'=>$rol])->count();
+//        var_dump($result); die();
+        return $result > 0;
+    }
+
 
 }

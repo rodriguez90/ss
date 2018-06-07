@@ -1,5 +1,6 @@
 <?php
 
+use yii\helpers\Url;
 // comment out the following two lines when deployed to production
 defined('YII_DEBUG') or define('YII_DEBUG', true);
 defined('YII_ENV') or define('YII_ENV', 'dev');
@@ -30,6 +31,30 @@ class SGTApplication extends yii\web\Application
 
         if ($this->user->isGuest)
         {
+
+//            $session = Yii::$app->session;
+//            $urlBeforeLogin = Yii::$app->request->url;
+////            var_dump($urlBeforeLogin); //die;
+////            var_dump($session->id); die;
+//
+//            if(!empty($urlBeforeLogin))
+//            {
+////                if(!$session->isActive)
+//                    $session->open();
+//
+//                $url = Yii::$app->session->get('urlBeforeLogin');
+////                var_dump($url);//die;
+//                if(empty($url) || $urlBeforeLogin !== $url)
+//                {
+////                    var_dump($urlBeforeLogin);die;
+////                    Yii::$app->session['urlBeforeLogin'] = $urlBeforeLogin;
+//                    $session->set('urlBeforeLogin', $urlBeforeLogin);
+////                    var_dump($session->get('urlBeforeLogin'));die;
+//                }
+//
+//            }
+
+
             if (!in_array($this->controller->action->id,
                 [
                     'login',

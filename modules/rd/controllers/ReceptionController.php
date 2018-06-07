@@ -4,9 +4,9 @@ namespace app\modules\rd\controllers;
 
 use app\modules\rd\models\ContainerSearch;
 use app\modules\rd\models\ReceptionTransaction;
-use Yii;
 use app\modules\rd\models\Reception;
 use app\modules\rd\models\ReceptionSearch;
+use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -37,6 +37,7 @@ class ReceptionController extends Controller
      */
     public function actionIndex()
     {
+//        var_dump(Yii::$app->request->queryParams);
         $searchModel = new ReceptionSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
@@ -122,6 +123,13 @@ class ReceptionController extends Controller
 
         return $this->render('create_agency', [
             'model' => $model,
+        ]);
+    }
+
+    public function actionTransCompany($id)
+    {
+        return $this->render('view', [
+            'model' => $this->findModel($id),
         ]);
     }
 

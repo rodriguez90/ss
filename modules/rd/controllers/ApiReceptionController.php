@@ -13,6 +13,7 @@ use app\modules\rd\models\Container;
 use app\modules\rd\models\Reception;
 use app\modules\rd\models\ReceptionTransaction;
 use Yii;
+use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\rest\ActiveController;
 use yii\web\Response;
@@ -68,6 +69,7 @@ class ApiReceptionController extends  ActiveController
 //
             $transaction = Reception::getDb()->beginTransaction();
 
+
             if($model->save())
             {
                 $containers = Yii::$app->request->post()["containers"];
@@ -115,6 +117,26 @@ class ApiReceptionController extends  ActiveController
                         ->one();
 
                     // TODO: send email user too from the admin system
+//                    $emailConten = null;
+
+                    $emailConten = Html::beginTag('div')
+                                   . Html::tag('p', Html::encode('Notificación de solicitud de recepción'))
+                                   . Html::ul($containers, ['item' => function($item, $index) {
+                                        $li = Html::tag(
+                                            'li',
+                                            Html::encode($item['name']),
+                                            []
+                                        );
+//                                        var_dump($li) ; die;
+                                        return $li;
+                                    }])
+                                    . Html::tag('p', Html::encode($model->created_at))
+//                                    . Html::tag('p', Html::encode($model->getAgency() ? $model->getAgency()->name): '')
+                                    . Html::tag('p', Html::encode($model->bl))
+                                    . Html::tag('p', Html::encode($model->getContainerAmount()))
+//                                    . Html::a('Ir a solicitud', Url::toRoute(['/rd/reception/trans-company', 'id'=>$model->id]), [])
+                                    . Html::a('Ir a solicitud', Url::to(['/rd/reception/trans-company', 'id'=>$model->id], true), [])
+                                    . Html::endTag('div');
 
                     Yii::$app->mailer->compose()
 //                    ->setFrom($remitente->email)
@@ -122,12 +144,13 @@ class ApiReceptionController extends  ActiveController
                         ->setFrom("admin@test.co")
                         ->setTo("test@test.co")
                         ->setSubject( "email de prueba." )
-                        ->setHtmlBody("<div> <p>". " Body "."</p></div>" )
+                        ->setHtmlBody($emailConten)
                         ->send();
 
                     $response['success'] = true;
                     $response['msg'] = Yii::t("app", "Recepción creada correctamente.");
-                    $response['url'] = Url::toRoute(['/site/index', 'option'=>1]);
+//                    $response['url'] = Url::toRoute(['/site/index', 'option'=>1]);
+                    $response['url'] = Url::to('/site/index');
                 }
             }
             else {

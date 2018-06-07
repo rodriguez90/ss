@@ -38,7 +38,5 @@ class TableAsset extends AssetBundle
 
     public $depends = [
         'app\assets\SystemAsset',
-        //'yii\bootstrap\BootstrapAsset',
-        //'yii\bootstrap\BootstrapPluginAsset',
     ];
 }
