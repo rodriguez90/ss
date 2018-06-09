@@ -8,8 +8,10 @@ use Yii;
  * This is the model class for table "ticket".
  *
  * @property int $id
- * @property string $delivery_date
  * @property int $reception_transaction_id
+ * @property int $calendar_id
+ * @property int $status
+ * @property string $created_at
  * @property int $active
  *
  * @property ReceptionTransaction $receptionTransaction
@@ -30,9 +32,9 @@ class Ticket extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['delivery_date', 'reception_transaction_id', 'active'], 'required'],
-            [['delivery_date'], 'safe'],
-            [['reception_transaction_id', 'active'], 'integer'],
+            [['reception_transaction_id', 'calendar_id', 'status', 'active'], 'required'],
+            [['reception_transaction_id', 'calendar_id', 'status', 'active'], 'integer'],
+            [['created_at'], 'safe'],
             [['reception_transaction_id'], 'exist', 'skipOnError' => true, 'targetClass' => ReceptionTransaction::className(), 'targetAttribute' => ['reception_transaction_id' => 'id']],
         ];
     }
@@ -44,8 +46,10 @@ class Ticket extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'delivery_date' => Yii::t('app', 'Delivery Date'),
             'reception_transaction_id' => Yii::t('app', 'Reception Transaction ID'),
+            'calendar_id' => Yii::t('app', 'Calendar ID'),
+            'status' => Yii::t('app', 'Status'),
+            'created_at' => Yii::t('app', 'Created At'),
             'active' => Yii::t('app', 'Active'),
         ];
     }

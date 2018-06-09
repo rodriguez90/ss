@@ -10,8 +10,11 @@ $this->title = 'Nuevo Usuario';
 $this->params['breadcrumbs'][] = ['label' => 'Usuarios', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="user-create">
+<div class="row">
+
     <?= $this->render('_form', [ 'model' => $model,'rol_actual'=>$rol_actual,'roles'=>$roles,'type'=>$type ]) ?>
+
 </div>
+
 
 

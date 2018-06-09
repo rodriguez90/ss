@@ -72,7 +72,7 @@ FormAsset::register($this);
                     <div class="col-md-6">
 
                         <div class="form-group">
-                            <label class="control-label col-md-4 col-sm-4" for="website">Nombre* :</label>
+                            <label class="control-label col-md-4 col-sm-4" for="website">Nombre*</label>
 
                             <div class="col-md-8 col-sm-8">
                                 <input class="form-control" name="AdmUser[nombre]" placeholder="Nombre"
@@ -82,7 +82,7 @@ FormAsset::register($this);
                         </div>
 
                         <div class="form-group">
-                            <label class="control-label col-md-4 col-sm-4" for="website">Apellidos* :</label>
+                            <label class="control-label col-md-4 col-sm-4" for="website">Apellidos*</label>
 
                             <div class="col-md-8 col-sm-8">
                                 <input class="form-control" name="AdmUser[apellidos]" placeholder="Apellidos"
@@ -92,7 +92,7 @@ FormAsset::register($this);
                         </div>
 
                         <div class="form-group">
-                            <label class="control-label col-md-4 col-sm-4" for="fullname">Nombre de usuario* :</label>
+                            <label class="control-label col-md-4 col-sm-4" for="fullname">Nombre de usuario*</label>
 
                             <div class="col-md-8 col-sm-8">
                                 <input class="form-control" name="AdmUser[username]" placeholder="nombreusuario85"
@@ -101,7 +101,7 @@ FormAsset::register($this);
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-md-4 col-sm-4" for="email">Email* :</label>
+                            <label class="control-label col-md-4 col-sm-4" for="email">Email*</label>
 
                             <div class="col-md-8 col-sm-8">
                                 <input class="form-control" name="AdmUser[email]" data-parsley-type="email"
@@ -113,7 +113,7 @@ FormAsset::register($this);
 
                         <div class="form-group">
 
-                            <label class="control-label col-md-4 col-sm-4" for="fullname">Cedula* :</label>
+                            <label class="control-label col-md-4 col-sm-4" for="fullname">Cedula*</label>
 
                             <div class="col-md-8 col-sm-8">
                                 <input class="form-control" name="AdmUser[cedula]" placeholder=""
@@ -121,20 +121,6 @@ FormAsset::register($this);
                                 <ul class="parsley-errors-list"></ul>
                             </div>
                         </div>
-
-
-
-
-
-                        <div class="form-group">
-                            <label class="control-label col-md-4 col-sm-4"></label>
-                            <div class="col-md-8 col-sm-8">
-                                <?= Html::submitButton('Guardar', ['class' => 'btn btn-primary']) ?>
-                            </div>
-                        </div>
-
-
-
 
 
                     </div>
@@ -145,17 +131,17 @@ FormAsset::register($this);
                             <label class="control-label col-md-4 col-sm-4">Contrase&ntilde;a*</label>
 
                             <div class="col-md-8 col-sm-8">
-                                <input name="AdmUser[password]" id="password-indicator-default" type="password"  Class="form-control"/>
+                                <input name="AdmUser[password]"   type="password"  Class="form-control"/>
 
                                 <!--div id="passwordStrengthDiv" class="is0 m-t-5"></div-->
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="control-label col-md-4 col-sm-4"> Confirmar contrase&ntilde;a </label>
+                            <label class="control-label col-md-4 col-sm-4"> Confirmar contrase&ntilde;a</label>
 
                             <div class="col-md-8 col-sm-8">
-                                <input name="AdmUser[passwordConfirm]" id="password-passwordConfirm" type="password"
+                                <input name="AdmUser[passwordConfirm]"   type="password"
                                        class="form-control"/>
 
                             </div>
@@ -164,11 +150,11 @@ FormAsset::register($this);
 
 
                         <div class="form-group">
-                            <label class="control-label col-md-4">Rol</label>
+                            <label class="control-label col-md-4 col-sm-4">Rol</label>
 
 
-                        <div class="col-md-8">
-                            <select id="selectpicker-rol" name="rol"  data-parsley-required="true" class="form-control selectpicker" data-size="10" data-live-search="true" >
+                        <div class="col-md-8 col-sm-8"  <?= \Yii::$app->user->can('Admin_mod') ? "": "style='visibility: hidden'"?> >
+                            <select id="selectpicker-rol" name="rol"  data-parsley-required="true" class="form-control selectpicker" data-size="10" data-live-search="true"  >
                                 <?php
 
                                 echo "<option  value=''>Seleccione un Rol</option>";
@@ -186,30 +172,62 @@ FormAsset::register($this);
 
 
                         <div class="form-group" id="div-type">
-                            <label class="control-label col-md-4" id="label-type">---</label>
+                            <label class="control-label col-md-4 col-sm-4" id="label-type">---</label>
 
-                            <div class="col-md-8" id="select-conten">
+                            <div class="col-md-8 col-sm-8" id="select-conten"  <?= \Yii::$app->user->can('Admin_mod') ? "": "style='visibility: hidden'"?>>
 
                             </div>
                         </div>
+
+
+
+
+
 
 
                         <div class="form-group">
                             <label class="control-label col-md-4 col-sm-4">Activo</label>
+                            <div class="col-md-8 col-sm-8"  <?= \Yii::$app->user->can('Admin_mod') ? "": "style='visibility: hidden'"?>>
 
-                            <div class="col-md-8 col-sm-8" style="margin-top: 5px;margin-bottom: 5px;">
-                                <input type="checkbox" <?= isset($model['status']) || $model->isNewRecord ? 'checked' : '' ?>
-                                    name="AdmUser[status]"
-                                    value="1"/>
-
-
+                                <input data-switchery="true"    id="admuser-status" name="AdmUser[status]" value="1" data-render="switchery" type="checkbox" <?= $model->status  ? 'checked': '' ?> >
 
                             </div>
                         </div>
 
+                    </div>
+
+                    <div class="col-md-12 col-sm-12" style="margin-bottom: 25px;">
+
+
+
+                    <div class="col-md-4 col-sm-3">
                         <input style="visibility: hidden" name="aux" value="<?= $type ?>" id="aux" />
 
                     </div>
+
+
+                    <div class="col-md-4 col-sm-6">
+
+                                <?= Html::button('Cancelar',['class'=>'btn btn-default','onclick'=>'window.history.go(-1)']) ?>
+
+                                <?= Html::submitButton('Guardar', ['class' => 'btn btn-primary']) ?>
+
+                    </div>
+
+                    <div class="col-md-4 col-sm-3">
+
+                    </div>
+
+                    </div>
+
+
+
+
+
+
+
+
+
 
 
                     <?php ActiveForm::end(); ?>
@@ -229,8 +247,8 @@ FormAsset::register($this);
 
 
 
-$this->registerJsFile('@web/js/modules/utiles.js',              ['depends' => ['app\assets\AppAsset']]);
-$this->registerJsFile('@web/js/modules/administracion/user.js', ['depends' => ['app\assets\AppAsset']]);
+$this->registerJsFile('@web/js/modules/utiles.js',              ['depends' => ['app\assets\FormAsset']]);
+$this->registerJsFile('@web/js/modules/administracion/user.js', ['depends' => ['app\assets\FormAsset']]);
 
 ?>
 

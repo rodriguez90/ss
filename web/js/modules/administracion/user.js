@@ -113,7 +113,7 @@ var handleSelectpicker = function() {
 $(function () {
     $('.selectpicker').selectpicker('render');
 
-    handleFormPasswordIndicator();
+    //handleFormPasswordIndicator();
     handleSelectpicker();
 
     if($('#selectpicker-rol').val() == 'Importador_Exportador'|| $('#selectpicker-rol').val() == 'Administrador_depósito' || $('#selectpicker-rol').val() == 'Cia_transporte' ){

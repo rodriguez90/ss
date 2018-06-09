@@ -128,7 +128,11 @@ class ReceptionController extends Controller
 
     public function actionTransCompany($id)
     {
-        return $this->render('view', [
+
+        $searchModel = new ReceptionSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->render('forTrasnCompany', [
             'model' => $this->findModel($id),
         ]);
     }

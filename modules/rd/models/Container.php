@@ -15,6 +15,9 @@ use Yii;
  */
 class Container extends \yii\db\ActiveRecord
 {
+
+    const DRY = 'DRY';
+    const RRF  = 'RRF';
     /**
      * {@inheritdoc}
      */

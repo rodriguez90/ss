@@ -85,35 +85,59 @@ class AuthitemchildController extends Controller
      */
     public function actionCreate()
     {
-        $model = new AuthItemChild();
-        $parent = Yii::$app->request->get('parent');
-        $model->parent = $parent;
-        if ($model->load(Yii::$app->request->post())) {
+        if(\Yii::$app->user->can('Admin_mod')){
 
-            $auth =  Yii::$app->authManager;
-
-            $rol = $auth->createRole($parent);
-            $permiso = $auth->createPermission($model->child);
-
-            if($auth->hasChild($rol,$permiso)){
-                $model->addError('error', 'El rol actual ya contiene el permiso especificado.');
-            }
-            if( $auth->getPermission($permiso->name)== null ){
-                $model->addError('error', 'No existe el permiso especificado.');
-            }
+            $model = new AuthItemChild();
+            $parent = Yii::$app->request->get('parent');
 
 
-            if (!$model->hasErrors())
-            {
-                $auth->addChild($rol,$permiso);
-                return $this->redirect(['index']);
+            $items = AuthItem::find()
+                ->Where(['type'=>2])
+                ->select("name")
+                ->all();
+
+            $result = [];
+            foreach($items as $item){
+                $auth =  Yii::$app->authManager;
+                $aux_rol = $auth->createRole($parent);
+                $aux_permiso= $auth->createPermission($item->name);
+                if(!$auth->hasChild($aux_rol,$aux_permiso)){
+                    // array_push($result,$aux_permiso);
+                    $result [] = $item;
+                }
             }
 
+            $model->parent = $parent;
+            if ($model->load(Yii::$app->request->post())) {
+
+                $auth =  Yii::$app->authManager;
+
+                $rol = $auth->createRole($parent);
+                $permiso = $auth->createPermission($model->child);
+
+                if($auth->hasChild($rol,$permiso)){
+                    $model->addError('error', 'El rol actual ya contiene el permiso especificado.');
+                }
+                if( $auth->getPermission($permiso->name)== null ){
+                    $model->addError('error', 'No existe el permiso especificado.');
+                }
+
+                if (!$model->hasErrors())
+                {
+                    $auth->addChild($rol,$permiso);
+                    return $this->redirect(['index']);
+                }
+
+            }
+
+            return $this->render('create', [
+                'model' => $model, 'items'=> $result
+            ]);
+
+        }else{
+            throw new ForbiddenHttpException('Acceso denegado');
         }
 
-        return $this->render('create', [
-            'model' => $model,
-        ]);
     }
 
     /**
@@ -126,15 +150,23 @@ class AuthitemchildController extends Controller
      */
     public function actionUpdate($parent, $child)
     {
-        $model = $this->findModel($parent, $child);
+        if(\Yii::$app->user->can('Admin_mod')){
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'parent' => $model->parent, 'child' => $model->child]);
+            $model = $this->findModel($parent, $child);
+
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                return $this->redirect(['view', 'parent' => $model->parent, 'child' => $model->child]);
+            }
+
+            return $this->render('update', [
+                'model' => $model,
+            ]);
+
+        }else{
+            throw new ForbiddenHttpException('Acceso denegado');
         }
 
-        return $this->render('update', [
-            'model' => $model,
-        ]);
+
     }
 
     /**
@@ -147,6 +179,12 @@ class AuthitemchildController extends Controller
      */
     public function actionDelete($parent, $child)
     {
+        if(\Yii::$app->user->can('Admin_mod')){
+
+        }else{
+            throw new ForbiddenHttpException('Acceso denegado');
+        }
+
         $this->findModel($parent, $child)->delete();
 
         return $this->redirect(['index']);
@@ -171,7 +209,7 @@ class AuthitemchildController extends Controller
 
 
 
-
+/*
     public function actionPermisos($term,$rol){
 
         Yii::$app->response->format = Response::FORMAT_JSON;
@@ -199,5 +237,7 @@ class AuthitemchildController extends Controller
 
         return false;
     }
+
+*/
 
 }

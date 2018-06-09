@@ -1,6 +1,6 @@
 <?php
 
-use kartik\export\ExportMenu;
+
 use yii\helpers\Html;
 use yii\grid\GridView;
 
@@ -76,14 +76,12 @@ $this->params['breadcrumbs'][] = $this->title;
                     'apellidos',
                     'email',
 
-
-
                     [
                         'attribute' => 'status',
                         'format' => 'text',
                         'content' => function ($data)
                             {
-                                return $data->status ? '<span class="label label-success pull-left">Activo</span>' : '<span class="label label-danger">Inactivo</span>';
+                                return $data['status'] ? '<span class="label label-success pull-left">Activo</span>' : '<span class="label label-danger">Inactivo</span>';
                             },
                         'filter' => Html::activeDropDownList($searchModel, 'status', [
                                 'activo' => 'Activo', 'inactivo' => 'Inactivo',
@@ -91,13 +89,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     ],
 
 
-                    //'password',
-                    //'authKey',
-                    //'accessToken',
-                    //'status',
-                    //'created_at',
-                    //'email:email',
-                    //'token_usuario',
+
                     ['class' => 'yii\grid\ActionColumn'],
                 ],
             ]); ?>

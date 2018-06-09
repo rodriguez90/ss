@@ -78,9 +78,13 @@ class UserController extends Controller
      */
     public function actionView($id)
     {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
+        if (\Yii::$app->user->can('User_list') || \Yii::$app->user->getId() == $id ) {
+            return $this->render('view', [
+                'model' => $this->findModel($id),
+            ]);
+        }else{
+            throw new ForbiddenHttpException('Acceso denegado');
+        }
     }
 
     /**
@@ -365,7 +369,8 @@ class UserController extends Controller
         $model = $this->findModel($id);
         if ( \Yii::$app->user->can('Admin_mod') && $model->username != 'root' && $model->username != \Yii::$app->user) {
 
-            $this->findModel($id)->delete();
+            return $this->redirect(['create']);
+            //$this->findModel($id)->delete();
         }
 
         return $this->redirect(['index']);

@@ -96,7 +96,6 @@ class AdmUser extends ActiveRecord implements IdentityInterface
     {
         $attr = parent::attributes();
         $attr[] = 'passwordConfirm';
-        $attr[] = 'id_operador';
         return $attr;
     }
 
@@ -122,7 +121,6 @@ class AdmUser extends ActiveRecord implements IdentityInterface
             'created_at' => 'Creado',
             'updated_at' => 'Modificado',
             'passwordConfirm' => 'Confirmar Contraseña',
-            'id_operador' => 'Operador'
         ];
     }
 
@@ -330,7 +328,7 @@ class AdmUser extends ActiveRecord implements IdentityInterface
         return $this->hasMany(AuthAssignment::className(), ['user_id' => 'id']);
     }
 
-    public function hasRol($rol)
+	public function hasRol($rol)
     {
 //        $rols =  Yii::$app->authManager->getRolesByUser($this->username);
 

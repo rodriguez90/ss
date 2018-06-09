@@ -38,8 +38,8 @@ class Reception extends \yii\db\ActiveRecord
             [['bl'], 'string'],
             [['trans_company_id', 'agency_id', 'active'], 'integer'],
             [['created_at'], 'safe'],
-            [['agency_id'], 'exist', 'skipOnError' => true, 'targetClass' => Agency::className(), 'targetAttribute' => ['agency_id' => 'id']],
-            [['trans_company_id'], 'exist', 'skipOnError' => true, 'targetClass' => TransCompany::className(), 'targetAttribute' => ['trans_company_id' => 'id']],
+            [['agency_id'], 'exist', 'skipOnError' => true, 'targetClass' => Agency::class(), 'targetAttribute' => ['agency_id' => 'id']],
+            [['trans_company_id'], 'exist', 'skipOnError' => true, 'targetClass' => TransCompany::class, 'targetAttribute' => ['trans_company_id' => 'id']],
         ];
     }
 
@@ -52,8 +52,10 @@ class Reception extends \yii\db\ActiveRecord
             'id' => Yii::t('app', 'ID'),
             'bl' => Yii::t('app', 'Código BL'),
             'trans_company_id' => Yii::t('app', 'Cia de Transporte'),
+            'transCompany' => Yii::t('app', 'Cia de Transporte'),
             'agency_id' => Yii::t('app', 'Agencia'),
-            'active' => Yii::t('app', 'Active'),
+            'agency' => Yii::t('app', 'Agencia'),
+            'active' => Yii::t('app', 'Activa'),
             'created_at' => Yii::t('app', 'Fecha de Envío'),
         ];
     }
@@ -81,7 +83,6 @@ class Reception extends \yii\db\ActiveRecord
     {
         return $this->hasMany(ReceptionTransaction::class, ['reception_id' => 'id']);
     }
-
 
     public function getContainerAmount()
     {

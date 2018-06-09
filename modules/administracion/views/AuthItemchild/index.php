@@ -34,12 +34,12 @@ $this->params['breadcrumbs'][] = $this->title;
                                 <?php
                                 foreach($tree as $rol=>$permisos){
 
-                                    echo "<li class='jstree-open' ><a title='click para añadir permiso'  href='".Url::toRoute(['/administracion/authitemchild/create','parent'=>  $rol])."'>".$rol."</a> ";
-
+                                    echo "<li class='jstree-open' ><a class='parent' title='click para añadir permiso.'  href='".Url::toRoute(['/administracion/authitemchild/create','parent'=>  $rol])."' >".$rol."</a> ";
+                                    $aux = $rol;
                                     foreach($permisos as $rol=> $permiso){
 
                                         echo "<ul>";
-                                        echo "<li   >" . $permiso['child'] . "</li>";
+                                        echo "<li>  <a href='".Url::toRoute(['/administracion/authitemchild/delete','parent'=>  $aux,'child'=> $permiso['child']])."'  title=\"Click para eliminar permiso.\" aria-label=\"Eliminar\" data-pjax=\"0\" data-confirm=\"¿Está seguro de eliminar este elemento?\" data-method=\"post\"> ". $permiso['child']  ."</a></li>";
                                         echo "</ul>";
                                     }
 

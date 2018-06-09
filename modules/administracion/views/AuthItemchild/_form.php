@@ -6,6 +6,10 @@ use yii\widgets\ActiveForm;
 /* @var $this yii\web\View */
 /* @var $model app\modules\administracion\models\AuthItemChild */
 /* @var $form yii\widgets\ActiveForm */
+
+use app\assets\FormAsset;
+FormAsset::register($this);
+
 ?>
 
 
@@ -48,7 +52,21 @@ use yii\widgets\ActiveForm;
                 <div class="form-group">
                     <label class="control-label col-md-4 col-sm-4" for="fullname">Permiso * :</label>
                     <div class="col-md-8 col-sm-8">
-                        <input id="authitemchild-child" class="form-control" name="AuthItemChild[child]"    data-parsley-required="true" type="text">
+
+                        <select id="selectpicker-item" name="AuthItemChild[child]"  data-parsley-required="true" class="form-control selectpicker" data-size="10" data-live-search="true" >
+                            <?php
+
+                            echo "<option  value=''>Seleccione un Permiso</option>";
+
+                            foreach($items as $item){
+
+                                echo "<option  value='".$item->name ."'>". $item->name ."</option>";
+                            }
+
+                            ?>
+                        </select>
+
+
                     </div>
                 </div>
 
@@ -56,13 +74,12 @@ use yii\widgets\ActiveForm;
                 <div class="form-group">
                     <label class="control-label col-md-4 col-sm-4"></label>
                     <div class="col-md-8 col-sm-8">
+                        <?= Html::button('Cancelar',['class'=>'btn btn-default','onclick'=>'window.history.go(-1)']) ?>
                         <?= Html::submitButton('Guardar', ['class' => 'btn btn-primary']) ?>
                     </div>
                 </div>
 
                 <?php ActiveForm::end(); ?>
-
-
 
             </div>
          </div>
@@ -73,5 +90,5 @@ use yii\widgets\ActiveForm;
 
 
 <?php
-$this->registerJsFile('@web/js/modules/administracion/permisos.js', ['depends' => ['app\assets\AppAsset']]);
+$this->registerJsFile('@web/js/modules/administracion/permisos.js', ['depends' => ['app\assets\FormAsset']]);
 ?>

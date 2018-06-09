@@ -4,17 +4,6 @@
 
 
 
-/**
- * Created by yopt on 12/05/18.
- */
-
-var handleFormPasswordIndicator = function() {
-    "use strict";
-    $('#password-indicator-default').passwordStrength();
-    $('#password-indicator-visible').passwordStrength({targetDiv: '#passwordStrengthDiv2'});
-};
-
-
 var handleJqueryAutocomplete = function() {
 
     $('#authitemchild-child').autocomplete({
@@ -41,6 +30,5 @@ var handleJqueryAutocomplete = function() {
 };
 
 $(function () {
-
-    handleJqueryAutocomplete();
+    $('.selectpicker').selectpicker('render');
 });

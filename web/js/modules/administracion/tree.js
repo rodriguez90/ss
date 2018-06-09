@@ -22,8 +22,10 @@ var handleJstreeDefault = function() {
         "plugins": ["types"]
     });
 
+    /*
     $('#jstree-default').on('select_node.jstree', function(e,data) {
-        var link = $('#' + data.selected).find('a');
+
+        var link = $('#' + data.selected).find('.parent');
         if (link.attr("href") != "#" && link.attr("href") != "javascript:;" && link.attr("href") != "") {
             if (link.attr("target") == "_blank") {
                 link.attr("href").target = "_blank";
@@ -31,9 +33,21 @@ var handleJstreeDefault = function() {
             document.location.href = link.attr("href");
             return false;
         }
+
+
     });
+    */
 };
 
+
 $(function (){
+
     handleJstreeDefault();
+
+    $('.parent').click(function () {
+        var link = $(this);
+        if (link.attr("href") != "#" && link.attr("href") != "javascript:;" && link.attr("href") != "") {
+            document.location.href = link.attr("href");
+        }
+    });
 });
