@@ -47,7 +47,7 @@ TableAsset::register($this);
                         <div class="row">
                             <div class="row">
                                 <div class="col col-md-10">
-                                    <input class="form-control" type="text" id="blCode" name="blCode"  data-parsley-type="alphanum"  data-parsley-length="[25, 25]" data-parsley-focus="first" placeholder="Código"  data-parsley-trigger="keyup" data-parsley-required="true"/>
+                                    <input class="form-control" type="text" id="blCode" name="blCode"  data-parsley-type="alphanum"  data-parsley-length="[25, 25]" data-parsley-focus="first" placeholder="Código"  data-parsley-trigger="focusin focusout" data-parsley-required="true"/>
 <!--                                                <input type="text" class="form-control" id="blCode" placeholder="Código" />-->
                                 </div>
                                 <div class="col col-md-2">
@@ -288,7 +288,7 @@ TableAsset::register($this);
 </div>
 
 
-<?php $this->registerJsFile('@web/js/modules/rd/form-wizards-validation-to-agency.demo.js', ['depends' => ['app\assets\WizardAsset']]) ?>
-<?php $this->registerJsFile('@web/js/modules/rd/table-manage-select.demo.js', ['depends' => ['app\assets\SystemAsset']]) ?>
-<?php $this->registerJsFile('@web/js/modules/rd/reception-agency.js', ['depends' => ['app\assets\SystemAsset', 'app\assets\FormAsset']]) ?>
+<?php $this->registerJsFile('@web/js/modules/rd/reception/form-wizards-validation-to-agency.demo.js', ['depends' => ['app\assets\WizardAsset']]) ?>
+<?php $this->registerJsFile('@web/js/modules/rd/reception/table-manage-select.demo.js', ['depends' => ['app\assets\SystemAsset']]) ?>
+<?php $this->registerJsFile('@web/js/modules/rd/reception/reception-agency.js', ['depends' => ['app\assets\SystemAsset', 'app\assets\FormAsset']]) ?>
 

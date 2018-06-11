@@ -135,8 +135,18 @@ $this->title = 'SGT';
                             ['class' => 'yii\grid\SerialColumn'],
                             [
                                 'class' => 'yii\grid\DataColumn',
+                                'attribute' => 'id',
+                                'label' => 'Número de recepción'
+                            ],
+                            [
+                                'class' => 'yii\grid\DataColumn',
                                 'attribute' => 'trans_company_id',
                                 'value' => 'transCompany.name',
+                            ],
+                            [
+                                'class' => 'yii\grid\DataColumn',
+                                'attribute' => 'agency_id',
+                                'value' => 'agency.name',
                             ],
                             [
 //                                'class' => 'yii\grid\DataColumn',

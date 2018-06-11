@@ -55,7 +55,7 @@ class UserController extends Controller
      */
     public function actionIndex()
     {
-        if ( \Yii::$app->user->can('User_list')) {
+        if ( \Yii::$app->user->can('user_list')) {
 
             $searchModel = new UserSearch();
             $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
@@ -66,7 +66,7 @@ class UserController extends Controller
                 'dataProvider' => $dataProvider,
             ]);
         }else{
-            return $this->redirect(['/site/index']);
+            throw new ForbiddenHttpException('Acceso denegado');
         }
     }
 

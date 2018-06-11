@@ -2,6 +2,7 @@
 
 namespace app\modules\administracion\models;
 
+use vakata\database\Query;
 use Yii;
 
 use yii\data\ActiveDataProvider;
@@ -19,7 +20,7 @@ class UserSearch extends AdmUser
     {
         return [
             [['id', 'created_at', 'updated_at'], 'integer'],
-            [['username', 'auth_key', 'password', 'email', 'nombre', 'apellidos', 'creado_por', 'password_reset_token', 'cedula','status'], 'safe'],
+            [['username', 'auth_key', 'password', 'email', 'nombre', 'apellidos', 'creado_por', 'password_reset_token', 'cedula','status','item_name','id'], 'safe'],
         ];
     }
 
@@ -33,13 +34,22 @@ class UserSearch extends AdmUser
      */
     public function search($params)
     {
-        $query = AdmUser::find();
+
+
+        $query = AdmUser::find()
+            ->innerJoin("auth_assignment","auth_assignment.user_id = adm_user.id")
+            ->select( 'id,username,nombre,apellidos,email,status,auth_assignment.item_name as item_name ,auth_assignment.user_id');
+
+        //var_dump($query);die;
+
 
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
+
+        //var_dump($dataProvider->models);die;
 
 
         //var_dump($query);die;
@@ -72,13 +82,28 @@ class UserSearch extends AdmUser
 
         }
 
+        //$filter = AuthAssignment::find()->select('user_id')->where(['like','auth_assignment.user_id','adm_user.id']);
+
+
+
+
+
         $query->andFilterWhere(['like', 'username', $this->username])
-
-
-
             ->andFilterWhere(['like', 'email', $this->email])
             ->andFilterWhere(['like', 'nombre', $this->nombre])
             ->andFilterWhere(['like', 'apellidos', $this->apellidos]);
+
+        //$query->andFilterWhere([  'item_name'=>$filter]);
+
+        /*
+    //var_dump($this->id);die;
+        if(isset($this->item_name)){
+
+            $filter = AuthAssignment::find()->select('item_name')->where(['like','user_id',$this->id]);
+            $query->andFilterWhere(['item_name'=>$filter]);
+        }*/
+
+
 
 
         return $dataProvider;

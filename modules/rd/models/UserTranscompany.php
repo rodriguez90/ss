@@ -11,8 +11,8 @@ use Yii;
  * @property int $user_id
  * @property int $transcompany_id
  *
- * @property TransCompany $transcompany
  * @property AdmUser $user
+ * @property TransCompany $transcompany
  */
 class UserTranscompany extends \yii\db\ActiveRecord
 {
@@ -30,9 +30,10 @@ class UserTranscompany extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id', 'user_id', 'transcompany_id'], 'required'],
-            [['id', 'user_id', 'transcompany_id'], 'integer'],
-
+            [['user_id', 'transcompany_id'], 'required'],
+            [['user_id', 'transcompany_id'], 'integer'],
+            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => AdmUser::className(), 'targetAttribute' => ['user_id' => 'id']],
+            [['transcompany_id'], 'exist', 'skipOnError' => true, 'targetClass' => TransCompany::className(), 'targetAttribute' => ['transcompany_id' => 'id']],
         ];
     }
 
@@ -51,16 +52,16 @@ class UserTranscompany extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getTranscompany()
+    public function getUser()
     {
-        return $this->hasOne(TransCompany::className(), ['id' => 'transcompany_id']);
+        return $this->hasOne(AdmUser::className(), ['id' => 'user_id']);
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getUser()
+    public function getTranscompany()
     {
-        return $this->hasOne(AdmUser::className(), ['id' => 'user_id']);
+        return $this->hasOne(TransCompany::className(), ['id' => 'transcompany_id']);
     }
 }

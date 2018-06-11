@@ -6,6 +6,8 @@ use app\modules\administracion\models\AdmUser;
 use app\modules\rd\models\Reception;
 use app\modules\rd\models\ReceptionSearch;
 use app\modules\rd\models\ReceptionTransaction;
+use app\modules\rd\models\UserAgency;
+use app\modules\rd\models\UserTranscompany;
 use Yii;
 use yii\filters\AccessControl;
 use yii\helpers\Url;
@@ -72,21 +74,24 @@ class SiteController extends Controller
 
 //        if($user)
 
-
+        $params = Yii::$app->request->queryParams;
+//        var_dump($params);die;
         if($user && $user->hasRol('Agencia'))
         {
-            var_dump("Tiene el rol");
+            $userAgency = UserAgency::findOne(['user_id'=>$user->id]);
+            if($userAgency)
+                $params['agency_id'] = $userAgency->agency->name;
         }
-        else {
-            var_dump("No Tiene el rol");
+        else if ($user && $user->hasRol('Cia_transporte')){
+            $userCiaTrans = UserTranscompany::findOne(['user_id'=>$user->id]);
+            if($userCiaTrans)
+                $params['trans_company_id'] = $userCiaTrans->transcompany->name;
         }
-
-//        die;
 
         $searchModel = new ReceptionSearch();
 
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        $receptionCount = $searchModel->search(Yii::$app->request->queryParams)->totalCount;
+        $dataProvider = $searchModel->search($params);
+        $receptionCount = $searchModel->search($params)->totalCount;
 
         return $this->render('index', [
             'searchModel' => $searchModel,

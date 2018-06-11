@@ -53,7 +53,7 @@ FormAsset::register($this);
                     </div>
                     <h4 class="panel-title"> <?=  $this->title  ?> </h4>
                 </div>
-                <div class="panel-body panel-form">
+                <div class="panel-body panel-form" style="margin-top: 25px;">
 
                     <?php $form = ActiveForm::begin(
                         [
@@ -62,7 +62,7 @@ FormAsset::register($this);
                             'options' =>
                                 [
                                     'enctype' => 'multipart/form-data',
-                                    'class' => 'form-horizontal form-bordered',
+                                    'class' => 'form-horizontal',
                                     'data-parsley-validate' => true
                                 ],
                         ]

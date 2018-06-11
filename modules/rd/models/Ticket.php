@@ -18,6 +18,10 @@ use Yii;
  */
 class Ticket extends \yii\db\ActiveRecord
 {
+
+    const PRE_BOOKING = 0;
+    const RESERVE  = 1;
+
     /**
      * {@inheritdoc}
      */

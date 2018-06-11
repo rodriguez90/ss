@@ -25,7 +25,7 @@ class FormAsset extends AssetBundle
     public $js = [
         'plugins/switchery/switchery.min.js',
         //'js/form-slider-switcher.demo.min.js',
-        'js/form-slider-switcher.demo.js',
+        'js/form-slider-switcher.js',
         'plugins/bootstrap-select/bootstrap-select.min.js',
         "plugins/select2/dist/js/select2.min.js"
     ];

@@ -16,9 +16,9 @@ $(document).ready(function () {
         $('#search-container').prop('disabled', true)
     });
 
-    $('#blCode').change(function () {
-        console.log($('#blCode').val());
-    });
+    // $('#blCode').change(function () {
+    //     // console.log($('#blCode').val());
+    // });
 
 
     // cronometer

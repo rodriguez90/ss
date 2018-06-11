@@ -37,6 +37,7 @@ class ApiReceptionController extends  ActiveController
             'create' => ['POST'],
             'update' => ['PUT', 'PATCH'],
             'delete' => ['DELETE'],
+            'transaction' => ['GET', 'HEAD'],
         ];
     }
 
@@ -69,93 +70,105 @@ class ApiReceptionController extends  ActiveController
 //
             $transaction = Reception::getDb()->beginTransaction();
 
-
-            if($model->save())
-            {
-                $containers = Yii::$app->request->post()["containers"];
-                $tmpResult = true;
-                foreach ($containers as $container)
+            try {
+                if($model->save())
                 {
-                    $containerModel = new Container();
-                    $containerModel->name = $container['name'];
-                    $containerModel->code = $container['type'];
-                    $containerModel->tonnage = $container['tonnage'];
-                    $containerModel->active = 1;
-
-                    if($containerModel->save())
+                    $containers = Yii::$app->request->post()["containers"];
+                    $tmpResult = true;
+                    foreach ($containers as $container)
                     {
-                        $receptionTransModel = new ReceptionTransaction();
-                        $receptionTransModel->reception_id = $model->id;
-                        $receptionTransModel->container_id = $containerModel->id;
-                        $receptionTransModel->delivery_date = strtotime($container['deliveryDate']);
-                        $receptionTransModel->active = 1;
+                        $containerModel = new Container();
+                        $containerModel->name = $container['name'];
+                        $containerModel->code = $container['type'];
+                        $containerModel->tonnage = $container['tonnage'];
+                        $containerModel->active = 1;
 
-                        if(!$receptionTransModel->save()) {
+                        if($containerModel->save())
+                        {
+                            $receptionTransModel = new ReceptionTransaction();
+                            $receptionTransModel->reception_id = $model->id;
+                            $receptionTransModel->container_id = $containerModel->id;
+                            $receptionTransModel->delivery_date = strtotime($container['deliveryDate']);
+                            $receptionTransModel->active = 1;
+
+                            if(!$receptionTransModel->save()) {
+                                $tmpResult = false;
+                                $response['msg'] = implode(" ", $receptionTransModel->getErrorSummary(false));// implode(", ", $receptionTransModel->getErrors());
+                                $transaction->rollBack();
+                                break;
+                            }
+                        }
+                        else{
                             $tmpResult = false;
-                            $response['msg'] = implode(" ", $receptionTransModel->getErrorSummary(false));// implode(", ", $receptionTransModel->getErrors());
+                            $response['msg'] = implode(", ", $containerModel->getErrorSummary(false)); // $containerModel->getFirstError();
                             $transaction->rollBack();
                             break;
                         }
                     }
-                    else{
-                        $tmpResult = false;
-                        $response['msg'] = implode(", ", $containerModel->getErrorSummary(false)); // $containerModel->getFirstError();
-                        $transaction->rollBack();
-                        break;
+
+                    if($tmpResult)
+                    {
+                        $transaction->commit();
+
+                        // send email
+                        $remitente = AdmUser::findOne(['id'=>\Yii::$app->user->getId()]);
+                        $destinatario = AdmUser::find()
+                            ->innerJoin("user_transcompany","user_transcompany.user_id = adm_user.id ")
+                            ->where(["user_transcompany.transcompany_id"=>$model->trans_company_id])
+                            ->one();
+
+                        // TODO: send email user too from the admin system
+//                    $emailConten = null;
+                        $agency= $model->agency ? $model->agency->name:'';
+                        $ciaTransporte = $model->transCompany ? $model->transCompany->name:'';
+                        $emailConten = Html::beginTag('div')
+                            . Html::tag('h4', Html::encode('Notificación de solicitud de recepción'))
+                            . Html::tag('h5', Html::encode('Número de la Recepción: ' . $model->id))
+                            . Html::tag('p', Html::encode('Agencia: ' . $agency))
+                            . Html::tag('h5', Html::encode('Cia de Trasnporte: ' . $ciaTransporte))
+                            . Html::tag('p', Html::encode('Código BL: ' . $model->bl))
+                            . Html::tag('p', Html::encode('Fecha de Envío: ' . $model->created_at))
+                            . Html::tag('h5', Html::encode('Contenedores'))
+                            . Html::ul($containers, ['item' => function($item, $index) {
+                                $li = Html::tag(
+                                    'li',
+                                    Html::encode($item['name'] . ' '. $item['type'] . ' ' . $item['tonnage']),
+                                    []
+                                );
+//                                        var_dump($li) ; die;
+                                return $li;
+                            }])
+
+
+                            . Html::tag('p', Html::encode('Cantidad de Cotenedores: ' .$model->getContainerAmount()))
+                            . Html::a('Ir a solicitud', Url::to(['/rd/reception/trans-company', 'id'=>$model->id], true), [])
+                            . Html::endTag('div');
+
+                        Yii::$app->mailer->compose()
+                            ->setFrom($remitente->email)
+                            ->setTo($destinatario->email)
+//                            ->setFrom("admin@test.co")
+//                            ->setTo("test@test.co")
+                            ->setSubject( "email de prueba." )
+                            ->setHtmlBody($emailConten)
+                            ->send();
+
+                        $response['success'] = true;
+                        $response['msg'] = Yii::t("app", "Recepción creada correctamente.");
+//                    $response['url'] = Url::toRoute(['/site/index', 'option'=>1]);
+                        $response['url'] = Url::to('/site/index');
                     }
                 }
-
-                if($tmpResult)
-                {
-                    $transaction->commit();
-
-                    // send email
-                    $remitente = AdmUser::findOne(['id'=>\Yii::$app->user->getId()]);
-                    $destinatario = AdmUser::find()
-                        ->innerJoin("user_transcompany","user_transcompany.user_id = adm_user.id ")
-                        ->where(["user_transcompany.transcompany_id"=>$model->trans_company_id])
-                        ->one();
-
-                    // TODO: send email user too from the admin system
-//                    $emailConten = null;
-
-                    $emailConten = Html::beginTag('div')
-                                   . Html::tag('p', Html::encode('Notificación de solicitud de recepción'))
-                                   . Html::ul($containers, ['item' => function($item, $index) {
-                                        $li = Html::tag(
-                                            'li',
-                                            Html::encode($item['name']),
-                                            []
-                                        );
-//                                        var_dump($li) ; die;
-                                        return $li;
-                                    }])
-                                    . Html::tag('p', Html::encode($model->created_at))
-//                                    . Html::tag('p', Html::encode($model->getAgency() ? $model->getAgency()->name): '')
-                                    . Html::tag('p', Html::encode($model->bl))
-                                    . Html::tag('p', Html::encode($model->getContainerAmount()))
-//                                    . Html::a('Ir a solicitud', Url::toRoute(['/rd/reception/trans-company', 'id'=>$model->id]), [])
-                                    . Html::a('Ir a solicitud', Url::to(['/rd/reception/trans-company', 'id'=>$model->id], true), [])
-                                    . Html::endTag('div');
-
-                    Yii::$app->mailer->compose()
-//                    ->setFrom($remitente->email)
-//                    ->setTo($destinatario->email)
-                        ->setFrom("admin@test.co")
-                        ->setTo("test@test.co")
-                        ->setSubject( "email de prueba." )
-                        ->setHtmlBody($emailConten)
-                        ->send();
-
-                    $response['success'] = true;
-                    $response['msg'] = Yii::t("app", "Recepción creada correctamente.");
-//                    $response['url'] = Url::toRoute(['/site/index', 'option'=>1]);
-                    $response['url'] = Url::to('/site/index');
+                else {
+                    $response['success'] = false;
+                    $response['msg'] =  $model->getFirstError();
                 }
             }
-            else {
+            catch (Exception $e)
+            {
                 $response['success'] = false;
-                $response['msg'] =  $model->getFirstError();
+                $response['msg'] = $e->getMessage();
+                $transaction->rollBack();
             }
         }
         else {

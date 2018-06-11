@@ -96,6 +96,7 @@ class AdmUser extends ActiveRecord implements IdentityInterface
     {
         $attr = parent::attributes();
         $attr[] = 'passwordConfirm';
+		$attr[] = 'item_name';
         return $attr;
     }
 
@@ -121,6 +122,7 @@ class AdmUser extends ActiveRecord implements IdentityInterface
             'created_at' => 'Creado',
             'updated_at' => 'Modificado',
             'passwordConfirm' => 'Confirmar Contraseña',
+			'item_name'=>'Rol'
         ];
     }
 

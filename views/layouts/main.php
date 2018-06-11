@@ -126,6 +126,11 @@ if(!Yii::$app->user->isGuest){
                             <span> Despacho</span>
                         </a>
                     </li>
+                    <li class="has-sub">
+                        <a href="<?php echo Url::to(['/rd/calendar']);?>"> <i class="fa fa-calendar"></i>
+                            <span> Calendario</span>
+                        </a>
+                    </li>
 
                     <?php
                         if(Yii::$app->user->can("Admin_mod")){
@@ -178,7 +183,17 @@ if(!Yii::$app->user->isGuest){
 <!--</div>-->
 
 
-<script type="text/javascript"> var homeUrl = "<?php Yii::$app->homeUrl; ?>";</script>
+<script type="text/javascript"> var homeUrl = '<?php echo Yii::$app->homeUrl; ?>';</script>
+
+<?php
+//
+//echo "<script>";
+//
+//echo "homeUrl = '" . Yii::$app->homeUrl . "';";
+//
+//echo "</script>";
+//
+//?>
 
 <!-- end wrap -->
 <?php $this->endBody() ?>

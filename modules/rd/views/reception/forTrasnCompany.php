@@ -43,23 +43,24 @@ TableAsset::register($this);
                <?= DetailView::widget([
                    'model' => $model,
                    'attributes' => [
-//                'id',
+//                       'id',
+                       [
+                           'attribute'=>'id',
+                           'label'=>'No.',
+                       ],
                        'bl',
                        'created_at:datetime',
-//                [
-//                        'attribute'=>'transCompany',
-//                        'value'=>$model->transCompany->name
-//                ],
-
+                        [
+                                'attribute'=>'transCompany',
+                                'value'=>$model->transCompany->name
+                        ],
                        [
                            'attribute'=>'agency',
                            'value'=>$model->agency->name
                        ],
                        [
-
                            'attribute'=>'active',
                            'value'=>$model->active ? 'Si':'No'
-
                        ]
                    ],
                ]) ?>
@@ -82,7 +83,7 @@ TableAsset::register($this);
                                 <h5>Horas</h5>
                             </div>
                             <div class="col-md-2">
-                                <h5 id="minutes">30</h5>
+                                <h5 id="minutes">29</h5>
                                 <h5>Minutos</h5>
                             </div>
                             <div class="col-md-2">
@@ -134,85 +135,9 @@ TableAsset::register($this);
 <!--                                                    <h4 class="panel-title">Calendario</h4>-->
 <!--                                                </div>-->
                                                 <div class="panel-body p-5">
-                                                    <div class="row">
-<!--                                                    <div class="vertical-box">-->
-<!--                                                        <div data-scrollbar="true" data-height="280px">-->
-    <!--                                                        <div class="vertical-box-column p-15 bg-silver width-sm">-->
-    <!--                                                        <div class="vertical-box-column p-15 bg-silver width-sm">-->
-                                                        <div class="col-md-3">
-
-                                                            <div class="row">
-                                                                <div class="checkbox">
-                                                                    <label>
-                                                                        <input type="checkbox" id="select-all-event" />
-                                                                        Seleccionar
-                                                                    </label>
-                                                                </div>
-                                                                <h4 class="m-b-20">Contenedores disponibles</h4>
-                                                            </div>
-                                                            <div id="external-events" class="calendar-event" data-scrollbar="true" data-height="300px">
-
-                                                                <!--                                                                <table id="data-table" class="table table-striped table-bordered nowrap" width="100%">-->
-                                                                <!--                                                                    <thead>-->
-                                                                <!--                                                                    <tr>-->
-                                                                <!---->
-                                                                <!--                                                                        <th>Seleccione <input type="checkbox" name="select_all" value="1" id="select-all"></th>-->
-                                                                <!--                                                                        <th>Contenedores</th>-->
-                                                                <!--                                                                        <th>Tipo</th>-->
-                                                                <!--                                                                        <th>Fecha Límite</th>-->
-                                                                <!--                                                                    </tr>-->
-                                                                <!--                                                                    </thead>-->
-                                                                <!--                                                                </table>-->
-                                                                <?php
-
-                                                                    foreach ($model->receptionTransactions as $receptionTransaction)
-                                                                    {
-
-                                                                        $container = $receptionTransaction->container;
-                                                                        $data_title = $container->name; //. " " .$container->code;
-                                                                        $color = '';
-                                                                        $data_bg = '';
-                                                                        $icon= 'fa fa-cubes';
-
-
-                                                                        if($container->code === Container::DRY)
-                                                                        {
-                                                                            $color = 'bg-purple';
-                                                                            $data_bg = 'bg-purple';
-
-                                                                        }
-                                                                        else if($container->code === Container::RRF)
-                                                                        {
-                                                                            $color = 'bg-blue';
-                                                                            $data_bg = 'bg-blue';
-                                                                        }
-
-
-                                                                        $component = Html::beginTag('div', ['class'=>'external-event ' . $color,
-                                                                                'data-bg'=>$data_bg,
-                                                                                'data-title'=>$data_title,
-                                                                                'data-media'=>Html::tag('i', '',  ['class'=>$icon]),
-                                                                                'data-desc'=>$container->code,
-                                                                                'data-id'=>$receptionTransaction->id,
-                                                                            ])
-                                                                            .Html::checkbox('checkBox'.$receptionTransaction->id, false, ['id'=>'checkBox'.$receptionTransaction->id])
-                                                                            .Html::beginTag('h5')
-                                                                            .Html::tag('i', '',  ['class'=>$icon . ' fa-lg fa-fw'])
-                                                                            //                                                                                            . Html::tag('br')
-                                                                            . Html::encode($container->name)
-                                                                            . Html::tag('br')
-                                                                            .Html::endTag('h5')
-                                                                            .Html::tag('p', Html::encode($container->code . $container->tonnage) )
-                                                                            .Html::endTag('div');
-
-                                                                        echo $component;
-                                                                    }
-
-                                                                ?>
-
-                                                            </div> <!-- events-->
-                                                        </div>
-                                                        <div id="calendar" class="col-md-9 p-15 calendar"></div>
+<!--                                                    <div class="row">-->
+                                                    <div class="vertical-box">
+                                                        <div id="calendar" class="vertical-box-column p-15 calendar"></div>
                                                     </div>
                                                 </div> <!-- end panel body-->
                                             </div>
@@ -244,6 +169,7 @@ TableAsset::register($this);
                                                             <th>Tipo</th>
                                                             <th>Fecha Límite</th>
                                                             <th>Agencia</th>
+                                                            <th>Fecha del Cupo</th>
                                                             <th>Placa del Carro</th>
                                                             <th>Cédula del Chofer</th>
                                                         </tr>
@@ -278,13 +204,46 @@ TableAsset::register($this);
             <!-- end col-12 -->
         </div>
         <!-- end row wizard-->
-
     </div>
 </div>
 
+
+
+<!-- #modal-alert -->
+<div class="modal fade" id="modal-select-containers">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 id="modalTitle" class="modal-title"></h4>
+                <h5 id="modalTicket" class="modal-title"></h5>
+            </div>
+            <div class="modal-body p-15">
+                    <table id="data-table-modal" class="table table-striped table-bordered nowrap" width="100%">
+                        <thead>
+                        <tr>
+                            <th>Seleccione <input type="checkbox" name="select_all" value="1" id="select-all"></th>
+                            <th>Contenedor</th>
+                            <th>Tipo</th>
+                            <th>Fecha Límite</th>
+                            <th>Agencia</th>
+                        </tr>
+                        </thead>
+                    </table>
+            </div>
+            <div class="modal-footer">
+                <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Cancelar</a>
+                <a href="javascript:;" class="btn btn-sm btn-success" data-dismiss="modal">Aceptar</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var modelId = '<?php echo $model->id; ?>';
+</script>
+
 <!---->
-<?php $this->registerJsFile('@web/js/modules/rd/form-validation-trans-company.js', ['depends' => ['app\assets\WizardAsset']]) ?>
-<?php $this->registerJsFile('@web/js/modules/rd/table-manage-select.demo.js', ['depends' => ['app\assets\SystemAsset']]) ?>
-<?php $this->registerJsFile('@web/js/modules/rd/calendar.js', ['depends' => ['app\assets\CalendarAsset']]) ?>
-<?php $this->registerJsFile('@web/js/modules/rd/reception-trans-company.js', ['depends' => ['app\assets\SystemAsset', 'app\assets\FormAsset']]) ?>
+<?php $this->registerJsFile('@web/js/modules/rd/reception/form-wizar-validation-trans-company.js', ['depends' => ['app\assets\WizardAsset']]) ?>
+<?php $this->registerJsFile('@web/js/modules/rd/reception/calendar.js', ['depends' => ['app\assets\CalendarAsset']]) ?>
+<?php $this->registerJsFile('@web/js/modules/rd/reception/reception-trans-company.js', ['depends' => ['app\assets\SystemAsset', 'app\assets\FormAsset']]) ?>
 

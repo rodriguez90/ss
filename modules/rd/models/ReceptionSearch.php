@@ -41,7 +41,9 @@ class ReceptionSearch extends Reception
      */
     public function search($params)
     {
-        $query = Reception::find()->where(['active'=>true]);
+//        var_dump($params); die('search');
+        $query = Reception::find()->innerJoin('agency', 'agency.id = reception.agency_id')
+                                    ->innerJoin('trans_company', 'trans_company.id = reception.trans_company_id')->where(['reception.active'=>true]);
 
         // add conditions that should always apply here
 
@@ -59,6 +61,17 @@ class ReceptionSearch extends Reception
 
         $this->load($params);
 
+        if(isset($params['agency_id']))
+        {
+            $this->agency_id = $params['agency_id'];
+        }
+
+        if(isset($params['trans_company_id']))
+        {
+            $this->trans_company_id = $params['trans_company_id'];
+        }
+//        var_dump($this->attributes); die;
+
         if (!$this->validate()) {
             // uncomment the following line if you do not want to return any records when validation fails
             // $query->where('0=1');
@@ -75,6 +88,7 @@ class ReceptionSearch extends Reception
         ]);
 
         $query->andFilterWhere(['like', 'bl', $this->bl]);
+
         if(isset($this->trans_company_id))
         {
             $filter = TransCompany::find()->select('id')->where(['like', 'name', $this->trans_company_id]);
@@ -82,12 +96,12 @@ class ReceptionSearch extends Reception
 //            $query->andFilterWhere(['like', 'trans_company.name', $this->trans_company_id]);
 
         }
-
+//        var_dump($this->agency_id);die;
         if(isset($this->agency_id))
         {
+
 //            $filter = TransCompany::find()->select('id')->where(['like', 'name', $this->agency_id]);
             $query->andFilterWhere(['like', 'agency.name', $this->agency_id]);
-
 
         }
 

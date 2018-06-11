@@ -38,7 +38,7 @@ class Reception extends \yii\db\ActiveRecord
             [['bl'], 'string'],
             [['trans_company_id', 'agency_id', 'active'], 'integer'],
             [['created_at'], 'safe'],
-            [['agency_id'], 'exist', 'skipOnError' => true, 'targetClass' => Agency::class(), 'targetAttribute' => ['agency_id' => 'id']],
+            [['agency_id'], 'exist', 'skipOnError' => true, 'targetClass' => Agency::class, 'targetAttribute' => ['agency_id' => 'id']],
             [['trans_company_id'], 'exist', 'skipOnError' => true, 'targetClass' => TransCompany::class, 'targetAttribute' => ['trans_company_id' => 'id']],
         ];
     }
