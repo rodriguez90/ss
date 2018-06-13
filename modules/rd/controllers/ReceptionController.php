@@ -2,6 +2,7 @@
 
 namespace app\modules\rd\controllers;
 
+use app\modules\administracion\models\AdmUser;
 use app\modules\rd\models\ContainerSearch;
 use app\modules\rd\models\ReceptionTransaction;
 use app\modules\rd\models\Reception;
@@ -79,9 +80,7 @@ class ReceptionController extends Controller
      */
     public function actionView($id)
     {
-        $session = Yii::$app->session;
-        $user = $session->get('user', null);
-
+        $user = AdmUser::findOne(['id'=>Yii::$app->user->id]);
 
         $params = Yii::$app->request->queryParams;
 
@@ -115,8 +114,7 @@ class ReceptionController extends Controller
      */
     public function actionCreate()
     {
-        $session = Yii::$app->session;
-        $user = $session->get('user', null);
+        $user = AdmUser::findOne(['id'=>Yii::$app->user->id]);
         if($user && !($user->hasRol('Agencia')))
             throw new ForbiddenHttpException('Usted ni tiene permiso para crear una recepción');
 
@@ -168,8 +166,7 @@ class ReceptionController extends Controller
 
     public function actionCreateByAgency()
     {
-        $session = Yii::$app->session;
-        $user = $session->get('user', null);
+        $user = AdmUser::findOne(['id'=>Yii::$app->user->id]);
         if($user && !($user->hasRol('Agencia')))
             throw new ForbiddenHttpException('Usted ni tiene permiso para crear una recepción');
 
@@ -187,8 +184,7 @@ class ReceptionController extends Controller
 
     public function actionTransCompany($id)
     {
-        $session = Yii::$app->session;
-        $user = $session->get('user', null);
+        $user = AdmUser::findOne(['id'=>Yii::$app->user->id]);
         if($user && !($user->hasRol('Cia_transporte')))
             throw new ForbiddenHttpException('Usted no tiene permiso para resevar cupos en la recepción');
 

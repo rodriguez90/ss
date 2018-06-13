@@ -266,7 +266,10 @@ class UserController extends Controller
                     break;
                 case 'Cia_transporte':
                     $error  ="Seleccione una compañía de transporte.";
-                    $type_actual =  UserTranscompany::findOne(['user_id'=>$model->id])->transcompany_id;
+                    $type_actual = -1;
+                    $ut = UserTranscompany::findOne(['user_id'=>$model->id]);
+                    if($ut)
+                        $type_actual = $ut->transcompany_id;
                     break;
                 default :
 

@@ -21,6 +21,7 @@ class TableAsset extends AssetBundle
     'plugins/DataTables/extensions/Buttons/css/buttons.bootstrap.min.css',
 	'plugins/DataTables/extensions/Select/css/select.bootstrap.min.css',
 	'plugins/DataTables/extensions/Responsive/css/responsive.bootstrap.min.css'	,
+    'plugins/DataTables/extensions/KeyTable/css/keyTable.bootstrap.min.css',
     ];
 
     public $js = [
@@ -33,8 +34,9 @@ class TableAsset extends AssetBundle
     'plugins/DataTables/extensions/Buttons/js/buttons.html5.min.js',
     'plugins/DataTables/extensions/Buttons/js/buttons.colvis.min.js',
 	'plugins/DataTables/extensions/Select/js/dataTables.select.min.js',
+    'plugins/DataTables/extensions/KeyTable/js/dataTables.keyTable.min.js',
 	'plugins/DataTables/extensions/Responsive/js/dataTables.responsive.min.js',
-    'plugins/DataTables/extensions/CellEdit/js/dataTables.cellEdit.js'
+    'plugins/DataTables/extensions/CellEdit/js/dataTables.cellEdit.js',
     ];
 
     public $depends = [

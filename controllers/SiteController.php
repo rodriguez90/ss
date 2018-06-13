@@ -69,11 +69,8 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        $session = Yii::$app->session;
-        $user = $session->get('user', null);
-
-//        if($user)
-
+        $user = AdmUser::findOne(['id'=>Yii::$app->user->id]);
+//        var_dump($user);die;
         $params = Yii::$app->request->queryParams;
 //        var_dump($params);die;
         if($user && $user->hasRol('Agencia'))

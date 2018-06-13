@@ -280,6 +280,9 @@ var handleTableInWizar = function() {
             pageLength: 5,
             // order: [[ 0, 'asc' ]],
             order: [[1, "asc"]],
+            // keys: {
+            //     columns: [ 5, 6 ]
+            // },
             columns: [
                 { title: "Contenedor",
                     "data":"name"
