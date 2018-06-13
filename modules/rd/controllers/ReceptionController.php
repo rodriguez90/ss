@@ -206,21 +206,32 @@ class ReceptionController extends Controller
         $response['msg'] = '';
         $response['transactions'] = [];
         $id = Yii::$app->request->get('id');
+        $actived = Yii::$app->request->get('actived');
         if(isset($id))
         {
             $reception = Reception::findOne(['id'=>$id]);
+            $condition = 'reception_id = ' . $id;
+            if(isset($actived))
+            {
+                $condition = $condition . ' and active = ' . $actived;
+            }
 
             if($reception)
             {
+                $transactions = ReceptionTransaction::find()->where($condition)
+                    ->orderBy('delivery_date', SORT_ASC)
+                    ->all();
+
                 $response['success'] = true;
-                $response['msg'] = Yii::t("app", "Datos encontrados.");
-//                $response['transactions'] = json_encode($reception->receptionTransactions);
-                $response['transactions'] = $reception->receptionTransactions;
+                $response['msg'] = "Datos encontrados.";
+//                $transactions = $reception->receptionTransactions;
+                $response['transactions'] = [];
                 $response['reception'] = $reception;
                 $response['angecy'] = $reception->agency;
                 $response['containers'] = [];
-                foreach ( $response['transactions'] as $t)
+                foreach ( $transactions as $t)
                 {
+                    array_push($response['transactions'], $t);
                     array_push($response['containers'], $t->container);
                 }
             }

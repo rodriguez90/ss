@@ -5,12 +5,9 @@
 
 return [
     'class' => 'yii\db\Connection',
-//    'dsn' => 'mssql:host=localhost;dbname=sgt',
-    //'dsn'=>'sqlsrv:Server=DESKTOP-JH5RE76\SQLEXPRESS;Database=sgt',
-//	'dsn'=>'sqlsrv:Server=PEDRO-PC\SQLEXPRESS;Database=sgt',
-//    'dsn'=>'sqlsrv:Server=127.0.0.1;Database=sgt',
-    'dsn' => 'mysql:host=localhost;dbname=sgt',
-    'username' => 'root',
+	'dsn'=>'sqlsrv:Server=PEDRO-PC\SQLEXPRESS;Database=sgt',
+//    'dsn' => 'mysql:host=localhost;dbname=sgt',
+    'username' => '',
     'password' => '', //Root*2018
     'charset' => 'utf8',
 

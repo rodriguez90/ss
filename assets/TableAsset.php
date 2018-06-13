@@ -34,6 +34,7 @@ class TableAsset extends AssetBundle
     'plugins/DataTables/extensions/Buttons/js/buttons.colvis.min.js',
 	'plugins/DataTables/extensions/Select/js/dataTables.select.min.js',
 	'plugins/DataTables/extensions/Responsive/js/dataTables.responsive.min.js',
+    'plugins/DataTables/extensions/CellEdit/js/dataTables.cellEdit.js'
     ];
 
     public $depends = [

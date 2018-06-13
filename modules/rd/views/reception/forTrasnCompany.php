@@ -25,6 +25,13 @@ TableAsset::register($this);
     {
         width: 100% !important;
     }
+    .fc-time-grid .fc-slats td
+    {
+        height:5.5em !important;
+    }
+    .fc-title {
+        font-size: 16px !important;
+    }
 </style>
 
 <div class="panel panel-inverse" data-sortable-id="ui-widget-1">
@@ -61,8 +68,13 @@ TableAsset::register($this);
                        [
                            'attribute'=>'active',
                            'value'=>$model->active ? 'Si':'No'
-                       ]
+                       ],
+                       [
+                        'label'=>'Cantidad de Contenedores',
+                        'value'=>count($model->receptionTransactions)
+                        ]
                    ],
+                   'class' => 'table table-striped table-bordered table-condensed detail-view',
                ]) ?>
            </div>
 
@@ -135,10 +147,22 @@ TableAsset::register($this);
 <!--                                                    <h4 class="panel-title">Calendario</h4>-->
 <!--                                                </div>-->
                                                 <div class="panel-body p-5">
-<!--                                                    <div class="row">-->
-                                                    <div class="vertical-box">
-                                                        <div id="calendar" class="vertical-box-column p-15 calendar"></div>
+                                                    <div class="row">
+                                                        <div class="col-md-2">
+                                                            <h4 class="m-b-20">Leyenda</h4>
+                                                            <div class="external-event bg-blue ui-draggable" style="position: relative;">
+                                                                <p>Disponibilidad en el calendario.</p>
+                                                            </div>
+                                                            <div class="external-event bg-green ui-draggable" style="position: relative;">
+                                                                <p>Contenedores de 20 toneledas.</p>
+                                                            </div>
+                                                            <div class="external-event bg-purple ui-draggable" style="position: relative;">
+                                                                <p>Contenedores de 40 toneledas.</p>
+                                                            </div>
+                                                        </div>
+                                                        <div id="calendar" class="col-md-10 p-15 calendar"></div>
                                                     </div>
+
                                                 </div> <!-- end panel body-->
                                             </div>
                                             <!-- end panel -->
@@ -164,15 +188,15 @@ TableAsset::register($this);
                                                 <div class="panel-body">
                                                     <table id="data-table2" class="table table-striped table-bordered nowrap" width="100%">
                                                         <thead>
-                                                        <tr>
-                                                            <th>Contenedores</th>
-                                                            <th>Tipo</th>
-                                                            <th>Fecha Límite</th>
-                                                            <th>Agencia</th>
-                                                            <th>Fecha del Cupo</th>
-                                                            <th>Placa del Carro</th>
-                                                            <th>Cédula del Chofer</th>
-                                                        </tr>
+<!--                                                        <tr>-->
+<!--                                                            <th>Contenedores</th>-->
+<!--                                                            <th>Tipo</th>-->
+<!--                                                            <th>Fecha Límite</th>-->
+<!--                                                            <th>Agencia</th>-->
+<!--                                                            <th>Fecha del Cupo</th>-->
+<!--                                                            <th>Placa del Carro</th>-->
+<!--                                                            <th>Cédula del Chofer</th>-->
+<!--                                                        </tr>-->
                                                         </thead>
                                                     </table>
                                                 </div>
@@ -218,7 +242,7 @@ TableAsset::register($this);
                 <h5 id="modalTicket" class="modal-title"></h5>
             </div>
             <div class="modal-body p-15">
-                    <table id="data-table-modal" class="table table-striped table-bordered nowrap" width="100%">
+                    <table id="data-table-modal" class="table table-striped table-bordered table-condensed nowrap" width="100%">
                         <thead>
                         <tr>
                             <th>Seleccione <input type="checkbox" name="select_all" value="1" id="select-all"></th>
@@ -232,7 +256,8 @@ TableAsset::register($this);
             </div>
             <div class="modal-footer">
                 <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Cancelar</a>
-                <a href="javascript:;" class="btn btn-sm btn-success" data-dismiss="modal">Aceptar</a>
+<!--                <a id="aceptBtn" href="#;" class="btn btn-sm btn-success" disabled>Aceptar</a>-->
+                <a id="aceptBtn" href="#;" class="btn btn-sm btn-success" >Aceptar</a>
             </div>
         </div>
     </div>
@@ -240,6 +265,7 @@ TableAsset::register($this);
 
 <script type="text/javascript">
     var modelId = '<?php echo $model->id; ?>';
+//    var complex = <?php //echo json_encode($complex); ?>//;
 </script>
 
 <!---->
