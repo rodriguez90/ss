@@ -74,7 +74,7 @@ TableAsset::register($this);
                         'value'=>count($model->receptionTransactions)
                         ]
                    ],
-                   'class' => 'table table-striped table-bordered table-condensed detail-view',
+                   'options'=>['class' => 'table table-striped table-bordered table-condensed detail-view'],
                ]) ?>
            </div>
 
