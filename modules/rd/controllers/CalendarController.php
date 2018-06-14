@@ -2,6 +2,7 @@
 
 namespace app\modules\rd\controllers;
 
+use app\modules\rd\models\Ticket;
 use app\modules\rd\models\Warehouse;
 use DateTime;
 use DateTimeZone;
@@ -74,6 +75,7 @@ class CalendarController extends Controller
         Yii::$app->response->format = Response::FORMAT_JSON;
 
         $result = [];
+        $result ['events'] = [];
 
         $events =Yii::$app->request->post('events');
 
@@ -89,8 +91,6 @@ class CalendarController extends Controller
                 if($event['id'] == -1){
 
                     $model = new Calendar();
-
-
                     $aux = new DateTime($event['start']);
                     $aux->setTimezone(new DateTimeZone("UTC"));
                     $model->start_datetime = $aux->format("Y-m-d G:i:s");  //date_format( new \DateTime($event['start'],new DateTimeZone("UTC")),"Y-m-d G:i:s");
@@ -99,22 +99,12 @@ class CalendarController extends Controller
                     $aux1->setTimezone(new DateTimeZone("UTC"));
                     $model->end_datetime = $aux1->format("Y-m-d G:i:s");// date_format(new \DateTime($event['end'],new DateTimeZone("UTC")),"Y-m-d G:i:s");
 
-                    //$start = date("Y-m-d\TH:i:sz",strtotime($event['start']));
-                    //$end = date("Y-m-d\TH:i:sz",strtotime($event['end']));
-
-                    /*
-                                        $model->start = $start;
-                                        $model->end = $end;*/
-
                     $model->amount = $event['title'];
                     $model->id_warehouse =  1;
                     $model->save();
 
-                    foreach ($model->errors as $key => $value) {
-
-                        $text  = $text. " ".  $value[0];
-                    }
-
+                    $event = ['update'=>false, 'id'=>$model->id, 'title'=>$model->amount,'start'=>$model->start_datetime,'end'=>$model->end_datetime  , 'url'=>Url::toRoute('/rd/calendar/delete?id='.$model->id),   'allDay'=>false, 'className'=>['event_rd'], 'editable'=>false];
+                    $result ['events'] [] = $event;
 
 
                 }else{
@@ -128,18 +118,28 @@ class CalendarController extends Controller
                     $aux1->setTimezone(new DateTimeZone("UTC"));
                     $model->end_datetime = $aux1->format("Y-m-d G:i:s");// date_format(new \DateTime($event['end'],new DateTimeZone("UTC")),"Y-m-d G:i:s");
 
+                    $reservados = Calendar::find()
+                        ->innerJoin("ticket","calendar.id = ticket.calendar_id")
+                        ->where(["calendar.id"=>$model->id])
+                        ->count();
+                    if( (int)$reservados <= (int)$event['title'] ){
+                        $model->amount = $event['title'];
+                        $model->save();
 
-                    $model->amount = $event['title'];
-                    $model->save();
-
-                    foreach ($model->errors as $key => $value) {
-
-                        $text  = $text. " ".  $value[0];
                     }
+
+                    $event = ['update'=>false, 'id'=>$model->id, 'title'=>$model->amount,'start'=>$model->start_datetime,'end'=>$model->end_datetime  , 'url'=>Url::toRoute('/rd/calendar/delete?id='.$model->id),   'allDay'=>false, 'className'=>['event_rd'], 'editable'=>false];
+                    $result ['events'] [] = $event;
+
                 }
+
+
             }
 
+
+
             $result ['status']= 1;
+
             $result['msg'] = "Cupos añadidos correctamente." . $text;
 
 
@@ -200,12 +200,25 @@ class CalendarController extends Controller
         $result = [];
         $model = $this->findModel($id);
         $amount = $model->amount;
-        if($this->findModel($id)->delete()>0){
-            $result ['status']= 1;
-            $result['msg'] = "Cupos eliminados: ".$amount;
+
+
+        $reservados = Calendar::find()
+            ->innerJoin("ticket","calendar.id = ticket.calendar_id")
+            ->where(["calendar.id"=>$model->id])
+            ->count();
+
+        if($reservados == 0){
+            //var_dump($reservados);
+            if($this->findModel($id)->delete()>0){
+                $result ['status']= 1;
+                $result['msg'] = "Cupos eliminados: ".$amount;
+            }else{
+                $result ['status']= 0;
+                $result['msg'] = "No se pudieron eliminar los cupos.";
+            }
         }else{
             $result ['status']= 0;
-            $result['msg'] = "No se pudieron eliminar los cupos.";
+            $result['msg'] = "No se pueden eliminar cupos reservados.";
         }
 
         return $result;
@@ -281,6 +294,7 @@ class CalendarController extends Controller
                             'start'=> $cal['start_datetime'] ,
                             'end'=>$cal['end_datetime'],
                             'count'=>$cal['amount'],
+                            'update'=>false,
                             'allDay'=> false,
                             'className'=>['event_rd'],
                             'editable'=>false,

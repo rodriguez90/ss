@@ -366,8 +366,8 @@ class UserController extends Controller
         $model = $this->findModel($id);
         if ( \Yii::$app->user->can('Admin_mod') && $model->username != 'root' && $model->username != \Yii::$app->user) {
 
-            return $this->redirect(['create']);
-            //$this->findModel($id)->delete();
+            //return $this->redirect(['create']);
+            $this->findModel($id)->delete();
         }
 
         return $this->redirect(['index']);

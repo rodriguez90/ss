@@ -82,7 +82,7 @@ $config = [
         'urlManager' => [
             'enablePrettyUrl' => true,
 //            'showScriptName' => false,
-//            'baseUrl' => 'http://localhost:8080/',
+           'baseUrl' => 'http://localhost:8080/sgt/',
             'rules' => [
             ],
         ],

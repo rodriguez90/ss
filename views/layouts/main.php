@@ -96,41 +96,70 @@ if(!Yii::$app->user->isGuest){
             <div data-scrollbar="true" data-height="100%">
                 <!-- begin sidebar nav -->
                 <ul class="nav">
-                    <li class="has-sub">
-                        <a href="<?php echo Url::to(['/rd/warehouse']);?>"/> <i class="fa fa-building"></i>
-                        <span> Depósito</span>
-                        </a>
-                    </li>
-                    <li class="has-sub">
-                        <a href="<?php echo Url::to(['/rd/agency']);?>"> <i class="fa fa-institution alias"></i>
-                            <span> Agencias</span>
-                        </a>
-                    </li>
-                    <li class="has-sub">
-                        <a href="<?php echo Url::to(['/rd/container']);?>"> <i class="fa fa-cubes"></i>
-                            <span> Contenedores</span>
-                        </a>
-                    </li>
-                    <li class="has-sub">
-                        <a href="<?php echo Url::to(['/rd/trans-company']);?>"> <i class="fa fa-truck"></i>
-                            <span> Transporte</span>
-                        </a>
-                    </li>
-                    <li class="has-sub">
-                        <a href="<?php echo Url::to(['/rd/reception']);?>"> <i class="fa fa-rotate-90 fa-sign-in"></i>
-                            <span> Recepción</span>
-                        </a>
-                    </li>
+                    <?php
+                    if(Yii::$app->user->can("Admin_mod") || Yii::$app->user->can("warehouse_list") ){
+                        echo "<li class='has-sub'>";
+                        echo "<a href=" . Url::to(['/rd/warehouse'])."/> <i class='fa fa-building'></i>";
+                        echo "<span> Depósito</span>";
+                        echo "</a>";
+                        echo "</li>";
+                    }
+                    ?>
+
+                    <?php
+                    if(Yii::$app->user->can("Admin_mod")  || Yii::$app->user->can("agency_list") ){
+                        echo "<li class='has-sub'>";
+                        echo "<a href=" . Url::to(['/rd/agency']) ."> <i class='fa fa-institution alias'></i>";
+                        echo "<span> Agencias</span>";
+                        echo "</a>";
+                        echo "</li>";
+                      }
+                    ?>
+
+                    <?php
+                    if(Yii::$app->user->can("Admin_mod") || Yii::$app->user->can("container_list")){
+                        echo "<li class='has-sub'>";
+                        echo "<a href=". Url::to(['/rd/container'])."> <i class='fa fa-cubes'></i>";
+                        echo "<span> Contenedores</span>";
+                        echo "</a>";
+                        echo "</li>";
+                    }
+                    ?>
+
+                    <?php
+                    if(Yii::$app->user->can("Admin_mod") || Yii::$app->user->can("trans-company_list")){
+                        echo "<li class='has-sub'>";
+                        echo "<a href=" . Url::to(['/rd/trans-company'])."> <i class='fa fa-truck'></i>";
+                        echo "<span> Transporte</span>";
+                        echo "</a>";
+                        echo "</li>";
+                    }
+                    ?>
+                    <?php
+                    if(Yii::$app->user->can("Admin_mod") || Yii::$app->user->can("reception_list")){
+                        echo "<li class='has-sub'>";
+                        echo "<a href=".Url::to(['/rd/reception'])."> <i class='fa fa-rotate-90 fa-sign-in'></i>";
+                        echo  "<span> Recepción</span>";
+                        echo "</a>";
+                        echo "</li>";
+                    }
+                    ?>
+
                     <li class="has-sub">
                         <a href="javascript:;"> <i class="fa fa-rotate-90 fa-sign-out"></i>
                             <span> Despacho</span>
                         </a>
                     </li>
-                    <li class="has-sub">
-                        <a href="<?php echo Url::to(['/rd/calendar']);?>"> <i class="fa fa-calendar"></i>
-                            <span> Calendario</span>
-                        </a>
-                    </li>
+
+                    <?php
+                    if (Yii::$app->user->can("Admin_mod") || Yii::$app->user->can("calendar_list")) {
+                        echo "<li class='has-sub'>";
+                        echo "<a href=" . Url::to(['/rd/calendar']) . "> <i class='fa fa-calendar'></i>";
+                        echo "<span> Calendario</span>";
+                        echo "</a>";
+                        echo "</li>";
+                    }
+                    ?>
 
                     <?php
                         if(Yii::$app->user->can("Admin_mod")){
@@ -141,7 +170,6 @@ if(!Yii::$app->user->isGuest){
                            echo "<li><a href=". Url::toRoute(['/administracion/item','type'=> 1]) .">Roles</a></li>";
                            echo "<li><a href=". Url::toRoute(['/administracion/item','type'=> 2]) .">Permisos</a></li>";
                            echo "<li><a href=". Url::toRoute(['/administracion/authitemchild/']) .">Grupos</a></li>";
-
                            echo "</ul>";
                            echo "</li>";
                         }

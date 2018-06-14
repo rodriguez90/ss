@@ -75,7 +75,7 @@ class RbacController extends Controller
         $adminUser->updated_at = time();
         $adminUser->cedula = "2012345678";
 
-        if (!AdmUser::findOne(['username' => $adminUser->username]) == null && $adminUser->save())
+        if (AdmUser::findOne(['username' => $adminUser->username]) == null && $adminUser->save())
         {
             $adminUser = null;
             $result['msg'] = $msg."No se pudo añadir el usuario.";

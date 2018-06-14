@@ -7,15 +7,12 @@
 
 var events = [];
 
-var min_date = new Date( new Date().getTime() - 604800000 );
-var max_date = new Date( new Date().getTime() + 604800000 );
+var min_date = new Date( new Date().getTime() - 691200000 );
+var max_date = new Date( new Date().getTime() + 691200000 );
 
 var fullcalendatInit = false;
 
 $(function (){
-
-    console.log(min_date);
-    console.log(max_date);
 
     $("#grabar").click(function () {
 
@@ -32,6 +29,52 @@ $(function (){
                        text: response['msg'],
                        time:5000,
                     });
+
+
+                    $.each(response["events"],function (i) {
+
+                        var response_start = response["events"][i].start.split(' ');
+                        var response_end = response["events"][i].end.split(' ');
+
+                        var array_time1 = response_start[1].split(':');
+                        var array_time2 = response_end[1].split(':');
+
+                        var time1 = array_time1[0];
+                        var time2 = array_time2[0];
+
+                        var array1 = response_start[0].split("-");
+                        var array2 = response_end[0].split("-");
+
+                        var start_y = parseInt(array1[0]);
+                        var start_m = parseInt(array1[1]);
+                        var start_d = parseInt(array1[2]);
+
+                        var end_y = parseInt(array2[0]);
+                        var end_m = parseInt(array2[1]);
+                        var end_d = parseInt(array2[2]);
+
+
+                        var start_event_db = new Date(Date.UTC(start_y, start_m - 1, start_d, time1, 0, 0));
+                        var end_event_db = new Date(Date.UTC(end_y, end_m - 1, end_d, time2, 0, 0));
+
+                        //esto convertirlo en la función exist
+                        for (var j = 0; j < events.length; j++) {
+                            var event_start = events[j].start;
+                            var event_end = events[j].end;
+                            if (event_start.getTime() === start_event_db.getTime() && event_end.getTime() === end_event_db.getTime()) {
+                                events[j].title = response["events"][i].title;
+                                console.log(" actualizado");
+                            }
+                        }
+
+                    });
+
+
+
+                  $('#calendar').fullCalendar('removeEvents');
+                  $('#calendar').fullCalendar('addEventSource',events);
+                  $('#calendar').fullCalendar('refetchEvents');
+
                 }else{
                     $.gritter.add({
                         title: "Error",
@@ -44,15 +87,11 @@ $(function (){
             },
             error: function (response) {
                 console.log(response.responseText);
-                //alert(textStatus);
-                result = false;
-                // return false;
+                return false;
             }
 
         });
-
         return false;
-
     });
 
 
@@ -84,19 +123,6 @@ $(function (){
 
                 ini = new Date(ini.getTime() +  parseInt(desde) * hora );
                 fin = new Date(fin.getTime() +  parseInt(desde) * hora );
-                /*
-                 var ini_utc = Date.UTC(ini.getUTCFullYear(),ini.getUTCMonth(),ini.getUTCDate(),ini.getUTCHours(),
-                 ini.getUTCMinutes(),ini.getUTCSeconds());
-
-                 var fin_utc = Date.UTC(fin.getUTCFullYear(),fin.getUTCMonth(),fin.getUTCDate(),fin.getUTCHours(),
-                 fin.getUTCMinutes(),fin.getUTCSeconds());
-
-                 ini  = new Date(ini_utc)
-                 fin = new Date(fin_utc)*/
-
-
-                //ini 2018-06-10T01:00:00.000Z
-                //fin 2018-06-11T01:00:00.000Z
 
                 while  ( ini <= fin){
                     var h_stard = ini;
@@ -105,7 +131,8 @@ $(function (){
                     while (h_stard < h_end){
                         var h_end_aux =new Date( h_stard.getTime() + hora );
                         var event = {
-                            pos:-1,
+                            update:false,
+                            //pos:-1,
                             id: -1,
                             title:amount+ "",
                             start:h_stard,
@@ -117,15 +144,9 @@ $(function (){
                         };
 
                         var pos = -1;
-
                         for(var i = 0; i<events.length; i++){
-
                             var event_start = events[i].start;
                             var event_end = events[i].end;
-
-                            console.log(event_start);
-                            console.log(event_end);
-
                             if( event_start.getTime() === h_stard.getTime() && event_end.getTime() === h_end_aux.getTime()){
                                 //pregnutar antes d grabar
                                 pos = i;
@@ -135,22 +156,23 @@ $(function (){
                         }
 
                         if(pos == -1){
-                            event['pos'] = events.length;
                             events.push( event );
                         }else{
                             events[pos].title = event['title'];
+                            events[pos].update = true;
                            }
-
                         h_stard = new Date( h_stard.getTime() + hora );
                     }
                     var aux = ini.getTime();
                     ini = new Date( (aux + dia) ) ;
                 }
+
                 $('#calendar').fullCalendar('removeEvents');
                 $('#calendar').fullCalendar('addEventSource',events);
                 $('#calendar').fullCalendar('refetchEvents');
 
-                console.log(events);
+
+                console.log("addEvens",events);
 
 
             }else{
@@ -161,8 +183,6 @@ $(function (){
         }
     });
 
-
-
     $.ajax({
         url: homeUrl+ "/rd/calendar/getcalendar",
         dataType:'json',
@@ -172,7 +192,7 @@ $(function (){
             end: max_date.toISOString()
         },
         success: function (response) {
-            console.log("111111");
+
             var calendar = $('#calendar').fullCalendar({
 
                 header: {
@@ -188,11 +208,6 @@ $(function (){
                         var min =  new Date(view.start);
                         var max = new Date(view.end);
 
-
-
-                        console.log("start: " + min);
-                        console.log("start: " + max);
-
                         $.ajax({
                             url: homeUrl+ "rd/calendar/getcalendar",
                             dataType:'json',
@@ -204,8 +219,7 @@ $(function (){
                             success: function (response) {
 
                                 for(var i = 0; i<events.length; i++){
-
-                                    if( events[i].id != -1 ){
+                                    if( !events[i].update && events[i].id !=-1 ){
                                         events.splice(i,1);
                                         i = i - 1;
                                     }
@@ -215,7 +229,7 @@ $(function (){
 
                                     var response_start = response[i].start.split(' ');
                                     var response_end = response[i].end.split(' ');
-                                    console.log(response_start)
+
                                     var time1 = response_start[1].substr(0,2);
                                     var time2 = response_end[1].substr(0,2);
 
@@ -230,38 +244,43 @@ $(function (){
                                     var end_m = parseInt(array2[1]);
                                     var end_d = parseInt(array2[2]);
 
-                                    console.log( new Date(Date.UTC( start_y,start_m,start_d,time1,0,0)));
+                                    var start_event_db = new Date(Date.UTC (start_y,start_m-1,start_d,time1,0,0) );
+                                    var end_event_db =  new Date( Date.UTC(end_y,end_m-1,end_d,time2,0,0));
 
-                                    var event = {pos:i, id: response[i].id, title: response[i].title,start: new Date(Date.UTC (start_y,start_m-1,start_d,time1,0,0) ),end:  new Date( Date.UTC(end_y,end_m-1,end_d,time2,0,0)), url:response[i].url,   allDay:false, className : ['event_rd'], editable: false}
-
-                                    events.push(event);
+                                    //esto convertirlo en la función exist
+                                    var pos = -1;
+                                    for(var j = 0; j<events.length; j++){
+                                        var event_start = events[j].start;
+                                        var event_end = events[j].end;
+                                        if( event_start.getTime() === start_event_db.getTime() && event_end.getTime() === end_event_db.getTime()){
+                                            pos = j;
+                                            break;
+                                        }
+                                    }
+                                    if(pos==-1){
+                                        var event = {update: false, id: response[i].id, title: response[i].title,start:start_event_db ,end:end_event_db , url:response[i].url,   allDay:false, className : ['event_rd'], editable: false}
+                                        events.push(event);
+                                    }
 
                                 });
-                                console.log(events);
+
                                 $('#calendar').fullCalendar('removeEvents');
                                 $('#calendar').fullCalendar('addEventSource',events);
                                 $('#calendar').fullCalendar('refetchEvents');
 
 
-                                console.log("eventos actualizados");
+                                console.log("viewRender: " , events);
 
-                                //eliminar los de la db que esten fuera del rango, manteniendo los de id -1
-                                //luego añadir los q vienen de la db....
+
+
                             },
                             error: function(response) {
                                 console.log(response.responseText);
-                                result = false;
-                                // return false;
+                                return false;
                             }
-
                         });
 
-
-
-                    }
-
-
-
+                    } 
                 },
                 selectable: false,
                 selectHelper: true,
@@ -289,7 +308,6 @@ $(function (){
                     calendar.fullCalendar('unselect');
                 },
                 eventClick: function(event) {
-
                     if(confirm("¿Está seguro de eliminar este elemento?")){
                         if(event.id !=-1 ){
                             if (event.url) {
@@ -307,7 +325,6 @@ $(function (){
                                                     events.splice(i,1);
                                                 }
                                             }
-
                                             $.gritter.add({
                                                 title: "Eliminar Cupos",
                                                 text: response['msg'],
@@ -326,6 +343,7 @@ $(function (){
                                         $('#calendar').fullCalendar('addEventSource',events);
                                         $('#calendar').fullCalendar('refetchEvents');
 
+
                                     },
                                     error: function(response) {
                                         console.log(response.responseText);
@@ -333,11 +351,8 @@ $(function (){
                                     }
 
                                 });
-
-
                             }
                         }else{
-
                             for(var i= 0; i<events.length; i++){
                                 var aux_star= new Date(event.start);
                                 var aux_end= new Date(event.end);
@@ -346,18 +361,17 @@ $(function (){
                                     events.splice(i,1);
                                 }
                             }
-
                             $.gritter.add({
                                 title: "Eliminar Cupos",
                                 text: "Cupos eliminados: " + event.amount,
                                 time:5000,
                             });
 
-
-
                             $('#calendar').fullCalendar('removeEvents');
                             $('#calendar').fullCalendar('addEventSource',events);
                             $('#calendar').fullCalendar('refetchEvents');
+
+
                         }
                     }
 
@@ -380,7 +394,7 @@ $(function (){
 
                 var response_start = response[i].start.split(' ');
                 var response_end = response[i].end.split(' ');
-                console.log(response_start)
+                //console.log(response_start)
                 var time1 = response_start[1].substr(0,2);
                 var time2 = response_end[1].substr(0,2);
 
@@ -395,17 +409,20 @@ $(function (){
                 var end_m = parseInt(array2[1]);
                 var end_d = parseInt(array2[2]);
 
-                console.log( new Date(Date.UTC( start_y,start_m,start_d,time1,0,0)));
+                //console.log( new Date(Date.UTC( start_y,start_m,start_d,time1,0,0)));
 
-                var event = {pos:i, id: response[i].id, title: response[i].title,start: new Date(Date.UTC (start_y,start_m-1,start_d,time1,0,0) ),end:  new Date( Date.UTC(end_y,end_m-1,end_d,time2,0,0)), url:response[i].url,   allDay:false, className : ['event_rd'], editable: false}
+                var event = {update:false, id: response[i].id, title: response[i].title,start: new Date(Date.UTC (start_y,start_m-1,start_d,time1,0,0) ),end:  new Date( Date.UTC(end_y,end_m-1,end_d,time2,0,0)), url:response[i].url,   allDay:false, className : ['event_rd'], editable: false}
 
                 events.push(event);
 
             });
-            console.log(events);
+            console.log("InitCalendar :", events);
 
+            $('#calendar').fullCalendar('removeEvents');
             $('#calendar').fullCalendar('addEventSource',events);
             $('#calendar').fullCalendar('refetchEvents');
+
+
 
             fullcalendatInit = true;
         },
@@ -417,14 +434,6 @@ $(function (){
     });
 
 
-
-    /*falta cuando cambia de pagina el calendar
-     var a = $('#calendar').find("button.fc-next-button span");
-     console.log(a);
-     */
-
-
-
     $('#range').datepicker({
         todayHighlight: true,
         format:'dd-mm-yyyy',
@@ -432,7 +441,6 @@ $(function (){
     });
 
     $('.selectpicker').selectpicker('render');
-
 
 
 });

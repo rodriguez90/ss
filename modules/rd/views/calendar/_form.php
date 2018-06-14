@@ -82,7 +82,7 @@ CalendarAsset::register($this);
                     <label class="control-label col-md-2 col-sm-2" for="amount">Cupos:</label>
                     <div class="col-md-10 col-sm-10">
                         <input class="form-control" type="text" id="amount" name="Calendar[amount]"
-                               data-parsley-type="number" placeholder="Cantidad" value="5"/>
+                               data-parsley-type="number" placeholder="Cantidad por hora" value="5"/>
                     </div>
                 </div>
 
@@ -187,7 +187,7 @@ CalendarAsset::register($this);
 
 
             <div class="col-md-12 col-sm-12" style="margin-top: 15px;">
-                <div id='calendar'>
+                <div id='calendar' style="scroll-padding-top:0px; ">
 
                 </div>
             </div>

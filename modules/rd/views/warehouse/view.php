@@ -47,6 +47,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'value' => ($model->active == 1)   ? 'Activo' : 'Inactivo',
                         ]
                     ],
+                    'options'=>['class' => 'table table-striped table-bordered table-condensed detail-view'],
                 ]) ?>
             </div>
         </div>

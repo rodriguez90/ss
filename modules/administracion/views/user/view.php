@@ -65,6 +65,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 
                     ],
+                    'options'=>['class' => 'table table-striped table-bordered table-condensed detail-view'],
                 ]) ?>
 
             </div>
