@@ -19,7 +19,8 @@
         "yiisoft/yii2-bootstrap": "~2.0.0",
         "yiisoft/yii2-swiftmailer": "~2.0.0",
         "mdmsoft/yii2-admin": "~2.0",
-        "guzzlehttp/guzzle": "^6.3@dev"
+        "guzzlehttp/guzzle": "^6.3@dev",
+        "mpdf/mpdf": "dev-master"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

@@ -3,6 +3,7 @@
 namespace app\modules\rd\controllers;
 
 use app\modules\administracion\models\AdmUser;
+use app\modules\rd\models\Container;
 use app\modules\rd\models\ContainerSearch;
 use app\modules\rd\models\ReceptionTransaction;
 use app\modules\rd\models\Reception;
@@ -32,6 +33,7 @@ class ReceptionController extends Controller
                 'actions' => [
                     'delete' => ['POST'],
                     'transactions' => ['GET'],
+                    'containers' => ['GET'],
                 ],
             ],
         ];
@@ -163,7 +165,6 @@ class ReceptionController extends Controller
         return $this->redirect(['index']);
     }
 
-
     public function actionCreateByAgency()
     {
         $user = AdmUser::findOne(['id'=>Yii::$app->user->id]);
@@ -244,6 +245,32 @@ class ReceptionController extends Controller
         }
 //        return json_encode($response);
 //        return $response;
+        return $response;
+    }
+
+    public function actionContainers()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $response = array();
+        $response['msg'] = '';
+        $response['containers'] = [];
+        $response['success'] = false;
+        $bl = Yii::$app->request->get('bl');
+
+        if(isset($bl))
+        {
+            $response['containers'] = Container::find()
+                                    ->innerJoin('reception_transaction', 'reception_transaction.container_id = container.id')
+                                    ->innerJoin('reception', 'reception_transaction.reception_id = reception.id')
+                                    ->where(['bl'=>$bl])
+                                    ->all();
+            $response['success'] = true;
+        }
+        else {
+            $response['msg'] = "Tiene que especificar un código BL.";
+        }
+
         return $response;
     }
 

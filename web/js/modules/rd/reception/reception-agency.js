@@ -27,6 +27,88 @@ var lan = {
     }
 };
 
+var selectedContainers = [];
+
+var fetchContainers = function (bl) {
+
+    $.ajax({
+        // async:false,
+        url: homeUrl + "/rd/reception/containers/",
+        type: "get",
+        dataType:'json',
+        data: {
+            bl: bl,
+        },
+        success: function(response) {
+            console.log(response);
+
+            fetchContainersWS(bl, response['containers']);
+
+        },
+        error: function(response) {
+            console.log(response);
+            console.log(response.responseText);
+            result = false;
+            // return false;
+        }
+    });
+};
+
+
+var fetchContainersWS = function (bl, containers) {
+    var data = [];
+    var types = ["DRY", "RRF"];
+    var tonnages = [20, 40];
+    // alert("Random: " +);
+
+    var table = $('#data-table').DataTable();
+
+    table
+        .clear()
+        .draw();
+
+
+    for (var i = 0; i < 10; i++)
+    {
+        var type = types[Math.round(Math.random())];
+        var tonnage = tonnages[Math.round(Math.random())]
+        var container =  {
+            id:-1,
+            checkbox:"",
+            name:"Contenedor " + i,
+            type: type,
+            tonnage: tonnage,
+            deliveryDate:moment().format('YYYY-MM-DD'),
+            agency:"Agency " + i,
+            wharehouse:1
+        };
+        var select = false;
+        for(var j = 0, length = containers.length; j < length ; j++)
+        {
+            var container2 = containers[j];
+
+            // duda condicion
+            // container2.code === container.code &&
+            // container2.tonnage === container.tonnage
+            if(container2.name === container.name)
+            {
+                select = true;
+                container.id = container2.id
+                break;
+            }
+        }
+
+        if(select)
+            table.row.add(
+                container
+            ).draw().select();
+        else
+            table.row.add(
+                container
+            ).draw();
+    }
+};
+
 $(document).ready(function () {
 
     // init wizar
@@ -74,14 +156,38 @@ $(document).ready(function () {
     $('#select-all').on('click', function(){
 
         var table = $('#data-table').DataTable();
+        var checked = this.checked;
 
-        if(this.checked)
-        {
-            table.rows().select();
-            return;
-        }
+        table
+            .rows()
+            .data()
+            .each( function ( value, index ) {
+                console.log(index);
+                console.log(value);
 
-        table.rows().deselect();
+                if(value.id !== -1)
+                {
+                    return false;
+                }
+                else
+                {
+                    // var index = selectedContainers.indexOf(value.name);
+                    alert('Voy a trabajar la seleccion: ' + checked);
+                    if(checked)
+                    {
+                        // dt.row(index.row, index.column)
+                        table.row(index).select();
+                        // if(index === -1) // seleccionando
+                        //     selectedContainers.push(value.name);
+
+                    }
+                    else {
+                        table.row(index).deselect();
+                        // if(index !== -1) // seleccionando
+                        //     selectedContainers.splice(value.name, 1);
+                    }
+                }
+            } );
     });
 
     // search container
@@ -89,45 +195,15 @@ $(document).ready(function () {
         // ajax resquest service for container
         // alert("// ajax resquest service for container");
 
+
+
         console.log("BL CODE: "  + $('#blCode').val());
 
         $('#blCode').prop('disabled', true);
-
-        var data = [];
-        var types = ["DRY", "RRF"];
-        var tonnages = [20, 40];
-        // alert("Random: " +);
-
-        var table = $('#data-table').DataTable();
-
-        // table.rows().delete();
-
-        // var rows = table
-        //     .rows()
-        //     .remove()
-        //     .draw();
-
-        table
-            .clear()
-            .draw();
+        var bl = $('#blCode').val();
+        fetchContainers(bl);
 
 
-        for (var i = 0; i < 10; i++)
-        {
-            var type = types[Math.round(Math.random())];
-            var tonnage = tonnages[Math.round(Math.random())]
-            table.row.add(
-                {
-                    checkbox:"",
-                    name:"Contenedor " + i,
-                    type: type,
-                    tonnage: tonnage,
-                    deliveryDate:moment().format('YYYY-MM-DD'),
-                    agency:"Agency " + i,
-                    wharehouse:1
-                }
-                ).draw();
-        }
         return false;
     });
 

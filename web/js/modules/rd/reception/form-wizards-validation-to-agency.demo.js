@@ -25,18 +25,15 @@ var handleBootstrapWizardsValidation = function() {
                         .clear()
                         .draw();
 
-                    var rows = table.rows( { selected: true } );
-                    // console.log("Selected Rows:");
-                    // console.log(rows);
-
                     table
                         .rows( { selected: true } )
                         .data()
                         .each( function ( value, index ) {
                             // console.log( 'Data in index: '+index +' is: '+ value.name );
-                            table2.row.add(
-                                value
-                            ).draw();
+                            if(value.id === -1)
+                                table2.row.add(
+                                    value
+                                ).draw();
                         } );
 
                     // set text value
@@ -94,12 +91,21 @@ var handleBootstrapWizardsValidation = function() {
                     // return true;
                     var table = $('#data-table').DataTable();
 
-                    var count = table.rows( { selected: true } ).count();
+                    // var count = table.rows( { selected: true } ).count();
 
+                    table
+                        .rows( { selected: true } )
+                        .data()
+                        .each( function ( value, index ) {
+                            // console.log( 'Data in index: '+index +' is: '+ value.name );
+                            if(value.id === -1 && !result) {
+                                result = true;
+                                return false;
+                            }
+                        } );
 
-                    if(count > 0)
-                        result = true;
-                    else {
+                    if(!result)
+                    {
                         alert("Debe seleccionar contenedores en el paso 1.");
                     }
 

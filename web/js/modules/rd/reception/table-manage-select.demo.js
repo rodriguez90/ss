@@ -9,7 +9,28 @@ var handleDataTableSelect = function() {
 	"use strict";
     
     if ($('#data-table').length !== 0) {
-        $('#data-table').DataTable({
+
+        var  table = $('#data-table').DataTable({
+            processing:true,
+            lengthMenu: [5, 10, 15],
+            pageLength: 5,
+            language: lan,
+            select: {
+                // items: 'cells',
+                style:    'multi',
+                selector: 'td:first-child'
+            },
+            order: [[ 1, 'asc' ]],
+            responsive: true,
+            // rowCallback: function( row, data, index ) {
+            //     // console.log(data);
+            //     if ( data.id !== -1) {
+            //         // console.log(row);
+            //         // /table.row(':eq(0)', { page: 'current' }).deselect();
+            //         // row().select();
+            //         // $('td:eq(0)', row).html( '<b>A</b>' );
+            //     }
+            // },
             "columns": [
                 {
                     // "title": "Selecionar",
@@ -28,15 +49,6 @@ var handleDataTableSelect = function() {
                     "data":"agency"
                 },
             ],
-            processing:true,
-            lengthMenu: [5, 10, 15],
-            "pageLength": 5,
-            "language": lan,
-            // select: true,
-            responsive: true,
-            // language: {url: 'web/plugins/DataTables/i18/Spanish.json'
-            //
-            // },
             columnDefs: [
                 {
                     orderable: false,
@@ -56,13 +68,35 @@ var handleDataTableSelect = function() {
                 },
 
             ],
-            select: {
-                // items: 'cells',
-                style:    'multi',
-                selector: 'td:first-child'
-            },
-            order: [[ 1, 'asc' ]]
         });
+
+        table.on( 'user-select', function ( e, dt, type, cell, originalEvent ) {
+            // alert('user-select');
+            var index = cell.index();
+            // console.log(index);
+            // console.log(dt.row(index.row, index.column).data());
+            var id = dt.row(index.row, index.column).data().id;
+            var name = dt.row(index.row, index.column).data().name;
+
+            if(id !== -1 )
+            {
+                alert('Este contenedor ya fue seleccionado en uan recepción previa.')
+                e.preventDefault();
+                return false;
+            }
+
+            // var index = selectedContainers.indexOf(name);
+            // if(index === -1) // seleccionando
+            //     selectedContainers.push(name);
+            // else // quitando selección
+            // {
+            //     selectedContainers.splice(name, 1);
+            // }
+            //
+            // console.log(selectedContainers);
+
+        } );
+
     }
 
     if ($('#data-table2').length !== 0) {
