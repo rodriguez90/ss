@@ -37,6 +37,7 @@ class TableAsset extends AssetBundle
     'plugins/DataTables/extensions/KeyTable/js/dataTables.keyTable.min.js',
 	'plugins/DataTables/extensions/Responsive/js/dataTables.responsive.min.js',
     'plugins/DataTables/extensions/CellEdit/js/dataTables.cellEdit.js',
+    'plugins/fullcalendar/lib/moment.min.js',
     ];
 
     public $depends = [

@@ -345,6 +345,4 @@ class AdmUser extends ActiveRecord implements IdentityInterface
 //        var_dump($result); die();
         return $result > 0;
     }
-
-
 }

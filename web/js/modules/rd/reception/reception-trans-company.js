@@ -2,6 +2,31 @@
  * Created by pedro on 30/05/2018.
  */
 
+var lan = {
+    "sProcessing":     "Procesando...",
+    "sLengthMenu":     "Mostrar _MENU_ registros",
+    "sZeroRecords":    "No se encontraron resultados",
+    "sEmptyTable":     "Ningún dato disponible en esta tabla",
+    "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+    "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
+    "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+    "sInfoPostFix":    "",
+    "sSearch":         "Buscar:",
+    "sUrl":            "",
+    "sInfoThousands":  ",",
+    "sLoadingRecords": "Cargando...",
+    "oPaginate": {
+        "sFirst":    "Primero",
+        "sLast":     "Último",
+        "sNext":     "Siguiente",
+        "sPrevious": "Anterior"
+    },
+    "oAria": {
+        "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+        "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+    }
+};
+
 var firstRun = true;
 
 var reception = null;
@@ -9,7 +34,6 @@ var agency = null;
 var transactions = new Map();
 var containers = new Map();
 var ticketDataMap =  new Map();
-
 var calendarSlotMap = new Map();
 
 var calendarSlotEvents = {
@@ -31,6 +55,8 @@ var maxDate = null;
 
 var selectedTransactions = [];
 var transactionWithTicket = [];
+
+var mode = null; // create and delete
 
 // functions
 
@@ -122,9 +148,6 @@ var handleTableInModal = function () {
 
     if ($('#data-table-modal').length !== 0) {
 
-        var table = $('#data-table-modal').DataTable();
-        table.destroy();
-
         $('#data-table-modal').DataTable({
             "columns": [
                 {
@@ -148,16 +171,10 @@ var handleTableInModal = function () {
             processing:true,
             lengthMenu: [5, 10, 15],
             "pageLength": 5,
-            "language": {
-                "lengthMenu": "Mostrar _MENU_ filas por página",
-                "zeroRecords": "No hay datos que mostrat - disculpe",
-                "info": "Página _PAGE_ de _PAGES_",
-                "infoEmpty": "No hay información que mostrar",
-                // "infoFiltered": "(encontrados from _MAX_ total records)"
-            },
+            "language": lan,
             // select: true,
             responsive: true,
-            // language: {url: 'web/plugins/DataTables/i18/Spanish.json'
+            // language: {url: '@web/plugins/DataTables/i18/Spanish.json'},
             //
             // },
             columnDefs: [
@@ -186,6 +203,8 @@ var handleTableInModal = function () {
             },
             order: [[ 1, 'asc' ]]
         });
+
+        var table = $('#data-table-modal').DataTable();
 
         table.on( 'user-select', function ( e, dt, type, cell, originalEvent ) {
             // alert('user-select');
@@ -272,17 +291,14 @@ var handleTableInModal = function () {
 var handleTableInWizar = function() {
     if ($('#data-table2').length !== 0) {
 
+
         $('#data-table2').DataTable({
             responsive: true,
             info: true,
             processing:true,
             lengthMenu: [5, 10, 15],
             pageLength: 5,
-            // order: [[ 0, 'asc' ]],
             order: [[1, "asc"]],
-            // keys: {
-            //     columns: [ 5, 6 ]
-            // },
             columns: [
                 { title: "Contenedor",
                     "data":"name"
@@ -301,31 +317,15 @@ var handleTableInWizar = function() {
                 },
                 { title: "Placa del Carro",
                     "data":"registerTrunk",
-                    // "render": function ( data, type, row, meta ) {
-                    //     // id="blCode"
-                    //     // name="blCode"
-                    //     return "<input type=\"text\"  data-parsley-type=\"alphanum\"  data-parsley-length=\"[10, 10]\" placeholder=\"Placa del Carro\"  data-parsley-trigger=\"focusout\" data-parsley-required=\"true\"/>"
-                    //
-                    // }
-                    // editField: "registerTrunk"
                 },
                 { title: "Cédula del Chofer",
                     "data":"registerDriver",
-                    // "render": function ( data, type, row, meta ) {
-                    //     // id="blCode"
-                    //     // name="blCode"
-                    //     return "<input type=\"text\"  data-parsley-type=\"digits\"  data-parsley-length=\"[10, 10]\" placeholder=\"Cédula del Chofer\"  data-parsley-trigger=\"focusout\" data-parsley-required=\"true\"/>"
-                    //
-                    // }
+                },
+                { title: "Nombre del Chofer",
+                    "data":"nameDriver"
                 }
             ],
-            language: {
-                "lengthMenu": "Mostrar _MENU_ filas por página",
-                "zeroRecords": "No hay datos que mostrat - disculpe",
-                "info": "Página _PAGE_ de _PAGES_",
-                "infoEmpty": "No hay información que mostrar",
-                "infoFiltered": "(encontrados from _MAX_ total records)"
-            },
+            "language": lan,
             columnDefs: [
                 {
                     targets: [1],
@@ -339,10 +339,22 @@ var handleTableInWizar = function() {
             // language: {url: 'web/plugins/DataTables/i18/Spanish.json'
         });
 
-
         function  myCallbackFunction(updatedCell, updatedRow, oldValue) {
+            var table = $('#data-table2').DataTable();
             console.log("The new value for the cell is: " + updatedCell.data());
-            console.log("The values for each cell in that row are: " + updatedRow.data());
+            console.log(updatedCell);
+            console.log(updatedCell.index().row);
+            if(updatedCell.index().column === 6)
+            {
+                var driverCell = table.cell(updatedCell.index().row, 7);
+                driverCell.data("Chico el cojo");
+            }
+
+
+            // var cell = table.cell()
+            console.log("The values for each cell in that row are: " );
+            console.log(updatedRow.data())
+            //TODO: valdiar placa y cedula x el servicio y recuperar el nombre del chofe
         }
 
         var table = $('#data-table2').DataTable();
@@ -370,22 +382,59 @@ var handleTableInWizar = function() {
                     "type":"text",
                     "options":null
                 },
-                // {
-                //     "column":1,
-                //     "type": "list",
-                //     "options":[
-                //         { "value": "1", "display": "Beaty" },
-                //         { "value": "2", "display": "Doe" },
-                //         { "value": "3", "display": "Dirt" }
-                //     ]
-                // }
-                // ,{
-                //     "column": 2,
-                //     "type": "datepicker", // requires jQuery UI: http://http://jqueryui.com/download/
-                //     "options": {
-                //         "icon": "http://jqueryui.com/resources/demos/datepicker/images/calendar.gif" // Optional
-                //     }
-                // }
+            ]
+        });
+    }
+};
+
+var handleTable3InWizar = function() {
+    if ($('#data-table3').length !== 0) {
+
+        // var table = $('#data-table3').DataTable();
+        // table.destroy();
+
+        $('#data-table3').DataTable({
+            responsive: true,
+            info: true,
+            processing:true,
+            lengthMenu: [5, 10, 15],
+            pageLength: 5,
+            order: [[1, "asc"]],
+            columns: [
+                { title: "Contenedor",
+                    "data":"name"
+                },
+                { title: "Tipo"
+                },
+                { title: "Fecha Límite",
+                    data:"deliveryDate"
+                },
+                { title: "Agencia",
+                    data:"agency"
+                },
+                { title: "Fecha del Cupo",
+                    "data":"dateTicket"
+                },
+                { title: "Placa del Carro",
+                    "data":"registerTrunk",
+                },
+                { title: "Cédula del Chofer",
+                    "data":"registerDriver",
+                },
+                { title: "Nombre del Chofer",
+                    "data":"nameDriver"
+                }
+            ],
+            "language": lan,
+            columnDefs: [
+                {
+                    targets: [1],
+                    title:"Tipo",
+                    data:null,
+                    render: function ( data, type, full, meta ) {
+                        return data.type + data.tonnage;
+                    }
+                }
             ]
         });
     }
@@ -400,23 +449,25 @@ var handleModal = function () {
         var count = table.rows( ).count();
         var disponivility = currentCalendarEvent.count;
 
-        // console.log($('#aceptBtn').attr('disabled'));
-
         if(this.checked)
         {
-            if(count <= disponivility)
+            if(mode == 'create')
+            {
+                if(count <= disponivility)
+                {
+                    table.rows().select();
+                }
+                else {
+                    this.checked = false;
+                    alert('Solo hay ' + disponivility + ' cupos disponibles.');
+                }
+            }
+            else if(mode == 'delete')
             {
                 table.rows().select();
-                // $('#aceptBtn').attr('disabled', false);
-            }
-            else {
-                this.checked = false;
-                // $('#aceptBtn').attr('disabled', true);
-                alert('Solo hay ' + disponivility + ' cupos disponibles.');
             }
             return;
         }
-
         table.rows().deselect();
     });
 
@@ -425,90 +476,222 @@ var handleModal = function () {
         var table = $('#data-table-modal').DataTable();
 
         var count = table.rows( { selected: true } ).count();
-        var disponivility = currentCalendarEvent.count;
 
-        if(count > disponivility)
+        if(mode == 'create')
         {
-            alert('La cantidad de contenedores seleccionados es superior a la disponibilidad: ' + count + ' de' + disponivility) ;
-            return;
-        }
+            var disponivility = currentCalendarEvent.count;
 
-        $('#calendar').fullCalendar('removeEventSources');
+            if(count > disponivility)
+            {
+                alert('La cantidad de contenedores seleccionados es superior a la disponibilidad: ' + count + ' de' + disponivility) ;
+                return;
+            }
 
-        table
-            .rows( { selected: true } )
-            .data()
-            .each( function ( value, index ) {
-                // var dateFormated = moment(currentCalendarEvent.star).format("YYYY-MM-DD h:mm");
-                if(selectedTransactions.indexOf(value.transactionId) === -1)
-                {
-                    selectedTransactions.push(value.transactionId);
+            $('#calendar').fullCalendar('removeEventSources');
 
-                    ticketDataMap.set(value.transactionId, {
-                        dateTicket:currentCalendarEvent.start,
-                        calendarId:currentCalendarEvent.id,
-                    });
-                }
+            table
+                .rows( { selected: true } )
+                .data()
+                .each( function ( value, index ) {
 
-                currentCalendarEvent.count = currentCalendarEvent.count - 1;
+                    if(selectedTransactions.indexOf(value.transactionId) === -1)
+                    {
+                        selectedTransactions.push(value.transactionId);
 
-                // create event ticket
-                var className = ['bg-blue'];
-                var type = "";
-                var id = currentCalendarEvent.id;
-                if(value.tonnage === 20)
-                {
-                    id = currentCalendarEvent.id + 1;
-                    className = ['bg-green'];
-                    type = "T20";
-                }
-                else if(value.tonnage === 40)
-                {
-                    id = currentCalendarEvent.id + 2;
-                    className = ['bg-purple'];
-                    type = "T40";
-                }
+                        ticketDataMap.set(value.transactionId, {
+                            id:-1,
+                            dateTicket:currentCalendarEvent.start,
+                            calendarId:currentCalendarEvent.id,
+                        });
+                    }
 
-                var count = 1;
-                var result = findTicketEvent(id);
+                    currentCalendarEvent.count = currentCalendarEvent.count - 1;
 
-                if(result.event)
-                {
-                    result.event.count = result.event.count + count;
-                    result.event.title = result.event.count;
-                    ticketEvents[result.index] = result.event;
-                    result.event.rt.push(value.transactionId);
-                    // $('#calendar').fullCalendar('updateEvent', oldEvent);
-                }
-                else
-                {
-                    var event = {
-                        id: id,
-                        title: count,
-                        ticketId:-1,
-                        start: currentCalendarEvent.start,//moment(currentCalendarEvent.start).utc() ,
-                        end: currentCalendarEvent.end,//moment( currentCalendarEvent.end).utc() ,
-                        allDay:false,
-                        className : className ,
-                        editable: false,
-                        type:type,
-                        count:count,
-                        calendarId:currentCalendarEvent.id,
-                        rt:[value.transactionId]
-                    };
-                    ticketEvents.events.push(event);
-                }
-            });
+                    // create event ticket
+                    var className = ['bg-blue'];
+                    var type = "";
+                    var id = currentCalendarEvent.id;
+                    if(value.tonnage === 20)
+                    {
+                        id = currentCalendarEvent.id + 1;
+                        className = ['bg-green'];
+                        type = "T20";
+                    }
+                    else if(value.tonnage === 40)
+                    {
+                        id = currentCalendarEvent.id + 2;
+                        className = ['bg-purple'];
+                        type = "T40";
+                    }
+
+                    var count = 1;
+                    var result = findTicketEvent(id);
+
+                    if(result.event)
+                    {
+                        result.event.count = result.event.count + count;
+                        result.event.title = result.event.count;
+                        ticketEvents[result.index] = result.event; // TODO CHECK THIS
+                        result.event.rt.push(value.transactionId);
+                        // $('#calendar').fullCalendar('updateEvent', oldEvent);
+                    }
+                    else
+                    {
+                        var event = {
+                            id: id,
+                            title: count,
+                            ticketId:-1,
+                            start: currentCalendarEvent.start,//moment(currentCalendarEvent.start).utc() ,
+                            end: currentCalendarEvent.end,//moment( currentCalendarEvent.end).utc() ,
+                            allDay:false,
+                            className : className ,
+                            editable: false,
+                            type:type,
+                            count:count,
+                            calendarId:currentCalendarEvent.id,
+                            rt:[value.transactionId]
+                        };
+                        ticketEvents.events.push(event);
+                    }
+                });
 
             currentCalendarEvent.title = currentCalendarEvent.count;
-            console.log(ticketEvents);
-            // console.log(currentCalendarEvent);
             calendarSlotEvents.events[currentCalendarEventIndex]=currentCalendarEvent;
+        }
+        else if(mode === 'delete')
+        {
+            var disponivility = currentCalendarEvent.count;
 
-            $('#calendar').fullCalendar('addEventSource',calendarSlotEvents);
-            $('#calendar').fullCalendar('addEventSource',ticketEvents);
-            $('#calendar').fullCalendar('refetchEventSources');
-            $("#modal-select-containers").modal("hide");
+            if(count === 0)
+            {
+                alert('Debe seleccionar los cupos que desea eliminar.') ;
+                return;
+            }
+
+            $('#calendar').fullCalendar('removeEventSources');
+
+            table
+                .rows( { selected: true } )
+                .data()
+                .each( function ( value, index ) {
+
+                    var ticket = ticketDataMap.get(value.transactionId, null);
+
+                    if(ticket === null) //  ticket bug error
+                    {
+                        return false;
+                    }
+
+                    if(ticket.id === -1)
+                    {
+                        var id = currentCalendarEvent.id;
+                        if(value.tonnage === 20)
+                        {
+                            id = currentCalendarEvent.id + 1;
+                        }
+                        else if(value.tonnage === 40)
+                        {
+                            id = currentCalendarEvent.id + 2;
+                        }
+
+                        var result = findTicketEvent(id);
+                        if(result.event) // always
+                        {
+                            result.event.count = result.event.count - 1;
+                            result.event.title = result.event.count;
+                            var indexRT = result.event.rt.indexOf(value.transactionId)
+                            result.event.rt.splice(indexRT, 1);
+
+                            if(result.event.count == 0)
+                            {
+                                ticketEvents.events.splice(result.index, 1);
+                            }
+                            else {
+                                ticketEvents[result.index] = result.event;
+                                // ticketEvents.events[result.index] = result.event; //TODO check this
+                            }
+                            var indexSelected = selectedTransactions.indexOf(value.transactionId);
+                            selectedTransactions.splice(indexSelected,1);
+
+                            ticketDataMap.delete(value.transactionId);
+                            currentCalendarEvent.count = currentCalendarEvent.count + 1;
+                        }
+                    }
+                    else // delete ticket from db
+                    {
+                        $.ajax({
+                            async:false,
+                            url: homeUrl + "/rd/ticket/delete/?id=" + ticket.id,
+                            type: "post",
+                            dataType:'json',
+                            success: function(response) {
+                                console.log(response);
+
+                                var calendar = calendarSlotMap.get(response['ticket'].calendar_id);
+
+                                var result = findSlotEvent(moment(calendar.start), moment(calendar.end));
+
+                                console.log(result);
+
+                                var calendarEvent = result.event
+                                var calendarIndex = result.index
+
+                                var id = calendarEvent.id;
+
+                                if(value.tonnage === 20)
+                                {
+                                    id = calendarEvent.id + 1;
+                                }
+                                else if(value.tonnage === 40)
+                                {
+                                    id = calendarEvent.id + 2;
+                                }
+
+                                var result = findTicketEvent(id);
+                                console.log(result);
+                                if(result.event) // always
+                                {
+                                    result.event.count = result.event.count - 1;
+                                    result.event.title = result.event.count;
+                                    var indexRT = result.event.rt.indexOf(value.transactionId)
+                                    result.event.rt.splice(indexRT, 1);
+
+                                    if(result.event.count == 0)
+                                    {
+                                        ticketEvents.events.splice(result.index, 1);
+                                    }
+                                    else {
+                                        ticketEvents[result.index] = result.event;
+                                        // ticketEvents.events[result.index] = result.event; //TODO check this
+                                    }
+                                    var indexTSWT = transactionWithTicket.indexOf(value.transactionId);
+                                    transactionWithTicket.splice(indexTSWT, 1);
+                                    ticketDataMap.delete(value.transactionId);
+                                    calendarEvent.count = calendarEvent.count + 1;
+                                }
+
+                            },
+                            error: function(response) {
+                                console.log(response);
+                                console.log(response['msg']);
+                                result = false;
+                            }
+                        });
+                    }
+                });
+
+            currentCalendarEvent.title = currentCalendarEvent.count;
+            calendarSlotEvents.events[currentCalendarEventIndex]=currentCalendarEvent;
+        }
+
+        // console.log(ticketEvents);
+        // console.log(currentCalendarEvent);
+
+        $('#calendar').fullCalendar('addEventSource',calendarSlotEvents);
+        $('#calendar').fullCalendar('addEventSource',ticketEvents);
+        $('#calendar').fullCalendar('refetchEventSources');
+        $("#modal-select-containers").modal("hide");
+        mode = null;
     });
 };
 
@@ -522,7 +705,7 @@ var fetchCalendar = function (start, end) {
             end: end
         },
         success: function(response) {
-            console.log(response);
+            // console.log(response);
 
             $('#calendar').fullCalendar('removeEventSources', calendarSlotEvents.id);
             calendarSlotEvents.events = [];
@@ -573,7 +756,7 @@ var fetchReceptionTransactions = function () {
         type: "get",
         dataType: "json",
         data:  {id:modelId,
-            actived:1,// 1 or 0 TODO no work
+                actived:1, // 1 or 0 TODO no work
         },
         success: function (response) {
             // console.log(response);
@@ -624,7 +807,7 @@ var fetchTickets = function (receptionId) {
             receptionId: receptionId,
         },
         success: function(response) {
-            console.log(response);
+            // console.log(response);
 
             $('#calendar').fullCalendar('removeEventSources', ticketEvents.id);
             ticketEvents.events = [];
@@ -641,6 +824,13 @@ var fetchTickets = function (receptionId) {
                 var calendar = calendarSlotMap.get(id);
 
                 transactionWithTicket.push(tId);
+                ticketDataMap.set(tId, {
+                    id:response['tickets'][i].id,
+                    dateTicket:calendar.start,
+                    dateEndTicket:calendar.end,
+                    calendarId:id,
+                });
+
 
                 // console.log(c);
 
@@ -706,12 +896,10 @@ $(document).ready(function () {
     Calendar.init();
 
     handleModal();
-
+    handleTableInModal();
     handleTableInWizar();
-
+    handleTable3InWizar();
     fetchReceptionTransactions();
-
-    // acotar el calendario
 
     // cronometer
     setInterval(function () {

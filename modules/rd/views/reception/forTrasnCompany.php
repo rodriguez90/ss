@@ -188,15 +188,6 @@ TableAsset::register($this);
                                                 <div class="panel-body">
                                                     <table id="data-table2" class="table table-striped table-bordered nowrap" width="100%">
                                                         <thead>
-<!--                                                        <tr>-->
-<!--                                                            <th>Contenedores</th>-->
-<!--                                                            <th>Tipo</th>-->
-<!--                                                            <th>Fecha Límite</th>-->
-<!--                                                            <th>Agencia</th>-->
-<!--                                                            <th>Fecha del Cupo</th>-->
-<!--                                                            <th>Placa del Carro</th>-->
-<!--                                                            <th>Cédula del Chofer</th>-->
-<!--                                                        </tr>-->
                                                         </thead>
                                                     </table>
                                                 </div>
@@ -208,6 +199,50 @@ TableAsset::register($this);
                                 <!-- end wizard step-2 -->
                                 <!-- begin wizard step-3 -->
                                 <div class="wizard-step-3">
+                                    <fieldset>
+                                        <!--                                                    <legend class="pull-left width-full">Confirmar y notificar </legend>-->
+                                        <!-- begin row -->
+                                        <div class="row">
+                                            <div class="alert alert-success fade in">
+                                                <!--                                                            <span class="close" data-dismiss="alert">×</span>-->
+                                                <i class="fa fa-check fa-2x pull-left"></i>
+                                                <p>Los datos de los cupos que serán reservados para los contenedores seleccionados se muestran a continuación, si está de acuerdo con la
+                                                    confirme la información y finalice el proceso, de lo contrario regrese al punto que considere incorrecto y corrija la información.
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <!-- end row -->
+
+                                        <!-- begin row -->
+                                        <div class="row">
+                                            <div class="panel panel-default">
+                                                <div class="panel-heading">
+                                                    <div class="panel-heading-btn">
+                                                        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+                                                        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fa fa-repeat"></i></a>
+                                                        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+                                                    </div>
+                                                    <h4 class="panel-title">Cupos a reservar</h4>
+                                                </div>
+                                                <div class="panel-body">
+                                                    <table id="data-table3" class="table table-striped table-bordered nowrap" width="100%">
+                                                        <thead>
+                                                        </thead>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- end row -->
+
+                                        <div class="row">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input id="confirming" type="checkbox"> Confirmar Información
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <!-- end row -->
+                                    </fieldset>
                                 </div>
                                 <!-- end wizard step-3 -->
                                 <!-- begin wizard step-4 -->

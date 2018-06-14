@@ -40,9 +40,9 @@ var handleBootstrapWizardsValidation = function() {
                     return true;
                 }
 
-                if (ui.index == 0) {
+                if (ui.index == 0) { // paso 1 reserva de cupos
                     // check selected transaction > 0
-                    //make clone copy to table
+                    //make clone copy to table2
 
                     if(selectedTransactions.length <= 0)
                     {
@@ -76,6 +76,7 @@ var handleBootstrapWizardsValidation = function() {
                                 dateTicket:ticketData.dateTicket,
                                 registerTrunk: '',
                                 registerDriver: '',
+                                nameDriver: '',
                                 transactionId:tId
                             };
                             table2.row.add(
@@ -86,28 +87,34 @@ var handleBootstrapWizardsValidation = function() {
 
                    return true;
 
-                } else if (ui.index == 1) {
-                    //TODO
+                }
+                else if (ui.index == 1) { // paso 2: cedula, nombre del chofer, placa del carro
 
-                    var tickets = [];
+
                     var table = $('#data-table2').DataTable();
+                    var table3 = $('#data-table3').DataTable();
                     var error = false;
+
+                    table3
+                        .clear()
+                        .draw();
+
                     table
                         .rows( )
                         .data()
                         .each( function ( value, index ) {
-                            console.log(value);
 
                             if(error) return false;
 
-                            if(value.registerTrunk.length == 0 || value.registerDriver.length == 0)
+                            if(value.registerTrunk.length === 0 || value.registerDriver.length === 0 || value.nameDriver.length === 0)
                             {
-                                tickets = [];
+                                table3
+                                    .clear()
+                                    .draw();
                                 error = true;
-                                alert("Debe introducir la placa del carro y la cédual del chofer para todo los contenedores.");
+                                alert("Debe introducir la placa del carro y la cédual y nombre chofer para todo los contenedores.");
                                 return false;
                             }
-
 
                             var tId = value.transactionId;
                             var t = transactions.get(tId);
@@ -117,83 +124,111 @@ var handleBootstrapWizardsValidation = function() {
                             if(ticketData)
                             {
                                 var data = {
-                                    "reception_transaction_id":tId, // FIXME THIS DEFINE BY USER WITH ROLE AGENCY OR IMPORTER/EXPORTER
-                                    "calendar_id":ticketData.calendarId,
-                                    "status":1,
-                                    "active":1,
-                                    "registerTruck":value.registerTrunk,
-                                    "registerDriver":value.registerDriver,
+                                    name: c.name,
+                                    type: c.code,
+                                    tonnage: c.tonnage,
+                                    deliveryDate: t.delivery_date,
+                                    agency: agency.name,
+                                    dateTicket:ticketData.dateTicket,
+                                    registerTrunk: value.registerTrunk,
+                                    registerDriver: value.registerDriver,
+                                    nameDriver: value.nameDriver,
+                                    transactionId:tId
                                 };
-                                tickets.push(data);
+
+                                table3.row.add(
+                                    data
+                                ).draw();
                             }
                         } );
+                        console.log('Paso 1 error: ' + error);
 
-                    // check that the user fill register trunk and register driver columns
+                        return !error;
+                }
+                else if (ui.index == 2) {
 
-                    // var tickets = [];
-                    //
-                    // $.each(selectedTransactions, function (i) {
-                    //     var tId = selectedTransactions[i];
-                    //     var t = transactions.get(tId);
-                    //     var c = containers.get(t.container_id);
-                    //     var ticketData = ticketDataMap.get(tId);
-                    //
-                    //     if(ticketData)
-                    //     {
-                    //         var data = {
-                    //             "reception_transaction_id":tId, // FIXME THIS DEFINE BY USER WITH ROLE AGENCY OR IMPORTER/EXPORTER
-                    //             "calendar_id":ticketData.calendarId,
-                    //             "status":1,
-                    //             "active":1,
-                    //             "registerTruck":'',
-                    //             "registerDriver":'',
-                    //         };
-                    //         tickets.push(data);
-                    //     }
-                    // });
+                    if($("#confirming").prop('checked'))
+                    {
+                        var table = $('#data-table3').DataTable();
 
-                    console.log(tickets);
-                    // return;
+                        var tickets = [];
+                        error = false;
+                        table
+                            .rows( )
+                            .data()
+                            .each( function ( value, index ) {
+                                console.log(value);
 
-                    if(tickets.length <= 0) return false;
+                                if(error) return false;
 
-                    $.ajax({
-                        async:false,
-                        url: homeUrl + "/rd/ticket/reserve",
-                        type: "POST",
-                        dataType: "json",
-                        data:  {
-                            tickets:tickets
-                        },
-                        success: function (response) {
-                            // you will get response from your php page (what you echo or print)
-                            var obj = JSON.parse(response);
-                            console.log(obj);
+                                if(value.registerTrunk.length == 0 || value.registerDriver.length == 0 || value.nameDriver.length === 0)
+                                {
+                                    tickets = [];
+                                    error = true;
+                                    alert("Debe introducir la placa del carro y la cédual y nombre del chofer para todo los contenedores.");
+                                    return false;
+                                }
 
-                            if(obj.success)
-                            {
-                                result = true;
-                                window.location.href = obj.url;
+
+                                var tId = value.transactionId;
+                                var t = transactions.get(tId);
+                                var c = containers.get(t.container_id);
+                                var ticketData = ticketDataMap.get(tId);
+
+                                if(ticketData)
+                                {
+                                    var data = {
+                                        "reception_transaction_id":tId, // FIXME THIS DEFINE BY USER WITH ROLE AGENCY OR IMPORTER/EXPORTER
+                                        "calendar_id":ticketData.calendarId,
+                                        "status":1,
+                                        "active":1,
+                                        "registerTruck":value.registerTrunk,
+                                        "registerDriver":value.registerDriver,
+                                        "nameDriver":value.nameDriver,
+                                    };
+                                    tickets.push(data);
+                                }
+                            } );
+
+                        if(error) return false;
+
+                        $.ajax({
+                            async:false,
+                            url: homeUrl + "/rd/ticket/reserve",
+                            type: "POST",
+                            dataType: "json",
+                            data:  {
+                                tickets:tickets
+                            },
+                            success: function (response) {
+                                // you will get response from your php page (what you echo or print)
+                                var obj = JSON.parse(response);
+                                console.log(obj);
+
+                                if(obj.success)
+                                {
+                                    result = true;
+                                    window.location.href = obj.url;
+                                }
+                                else
+                                {
+                                    alert(obj.msg);
+                                }
+                                // return true;
+                            },
+                            error: function(data) {
+                                console.log(data);
+                                alert(data['msg']);
+                                result = false;
+                                // return false;
                             }
-                            else
-                            {
-                                alert(obj.msg);
-                            }
-                            // return true;
-                        },
-                        error: function(data) {
-                            console.log(data);
-                            alert(data['msg']);
-                            result = false;
-                            // return false;
-                        }
-                    });
+                        });
 
-                    return true;
+                        return true;
+                    }
 
-                } else if (ui.index == 2) {
-
-                    return true;
+                    alert("Debe confirmar que la información es valida.");
+                    return false;
                 }
             },
             backBtnText:'Anterior',

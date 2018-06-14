@@ -31,13 +31,7 @@ var handleDataTableSelect = function() {
             processing:true,
             lengthMenu: [5, 10, 15],
             "pageLength": 5,
-            "language": {
-                "lengthMenu": "Mostrar _MENU_ filas por página",
-                "zeroRecords": "No hay datos que mostrat - disculpe",
-                "info": "Página _PAGE_ de _PAGES_",
-                "infoEmpty": "No hay información que mostrar",
-                // "infoFiltered": "(encontrados from _MAX_ total records)"
-            },
+            "language": lan,
             // select: true,
             responsive: true,
             // language: {url: 'web/plugins/DataTables/i18/Spanish.json'
@@ -90,13 +84,7 @@ var handleDataTableSelect = function() {
             processing:true,
             lengthMenu: [5, 10, 15],
             "pageLength": 5,
-            "language": {
-                "lengthMenu": "Mostrar _MENU_ filas por página",
-                "zeroRecords": "No hay datos que mostrat - disculpe",
-                "info": "Página _PAGE_ de _PAGES_",
-                "infoEmpty": "No hay información que mostrar",
-                // "infoFiltered": "(encontrados from _MAX_ total records)"
-            },
+            "language": lan,
             responsive: true,
             columnDefs: [
                 {

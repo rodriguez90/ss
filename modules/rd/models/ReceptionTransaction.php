@@ -37,10 +37,10 @@ class ReceptionTransaction extends \yii\db\ActiveRecord
         return [
             [['reception_id', 'container_id', 'delivery_date', 'active'], 'required'],
             [['reception_id', 'container_id', 'active'], 'integer'],
-            [['regiter_truck', 'register_driver'], 'string'],
+            [['regiter_truck', 'register_driver', 'name_driver'], 'string'],
             [['delivery_date'], 'safe'],
-            [['container_id'], 'exist', 'skipOnError' => true, 'targetClass' => Container::className(), 'targetAttribute' => ['container_id' => 'id']],
-            [['reception_id'], 'exist', 'skipOnError' => true, 'targetClass' => Reception::className(), 'targetAttribute' => ['reception_id' => 'id']],
+            [['container_id'], 'exist', 'skipOnError' => true, 'targetClass' => Container::class, 'targetAttribute' => ['container_id' => 'id']],
+            [['reception_id'], 'exist', 'skipOnError' => true, 'targetClass' => Reception::class, 'targetAttribute' => ['reception_id' => 'id']],
         ];
     }
 
@@ -55,6 +55,7 @@ class ReceptionTransaction extends \yii\db\ActiveRecord
             'container_id' => Yii::t('app', 'Container ID'),
             'regiter_truck' => Yii::t('app', 'Regiter Truck'),
             'register_driver' => Yii::t('app', 'Register Driver'),
+            'name_driver' => Yii::t('app', 'Name Driver'),
             'delivery_date' => Yii::t('app', 'Delivery Date'),
             'active' => Yii::t('app', 'Active'),
         ];

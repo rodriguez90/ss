@@ -69,33 +69,77 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        $user = AdmUser::findOne(['id'=>Yii::$app->user->id]);
+        $user = AdmUser::findOne(['id'=>Yii::$app->user->getId()]);
 //        var_dump($user);die;
         $params = Yii::$app->request->queryParams;
 //        var_dump($params);die;
+        $rol = '';
         if($user && $user->hasRol('Agencia'))
         {
             $userAgency = UserAgency::findOne(['user_id'=>$user->id]);
+            $params['agency_id'] = '';
+            $rol= 'Agencia';
             if($userAgency)
+            {
                 $params['agency_id'] = $userAgency->agency->name;
+            }
         }
         else if ($user && $user->hasRol('Cia_transporte')){
             $userCiaTrans = UserTranscompany::findOne(['user_id'=>$user->id]);
+            $params['trans_company_id'] = '';
+            $rol= 'Cia_transporte';
             if($userCiaTrans)
+            {
                 $params['trans_company_id'] = $userCiaTrans->transcompany->name;
+            }
         }
 
         $searchModel = new ReceptionSearch();
 
         $dataProvider = $searchModel->search($params);
         $receptionCount = $searchModel->search($params)->totalCount;
-
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-            'receptionCount'=>$receptionCount
-        ]);
+        return $this->render('index', ['searchModel' => $searchModel, 'dataProvider' => $dataProvider, 'receptionCount'=>$receptionCount, 'user'=>$user]);
     }
+
+//    public function actionDashBoard()
+//    {
+//        $user = AdmUser::findOne(['id'=>Yii::$app->user->getId()]);
+////        var_dump($user);die;
+//        $params = Yii::$app->request->queryParams;
+////        var_dump($params);die;
+//        $rol = '';
+//        if($user && $user->hasRol('Agencia'))
+//        {
+//            $userAgency = UserAgency::findOne(['user_id'=>$user->id]);
+//            $params['agency_id'] = '';
+//            $rol= 'Agencia';
+//            if($userAgency)
+//            {
+//                $params['agency_id'] = $userAgency->agency->name;
+//            }
+//        }
+//        else if ($user && $user->hasRol('Cia_transporte')){
+//            $userCiaTrans = UserTranscompany::findOne(['user_id'=>$user->id]);
+//            $params['trans_company_id'] = '';
+//            $rol= 'Cia_transporte';
+//            if($userCiaTrans)
+//            {
+//                $params['trans_company_id'] = $userCiaTrans->transcompany->name;
+//            }
+//        }
+//
+//        $searchModel = new ReceptionSearch();
+//
+//        $dataProvider = $searchModel->search($params);
+//        $receptionCount = $searchModel->search($params)->totalCount;
+//
+//        return $this->render('index', [
+//            'searchModel' => $searchModel,
+//            'dataProvider' => $dataProvider,
+//            'receptionCount'=>$receptionCount,
+//            'user'=>$user,
+//        ]);
+//    }
 
     /**
      * Login action.

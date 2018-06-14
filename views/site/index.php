@@ -2,18 +2,20 @@
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\modules\rd\models\ReceptionSearch */
-/* @var $dataProvider yii\data\ActiveDataProvider */
+/* @var $dataProvider yii\data\ActiveDataProvider
+ */
 
 use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
-
+use yii\helpers\Url;
+use app\modules\administracion\models\AdmUser;
 $this->title = 'SGT';
 
-//use app\assets\TableAsset;
-//TableAsset::register($this);
-
-//echo $option;
+//var_dump($this->params) ;die;
+//var_dump($rol);die;
+//echo $user;
+//echo json_encode($user);
 ?>
 
 <div class="row">
@@ -126,9 +128,8 @@ $this->title = 'SGT';
                 <?php Pjax::begin(); ?>
 <!--                --><?php //Pjax::end(); ?>
 <!--                <table id="data-table" class="table table-striped table-bordered nowrap" width="100%">-->
-
-
-                    <?= GridView::widget([
+                    <?=
+                        GridView::widget([
                         'dataProvider' => $dataProvider,
                         'filterModel' => $searchModel,
                         'columns' => [
@@ -187,9 +188,24 @@ $this->title = 'SGT';
                             [
                                 'class' => 'yii\grid\ActionColumn',
                                 'template' => '{view}',
-                                'controller' => 'rd/reception',
+                                'controller' =>Url::to(['/rd/reception/trans-company/', 'id'=>2], true),
                             ],
-                        ],
+//                            [
+//                                'class' => 'yii\grid\ActionColumn',
+//                                'header' => 'Acciones',
+//                                'template' => '{myButton}',  // the default buttons + your custom button
+//                                'buttons' => [
+//                                    'myButton' => function($url, $model, $key) {
+//
+//                                        if($user->hasRol('Agencia'))
+//                                            $result = Html::a('Ver', ['site/index'], ['class' => 'btn btn-success btn-xs', 'data-pjax' => 0]);
+//                                        else if($user->hasRol('Cia_transporte'))
+//                                            $result = Html::a('Turnos', ['site/index'], ['class' => 'btn btn-success btn-xs', 'data-pjax' => 0]);
+//                                        return $result;
+//                                    }
+//                                ]
+//                            ],
+                    ]
                     ]); ?>
 <!--                </table>-->
                 <?php Pjax::end(); ?>

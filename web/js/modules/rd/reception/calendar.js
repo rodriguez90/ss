@@ -153,40 +153,101 @@ var handleCalendarDemo = function () {
 
             var result = findSlotEvent(calEvent.start, calEvent.end);
 
-            console.log('Slot Event Selected: ');
-            console.log(result);
+            currentCalendarEventIndex = result.index;
+            currentCalendarEvent = result.event;
+            // currentCalendarEvent = calendarSlotMap.get();
+            //
+            // if(calEvent.type === 'D')
+            // {
+            //     currentCalendarEvent = calendarSlotMap.get(calEvent.id);
+            // }
+            // else if(calEvent.type === 'T20')
+            // {
+            //     currentCalendarEvent = calendarSlotMap.get(calEvent.id - 1);
+            // }
+            // else if(calEvent.type === 'T20')
+            // {
+            //     currentCalendarEvent = calendarSlotMap.get(calEvent.id - 2);
+            // }
 
-            if(result.event)
+
+            if(calEvent.type === 'D')
             {
-                currentCalendarEventIndex = result.index;
-                currentCalendarEvent = result.event;
-
-                if(currentCalendarEvent.count <=0 )
+                if(result.event)
                 {
-                    alert("No hay disponibilidad para esta fecha.");
-                    return;
+                    if(currentCalendarEvent.count <= 0 )
+                    {
+                        alert("No hay disponibilidad para esta fecha.");
+                        return;
+                    }
+
+                    var table = $('#data-table-modal').DataTable();
+
+                    var count = 0;
+                    table
+                        .clear()
+                        .draw();
+
+                    transactions.forEach(function(transaction, key) {
+
+                        var container = containers.get(transaction.container_id);
+
+                        var indexSelected = selectedTransactions.indexOf(transaction.id);
+                        var indexTicket = transactionWithTicket.indexOf(transaction.id);
+
+                        if(indexSelected === -1 && indexTicket === -1)
+                        {
+                            table.row.add(
+                                {
+                                    checkbox:"",
+                                    name: container.name,
+                                    type: container.code,
+                                    tonnage: container.tonnage,
+                                    deliveryDate:transaction.delivery_date,
+                                    agency:agency.name,
+                                    transactionId:transaction.id
+                                }
+                            ).draw();
+                            count++;
+                        }
+                    });
+
+                    if(count > 0)
+                    {
+                        mode = 'create';
+                        $("#modalTitle").get(0).textContent = 'Cupos disponibles: ' + currentCalendarEvent.title;
+                        $("#modalTicket").get(0).textContent = moment(currentCalendarEvent.start).format("dddd, MMMM YYYY h:mm");
+                        $("#modal-select-containers").modal("show");
+                        $('#select-all')[0].checked = false;
+                    }
+                    else {
+                        alert('Ya todas los contenedores de esta recepción tienen cupos');
+                    }
                 }
-
-
-                // init table on date table
-                handleTableInModal();
-                // fetchReceptionTransactions();
+            }
+            else {
 
                 var table = $('#data-table-modal').DataTable();
 
                 var count = 0;
+
                 table
                     .clear()
                     .draw();
+                // console.log(calEvent.rt);
+                // console.log(selectedTransactions);
+                // console.log(transactionWithTicket);
 
-                transactions.forEach(function(transaction, key) {
+                for(var i = 0, length = calEvent.rt.length ; i < length; i++) {
 
+                    var tId = calEvent.rt[i];
+                    var transaction = transactions.get(tId);
                     var container = containers.get(transaction.container_id);
 
                     var indexSelected = selectedTransactions.indexOf(transaction.id);
                     var indexTicket = transactionWithTicket.indexOf(transaction.id);
 
-                    if(indexSelected === -1 && indexTicket == -1)
+                    if(indexSelected !== -1 || indexTicket !== -1)
                     {
                         table.row.add(
                             {
@@ -201,24 +262,17 @@ var handleCalendarDemo = function () {
                         ).draw();
                         count++;
                     }
-                });
+                }
 
                 if(count > 0)
                 {
-                    var startDate = new Date(currentCalendarEvent.start);// start.format();
-                    $("#modalTitle").get(0).textContent = moment(currentCalendarEvent.start).format("dddd, MMMM YYYY h:mm");
-                    $("#modalTicket").get(0).textContent = 'Cupos disponibles: ' + currentCalendarEvent.title;
+                    mode = 'delete';
+                    $("#modalTitle").get(0).textContent = 'Eliminar Cupos';
+                    $("#modalTicket").get(0).textContent = moment(currentCalendarEvent.start).format("dddd, MMMM YYYY h:mm");
                     $("#modal-select-containers").modal("show");
                     $('#select-all')[0].checked = false;
                 }
-                else {
-                    alert('Ya todas los contenedores de esta recepción tienen cupos');
-                }
             }
-
-            // alert('Event: ' + calEvent.title);
-            // alert('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
-            // alert('View: ' + view.name);
         },
 		eventRender: function(event, element, calEvent) {
 				// var mediaObject = (event.media) ? event.media : '';

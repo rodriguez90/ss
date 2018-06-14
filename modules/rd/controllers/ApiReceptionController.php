@@ -8,10 +8,13 @@
 
 namespace app\modules\rd\controllers;
 
+
 use app\modules\administracion\models\AdmUser;
 use app\modules\rd\models\Container;
 use app\modules\rd\models\Reception;
 use app\modules\rd\models\ReceptionTransaction;
+use DateTime;
+use DateTimeZone;
 use Yii;
 use yii\helpers\Html;
 use yii\helpers\Url;
@@ -26,6 +29,9 @@ class ApiReceptionController extends  ActiveController
     {
         $actions = parent::actions();
         unset($actions['create']);
+        unset($actions['deelete']);
+        unset($actions['update']);
+        unset($actions['view']);
         return $actions;
     }
 
@@ -82,13 +88,16 @@ class ApiReceptionController extends  ActiveController
                         $containerModel->code = $container['type'];
                         $containerModel->tonnage = $container['tonnage'];
                         $containerModel->active = 1;
-
                         if($containerModel->save())
                         {
                             $receptionTransModel = new ReceptionTransaction();
                             $receptionTransModel->reception_id = $model->id;
                             $receptionTransModel->container_id = $containerModel->id;
-                            $receptionTransModel->delivery_date = strtotime($container['deliveryDate']);
+
+                            $aux = new DateTime($container['deliveryDate']);
+                            $aux->setTimezone(new DateTimeZone("UTC"));
+
+                            $receptionTransModel->delivery_date = $aux->format("Y-m-d G:i:s");
                             $receptionTransModel->active = 1;
 
                             if(!$receptionTransModel->save()) {
@@ -118,7 +127,6 @@ class ApiReceptionController extends  ActiveController
                             ->one();
 
                         // TODO: send email user too from the admin system
-//                    $emailConten = null;
                         $agency= $model->agency ? $model->agency->name:'';
                         $ciaTransporte = $model->transCompany ? $model->transCompany->name:'';
                         $emailConten = Html::beginTag('div')
@@ -145,10 +153,10 @@ class ApiReceptionController extends  ActiveController
                             . Html::endTag('div');
 
                         Yii::$app->mailer->compose()
-                            ->setFrom($remitente->email)
-                            ->setTo($destinatario->email)
-//                            ->setFrom("admin@test.co")
-//                            ->setTo("test@test.co")
+//                            ->setFrom($remitente->email)
+//                            ->setTo($destinatario->email)
+                            ->setFrom("admin@test.co")
+                            ->setTo("test@test.co")
                             ->setSubject( "email de prueba." )
                             ->setHtmlBody($emailConten)
                             ->send();

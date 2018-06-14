@@ -140,6 +140,7 @@ class TicketController extends Controller
 
         $response['success'] = true;
         $response['msg'] = 'Ticket Eliminado';
+        $response['ticket'] = $model;
 
         if($model)
         {
@@ -149,12 +150,13 @@ class TicketController extends Controller
 
                 if($model->delete())
                 {
-                    $calendarSlot->amount--;
+                    $calendarSlot->amount++;
                     if(!$calendarSlot->update())
                     {
                         $response['success'] = false;
                         $response['msg'] = 'Ah ocurrido un error al actualizar la disponibilidad del calendario: '.
                             implode(" ", $calendarSlot->getErrorSummary(false));
+
                     }
                 }
                 else
@@ -162,6 +164,14 @@ class TicketController extends Controller
                     $response['success'] = false;
                     $response['msg'] = 'Ah ocurrido un error al eliminar el ticket: '.
                         implode(" ", $model->getErrorSummary(false));
+                }
+
+                if($response['success'] == true)
+                {
+                    $transaction->commit();
+                }
+                else {
+                    $transaction->rollBack();
                 }
             }
             catch (\Exception $e)
@@ -176,7 +186,7 @@ class TicketController extends Controller
             $response['msg'] = 'El ticket no existe';
         }
 
-        return json_encode($response);
+        return $response;
     }
 
     public function actionReserve()
@@ -255,8 +265,9 @@ class TicketController extends Controller
                         $receptionTransaction = ReceptionTransaction::findOne(['id'=>$model->reception_transaction_id]);
                         $receptionTransaction->regiter_truck = $data['registerTruck'];
                         $receptionTransaction->register_driver = $data['registerDriver'];
+                        $receptionTransaction->name_driver = $data['nameDriver'];
 
-                        if(!$receptionTransaction->update(true, ['regiter_truck', 'register_driver']))
+                        if(!$receptionTransaction->update(true, ['regiter_truck', 'register_driver', 'name_driver']))
                         {
                             $processStatus = false;
                             $response['msg'] = 'Ah ocurrido un error al actualizar la placa del carro y la cédula del chofer: '.

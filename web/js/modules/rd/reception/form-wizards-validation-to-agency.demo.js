@@ -41,19 +41,6 @@ var handleBootstrapWizardsValidation = function() {
 
                     // set text value
                     $("#trans_company").text($("#select-agency option:selected").text());
-
-
-                    // // chagen text next button to finish
-                    // var nextBtn = $("[role='button']").eq(1 );
-                    // var aTag = null;
-                    //
-                    // if(nextBtn) {
-                    //     nextBtn.removeClass('disabled');
-                    //     aTag = nextBtn.find("a")
-                    // }
-                    //
-                    // if(aTag)
-                    //     aTag.text('Finalizar');
                 }
                 else if(ui.index==3)
                 {
@@ -174,8 +161,8 @@ var handleBootstrapWizardsValidation = function() {
                         //     "containers":containers
                         // };
 
-                        console.log(reception);
-                        console.log(JSON.stringify(reception));
+                        // console.log(reception);
+                        // console.log(JSON.stringify(reception));
 
                         $.ajax({
                             async:false,
@@ -201,8 +188,8 @@ var handleBootstrapWizardsValidation = function() {
                                 // return true;
                             },
                             error: function(data) {
+                                // console.log(data);
                                 console.log(data.responseText);
-                                alert(textStatus);
                                 result = false;
                                 // return false;
                             }
