@@ -42,10 +42,10 @@ class Agency extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'name' => 'Name',
-            'code_oce' => 'Code Oce',
-            'ruc' => 'Ruc',
-            'active' => 'Active',
+            'name' => 'Nombre',
+            'code_oce' => 'Código Oce',
+            'ruc' => 'RUC',
+            'active' => 'Activa',
         ];
     }
 }

@@ -7,9 +7,10 @@ use yii\widgets\DetailView;
 /* @var $model app\modules\rd\models\Warehouse */
 
 $this->title = $model->name;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Depósito'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Depósitos'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
+
 <div class="row">
     <div class="col-md-8">
         <div class="panel panel-inverse">
@@ -23,11 +24,11 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
             <div class="panel-body">
                 <p>
-                    <?= Html::a(Yii::t('app', 'Editar'), ['update', 'id' => $model->id], ['class' => 'btn btn-sm btn-primary']) ?>
+                    <?= Html::a(Yii::t('app', 'Actualizar'), ['update', 'id' => $model->id], ['class' => 'btn btn-sm btn-primary']) ?>
                     <?= Html::a(Yii::t('app', 'Eliminar'), ['delete', 'id' => $model->id], [
                         'class' => 'btn btn-sm btn-danger',
                         'data' => [
-                            'confirm' => Yii::t('app', 'Are you sure you want to delete this item?'),
+                            'confirm' => Yii::t('app', 'Está seguro que desea eliminar el depósito?'),
                             'method' => 'post',
                         ],
                     ]) ?>
@@ -36,11 +37,15 @@ $this->params['breadcrumbs'][] = $this->title;
                 <?= DetailView::widget([
                     'model' => $model,
                     'attributes' => [
-                        'id',
-                        'code_oce',
+                        //'id',
                         'name',
-                        'active',
+                        'code_oce',
+                        //'active',
                         'ruc',
+                        [
+                            'attribute' => 'active',
+                            'value' => ($model->active == 1)   ? 'Activo' : 'Inactivo',
+                        ]
                     ],
                 ]) ?>
             </div>

@@ -18,8 +18,8 @@ class ContainerSearch extends Container
     public function rules()
     {
         return [
-            [['id', 'tonnage', 'active'], 'integer'],
-            [['name', 'code'], 'safe'],
+            [['id'], 'integer'],
+            [['name', 'tonnage', 'active', 'code'], 'safe'],
         ];
     }
 
@@ -61,8 +61,20 @@ class ContainerSearch extends Container
         $query->andFilterWhere([
             'id' => $this->id,
             'tonnage' => $this->tonnage,
-            'active' => $this->active,
+            //'active' => $this->active,
         ]);
+
+        if(isset($this->active) && !empty($this->active)){
+
+            if(strstr("activo",strtolower($this->active)) == true)
+            {
+                $query->andFilterWhere(['active' =>1]);
+            }else if(strstr("inactivo",strtolower($this->active)) == true)
+            {
+                $query->andFilterWhere(['active' =>0]);
+            }
+
+        }
 
         $query->andFilterWhere(['like', 'name', $this->name])
             ->andFilterWhere(['like', 'code', $this->code]);

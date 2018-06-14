@@ -180,7 +180,6 @@ class ItemController extends Controller
         throw new NotFoundHttpException('The requested page does not exist.');
     }
 
-
     public function actionAssign($idparent,$idchild)
     {
         $auth =  Yii::$app->authManager;
@@ -197,7 +196,6 @@ class ItemController extends Controller
         }
 
     }
-
 
     public function actionGetroles(){
         if(\Yii::$app->user->can('Admin_mod')){
@@ -216,11 +214,4 @@ class ItemController extends Controller
 
 
     }
-
-
-
-
-
-
-
 }

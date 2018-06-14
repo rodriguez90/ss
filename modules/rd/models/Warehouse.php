@@ -42,10 +42,10 @@ class Warehouse extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'code_oce' => 'Code Oce',
-            'name' => 'Name',
-            'active' => 'Active',
-            'ruc' => 'Ruc',
+            'code_oce' => 'Código Oce',
+            'name' => 'Nombre',
+            'active' => 'Activo',
+            'ruc' => 'RUC',
         ];
     }
 }

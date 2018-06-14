@@ -25,25 +25,25 @@ use Yii;
 class AuthItem extends \yii\db\ActiveRecord
 {
 
-//    const ROLE_ADMIN = 'admin';
-//    const ROLE_ADMIN_WHAREHOUSE = 'admin_wharehoue';
-//    const ROLE_WHAREHOUSE = 'wharehoue';
-//    const ROLE_AGENCY = 'agency';
-//    const ROLE_TRANS_COMPANY = 'trans_company';
-//    const ROLE_IMPORTER = 'importer';
-//    const ROLE_EXPORTER = 'exporter';
-//
-//    const ROL_LABEL = [ROL_ADMIN=>'Administrador',
-//        ROL_ADMIN_WHAREHOUSE=>'Administrador de Depósito',
-//        ROLE_WHAREHOUSE=>'Depósito',
-//        ROL_AGENCY=>'Agencia',
-//        ROLE_TRANS_COMPANY=>'Cia de Transporte',
-//        ROLE_IMPORTER=>'Importador',
-//        ROLE_EXPORTER=>'Exportador',
-//    ];
-//
-//    const DEFAULT_ROLES = [ROLE_ADMIN, ROLE_ADMIN_WHAREHOUSE,
-//                           ROLE_WHAREHOUSE, ROLE_AGENCY, ROLE_TRANS_COMPANY, ROLE_IMPORTER, ROLE_EXPORTER];
+    const ROLE_ADMIN = 'admin';
+    const ROLE_ADMIN_WHAREHOUSE = 'admin_wharehoue';
+    const ROLE_WHAREHOUSE = 'wharehoue';
+    const ROLE_AGENCY = 'agency';
+    const ROLE_TRANS_COMPANY = 'trans_company';
+    const ROLE_IMPORTER = 'importer';
+    const ROLE_EXPORTER = 'exporter';
+
+    const ROL_LABEL = [ROL_ADMIN=>'Administrador',
+        ROL_ADMIN_WHAREHOUSE=>'Administrador de Depósito',
+        ROLE_WHAREHOUSE=>'Depósito',
+        ROL_AGENCY=>'Agencia',
+        ROLE_TRANS_COMPANY=>'Cia de Transporte',
+        ROLE_IMPORTER=>'Importador',
+        ROLE_EXPORTER=>'Exportador',
+    ];
+
+    const DEFAULT_ROLES = [ROLE_ADMIN, ROLE_ADMIN_WHAREHOUSE,
+                           ROLE_WHAREHOUSE, ROLE_AGENCY, ROLE_TRANS_COMPANY, ROLE_IMPORTER, ROLE_EXPORTER];
 
     /**
      * {@inheritdoc}

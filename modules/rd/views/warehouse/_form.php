@@ -13,12 +13,20 @@ FormAsset::register($this);
 
 <!--<div class="warehouse-form">-->
 
-    <?php $form = ActiveForm::begin(['class'=>'form-horizontal']); ?>
+    <?php $form = ActiveForm::begin([
+            'class'=>'form-horizontal',
+        'enableClientScript' => false,
+
+        'options' =>
+            [
+                'data-parsley-validate' => true
+            ],
+        ]); ?>
 
     <div class="form-group">
         <label class="col-md-3 col-sm-3 control-label">Nombre</label>
         <div class="col-md-9">
-            <?= $form->field($model, 'name')->textInput(['class'=>'form-control'])->label(false) ?>
+            <?= $form->field($model, 'name')->textInput(['class'=>'form-control', 'data-parsley-required'=>"true"])->label(false) ?>
         </div>
     </div>
 
@@ -26,14 +34,14 @@ FormAsset::register($this);
     <div class="form-group">
         <label class="col-md-3 col-sm-3 control-label">Código OCE</label>
         <div class="col-md-9">
-            <?= $form->field($model, 'code_oce')->textInput(['class'=>'form-control'])->label(false) ?>
+            <?= $form->field($model, 'code_oce')->textInput(['class'=>'form-control','data-parsley-required'=>"true", 'data-parsley-minlength'=>"4", 'data-parsley-maxlength'=>"10",'data-parsley-type'=>"alphanum"])->label(false) ?>
         </div>
     </div>
 
     <div class="form-group">
-        <label class="col-md-3 col-sm-3 control-label">Ruc</label>
+        <label class="col-md-3 col-sm-3 control-label">RUC</label>
         <div class="col-md-9">
-            <?= $form->field($model, 'ruc')->textInput(['class'=>'form-control'])->label(false) ?>
+            <?= $form->field($model, 'ruc')->textInput(['class'=>'form-control','data-parsley-required'=>"true" , 'data-parsley-type'=>"number",'data-parsley-minlength'=>"13", 'data-parsley-maxlength'=>"13"])->label(false) ?>
         </div>
     </div>
 
@@ -47,7 +55,8 @@ FormAsset::register($this);
     <div class="form-group">
         <label class="col-md-3 col-sm-3 control-label"></label>
         <div class="col-md-9">
-            <?= Html::submitButton(Yii::t('app', 'Salvar'), ['class' => 'btn btn-sm btn-success']) ?>
+            <?= Html::button('Cancelar',['class'=>'btn btn-default','onclick'=>'window.history.go(-1)']) ?>
+            <?= Html::submitButton(Yii::t('app', 'Guardar'), ['class' => 'btn btn-success']) ?>
         </div>
     </div>
 

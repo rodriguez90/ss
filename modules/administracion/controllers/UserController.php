@@ -154,7 +154,6 @@ class UserController extends Controller
                 $model->addError('error', "La cédula {$model->cedula} ya fue registrada en el sistema" );
             }
 
-
         if (!$model->hasErrors())
             {
                 $model->setPassword($model->password);
@@ -249,33 +248,28 @@ class UserController extends Controller
 
             switch($rol_actual->name){
                 case 'Importador_Exportador':
-                    $error  = "Seleccione una agencia.";
-                    $type_actual =  UserAgency::findOne(['user_id'=>$model->id])->agency_id;
-                    break;
                 case 'Agencia':
                     $error  = "Seleccione una agencia.";
-                    $type_actual =  UserAgency::findOne(['user_id'=>$model->id])->agency_id;
+                    $ua = UserAgency::findOne(['user_id'=>$model->id]);
+                    if($ua)
+                        $type_actual = $ua->agency_id;
                     break;
                 case 'Administrador_depósito':
-                    $error  ="Seleccione un depósito." ;
-                    $type_actual =  UserWarehouse::findOne(['user_id'=>$model->id])->warehouse_id;
-                    break;
                 case 'Depósito':
                     $error  ="Seleccione un depósito." ;
-                    $type_actual =  UserWarehouse::findOne(['user_id'=>$model->id])->warehouse_id;
+                    $uw = UserWarehouse::findOne(['user_id'=>$model->id]);
+                    if($uw)
+                        $type_actual = $uw->warehouse_id;
                     break;
                 case 'Cia_transporte':
                     $error  ="Seleccione una compañía de transporte.";
-                    $type_actual = -1;
                     $ut = UserTranscompany::findOne(['user_id'=>$model->id]);
                     if($ut)
                         $type_actual = $ut->transcompany_id;
                     break;
                 default :
-
                     break;
             }
-
 
             if ($model->load(Yii::$app->request->post()) ) {
 

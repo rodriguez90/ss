@@ -6,16 +6,32 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\modules\rd\models\Agency */
 
-$this->title = Yii::t('app', 'Create Agency');
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Agencies'), 'url' => ['index']];
+$this->title = Yii::t('app', 'Nueva Agencia');
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Agencias'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="agency-create">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+<div class="row">
+    <div class="col-md-8">
+        <div class="panel panel-inverse">
+            <div class="panel-heading">
+                <div class="panel-heading-btn">
+                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i
+                                class="fa fa-expand"></i></a>
+                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i
+                                class="fa fa-repeat"></i></a>
+                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning"
+                       data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+                </div>
+                <h4 class="panel-title"><?= Html::encode($this->title) ?></h4>
+            </div>
+            <div class="panel-body">
+                <?= $this->render('_form', [
+                    'model' => $model,
+                ]) ?>
 
-    <?= $this->render('_form', [
-        'model' => $model,
-    ]) ?>
-
+            </div>
+        </div>
+    </div>
 </div>
+

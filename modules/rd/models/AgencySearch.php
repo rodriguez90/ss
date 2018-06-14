@@ -18,8 +18,8 @@ class AgencySearch extends Agency
     public function rules()
     {
         return [
-            [['id', 'active'], 'integer'],
-            [['name', 'code_oce', 'ruc'], 'safe'],
+            [['id' ], 'integer'],
+            [['name','active', 'code_oce', 'ruc'], 'safe'],
         ];
     }
 
@@ -60,8 +60,20 @@ class AgencySearch extends Agency
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'active' => $this->active,
+            //'active' => $this->active,
         ]);
+
+        if(isset($this->active) && !empty($this->active)){
+
+            if(strstr("activo",strtolower($this->active)) == true)
+            {
+                $query->andFilterWhere(['active' =>1]);
+            }else if(strstr("inactivo",strtolower($this->active)) == true)
+            {
+                $query->andFilterWhere(['active' =>0]);
+            }
+
+        }
 
         $query->andFilterWhere(['like', 'name', $this->name])
             ->andFilterWhere(['like', 'code_oce', $this->code_oce])

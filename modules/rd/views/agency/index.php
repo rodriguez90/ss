@@ -18,7 +18,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
                 <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fa fa-repeat"></i></a>
                 <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
-                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
             </div>
             <h4 class="panel-title"><?= Html::encode($this->title) ?></h4>
         </div>
@@ -36,15 +35,25 @@ $this->params['breadcrumbs'][] = $this->title;
                 'columns' => [
                     ['class' => 'yii\grid\SerialColumn'],
 
-                    'id',
                     'name',
                     'code_oce',
                     'ruc',
-                    'active',
+                    [
+                        'attribute' => 'active',
+                        'format' => 'text',
+                        'content' => function ($data)
+                        {
+                            return $data['active'] ? '<span class="label label-success pull-left">Activo</span>' : '<span class="label label-danger">Inactivo</span>';
+                        },
+                        'filter' => Html::activeDropDownList($searchModel, 'active', [
+                            'activo' => 'Activo', 'inactivo' => 'Inactivo',
+                        ], ['class' => 'form-control', 'prompt'=>''])
+                    ],
 
                     ['class' => 'yii\grid\ActionColumn'],
                 ],
             ]); ?>
             <?php Pjax::end(); ?>
+
         </div>
 </div>

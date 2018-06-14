@@ -18,8 +18,8 @@ class TransCompanySearch extends TransCompany
     public function rules()
     {
         return [
-            [['id', 'active'], 'integer'],
-            [['name', 'ruc', 'address'], 'safe'],
+            [['id'], 'integer'],
+            [['name', 'ruc', 'address','active'], 'safe'],
         ];
     }
 
@@ -60,8 +60,20 @@ class TransCompanySearch extends TransCompany
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'active' => $this->active,
+            //'active' => $this->active,
         ]);
+
+        if(isset($this->active) && !empty($this->active)){
+
+            if(strstr("activo",strtolower($this->active)) == true)
+            {
+                $query->andFilterWhere(['active' =>1]);
+            }else if(strstr("inactivo",strtolower($this->active)) == true)
+            {
+                $query->andFilterWhere(['active' =>0]);
+            }
+
+        }
 
         $query->andFilterWhere(['like', 'name', $this->name])
             ->andFilterWhere(['like', 'ruc', $this->ruc])

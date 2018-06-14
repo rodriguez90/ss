@@ -5,12 +5,12 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\modules\rd\models\Warehouse */
 
-$this->title = Yii::t('app', 'Editar Depósito: ' . $model->name, [
+$this->title = Yii::t('app', 'Actualizar Depósito: ' . $model->name, [
     'nameAttribute' => '' . $model->name,
 ]);
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Depósitos'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->name, 'url' => ['view', 'id' => $model->id]];
-$this->params['breadcrumbs'][] = Yii::t('app', 'Editar');
+$this->params['breadcrumbs'][] = Yii::t('app', 'Actualizar');
 ?>
 <div class="row">
     <div class="col-md-8">

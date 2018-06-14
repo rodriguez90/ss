@@ -10,6 +10,7 @@ $this->title = Yii::t('app', 'Nuevo Depósito');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Depósitos'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
+
 <div class="row">
     <div class="col-md-8">
         <div class="panel panel-inverse">
