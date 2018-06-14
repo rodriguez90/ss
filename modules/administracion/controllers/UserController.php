@@ -78,7 +78,7 @@ class UserController extends Controller
      */
     public function actionView($id)
     {
-        if (\Yii::$app->user->can('User_list') || \Yii::$app->user->getId() == $id ) {
+        if (\Yii::$app->user->can('user_view') || \Yii::$app->user->getId() == $id ) {
             return $this->render('view', [
                 'model' => $this->findModel($id),
             ]);
@@ -95,7 +95,7 @@ class UserController extends Controller
 
     public function actionCreate()
     {
-        if ( \Yii::$app->user->can('User_create')) {
+        if ( \Yii::$app->user->can('user_create')) {
 
         $auth =  Yii::$app->authManager;
         $confirm = Yii::$app->request->post('AdmUser')["passwordConfirm"];
@@ -226,7 +226,7 @@ class UserController extends Controller
     public function actionUpdate($id)
     {
 
-        if ( \Yii::$app->user->can('User_update') || \Yii::$app->user->getId() == $id  ) {
+        if ( \Yii::$app->user->can('user_update') || \Yii::$app->user->getId() == $id  ) {
 
             $model = $this->findModel($id);//comprobar si model existe...
             $old_password = $model->password;
@@ -364,8 +364,7 @@ class UserController extends Controller
     public function actionDelete($id)
     {
         $model = $this->findModel($id);
-        if ( \Yii::$app->user->can('Admin_mod') && $model->username != 'root' && $model->username != \Yii::$app->user) {
-
+        if (  \Yii::$app->user->can('user_delete') &&  $model->username != 'root' && $model->username != \Yii::$app->user) {
             //return $this->redirect(['create']);
             $this->findModel($id)->delete();
         }

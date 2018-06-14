@@ -230,8 +230,11 @@ $(function (){
                                     var response_start = response[i].start.split(' ');
                                     var response_end = response[i].end.split(' ');
 
-                                    var time1 = response_start[1].substr(0,2);
-                                    var time2 = response_end[1].substr(0,2);
+                                    var array_time1 = response_start[1].split(':');
+                                    var array_time2 = response_end[1].split(':');
+
+                                    var time1 = array_time1[0];
+                                    var time2 = array_time2[0];
 
                                     var array1 = response_start[0].split("-");
                                     var array2 = response_end[0].split("-");
@@ -280,7 +283,7 @@ $(function (){
                             }
                         });
 
-                    } 
+                    }
                 },
                 selectable: false,
                 selectHelper: true,

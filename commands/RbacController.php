@@ -15,54 +15,46 @@ use app\modules\administracion\models\AdmUser;
 
 class RbacController extends Controller
 {
-    public function actionInit()
+    public function actionInit22()
     {
-        $msg = 'Error: ';
+        $msg = "!Error :";
         $ok = true;
-        try{
-            Yii::$app->authManager;
-            $result = $this->actionCreateAdminUser();
+        try {
 
-            if(isset($result['msg']))
-            {
-                $ok= false;
-                $msg = $result['msg'];
+            if (!$this->CreateAdminUser()) {
+                $ok = false;
+                $msg = " No se pudo añadir el usuario administrador. ";
             }
 
-            if(ok)
-            {
-                $ok = $this->actionCreateDefaulRoles() === null;
+            if ($ok) {
+                if (!$this->actionCreateDefaulRoles()) {
+                    $ok = false;
+                    $msg = " No se crearon los roles por defecto. ";
+                }
             }
 
-            if(!$ok)
-                $msg = $msg . 'Al crear los roles';
-
-            if($ok)
-            {
-                $ok = $this->actionCreateDefaultPermisssion() === null;
+            if ($ok) {
+                if ($this->actionCreateDefaultPermisssion()) {
+                    $ok = false;
+                    $msg = " No se crearon los permisos por defecto. ";
+                }
             }
 
-            if(!$ok)
-                $msg = $msg . 'Al crear los permisos';
-
-        }catch (\Exception $ex){
+        } catch (\Exception $ex) {
             $ok = false;
-            $msg = $msg. "ex: ". $ex;
+            $msg = $msg . " ex: " . $ex->getMessage();
         }
 
-       if($ok){
-           echo "Migración OK...";
-       }else
-          echo $msg;
+        if ($ok) {
+            echo "Migración OK...";
+        } else
+            echo $msg;
     }
 
-    public function actionCreateAdminUser()
+
+    public function CreateAdminUser()
     {
         $auth = Yii::$app->authManager;
-        //$auth->removeAll();
-        $ok = true;
-        $result = [];
-        $msg = "Error, ";
 
         $adminUser = new AdmUser();
         $adminUser->username = 'root';
@@ -75,25 +67,21 @@ class RbacController extends Controller
         $adminUser->updated_at = time();
         $adminUser->cedula = "2012345678";
 
-        if (AdmUser::findOne(['username' => $adminUser->username]) == null && $adminUser->save())
-        {
-            $adminUser = null;
-            $result['msg'] = $msg."No se pudo añadir el usuario.";
+        if (AdmUser::findOne(['username' => $adminUser->username]) == null && $adminUser->save()) {
+            return true;
         }
-        $result['user'] = $adminUser;
-        return $adminUser;
+
+        return false;
     }
+
 
     public function actionCreateDefaulRoles()
     {
         $auth = Yii::$app->authManager;
-
-        foreach (AuthItem::DEFAULT_ROLES as $role)
-        {
+        foreach (AuthItem::DEFAULT_ROLES as $role) {
             $rolModel = $auth->createRole($role);
-            if($auth->getRole($rolModel->name) === null){
-                if(!$auth->add($rolModel))
-                {
+            if ($auth->getRole($rolModel->name) === null) {
+                if (!$auth->add($rolModel)) {
                     return false;
                 }
             }
@@ -102,53 +90,117 @@ class RbacController extends Controller
         return true;
     }
 
-    public function actionCreateDefaultPermisssion()
+    public function actionInit()
     {
-        // add "createPost" permission
-        $auth = Yii::$app->authManager;
+        $msg = "!Error :";
+        $ok = true;
+        try{
+            $auth = Yii::$app->authManager;
 
-        // los permisos son generados x los tablas o modelos que tenemos en el sistema
-        /*
-         * Ejemplo
-         * Modelo Reception tendriamos:
-         * reception_create
-         * reception_update
-         * reception_delete
-         * reception_list
-         * reception_view
-         *
-         * estos son los permisos basicos que se pueden autogenerar por un modelo
-         */
+            $admin_perm = [];
 
-        // TODO: VER ESTO
-//        $adminMod = $auth->createPermission('Admin_mod2');
-//        $adminMod->description = 'Acceso al modulo de administración';
-//        if($auth->getPermission($adminMod->name)==null)
-//            $ok = $ok && $auth->add($adminMod);
-//        else
-//            $msg = $msg." No se pudo añadir el permiso ( ".$adminMod->name . " )";
-//
-//        // add "admin" role and give this role the "updatePost" permission
-//        // as well as the permissions of the "author" role
-//        $adminRol = $auth->createRole(AuthItem::ROLE_ADMIN);
-//        $adminRol->description = "Administrador del sistema";
-//        if($auth->getRole($adminRol->name)==null){
-//            $ok = $ok && $auth->add($adminRol);
-//        }
-//        else
-//            $msg = $msg." No se pudo añadir el rol ( ".$adminRol->name . " )";
-//
-//
-//        if(!$auth->hasChild($adminRol,$adminMod)){
-//            $ok = $ok && $auth->addChild($adminRol,$adminMod);
-//        }
-//        else
-//            $msg = $msg." No se pudo asignar el permiso ( ".$adminMod->name . " al rol ". $adminRol->name ." )";
-//
-//        if($adminUser->getId() != null && !$auth->checkAccess($adminUser->getId(),$adminRol->name)){
-//            $ok = $ok &&  $auth->assign($adminRol,$adminUser->getId());
-//        }
-//        else
-//            $msg = $msg." No se pudo asignar el rol (".$adminRol->name." ) al usuario ( ".$adminUser->username ." )";
+            $user_perm = ["admin_mod" => "Acceso al modulo administrción","user_create" => "Crear Usuario", "user_update" => "Actualizar Usuarios", "user_delete" => "Eliminar Usuarios", "user_list" => "Listar Usuarios", "user_view" => "Ver Usuarios"];
+            $warehouse_perm = ["warehouse_create"=>"Crear Depósito", "warehouse_update"=>"Actualizar Depósito", "warehouse_delete" => "Eliminar Depósito", "warehouse_list"=>"Listar Depósito", "warehouse_view"=>"Detalle Depósito"];
+            $calendar_perm = ["calendar_create"=>"Crear calendario", "calendar_update"=>"Actualizar calendario", "calendar_delete"=>"Eliminar calendario", "calendar_list"=>"Listar calendario", "calendar_view"=>"Detalle de calendario"];
+            $reception_perm = ["reception_create"=>"Crear recepción", "reception_update"=>"Actualizar recepción", "reception_delete"=>"", "reception_list"=>"", "reception_view"=>""];
+            $agency_perm = ["agency_create"=>"", "agency_update"=>"", "agency_delete"=>"", "agency_list"=>"", "agency_view"=>""];
+            $ticket_perm = ["ticket_create"=>"", "ticket_update"=>"", "ticket_delete"=>"", "ticket_list"=>"", "ticket_view"=>""];
+            $transcompany_perm = ["trans_company_create"=>"", "trans_company_update"=>"", "trans_company_delete"=>"", "trans_company_list"=>"", "trans_company_view"=>""];
+            $container_perm = ["container_create"=>"", "container_update"=>"", "container_delete"=>"", "container_list"=>"", "container_view"=>""];
+            $ciatrans_perm = ["cia_trans_create"=>"", "cia_trans_update"=>"", "cia_trans_delete"=>"", "cia_trans_list"=>"", "cia_trans_view"=>""];
+
+            $admin_perm [0] = $user_perm;
+            $admin_perm [1] = $warehouse_perm;
+            $admin_perm [2] = $calendar_perm;
+            $admin_perm [3] = $reception_perm;
+            $admin_perm [4] = $agency_perm;
+            $admin_perm [5] = $ticket_perm;
+            $admin_perm [6] = $transcompany_perm;
+            $admin_perm [7] = $container_perm;
+            $admin_perm [8] = $ciatrans_perm;
+
+            echo "1";
+
+            //crealo independiente y asignar rolesy perms
+            $adminUser = new AdmUser();
+            $adminUser->username = 'root2';
+            $adminUser->password = Yii::$app->security->generatePasswordHash("a");
+            $adminUser->email = 'root2@gmail.com';
+            $adminUser->nombre = 'root2';
+            $adminUser->apellidos = 'root';
+            $adminUser->status = 1;
+            $adminUser->created_at = time();
+            $adminUser->updated_at = time();
+            $adminUser->cedula = "2012345678";
+
+            if (AdmUser::findOne(['username' => $adminUser->username]) == null && $adminUser->save()) {
+                $ok = true;
+                echo "2";
+            } else {
+                $ok = false;
+                $msg =  $msg . " No se pudo añadir el usuario administrador. ";
+                echo "3";
+            }
+
+            echo "4";
+            if ($ok) {
+                echo "4.5";
+                $adminRol = $auth->createRole(AuthItem::ROLE_ADMIN);
+                $adminRol->description = "Administrador del sistema";
+                if ($auth->getRole($adminRol->name) == null) {
+                    $ok = $ok && $auth->add($adminRol);
+                    if ($ok) {
+                        echo "5";
+                        foreach ($admin_perm as $perms){
+                             echo "6";
+                            foreach ($perms as $key => $desc) {
+                                $pemiso = $auth->createPermission($key);
+                                $pemiso->description = $desc;
+                                echo "6.5";
+                                if ($auth->getPermission($pemiso->name) == null)
+                                    $ok = $ok && $auth->add($pemiso);
+                                if ($ok) {
+                                    echo "7";
+                                    if (!$auth->hasChild($adminRol, $pemiso)) {
+                                        $ok = $ok && $auth->addChild($adminRol, $pemiso);
+                                        if (!$ok) {
+                                            echo "8";
+                                            $msg = $msg . " No se pudo asignar el pemiso( " . $pemiso->name . " al rol " . $adminRol->name . " )";
+                                        }
+                                    }
+                                } else {
+
+                                    $msg =  $msg . " No se pudo añadir el permiso ( " . $pemiso->name . " )";
+                                }
+                            }
+                        }
+
+                    } else {
+                        $msg =   $msg . " No se pudo añadir el rol ( " . $adminRol->name . " )";
+                    }
+
+                    if ($adminUser->getId() != null && !$auth->checkAccess($adminUser->getId(), $adminRol->name)) {
+                        $ok = $ok && $auth->assign($adminRol, $adminUser->getId());
+                    } else {
+                        $ok = false;
+                        $msg = $msg . " No se pudo asignar el rol (" . $adminRol->name . " ) al usuario ( " . $adminUser->username . " )";
+                    }
+                }else{
+                    $ok = false;
+                    $msg = $msg . " Ya existe el rol ". $adminRol->name;
+                }
+            }
+
+
+        } catch (\Exception $ex) {
+            $ok = false;
+            $msg = $msg . " ex: " . $ex->getMessage();
+        }
+
+        if ($ok) {
+            echo "Migración OK...";
+        } else
+            echo $msg;
+
     }
 }
