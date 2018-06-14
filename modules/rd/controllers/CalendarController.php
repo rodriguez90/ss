@@ -42,13 +42,14 @@ class CalendarController extends Controller
      */
     public function actionIndex()
     {
-        /*
-        $searchModel = new CalendarSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        */
-        $model = new Calendar();
+        if ( \Yii::$app->user->can('calendar_list')) {
 
-        return $this->render('create',[ 'model' => $model]);
+            $model = new Calendar();
+
+            return $this->render('create',[ 'model' => $model]);
+        } else{
+            throw new ForbiddenHttpException('Acceso denegado');
+        }
     }
 
     /**
@@ -72,83 +73,93 @@ class CalendarController extends Controller
      */
     public function actionCreate()
     {
-        Yii::$app->response->format = Response::FORMAT_JSON;
-
-        $result = [];
-        $result ['events'] = [];
-
-        $events =Yii::$app->request->post('events');
-
-        $text = "";
-
-        try{
-            $id_warehouse = Warehouse::find()
-                ->innerJoin("","")
-                ->where(['user_id'=>\Yii::$app->user->getId()])
-                ->select("id");
-
-            foreach ( $events as $event) {
-                if($event['id'] == -1){
-
-                    $model = new Calendar();
-                    $aux = new DateTime($event['start']);
-                    $aux->setTimezone(new DateTimeZone("UTC"));
-                    $model->start_datetime = $aux->format("Y-m-d G:i:s");  //date_format( new \DateTime($event['start'],new DateTimeZone("UTC")),"Y-m-d G:i:s");
-
-                    $aux1 = new DateTime($event['end']);
-                    $aux1->setTimezone(new DateTimeZone("UTC"));
-                    $model->end_datetime = $aux1->format("Y-m-d G:i:s");// date_format(new \DateTime($event['end'],new DateTimeZone("UTC")),"Y-m-d G:i:s");
-
-                    $model->amount = $event['title'];
-                    $model->id_warehouse =  1;
-                    $model->save();
-
-                    $event = ['update'=>false, 'id'=>$model->id, 'title'=>$model->amount,'start'=>$model->start_datetime,'end'=>$model->end_datetime  , 'url'=>Url::toRoute('/rd/calendar/delete?id='.$model->id),   'allDay'=>false, 'className'=>['event_rd'], 'editable'=>false];
-                    $result ['events'] [] = $event;
+        if ( \Yii::$app->user->can('calendar_create')) {
 
 
-                }else{
-                    $model = $this->findModel($event['id']);
+            Yii::$app->response->format = Response::FORMAT_JSON;
 
-                    $aux = new \DateTime($event['start']);
-                    $aux->setTimezone(new DateTimeZone("UTC"));
-                    $model->start_datetime = $aux->format("Y-m-d G:i:s");  //date_format( new \DateTime($event['start'],new DateTimeZone("UTC")),"Y-m-d G:i:s");
+            $result = [];
+            $result ['events'] = [];
 
-                    $aux1 = new \DateTime($event['end']);
-                    $aux1->setTimezone(new DateTimeZone("UTC"));
-                    $model->end_datetime = $aux1->format("Y-m-d G:i:s");// date_format(new \DateTime($event['end'],new DateTimeZone("UTC")),"Y-m-d G:i:s");
+            $events =Yii::$app->request->post('events');
 
-                    $reservados = Calendar::find()
-                        ->innerJoin("ticket","calendar.id = ticket.calendar_id")
-                        ->where(["calendar.id"=>$model->id])
-                        ->count();
-                    if( (int)$reservados <= (int)$event['title'] ){
+            $text = "";
+
+            try{
+                $id_warehouse = Warehouse::find()
+                    ->innerJoin("","")
+                    ->where(['user_id'=>\Yii::$app->user->getId()])
+                    ->select("id");
+
+                foreach ( $events as $event) {
+                    if($event['id'] == -1){
+
+                        $model = new Calendar();
+                        $aux = new DateTime($event['start']);
+                        $aux->setTimezone(new DateTimeZone("UTC"));
+                        $model->start_datetime = $aux->format("Y-m-d G:i:s");  //date_format( new \DateTime($event['start'],new DateTimeZone("UTC")),"Y-m-d G:i:s");
+
+                        $aux1 = new DateTime($event['end']);
+                        $aux1->setTimezone(new DateTimeZone("UTC"));
+                        $model->end_datetime = $aux1->format("Y-m-d G:i:s");// date_format(new \DateTime($event['end'],new DateTimeZone("UTC")),"Y-m-d G:i:s");
+
                         $model->amount = $event['title'];
+                        $model->id_warehouse =  1;
                         $model->save();
+
+                        $event = ['update'=>false, 'id'=>$model->id, 'title'=>$model->amount,'start'=>$model->start_datetime,'end'=>$model->end_datetime  , 'url'=>Url::toRoute('/rd/calendar/delete?id='.$model->id),   'allDay'=>false, 'className'=>['event_rd'], 'editable'=>false];
+                        $result ['events'] [] = $event;
+
+
+                    }else{
+                        $model = $this->findModel($event['id']);
+
+                        $aux = new \DateTime($event['start']);
+                        $aux->setTimezone(new DateTimeZone("UTC"));
+                        $model->start_datetime = $aux->format("Y-m-d G:i:s");  //date_format( new \DateTime($event['start'],new DateTimeZone("UTC")),"Y-m-d G:i:s");
+
+                        $aux1 = new \DateTime($event['end']);
+                        $aux1->setTimezone(new DateTimeZone("UTC"));
+                        $model->end_datetime = $aux1->format("Y-m-d G:i:s");// date_format(new \DateTime($event['end'],new DateTimeZone("UTC")),"Y-m-d G:i:s");
+
+                        $reservados = Calendar::find()
+                            ->innerJoin("ticket","calendar.id = ticket.calendar_id")
+                            ->where(["calendar.id"=>$model->id])
+                            ->count();
+                        if( (int)$reservados <= (int)$event['title'] ){
+                            $model->amount = $event['title'];
+                            $model->save();
+
+                        }
+
+                        $event = ['update'=>false, 'id'=>$model->id, 'title'=>$model->amount,'start'=>$model->start_datetime,'end'=>$model->end_datetime  , 'url'=>Url::toRoute('/rd/calendar/delete?id='.$model->id),   'allDay'=>false, 'className'=>['event_rd'], 'editable'=>false];
+                        $result ['events'] [] = $event;
 
                     }
 
-                    $event = ['update'=>false, 'id'=>$model->id, 'title'=>$model->amount,'start'=>$model->start_datetime,'end'=>$model->end_datetime  , 'url'=>Url::toRoute('/rd/calendar/delete?id='.$model->id),   'allDay'=>false, 'className'=>['event_rd'], 'editable'=>false];
-                    $result ['events'] [] = $event;
 
                 }
 
 
+
+                $result ['status']= 1;
+
+                $result['msg'] = "Cupos añadidos correctamente." . $text;
+
+
+            }catch (\yii\base\Exception $ex){
+                $result ['status']= 0;
+                $result['msg'] = "!Error. ".$ex->getMessage();
             }
 
+            return $result;
 
-
-            $result ['status']= 1;
-
-            $result['msg'] = "Cupos añadidos correctamente." . $text;
-
-
-        }catch (\yii\base\Exception $ex){
-            $result ['status']= 0;
-            $result['msg'] = "!Error. ".$ex->getMessage();
+        }
+        else{
+            throw new ForbiddenHttpException('Acceso denegado');
         }
 
-        return $result;
+
 
 
         /*
@@ -174,6 +185,7 @@ class CalendarController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
+    /*
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
@@ -186,7 +198,7 @@ class CalendarController extends Controller
             'model' => $model,
         ]);
     }
-
+*/
     /**
      * Deletes an existing Calendar model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
@@ -196,32 +208,39 @@ class CalendarController extends Controller
      */
     public function actionDelete($id)
     {
-        Yii::$app->response->format = Response::FORMAT_JSON;
-        $result = [];
-        $model = $this->findModel($id);
-        $amount = $model->amount;
+        if ( \Yii::$app->user->can('calendar_delete')) {
+
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            $result = [];
+            $model = $this->findModel($id);
+            $amount = $model->amount;
 
 
-        $reservados = Calendar::find()
-            ->innerJoin("ticket","calendar.id = ticket.calendar_id")
-            ->where(["calendar.id"=>$model->id])
-            ->count();
+            $reservados = Calendar::find()
+                ->innerJoin("ticket","calendar.id = ticket.calendar_id")
+                ->where(["calendar.id"=>$model->id])
+                ->count();
 
-        if($reservados == 0){
-            //var_dump($reservados);
-            if($this->findModel($id)->delete()>0){
-                $result ['status']= 1;
-                $result['msg'] = "Cupos eliminados: ".$amount;
+            if($reservados == 0){
+                //var_dump($reservados);
+                if($this->findModel($id)->delete()>0){
+                    $result ['status']= 1;
+                    $result['msg'] = "Cupos eliminados: ".$amount;
+                }else{
+                    $result ['status']= 0;
+                    $result['msg'] = "No se pudieron eliminar los cupos.";
+                }
             }else{
                 $result ['status']= 0;
-                $result['msg'] = "No se pudieron eliminar los cupos.";
+                $result['msg'] = "No se pueden eliminar cupos reservados.";
             }
-        }else{
-            $result ['status']= 0;
-            $result['msg'] = "No se pueden eliminar cupos reservados.";
+
+            return $result;
+        }
+        else{
+            throw new ForbiddenHttpException('Acceso denegado');
         }
 
-        return $result;
         // return $this->redirect(['index']);
     }
 
@@ -243,64 +262,73 @@ class CalendarController extends Controller
 
     public function actionGetcalendar(){
 
-        Yii::$app->response->format = Response::FORMAT_JSON;
+        if ( \Yii::$app->user->can('calendar_list')) {
 
-        $startDate = Yii::$app->request->get('start');
-        $endDate = Yii::$app->request->get('end');
-        $calendars= [];
+            Yii::$app->response->format = Response::FORMAT_JSON;
 
-        /*
-         * Select * from calendar
-         * Where start >= $startDate and end <= $endDate
-         * Order By start, ASC
-         */
-        $conditon2 = null;
-        if(isset($startDate))
-        {
-            $conditon2= '';
-            $aux = new \DateTime($startDate);
-            $aux->setTimezone(new DateTimeZone("UTC"));
-            $datetimeFormated = $aux->format("Y-m-d G:i:s");
-            $conditon2 .= 'start_datetime >=' ."'". $datetimeFormated ."'";
-        }
-        if (isset($endDate))
-        {
-            $aux = new \DateTime($endDate);
-            $aux->setTimezone(new DateTimeZone("UTC"));
-            $datetimeFormated = $aux->format("Y-m-d G:i:s");
-            $conditon2 .= 'and end_datetime <=' . "'" .$datetimeFormated . "'";
-        }
+            $startDate = Yii::$app->request->get('start');
+            $endDate = Yii::$app->request->get('end');
+            $calendars= [];
+
+            /*
+             * Select * from calendar
+             * Where start >= $startDate and end <= $endDate
+             * Order By start, ASC
+             */
+            $conditon2 = null;
+            if(isset($startDate))
+            {
+                $conditon2= '';
+                $aux = new \DateTime($startDate);
+                $aux->setTimezone(new DateTimeZone("UTC"));
+                $datetimeFormated = $aux->format("Y-m-d G:i:s");
+                $conditon2 .= 'start_datetime >=' ."'". $datetimeFormated ."'";
+            }
+            if (isset($endDate))
+            {
+                $aux = new \DateTime($endDate);
+                $aux->setTimezone(new DateTimeZone("UTC"));
+                $datetimeFormated = $aux->format("Y-m-d G:i:s");
+                $conditon2 .= 'and end_datetime <=' . "'" .$datetimeFormated . "'";
+            }
 
 //        var_dump($conditon2); die;
 
-        if($conditon2)
-            $calendars= Calendar::find()
-                ->where($conditon2)
-                ->orderBy("start_datetime",SORT_ASC)
-                ->all();
-        else
-            $calendars= Calendar::find()
-                ->orderBy("start_datetime",SORT_ASC)
-                ->all();
+            if($conditon2)
+                $calendars= Calendar::find()
+                    ->where($conditon2)
+                    ->orderBy("start_datetime",SORT_ASC)
+                    ->all();
+            else
+                $calendars= Calendar::find()
+                    ->orderBy("start_datetime",SORT_ASC)
+                    ->all();
 
 
 
-        $result = [];
+            $result = [];
 
-        foreach ($calendars as $cal){
-            $result [] = [
-                            'id'=>$cal['id'],
-                            'title'=>$cal['amount']."",
-                            'start'=> $cal['start_datetime'] ,
-                            'end'=>$cal['end_datetime'],
-                            'count'=>$cal['amount'],
-                            'update'=>false,
-                            'allDay'=> false,
-                            'className'=>['event_rd'],
-                            'editable'=>false,
-                            'url'=>Url::toRoute('/rd/calendar/delete?id='.$cal['id'])
-            ];
+            foreach ($calendars as $cal){
+                $result [] = [
+                    'id'=>$cal['id'],
+                    'title'=>$cal['amount']."",
+                    'start'=> $cal['start_datetime'] ,
+                    'end'=>$cal['end_datetime'],
+                    'count'=>$cal['amount'],
+                    'update'=>false,
+                    'allDay'=> false,
+                    'className'=>['event_rd'],
+                    'editable'=>false,
+                    'url'=>Url::toRoute('/rd/calendar/delete?id='.$cal['id'])
+                ];
+            }
+            return $result;
+
+
+        } else{
+            throw new ForbiddenHttpException('Acceso denegado');
         }
-        return $result;
+
+
     }
 }
