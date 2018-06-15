@@ -193,27 +193,24 @@ $rol = $user->getRole();
                             ],
                             [
                                 'class' => 'yii\grid\ActionColumn',
-                                'controller' => 'rd/reception',
-                                'template' => '{view}',
+                                'header' => 'Acciones',
+                                'controller' => 'rd/reception/create',
+                                'template' => $rol === 'Agencia' ? '{view}' : '{update}',
 //                                'urlCreator' =>
 //                                'controller' =>Url::to(['rd/reception/trans-company/'], true),
                             ],
-                            [
-                                'class' => 'yii\grid\ActionColumn',
-                                'header' => 'Acciones',
-                                'template' => '{myButton}',  // the default buttons + your custom button
-                                'buttons' => [
-                                    'myButton' => function($url, $model, $key) {
-                                        $result = '';
-                                        if($rol === 'Agencia')
-                                            $result = Html::a('Ver', ['site/index'], ['class' => 'btn btn-success btn-xs', 'data-pjax' => 0]);
-                                        else if($rol === 'Cia_transporte')
-                                            $result = Html::a('Turnos', ['site/index'], ['class' => 'btn btn-success btn-xs', 'data-pjax' => 0]);
-//                                        var_dump($result);die;
-                                        return $result;
-                                    }
-                                ]
-                            ],
+//                            [
+//                                'class' => 'yii\grid\ActionColumn',
+//                                'header' => 'Acciones',
+//                                'template' => '{myButton}',  // the default buttons + your custom button
+//                                'controller' => 'rd/reception',
+//                                'buttons' => [
+//                                    'myButton' => function($url, $model, $key) {
+//                                        $result = Html::a('Ver', $url, ['class' => 'btn btn-success btn-xs', 'data-pjax' => 0]);
+//                                        return $result;
+//                                    }
+//                                ]
+//                            ],
                     ]
                     ]); ?>
 <!--                </table>-->
