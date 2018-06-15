@@ -345,4 +345,21 @@ class AdmUser extends ActiveRecord implements IdentityInterface
 //        var_dump($result); die();
         return $result > 0;
     }
+
+    public function getRole()
+    {
+        $roles = Yii::$app->authManager->getRolesByUser($this->id);
+        if (!$roles) {
+            return null;
+        }
+
+
+        return array_shift($roles)->name;
+
+//        reset($roles);
+//        /* @var $role \yii\rbac\Role */
+//        $role = current($roles);
+//
+//        return $role->name;
+    }
 }

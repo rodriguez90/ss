@@ -172,7 +172,7 @@ $(document).ready(function () {
                 else
                 {
                     // var index = selectedContainers.indexOf(value.name);
-                    alert('Voy a trabajar la seleccion: ' + checked);
+                    // alert('Voy a trabajar la seleccion: ' + checked);
                     if(checked)
                     {
                         // dt.row(index.row, index.column)

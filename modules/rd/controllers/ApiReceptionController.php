@@ -129,7 +129,30 @@ class ApiReceptionController extends  ActiveController
                         // TODO: send email user too from the admin system
                         $agency= $model->agency ? $model->agency->name:'';
                         $ciaTransporte = $model->transCompany ? $model->transCompany->name:'';
-                        $emailConten = Html::beginTag('div')
+                        $emailCSS .= "<style>
+                                        .jumbotron {
+                                        padding-top: 30px;
+                                        padding-bottom: 30px;
+                                        margin-bottom: 30px;
+                                        color: inherit;
+                                        background-color: #eee;
+                                        }
+                                        .jumbotron h1,
+                                        .jumbotron .h1 {
+                                          color: inherit;
+                                        }
+                                        .jumbotron p {
+                                          margin-bottom: 15px;
+                                          font-size: 21px;
+                                          font-weight: 200;
+                                        }
+                                        .jumbotron > hr {
+                                          border-top-color: #d5d5d5;
+                                        } 
+                                        </style>";
+
+                        $emailConten = $emailCSS;
+                        $emailConten .= Html::beginTag('div', ['class'=>'jumbotron'])
                             . Html::tag('h4', Html::encode('Notificación de solicitud de recepción'))
                             . Html::tag('h5', Html::encode('Número de la Recepción: ' . $model->id))
                             . Html::tag('p', Html::encode('Agencia: ' . $agency))

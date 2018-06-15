@@ -110,28 +110,6 @@ class ReceptionController extends Controller
     }
 
     /**
-     * Creates a new Reception model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
-     */
-    public function actionCreate()
-    {
-        $user = AdmUser::findOne(['id'=>Yii::$app->user->id]);
-        if($user && !($user->hasRol('Agencia')))
-            throw new ForbiddenHttpException('Usted ni tiene permiso para crear una recepción');
-
-        $model = new Reception();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        }
-
-        return $this->render('create', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
      * Updates an existing Reception model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param string $id
@@ -165,7 +143,18 @@ class ReceptionController extends Controller
         return $this->redirect(['index']);
     }
 
-    public function actionCreateByAgency()
+    public function actionTransCompany($id)
+    {
+        $user = AdmUser::findOne(['id'=>Yii::$app->user->id]);
+        if($user && !($user->hasRol('Cia_transporte')))
+            throw new ForbiddenHttpException('Usted no tiene permiso para resevar cupos en la recepción');
+
+        return $this->render('_formTransCompany', [
+            'model' => $this->findModel($id),
+        ]);
+    }
+
+    public function actionCreate()
     {
         $user = AdmUser::findOne(['id'=>Yii::$app->user->id]);
         if($user && !($user->hasRol('Agencia')))
@@ -178,19 +167,8 @@ class ReceptionController extends Controller
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
-        return $this->render('create_agency', [
+        return $this->render('create', [
             'model' => $model,
-        ]);
-    }
-
-    public function actionTransCompany($id)
-    {
-        $user = AdmUser::findOne(['id'=>Yii::$app->user->id]);
-        if($user && !($user->hasRol('Cia_transporte')))
-            throw new ForbiddenHttpException('Usted no tiene permiso para resevar cupos en la recepción');
-
-        return $this->render('forTrasnCompany', [
-            'model' => $this->findModel($id),
         ]);
     }
 

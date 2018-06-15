@@ -4,6 +4,7 @@ namespace app\modules\rd\controllers;
 
 use Yii;
 use app\modules\rd\models\Ticket;
+use app\modules\administracion\models\AdmUser;
 use app\modules\rd\models\TicketSearch;
 use app\modules\rd\models\Reception;
 use app\modules\rd\models\ReceptionTransaction;
@@ -14,6 +15,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\helpers\Url;
+use yii\web\ForbiddenHttpException;
 /**
  * TicketController implements the CRUD actions for Ticket model.
  */
@@ -38,16 +40,16 @@ class TicketController extends Controller
      * Lists all Ticket models.
      * @return mixed
      */
-    public function actionIndex()
-    {
-        $searchModel = new TicketSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
-    }
+//    public function actionIndex()
+//    {
+//        $searchModel = new TicketSearch();
+//        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+//
+//        return $this->render('index', [
+//            'searchModel' => $searchModel,
+//            'dataProvider' => $dataProvider,
+//        ]);
+//    }
 
     /**
      * Displays a single Ticket model.
@@ -55,30 +57,45 @@ class TicketController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionView($id)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
-    }
+//    public function actionView($id)
+//    {
+//        return $this->render('view', [
+//            'model' => $this->findModel($id),
+//        ]);
+//    }
 
     /**
      * Creates a new Ticket model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-//    public function actionCreate()
+//    public function actionAdd()
 //    {
-//        $model = new Ticket();
+////        $model = new Ticket();
+////
+////        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+////            return $this->redirect(['view', 'id' => $model->id]);
+////        }
 //
-//        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-//            return $this->redirect(['view', 'id' => $model->id]);
-//        }
+//        $user = AdmUser::findOne(['id'=>Yii::$app->user->id]);
+//        if($user && !($user->hasRol('Cia_transporte')))
+//            throw new ForbiddenHttpException('Usted no tiene permiso para resevar cupos en la recepción');
 //
-//        return $this->render('create', [
-//            'model' => $model,
+//        return $this->render('_form', [
+//            'model' => $this->findModel($id),
 //        ]);
 //    }
+
+    public function actionTransCompany($id)
+    {
+        $user = AdmUser::findOne(['id'=>Yii::$app->user->id]);
+        if($user && !($user->hasRol('Cia_transporte')))
+            throw new ForbiddenHttpException('Usted no tiene permiso para resevar cupos en la recepción');
+
+        return $this->render('_form', [
+            'model' => $this->findModel($id),
+        ]);
+    }
 
     /**
      * Updates an existing Ticket model.
@@ -87,18 +104,18 @@ class TicketController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        }
-
-        return $this->render('update', [
-            'model' => $model,
-        ]);
-    }
+//    public function actionUpdate($id)
+//    {
+//        $model = $this->findModel($id);
+//
+//        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+//            return $this->redirect(['view', 'id' => $model->id]);
+//        }
+//
+//        return $this->render('update', [
+//            'model' => $model,
+//        ]);
+//    }
 
     /**
      * Deletes an existing Ticket model.

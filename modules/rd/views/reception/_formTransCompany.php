@@ -46,37 +46,37 @@ TableAsset::register($this);
     <div class="panel-body">
 
         <div class="row">
-           <div class="col-md-6">
-               <?= DetailView::widget([
-                   'model' => $model,
-                   'attributes' => [
+            <div class="col-md-6">
+                <?= DetailView::widget([
+                    'model' => $model,
+                    'attributes' => [
 //                       'id',
-                       [
-                           'attribute'=>'id',
-                           'label'=>'No.',
-                       ],
-                       'bl',
-                       'created_at:datetime',
                         [
-                                'attribute'=>'transCompany',
-                                'value'=>$model->transCompany->name
+                            'attribute'=>'id',
+                            'label'=>'No.',
                         ],
-                       [
-                           'attribute'=>'agency',
-                           'value'=>$model->agency->name
-                       ],
-                       [
-                           'attribute'=>'active',
-                           'value'=>$model->active ? 'Si':'No'
-                       ],
-                       [
-                        'label'=>'Cantidad de Contenedores',
-                        'value'=>count($model->receptionTransactions)
+                        'bl',
+                        'created_at:datetime',
+                        [
+                            'attribute'=>'transCompany',
+                            'value'=>$model->transCompany->name
+                        ],
+                        [
+                            'attribute'=>'agency',
+                            'value'=>$model->agency->name
+                        ],
+                        [
+                            'attribute'=>'active',
+                            'value'=>$model->active ? 'Si':'No'
+                        ],
+                        [
+                            'label'=>'Cantidad de Contenedores',
+                            'value'=>count($model->receptionTransactions)
                         ]
-                   ],
-                   'options'=>['class' => 'table table-striped table-bordered table-condensed detail-view'],
-               ]) ?>
-           </div>
+                    ],
+                    'options'=>['class' => 'table table-striped table-bordered table-condensed detail-view'],
+                ]) ?>
+            </div>
 
             <!-- begin time-->
             <div class="col-md-6">
@@ -120,7 +120,7 @@ TableAsset::register($this);
                             <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fa fa-repeat"></i></a>
                             <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
                         </div>
-                    <h2 class="panel-title">Datos a Intoducir</h2>
+                        <h2 class="panel-title">Datos a Intoducir</h2>
                     </div>
                     <div class="panel-body">
                         <form action="/" method="POST" data-parsley-validate="true" name="form-wizard">
@@ -137,15 +137,15 @@ TableAsset::register($this);
                                         <div class="row">
                                             <!-- begin panel -->
                                             <div class="panel panel-default col-sm-12">
-<!--                                                <div class="panel-heading">-->
-<!--                                                    <div class="panel-heading-btn">-->
-<!--                                                        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>-->
-<!--                                                        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fa fa-repeat"></i></a>-->
-<!--                                                        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>-->
-<!--                                                        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>-->
-<!--                                                    </div>-->
-<!--                                                    <h4 class="panel-title">Calendario</h4>-->
-<!--                                                </div>-->
+                                                <!--                                                <div class="panel-heading">-->
+                                                <!--                                                    <div class="panel-heading-btn">-->
+                                                <!--                                                        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>-->
+                                                <!--                                                        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fa fa-repeat"></i></a>-->
+                                                <!--                                                        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>-->
+                                                <!--                                                        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>-->
+                                                <!--                                                    </div>-->
+                                                <!--                                                    <h4 class="panel-title">Calendario</h4>-->
+                                                <!--                                                </div>-->
                                                 <div class="panel-body p-5">
                                                     <div class="row">
                                                         <div class="col-md-2">
@@ -277,21 +277,21 @@ TableAsset::register($this);
                 <h5 id="modalTicket" class="modal-title"></h5>
             </div>
             <div class="modal-body p-15">
-                    <table id="data-table-modal" class="table table-striped table-bordered table-condensed nowrap" width="100%">
-                        <thead>
-                        <tr>
-                            <th>Seleccione <input type="checkbox" name="select_all" value="1" id="select-all"></th>
-                            <th>Contenedor</th>
-                            <th>Tipo</th>
-                            <th>Fecha Límite</th>
-                            <th>Agencia</th>
-                        </tr>
-                        </thead>
-                    </table>
+                <table id="data-table-modal" class="table table-striped table-bordered table-condensed nowrap" width="100%">
+                    <thead>
+                    <tr>
+                        <th>Seleccione <input type="checkbox" name="select_all" value="1" id="select-all"></th>
+                        <th>Contenedor</th>
+                        <th>Tipo</th>
+                        <th>Fecha Límite</th>
+                        <th>Agencia</th>
+                    </tr>
+                    </thead>
+                </table>
             </div>
             <div class="modal-footer">
                 <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Cancelar</a>
-<!--                <a id="aceptBtn" href="#;" class="btn btn-sm btn-success" disabled>Aceptar</a>-->
+                <!--                <a id="aceptBtn" href="#;" class="btn btn-sm btn-success" disabled>Aceptar</a>-->
                 <a id="aceptBtn" href="#;" class="btn btn-sm btn-success" >Aceptar</a>
             </div>
         </div>
@@ -300,11 +300,11 @@ TableAsset::register($this);
 
 <script type="text/javascript">
     var modelId = '<?php echo $model->id; ?>';
-//    var complex = <?php //echo json_encode($complex); ?>//;
+    //    var complex = <?php //echo json_encode($complex); ?>//;
 </script>
 
 <!---->
-<?php $this->registerJsFile('@web/js/modules/rd/reception/form-wizar-validation-trans-company.js', ['depends' => ['app\assets\WizardAsset']]) ?>
-<?php $this->registerJsFile('@web/js/modules/rd/reception/calendar.js', ['depends' => ['app\assets\CalendarAsset']]) ?>
-<?php $this->registerJsFile('@web/js/modules/rd/reception/reception-trans-company.js', ['depends' => ['app\assets\SystemAsset', 'app\assets\FormAsset']]) ?>
+<?php $this->registerJsFile('@web/js/modules/rd/ticket/form-wizar-validation-create.js', ['depends' => ['app\assets\WizardAsset']]) ?>
+<?php $this->registerJsFile('@web/js/modules/rd/ticket/calendar.js', ['depends' => ['app\assets\CalendarAsset']]) ?>
+<?php $this->registerJsFile('@web/js/modules/rd/ticket/ticket-create.js', ['depends' => ['app\assets\SystemAsset', 'app\assets\FormAsset']]) ?>
 

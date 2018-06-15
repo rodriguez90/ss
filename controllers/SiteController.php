@@ -98,7 +98,12 @@ class SiteController extends Controller
 
         $dataProvider = $searchModel->search($params);
         $receptionCount = $searchModel->search($params)->totalCount;
-        return $this->render('index', ['searchModel' => $searchModel, 'dataProvider' => $dataProvider, 'receptionCount'=>$receptionCount, 'user'=>$user]);
+        $myparams = array();
+        $myparams['searchModel'] = $searchModel;
+        $myparams['dataProvider'] = $dataProvider;
+        $myparams['receptionCount'] = $receptionCount;
+//        $myparams['user'] = $user;
+        return $this->render('index', $myparams);
     }
 
 //    public function actionDashBoard()

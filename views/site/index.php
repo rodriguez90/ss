@@ -16,6 +16,12 @@ $this->title = 'SGT';
 //var_dump($rol);die;
 //echo $user;
 //echo json_encode($user);
+$user = AdmUser::findOne(['id'=>Yii::$app->user->getId()]);
+//var_dump($user);die;
+$rol = $user->getRole();
+
+//var_dump($rol);die;
+
 ?>
 
 <div class="row">
@@ -43,7 +49,7 @@ $this->title = 'SGT';
                 <p><?php echo $receptionCount?></p>
             </div>
             <div class="stats-link">
-                <a href="<?php echo \yii\helpers\Url::to('/rd/reception/create-by-agency');?>">Realice una solocitud de recepción.<i class="fa fa-arrow-circle-o-right"></i></a>
+                <a href="<?php echo \yii\helpers\Url::to('/rd/reception/create');?>">Realice una solocitud de recepción.<i class="fa fa-arrow-circle-o-right"></i></a>
             </div>
         </div>
     </div>
@@ -187,24 +193,27 @@ $this->title = 'SGT';
                             ],
                             [
                                 'class' => 'yii\grid\ActionColumn',
+                                'controller' => 'rd/reception',
                                 'template' => '{view}',
-                                'controller' =>Url::to(['/rd/reception/trans-company/', 'id'=>2], true),
+//                                'urlCreator' =>
+//                                'controller' =>Url::to(['rd/reception/trans-company/'], true),
                             ],
-//                            [
-//                                'class' => 'yii\grid\ActionColumn',
-//                                'header' => 'Acciones',
-//                                'template' => '{myButton}',  // the default buttons + your custom button
-//                                'buttons' => [
-//                                    'myButton' => function($url, $model, $key) {
-//
-//                                        if($user->hasRol('Agencia'))
-//                                            $result = Html::a('Ver', ['site/index'], ['class' => 'btn btn-success btn-xs', 'data-pjax' => 0]);
-//                                        else if($user->hasRol('Cia_transporte'))
-//                                            $result = Html::a('Turnos', ['site/index'], ['class' => 'btn btn-success btn-xs', 'data-pjax' => 0]);
-//                                        return $result;
-//                                    }
-//                                ]
-//                            ],
+                            [
+                                'class' => 'yii\grid\ActionColumn',
+                                'header' => 'Acciones',
+                                'template' => '{myButton}',  // the default buttons + your custom button
+                                'buttons' => [
+                                    'myButton' => function($url, $model, $key) {
+                                        $result = '';
+                                        if($rol === 'Agencia')
+                                            $result = Html::a('Ver', ['site/index'], ['class' => 'btn btn-success btn-xs', 'data-pjax' => 0]);
+                                        else if($rol === 'Cia_transporte')
+                                            $result = Html::a('Turnos', ['site/index'], ['class' => 'btn btn-success btn-xs', 'data-pjax' => 0]);
+//                                        var_dump($result);die;
+                                        return $result;
+                                    }
+                                ]
+                            ],
                     ]
                     ]); ?>
 <!--                </table>-->
