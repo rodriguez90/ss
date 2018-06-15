@@ -138,18 +138,26 @@ if(!Yii::$app->user->isGuest){
                     <?php
                     if(Yii::$app->user->can("admin_mod") || Yii::$app->user->can("reception_list")){
                         echo "<li class='has-sub'>";
-                        echo "<a href=".Url::to(['/rd/reception'])."> <i class='fa fa-rotate-90 fa-sign-in'></i>";
+                        echo "<a href=".Url::to(['/rd/reception/create'])."> <i class='fa fa-rotate-90 fa-sign-in'></i>";
                         echo  "<span> Recepción</span>";
                         echo "</a>";
                         echo "</li>";
                     }
                     ?>
 
-                    <li class="has-sub">
-                        <a href="javascript:;"> <i class="fa fa-rotate-90 fa-sign-out"></i>
-                            <span> Despacho</span>
-                        </a>
-                    </li>
+
+                    <!--                    <li class="has-sub">-->
+                    <!--                        <a href="javascript:;"> <i class="fa fa-rotate-90 fa-sign-out"></i>-->
+                    <!--                            <span> Despacho</span>-->
+                    <!--                        </a>-->
+                    <!--                    </li>
+
+                    <!---->
+<!--                    <li class="has-sub">-->
+<!--                        <a href="javascript:;"> <i class="fa fa-rotate-90 fa-sign-out"></i>-->
+<!--                            <span> Despacho</span>-->
+<!--                        </a>-->
+<!--                    </li>-->
 
                     <?php
                     if (Yii::$app->user->can("admin_mod") || Yii::$app->user->can("calendar_list")) {

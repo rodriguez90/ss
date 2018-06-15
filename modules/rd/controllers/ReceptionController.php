@@ -156,8 +156,7 @@ class ReceptionController extends Controller
 
     public function actionCreate()
     {
-        $user = AdmUser::findOne(['id'=>Yii::$app->user->id]);
-        if($user && !($user->hasRol('Agencia')))
+        if(!Yii::$app->user->can("reception_create"))
             throw new ForbiddenHttpException('Usted ni tiene permiso para crear una recepción');
 
 
