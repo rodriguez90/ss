@@ -123,11 +123,10 @@ $(document).ready(function () {
         $('#search-container').prop('disabled', true)
     });
 
-    // $('#blCode').change(function () {
-    //     // console.log($('#blCode').val());
-    // });
-
-
+    // if(modelId)
+    // {
+    //     $('#blCode').val()
+    // }
     // cronometer
     setInterval(function () {
         var m = $("#minutes");

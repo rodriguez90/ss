@@ -16,12 +16,12 @@ $this->title = 'SGT';
 //var_dump($rol);die;
 //echo $user;
 //echo json_encode($user);
-$user = AdmUser::findOne(['id'=>Yii::$app->user->getId()]);
-//var_dump($user);die;
-$rol = $user->getRole();
 
 //var_dump($rol);die;
 
+$user = AdmUser::findOne(['id'=>Yii::$app->user->getId()]);
+//var_dump($user);die;
+$rol = $user->getRole();
 ?>
 
 <div class="row">
@@ -41,7 +41,7 @@ $rol = $user->getRole();
     <!-- end col-3 -->
 
     <!-- begin col-3 -->
-    <div class="col-md-3 col-sm-6">
+    <div id="reception" class="col-md-3 col-sm-6" style="display: none;">
         <div class="widget widget-stats bg-red">
             <div class="stats-icon"><i class="fa fa-rotate-90 fa-sign-in"></i></div>
             <div class="stats-info">
@@ -56,7 +56,7 @@ $rol = $user->getRole();
     <!-- end col-3 -->
 
     <!-- begin col-3 -->
-    <div class="col-md-3 col-sm-6">
+    <div id="wharehouse" class="col-md-3 col-sm-6" style="display: none;">
         <div class="widget widget-stats bg-blue">
             <div class="stats-icon"><i class="fa fa-rotate-90 fa-sign-out"></i></div>
             <div class="stats-info">
@@ -71,37 +71,37 @@ $rol = $user->getRole();
     <!-- end col-3 -->
 
     <!-- begin col-3 -->
-<!--    <div class="col-md-3 col-sm-6">-->
-<!--        <div class="widget widget-stats bg-purple">-->
-<!--            <div class="stats-icon"><i class="fa fa-building"></i></div>-->
-<!--            <div class="stats-info">-->
-<!--                <h4>DEPÓSITOS</h4>-->
-<!--                <p>1,291,922</p>-->
-<!--            </div>-->
-<!--            <div class="stats-link">-->
-<!--                <a href="javascript:;">Ver Detalles <i class="fa fa-arrow-circle-o-right"></i></a>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
+    <div id="dispatch" class="col-md-3 col-sm-6"  style="display: none;">
+        <div class="widget widget-stats bg-purple">
+            <div class="stats-icon"><i class="fa fa-building"></i></div>
+            <div class="stats-info">
+                <h4>DEPÓSITOS</h4>
+                <p>1,291,922</p>
+            </div>
+            <div class="stats-link">
+                <a href="javascript:;">Ver Detalles <i class="fa fa-arrow-circle-o-right"></i></a>
+            </div>
+        </div>
+    </div>
     <!-- end col-3 -->
 
     <!-- begin col-3 -->
-<!--    <div class="col-md-3 col-sm-6">-->
-<!--        <div class="widget widget-stats bg-red">-->
-<!--            <div class="stats-icon"><i class="fa fa-ticket"></i></div>-->
-<!--            <div class="stats-info">-->
-<!--                <h4>CUPOS</h4>-->
-<!--                <p>1,291,922</p>-->
-<!--            </div>-->
-<!--            <div class="stats-link">-->
-<!--                <a href="javascript:;">Ver Detalles <i class="fa fa-arrow-circle-o-right"></i></a>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
+    <div id="ticket" class="col-md-3 col-sm-6"  style="display: none;">
+        <div class="widget widget-stats bg-green">
+            <div class="stats-icon"><i class="fa fa-ticket"></i></div>
+            <div class="stats-info">
+                <h4>CUPOS</h4>
+                <p><?php echo $ticketCount?></p>
+            </div>
+            <div class="stats-link">
+                <a href="<?php echo \yii\helpers\Url::to('/rd/ticket');?>">Ver Detalles.<i class="fa fa-arrow-circle-o-right"></i></a>
+            </div>
+        </div>
+    </div>
     <!-- end col-3 -->
 
     <!-- begin col-3 -->
-    <div class="col-md-3 col-sm-6">
+    <div id="report" class="col-md-3 col-sm-6"  style="display: none;">
         <div class="widget widget-stats bg-orange">
             <div class="stats-icon"><i class="fa fa-clock-o"></i></div>
             <div class="stats-info">
@@ -194,31 +194,43 @@ $rol = $user->getRole();
                             [
                                 'class' => 'yii\grid\ActionColumn',
                                 'header' => 'Acciones',
-                                'controller' => 'rd/reception/create',
-                                'template' => $rol === 'Agencia' ? '{view}' : '{update}',
-//                                'urlCreator' =>
-//                                'controller' =>Url::to(['rd/reception/trans-company/'], true),
+                                'template' => '{myButton}',  // the default buttons + your custom button
+                                'controller' => 'rd/reception',
+                                'buttons' => [
+                                    'myButton' => function($url, $model, $key) {
+
+                                        $user = AdmUser::findOne(['id'=>Yii::$app->user->getId()]);
+                                        $role = $user->getRole();
+                                        $result = '';
+                                        $url1 = '/rd/reception/view?id='. $model->id;
+                                        $url2 = '/rd/reception/trans-company?id='. $model->id;
+                                        $ticketClass = $model->hastReceptionTransactionsActive() ? 'btn-success' : 'btn-default';
+                                        if($role === 'Agencia')
+                                            $result = Html::a('Ver', [$url1], ['class' => 'btn btn-info btn-xs', 'data-pjax' => 0]);
+                                        else if($role === 'Cia_transporte')
+                                            $result = Html::a('Turnos', [$url2], ['class' => 'btn btn-xs ' . $ticketClass, 'data-pjax' => 0]);
+                                        if($role === 'Administracion')
+                                        {
+
+                                            $result = Html::a('Ver', [$url1], ['class' => 'btn btn-info btn-xs', 'data-pjax' => 0])
+                                                      .Html::a('Turnos', [$url2], ['class' => 'btn btn-xs ' . $ticketClass, 'data-pjax' => 0]);
+                                        }
+
+                                        return $result;
+                                    }
+                                ]
                             ],
-//                            [
-//                                'class' => 'yii\grid\ActionColumn',
-//                                'header' => 'Acciones',
-//                                'template' => '{myButton}',  // the default buttons + your custom button
-//                                'controller' => 'rd/reception',
-//                                'buttons' => [
-//                                    'myButton' => function($url, $model, $key) {
-//                                        $result = Html::a('Ver', $url, ['class' => 'btn btn-success btn-xs', 'data-pjax' => 0]);
-//                                        return $result;
-//                                    }
-//                                ]
-//                            ],
                     ]
                     ]); ?>
-<!--                </table>-->
                 <?php Pjax::end(); ?>
             </div>
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+    var role = '<?php echo $rol; ?>';
+</script>
 
 <?php
    $this->registerJsFile('@web/js/dashboard.js', ['depends' => ['app\assets\SystemAsset']]);

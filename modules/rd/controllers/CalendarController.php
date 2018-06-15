@@ -60,6 +60,8 @@ class CalendarController extends Controller
      */
     public function actionView($id)
     {
+        if(!Yii::$app->user->can("calendar_view"))
+            throw new ForbiddenHttpException('Usted no tiene permiso ver esta vista');
 
         return $this->render('view', [
             'model' => $this->findModel($id),
@@ -158,10 +160,6 @@ class CalendarController extends Controller
         else{
             throw new ForbiddenHttpException('Acceso denegado');
         }
-
-
-
-
         /*
 
         $model = new Calendar();

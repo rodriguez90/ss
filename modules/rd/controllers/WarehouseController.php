@@ -35,6 +35,9 @@ class WarehouseController extends Controller
      */
     public function actionIndex()
     {
+        if(!Yii::$app->user->can("warehouse_list"))
+            throw new ForbiddenHttpException('Usted no tiene permiso ver esta vista');
+
         $searchModel = new WarehouseSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
@@ -52,6 +55,9 @@ class WarehouseController extends Controller
      */
     public function actionView($id)
     {
+        if(!Yii::$app->user->can("warehouse_view"))
+            throw new ForbiddenHttpException('Usted no tiene permiso ver esta vista');
+
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -64,6 +70,9 @@ class WarehouseController extends Controller
      */
     public function actionCreate()
     {
+        if(!Yii::$app->user->can("warehouse_create"))
+            throw new ForbiddenHttpException('Usted no tiene permiso ver esta vista');
+
         $model = new Warehouse();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -84,6 +93,9 @@ class WarehouseController extends Controller
      */
     public function actionUpdate($id)
     {
+        if(!Yii::$app->user->can("warehouse_update"))
+            throw new ForbiddenHttpException('Usted no tiene permiso ver esta vista');
+
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -104,6 +116,9 @@ class WarehouseController extends Controller
      */
     public function actionDelete($id)
     {
+        if(!Yii::$app->user->can("warehouse_delete"))
+            throw new ForbiddenHttpException('Usted no tiene permiso ver esta vista');
+
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);

@@ -19,10 +19,6 @@ use yii\helpers\Url;
 WizardAsset::register($this);
 FormAsset::register($this);
 TableAsset::register($this);
-
-//$this->title = 'Rece'$model->bl;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Recepciones'), 'url' => Url::to('/site/index')];
-$this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <div class="panel panel-inverse" data-sortable-id="ui-widget-1">
@@ -73,32 +69,42 @@ $this->params['breadcrumbs'][] = $this->title;
             <!-- begin col-12 -->
             <div class="col-md-12">
                 <!-- begin panel -->
-                <div class="panel panel-info">
+                <div class="panel panel-default">
                     <div class="panel-heading">
                         <div class="panel-heading-btn">
-<!--                            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>-->
-<!--                            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fa fa-repeat"></i></a>-->
-<!--                            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>-->
+                            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+                            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fa fa-repeat"></i></a>
+                            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
                         </div>
                         <h2 class="panel-title">Contenedores</h2>
+                        <?php
+                            $result = Html::ul($containers, ['item' => function($item, $index) {
+                                        $li = Html::tag(
+                                            'li',
+                                            Html::encode($item['name'] . ' '. $item['type'] . ' ' . $item['tonnage']),
+                                            ['class'=>'list-group-item-heading']
+                                        );
+                                        //                                        var_dump($li) ; die;
+                                        return $li;
+                                    }])
+
+                                    . Html::endTag('div');
+                            echo $result;
+                        ?>
                     </div>
                     <div class="panel-body">
-                        <?php
-                        $result = Html::ul($containers, ['item' => function($item, $index) {
-                                $li = Html::tag(
-                                    'li',
-                                    Html::encode($item['name'] . ' '. $item['code'] . ' ' . $item['tonnage']),
-                                    []
-                                );
-                                return $li;
-                            }]);
-                        echo $result;
-                        ?>
+
                     </div>
                 </div>
                 <!-- end panel -->
             </div>
             <!-- end col-12 -->
         </div>
+        <?php echo Html::a('Ir a solicitud', Url::to(['/rd/reception/trans-company', 'id'=>$model->id], true));?>
     </div>
 </div>
+
+
+
+
+

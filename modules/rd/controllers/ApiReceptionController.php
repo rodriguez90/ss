@@ -129,59 +129,44 @@ class ApiReceptionController extends  ActiveController
                         // TODO: send email user too from the admin system
                         $agency= $model->agency ? $model->agency->name:'';
                         $ciaTransporte = $model->transCompany ? $model->transCompany->name:'';
-                        $emailCSS .= "<style>
-                                        .jumbotron {
-                                        padding-top: 30px;
-                                        padding-bottom: 30px;
-                                        margin-bottom: 30px;
-                                        color: inherit;
-                                        background-color: #eee;
-                                        }
-                                        .jumbotron h1,
-                                        .jumbotron .h1 {
-                                          color: inherit;
-                                        }
-                                        .jumbotron p {
-                                          margin-bottom: 15px;
-                                          font-size: 21px;
-                                          font-weight: 200;
-                                        }
-                                        .jumbotron > hr {
-                                          border-top-color: #d5d5d5;
-                                        } 
-                                        </style>";
-
-                        $emailConten = $emailCSS;
-                        $emailConten .= Html::beginTag('div', ['class'=>'jumbotron'])
-                            . Html::tag('h4', Html::encode('Notificación de solicitud de recepción'))
-                            . Html::tag('h5', Html::encode('Número de la Recepción: ' . $model->id))
-                            . Html::tag('p', Html::encode('Agencia: ' . $agency))
-                            . Html::tag('h5', Html::encode('Cia de Trasnporte: ' . $ciaTransporte))
-                            . Html::tag('p', Html::encode('Código BL: ' . $model->bl))
-                            . Html::tag('p', Html::encode('Fecha de Envío: ' . $model->created_at))
-                            . Html::tag('h5', Html::encode('Contenedores'))
-                            . Html::ul($containers, ['item' => function($item, $index) {
-                                $li = Html::tag(
-                                    'li',
-                                    Html::encode($item['name'] . ' '. $item['type'] . ' ' . $item['tonnage']),
-                                    []
-                                );
-//                                        var_dump($li) ; die;
-                                return $li;
-                            }])
 
 
-                            . Html::tag('p', Html::encode('Cantidad de Cotenedores: ' .$model->getContainerAmount()))
-                            . Html::a('Ir a solicitud', Url::to(['/rd/reception/trans-company', 'id'=>$model->id], true), [])
-                            . Html::endTag('div');
+//                        $emailConten .= Html::beginTag('div', ['class'=>'jumbotron'])
+//                                        . Html::beginTag('div', ['class'=>'panel panel-default'])
+//                                            . Html::tag('div', Html::encode('Notificación de solicitud de recepción'), ['class'=>'panel-heading'])
+//                                            . Html::beginTag('div', ['class'=>'panel-body'])
+//
+//                                                . Html::tag('h5', Html::encode('Número de la Recepción: ' . $model->id))
+//                                                . Html::tag('p', Html::encode('Agencia: ' . $agency))
+//                                                . Html::tag('h5', Html::encode('Cia de Trasnporte: ' . $ciaTransporte))
+//                                                . Html::tag('p', Html::encode('Código BL: ' . $model->bl))
+//                                                . Html::tag('p', Html::encode('Fecha de Envío: ' . $model->created_at))
+//                                                . Html::tag('h5', Html::encode('Contenedores'))
+//                                                . Html::beginTag('div', ['class'=>'list-group'])
+//                                                    . Html::ul($containers, ['item' => function($item, $index) {
+//                                                        $li = Html::tag(
+//                                                            'li',
+//                                                            Html::encode($item['name'] . ' '. $item['type'] . ' ' . $item['tonnage']),
+//                                                            ['class'=>'list-group-item-heading']
+//                                                        );
+//                                                        //                                        var_dump($li) ; die;
+//                                                        return $li;
+//                                                    }])
+//                                                . Html::endTag('div')
+//                                                . Html::tag('p', Html::encode('Cantidad de Cotenedores: ' .$model->getContainerAmount()))
+//                                            . Html::endTag('div')
+//                                        . Html::a('Ir a solicitud', Url::to(['/rd/reception/trans-company', 'id'=>$model->id], true), [])
+//                                        . Html::endTag('div')
+//                                    . Html::endTag('div');
 
-                        Yii::$app->mailer->compose()
-//                            ->setFrom($remitente->email)
-//                            ->setTo($destinatario->email)
-                            ->setFrom("admin@test.co")
-                            ->setTo("test@test.co")
-                            ->setSubject( "email de prueba." )
-                            ->setHtmlBody($emailConten)
+                        Yii::$app->mailer->compose('/rd/reception/email', ['model' => $model])
+                            ->setFrom($remitente->email)
+                            ->setTo($destinatario->email)
+//                            ->setFrom("admin@test.co")
+//                            ->setTo("test@test.co")
+                            ->setSubject("Nueva Solicitud de Recepción")
+//                            ->setHtmlBody($emailConten)
+                            ->setTextBody('Test')
                             ->send();
 
                         $response['success'] = true;

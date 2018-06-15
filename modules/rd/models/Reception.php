@@ -2,6 +2,7 @@
 
 namespace app\modules\rd\models;
 
+use function GuzzleHttp\Promise\all;
 use Yii;
 
 /**
@@ -82,6 +83,14 @@ class Reception extends \yii\db\ActiveRecord
     public function getReceptionTransactions()
     {
         return $this->hasMany(ReceptionTransaction::class, ['reception_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function hastReceptionTransactionsActive()
+    {
+        return ReceptionTransaction::find()->where(['reception_id' => $this->id, 'active'=>1])->count() >= 1;
     }
 
     public function getContainerAmount()

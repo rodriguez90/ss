@@ -51,6 +51,16 @@ class TicketSearch extends Ticket
 
         $this->load($params);
 
+//        if(isset($params['agency_id']))
+//        {
+//            $this->agency_id = $params['agency_id'];
+//        }
+//
+//        if(isset($params['trans_company_id']))
+//        {
+//            $this->trans_company_id = $params['trans_company_id'];
+//        }
+
         if (!$this->validate()) {
             // uncomment the following line if you do not want to return any records when validation fails
             // $query->where('0=1');
@@ -66,6 +76,22 @@ class TicketSearch extends Ticket
             'created_at' => $this->created_at,
             'active' => $this->active,
         ]);
+
+//        if(isset($this->trans_company_id))
+//        {
+//            $filter = TransCompany::find()->select('id')->where(['like', 'name', $this->trans_company_id]);
+//            $query->andFilterWhere(['trans_company_id'=>$filter]);
+////            $query->andFilterWhere(['like', 'trans_company.name', $this->trans_company_id]);
+//
+//        }
+////        var_dump($this->agency_id);die;
+//        if(isset($this->agency_id))
+//        {
+//
+////            $filter = TransCompany::find()->select('id')->where(['like', 'name', $this->agency_id]);
+//            $query->andFilterWhere(['like', 'agency.name', $this->agency_id]);
+//
+//        }
 
         return $dataProvider;
     }

@@ -5,12 +5,12 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\modules\rd\models\Reception */
 
-$this->title = Yii::t('app', 'Update Reception: ' . $model->id, [
+$this->title = Yii::t('app', 'Actualizar Reception: ' . $model->id, [
     'nameAttribute' => '' . $model->id,
 ]);
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Receptions'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Recepciones'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
-$this->params['breadcrumbs'][] = Yii::t('app', 'Update');
+$this->params['breadcrumbs'][] = Yii::t('app', 'Actualizar');
 ?>
 <div class="reception-update">
 
@@ -21,3 +21,9 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
     ]) ?>
 
 </div>
+
+<script type="text/javascript">
+    var modelId = '<?php echo $model->id; ?>';
+    var transCompany =  '<?php echo $model->transCompany->name; ?>';
+    var bl =  '<?php echo $model->bl; ?>';
+</script>

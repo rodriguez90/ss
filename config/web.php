@@ -41,31 +41,18 @@ $config = [
 
         'mailer' => [
             'class' => 'yii\swiftmailer\Mailer',
+            'viewPath' => '@app/mail',
+//            'viewPath' => '@app\mail\layouts',
+//            'viewPath' => '@app/mail/layouts',
             'transport' => [
                 'class' => 'Swift_SmtpTransport',
                 'host' => '127.0.0.1',
+//                'username' => 'Administrator',
+//                'password' => 'Root*2018',
+//                'port' => '25', // Port 25 is a very common port too
+//                'encryption' => 'tls
             ],
-        ],        /*
-   'mailer' => [
-       'class' => 'yii\swiftmailer\Mailer',
-       'transport' => [
-           'class' => 'Swift_SmtpTransport',
-           'host' => 'localhost',
-           'username' => 'Administrator',
-           'password' => 'yopt85',
-           'port' => '587',
-           'encryption' => 'tls',
-       ],
-   ],
-   'mailer' => [
-       'class' => 'yii\swiftmailer\Mailer',
-       // send all mails to a file by default. You have to set
-       // 'useFileTransport' to false and configure a transport
-       // for the mailer to send real emails.
-       'useFileTransport' => true,
-
-
-   ],*/
+        ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
             'targets' => [

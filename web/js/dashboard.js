@@ -27,8 +27,34 @@ var blue		= '#348fe2',
 var handleWidgetOptions = function() {
 	"use strict";
 
-};
+    // element.style.display = 'none';           // Hide
+    // element.style.display = 'block';          // Show
+    // element.style.display = 'inline';         // Show
+    // element.style.display = 'inline-block';   // Show
 
+    // element.style.visibility = 'hidden';      // Hide
+    // element.style.visibility = 'visible';     // Show
+
+    console.log(role);
+
+	if(role === 'Agencia')
+    {
+        document.getElementById('reception').style.display = 'inline';
+        document.getElementById('report').style.display = 'inline';
+    }
+    else if(role === 'Cia_transporte')
+    {
+        document.getElementById('ticket').style.display = 'inline';
+        document.getElementById('report').style.display = 'inline';
+    }
+    else if(role === 'Administracion')
+    {
+        document.getElementById('reception').style.display = 'inline';
+        document.getElementById('ticket').style.display = 'inline';
+        document.getElementById('report').style.display = 'inline';
+    }
+
+};
 
 var handleTableByOption = function (option) {
 
@@ -40,73 +66,6 @@ var handleTableByOption = function (option) {
             break;
         }
     }
-};
-
-
-var tableByOption = function() {
-    "use strict";
-    var table = $('#data-table').DataTable();
-    table.destroy();
-
-    $('#data-table').DataTable({
-        "columns": [
-            {
-                "title": "No",
-                "data":'checkbox', // FIXME CHECK THIS
-            },
-            { "title": "Contenedor",
-                "data":"name",
-            },
-            { "title": "Tipo",
-            },
-            { "title": "Fecha Limite",
-                "data":"deliveryDate",
-            },
-            { "title": "Agencia",
-                "data":"agency"
-            },
-        ],
-        processing:true,
-        lengthMenu: [5, 10, 15],
-        "pageLength": 5,
-        "language": {
-            "lengthMenu": "Mostrar _MENU_ filas por página",
-            "zeroRecords": "No hay datos que mostrat - disculpe",
-            "info": "Página _PAGE_ de _PAGES_",
-            "infoEmpty": "No hay información que mostrar",
-            // "infoFiltered": "(encontrados from _MAX_ total records)"
-        },
-        // select: true,
-        responsive: true,
-        // language: {url: 'web/plugins/DataTables/i18/Spanish.json'
-        //
-        // },
-        columnDefs: [
-            {
-                orderable: false,
-                searchable: false,
-                className: 'select-checkbox',
-                targets:   [0],
-                // data: null,
-            },
-            {
-                targets: [2],
-                title:"Tipo",
-                data:null,
-                render: function ( data, type, full, meta ) {
-                    // console.log("In render: " + data);
-                    return data.type + data.tonnage;
-                },
-            },
-
-        ],
-        select: {
-            // items: 'cells',
-            style:    'multi',
-            selector: 'td:first-child'
-        },
-        order: [[ 1, 'asc' ]]
-    });
 };
 
 var Dashboard = function () {
@@ -122,15 +81,4 @@ var Dashboard = function () {
 
 $(document).ready(function () {
     Dashboard.init();
-    //
-    // $('#panel-body').find('a').unbind().click(function(e)
-    // {
-    //     e.preventDefault();
-    //     e.stopPropagation();
-    //     alert('T');
-    //     return false;
-    //
-    // });
-    // $(document).pjax('a', '#panel-body');
-
 });

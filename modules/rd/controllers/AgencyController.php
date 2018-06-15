@@ -36,6 +36,9 @@ class AgencyController extends Controller
      */
     public function actionIndex()
     {
+        if(!Yii::$app->user->can("agency_list"))
+            throw new ForbiddenHttpException('Usted no tiene permiso ver esta vista');
+
         $searchModel = new AgencySearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
@@ -53,6 +56,9 @@ class AgencyController extends Controller
      */
     public function actionView($id)
     {
+        if(!Yii::$app->user->can("agency_view"))
+            throw new ForbiddenHttpException('Usted no tiene permiso ver esta vista');
+
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -65,6 +71,9 @@ class AgencyController extends Controller
      */
     public function actionCreate()
     {
+        if(!Yii::$app->user->can("agency_create"))
+            throw new ForbiddenHttpException('Usted no tiene permiso ver esta vista');
+
         $model = new Agency();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -85,6 +94,9 @@ class AgencyController extends Controller
      */
     public function actionUpdate($id)
     {
+        if(!Yii::$app->user->can("agency_update"))
+            throw new ForbiddenHttpException('Usted no tiene permiso ver esta vista');
+
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -105,6 +117,9 @@ class AgencyController extends Controller
      */
     public function actionDelete($id)
     {
+        if(!Yii::$app->user->can("agency_delete"))
+            throw new ForbiddenHttpException('Usted no tiene permiso ver esta vista');
+
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);

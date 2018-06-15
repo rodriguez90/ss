@@ -7,34 +7,68 @@ use yii\widgets\Pjax;
 /* @var $searchModel app\modules\rd\models\TicketSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('app', 'Tickets');
+$this->title = Yii::t('app', 'Cupos');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="ticket-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-    <?php Pjax::begin(); ?>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+    <div class="panel panel-inverse" data-sortable-id="index-1">
+        <div class="panel-heading">
+            <div class="panel-heading-btn">
+                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fa fa-repeat"></i></a>
+                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+            </div>
+            <h4 class="panel-title"><?= Html::encode($this->title) ?></h4>
+        </div>
+        <div class="panel-body">
 
-    <p>
-        <?= Html::a(Yii::t('app', 'Create Ticket'), ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
+            <?php Pjax::begin(); ?>
+            <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
+            <?= GridView::widget([
+                'dataProvider' => $dataProvider,
+                'filterModel' => $searchModel,
+                'columns' => [
+                    ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
-            'reception_transaction_id',
-            'calendar_id',
-            'status',
-            'created_at',
-            //'active',
+                    'id',
+                    [
+                        'class' => 'yii\grid\DataColumn',
+                        'attribute' => 'reception_transaction_id',
+                        'value' => 'receptionTransaction.container.name',
+                    ],
+                    [
+                        'class' => 'yii\grid\DataColumn',
+                        'attribute' => 'calendar_id',
+                        'format' => 'datetime',
+                        'value' => 'calendar.start_datetime',
+                    ],
+//                    [
+//                        'class' => 'yii\grid\DataColumn',
+//                        'attribute' => 'status',
+//                        'value' => 'calendar.start_datetime',
+//                    ],
+                    [
+                        'attribute' => 'status',
+                        'format' => 'text',
+                        'content' => function ($data)
+                        {
+                            return $data['status'] ? '<span class="label label-success">Activo</span>' : '<span class="label label-danger">Consumido</span>';
+                        },
+                        'filter' => Html::activeDropDownList($searchModel, 'active', [
+                            '1' => 'Activo', '0' => 'Consumido',
+                        ], ['class' => 'form-control', 'prompt'=>''])
+                    ],
+//                    'status',
+                    'created_at',
+                    //'active',
 
-            ['class' => 'yii\grid\ActionColumn'],
-        ],
-    ]); ?>
-    <?php Pjax::end(); ?>
+//                    ['class' => 'yii\grid\ActionColumn'],
+                ],
+            ]); ?>
+            <?php Pjax::end(); ?>
+
+        </div>
+    </div>
 </div>

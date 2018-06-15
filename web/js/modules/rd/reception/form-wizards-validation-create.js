@@ -172,7 +172,7 @@ var handleBootstrapWizardsValidation = function() {
 
                         $.ajax({
                             async:false,
-                            url: homeUrl + "/rd/api-reception/create",
+                            url: homeUrl + "/rd/reception/create",
                             type: "POST",
                             dataType: "json",
                             data:  reception,

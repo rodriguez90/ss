@@ -40,16 +40,16 @@ class TicketController extends Controller
      * Lists all Ticket models.
      * @return mixed
      */
-//    public function actionIndex()
-//    {
-//        $searchModel = new TicketSearch();
-//        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-//
-//        return $this->render('index', [
-//            'searchModel' => $searchModel,
-//            'dataProvider' => $dataProvider,
-//        ]);
-//    }
+    public function actionIndex()
+    {
+        $searchModel = new TicketSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->render('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
 
     /**
      * Displays a single Ticket model.
@@ -89,8 +89,12 @@ class TicketController extends Controller
     public function actionTransCompany($id)
     {
         $user = AdmUser::findOne(['id'=>Yii::$app->user->id]);
-        if($user && !($user->hasRol('Cia_transporte')))
-            throw new ForbiddenHttpException('Usted no tiene permiso para resevar cupos en la recepción');
+
+        if(!Yii::$app->user->can("ticket_create"))
+            throw new ForbiddenHttpException('Usted no tiene permiso ver esta vista');
+
+//        if($user && !($user->hasRol('Cia_transporte')))
+//            throw new ForbiddenHttpException('Usted no tiene permiso para resevar cupos en la recepción');
 
         return $this->render('_form', [
             'model' => $this->findModel($id),
@@ -149,6 +153,9 @@ class TicketController extends Controller
 
     public function actionDelete($id)
     {
+        if(!Yii::$app->user->can("ticket_delete"))
+            throw new ForbiddenHttpException('Usted no tiene permiso ver esta vista');
+
         $response = array();
 
         Yii::$app->response->format = Response::FORMAT_JSON;
@@ -208,12 +215,18 @@ class TicketController extends Controller
 
     public function actionReserve()
     {
+        if(!Yii::$app->user->can("ticket_update"))
+            throw new ForbiddenHttpException('Usted no tiene permiso ver esta vista');
+
         $tickets = Yii::$app->request->post('tickets');
         return $this->doTicket($tickets, Ticket::RESERVE);
     }
 
     public function actionPrebooking()
     {
+        if(!Yii::$app->user->can("ticket_update"))
+            throw new ForbiddenHttpException('Usted no tiene permiso ver esta vista');
+
         $tickets = Yii::$app->request->post('tickets');
         return $this->doTicket($tickets, Ticket::PRE_BOOKING);
     }

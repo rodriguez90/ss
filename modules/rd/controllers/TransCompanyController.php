@@ -35,6 +35,9 @@ class TransCompanyController extends Controller
      */
     public function actionIndex()
     {
+        if(!Yii::$app->user->can("trans_company_list"))
+            throw new ForbiddenHttpException('Usted no tiene permiso ver esta vista');
+
         $searchModel = new TransCompanySearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
@@ -52,6 +55,9 @@ class TransCompanyController extends Controller
      */
     public function actionView($id)
     {
+        if(!Yii::$app->user->can("trans_company_view"))
+            throw new ForbiddenHttpException('Usted no tiene permiso ver esta vista');
+
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -64,6 +70,10 @@ class TransCompanyController extends Controller
      */
     public function actionCreate()
     {
+        if(!Yii::$app->user->can("trans_company_create"))
+            throw new ForbiddenHttpException('Usted no tiene permiso ver esta vista');
+
+
         $model = new TransCompany();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -84,6 +94,9 @@ class TransCompanyController extends Controller
      */
     public function actionUpdate($id)
     {
+        if(!Yii::$app->user->can("trans_company_update"))
+            throw new ForbiddenHttpException('Usted no tiene permiso ver esta vista');
+
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -104,6 +117,9 @@ class TransCompanyController extends Controller
      */
     public function actionDelete($id)
     {
+        if(!Yii::$app->user->can("trans_company_delete"))
+            throw new ForbiddenHttpException('Usted no tiene permiso ver esta vista');
+
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
