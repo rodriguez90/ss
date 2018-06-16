@@ -16,6 +16,7 @@ CalendarAsset::register($this);
 <style>
     .fc-axis {
         height: 30px !important;
+
     }
 
     .fc-content{
@@ -26,6 +27,8 @@ CalendarAsset::register($this);
     .input-daterange {
         width: 100% !important;
     }
+
+
 </style>
 <!--div class="calendar-form">
 
@@ -82,7 +85,7 @@ CalendarAsset::register($this);
                     <label class="control-label col-md-2 col-sm-2" for="amount">Cupos:</label>
                     <div class="col-md-10 col-sm-10">
                         <input class="form-control" type="text" id="amount" name="Calendar[amount]"
-                               data-parsley-type="number" placeholder="Cantidad por hora" value="5"/>
+                               data-parsley-type="number" placeholder="Cantidad por hora" />
                     </div>
                 </div>
 
@@ -98,8 +101,9 @@ CalendarAsset::register($this);
                             <select id="selectpicker-desde" name="start" data-parsley-required="true"
                                     class="form-control selectpicker" data-size="10" data-live-search="true">
                                 <option value=''>Seleccione Desde</option>
+                                <option value='0'>00:00</option>
                                 <option value='1'>1:00</option>
-                                <option selected="selected" value='2'>2:00</option>
+                                <option value='2'>2:00</option>
                                 <option value='3'>3:00</option>
                                 <option value='4'>4:00</option>
                                 <option value='5'>5:00</option>
@@ -121,7 +125,7 @@ CalendarAsset::register($this);
                                 <option value='21'>21:00</option>
                                 <option value='22'>22:00</option>
                                 <option value='23'>23:00</option>
-                                <option value='24'>24:00</option>
+
                             </select>
                         </div>
                     </div>
@@ -133,9 +137,10 @@ CalendarAsset::register($this);
                             <select id="selectpicker-hasta" name="end" data-parsley-required="true"
                                     class="form-control selectpicker" data-size="10" data-live-search="true">
                                 <option value=''>Seleccione Hasta</option>
+                                <option value='0'>00:00</option>
                                 <option value='1'>1:00</option>
                                 <option value='2'>2:00</option>
-                                <option selected="selected" value='3'>3:00</option>
+                                <option value='3'>3:00</option>
                                 <option value='4'>4:00</option>
                                 <option value='5'>5:00</option>
                                 <option value='6'>6:00</option>
@@ -156,7 +161,6 @@ CalendarAsset::register($this);
                                 <option value='21'>21:00</option>
                                 <option value='22'>22:00</option>
                                 <option value='23'>23:00</option>
-                                <option value='24'>24:00</option>
                             </select>
                         </div>
 
@@ -164,10 +168,16 @@ CalendarAsset::register($this);
                 </div>
 
                 <div class="col-md-12 col-sm-12">
-                    <div class="col-md-4 col-sm-4">
+                    <div class="col-md-8 col-sm-8">
+                        <div class="col-md-12 col-sm-12 m-t-10">
+                        <label class="label label-success p-10 f-s-12">Nuevo</label>
 
-                    </div>
-                    <div class="col-md-4 col-sm-4" >
+                        <label class="label label-primary p-10 f-s-12">Existente</label>
+
+                        <label class="label bg-purple p-10 f-s-12">Actualizado</label>
+                        </div>
+
+
 
                     </div>
                     <div class="col-md-4 col-sm-4" style="text-align: right;padding-right:0px;">

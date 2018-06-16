@@ -15,14 +15,6 @@ var fullcalendatInit = false;
 $(function (){
 
     $("#grabar").click(function () {
-        // var events2 = [];
-        // for(var i = 0, length=events.length; i < length ; i++)
-        // {
-        //     var event = events[i];
-        //     event.start = moment(event.start).utc().format("YYYY-MM-DD H:mm");
-        //     event.end = moment(event.end).utc().format("YYYY-MM-DD H:mm");
-        //     events2.push(event);
-        // }
 
         $.ajax({
             url: homeUrl + "/rd/calendar/create",
@@ -146,7 +138,7 @@ $(function (){
                             start:h_stard,
                             end:h_end_aux,
                             allDay:false,
-                            className : ['event_rd'],
+                            className : ['event_rd bg-green'],
                             editable: false,
                             amount:amount
                         };
@@ -167,6 +159,7 @@ $(function (){
                             events.push( event );
                         }else{
                             events[pos].title = event['title'];
+                            events[pos].className = ['event_rd bg-purple'];
                             events[pos].update = true;
                            }
                         h_stard = new Date( h_stard.getTime() + hora );
@@ -297,7 +290,7 @@ $(function (){
                 selectHelper: true,
                 slotDuration:"00:60:00",
                 //contentHeight:'auto',
-                height:500,
+                //height:500,
                 // locale:"es",
                 timezone:"UTC",
                 //minTime:"07:00:00",

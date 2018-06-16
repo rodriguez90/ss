@@ -315,7 +315,7 @@ class CalendarController extends Controller
                     'count'=>$cal['amount'],
                     'update'=>false,
                     'allDay'=> false,
-                    'className'=>['event_rd'],
+                    'className'=>['event_rd bg-blue'],
                     'editable'=>false,
                     'url'=>Url::toRoute('/rd/calendar/delete?id='.$cal['id'])
                 ];
