@@ -172,7 +172,7 @@ class ApiReceptionController extends  ActiveController
                         $response['success'] = true;
                         $response['msg'] = Yii::t("app", "Recepción creada correctamente.");
 //                    $response['url'] = Url::toRoute(['/site/index', 'option'=>1]);
-                        $response['url'] = Url::to('/site/index');
+                        $response['url'] = Url::to(['/site/index']);
                     }
                 }
                 else {

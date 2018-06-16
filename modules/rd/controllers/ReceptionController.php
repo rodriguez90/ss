@@ -357,8 +357,8 @@ class ReceptionController extends Controller
 //                        $body = $this->renderFile('@app/modules/rd/views/reception/email', ['model' => $model]);
                         //                        Yii::$app->mailer->compose('layouts/html')
 //                        Yii::$app->mailer->compose('@app/modules/rd/views/reception/email', ['model' => $model])
-                        $body = Yii::$app->view->renderFile('@app/modules/rd/views/reception/email.php', ['model' => $model,
-                                                                                                                   'containers'=>$containers]);
+                        $body = Yii::$app->view->renderFile('@app/mail/layouts/html2.php', ['model' => $model,
+                                                                                                  'containers'=>$containers]);
                         Yii::$app->mailer->compose()
                             ->setFrom($remitente->email)
                             ->setTo($destinatario->email)
@@ -368,7 +368,7 @@ class ReceptionController extends Controller
 
                         $response['success'] = true;
                         $response['msg'] = Yii::t("app", "Recepción creada correctamente.");
-                        $response['url'] = Url::to('/site/index');
+                        $response['url'] = Url::to(['/site/index']);
                     }
                 }
                 else {

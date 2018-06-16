@@ -80,11 +80,11 @@ class ReceptionSearch extends Reception
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'id' => $this->id,
-//            'trans_company_id' => $this->trans_company_id,
+            'reception.id' => $this->id,
+            'reception.bl' => $this->bl,
 //            'agency_id' => $this->agency_id,
-            'active' => $this->active,
-            'created_at' => $this->created_at,
+            'reception.active' => $this->active,
+            'reception.created_at' => $this->created_at,
         ]);
 
         $query->andFilterWhere(['like', 'bl', $this->bl]);

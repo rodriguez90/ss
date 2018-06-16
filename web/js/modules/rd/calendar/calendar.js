@@ -15,12 +15,20 @@ var fullcalendatInit = false;
 $(function (){
 
     $("#grabar").click(function () {
+        var events2 = [];
+        for(var i = 0, length=events.length; i < length ; i++)
+        {
+            var event = events[i];
+            event.start = moment(event.start).utc().format("YYYY-MM-DD hh:mm");
+            event.end = moment(event.end).utc().format("YYYY-MM-DD h:mm");
+            events2.push(event);
+        }
 
         $.ajax({
-            url: homeUrl + "rd/calendar/create",
+            url: homeUrl + "/rd/calendar/create",
             dataType: 'json',
             type: "POST",
-            data: {'events':events},
+            data: {'events':events2},
 
             success: function (response) {
                 if(response['status']){
@@ -209,7 +217,7 @@ $(function (){
                         var max = new Date(view.end);
 
                         $.ajax({
-                            url: homeUrl+ "rd/calendar/getcalendar",
+                            url: homeUrl+ "/rd/calendar/getcalendar",
                             dataType:'json',
                             type: "get",
                             data: {

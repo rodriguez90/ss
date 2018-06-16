@@ -21,7 +21,7 @@ FormAsset::register($this);
 TableAsset::register($this);
 
 //$this->title = 'Rece'$model->bl;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Recepciones'), 'url' => Url::to('/site/index')];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Recepciones'), 'url' => Url::to(['/site/index'])];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 

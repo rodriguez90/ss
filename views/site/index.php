@@ -94,7 +94,7 @@ $rol = $user->getRole();
                 <p><?php echo $ticketCount?></p>
             </div>
             <div class="stats-link">
-                <a href="<?php echo \yii\helpers\Url::to('/rd/ticket');?>">Ver Detalles.<i class="fa fa-arrow-circle-o-right"></i></a>
+                <a href="<?php echo \yii\helpers\Url::to(['/rd/ticket']);?>">Ver Detalles.<i class="fa fa-arrow-circle-o-right"></i></a>
             </div>
         </div>
     </div>
@@ -144,6 +144,11 @@ $rol = $user->getRole();
                                 'class' => 'yii\grid\DataColumn',
                                 'attribute' => 'id',
                                 'label' => 'Número de recepción'
+                            ],
+                            [
+                                'class' => 'yii\grid\DataColumn',
+                                'attribute' => 'bl',
+                                'label' => 'Código BL'
                             ],
                             [
                                 'class' => 'yii\grid\DataColumn',

@@ -219,17 +219,9 @@ if(!Yii::$app->user->isGuest){
 <!--</div>-->
 
 
-<script type="text/javascript"> var homeUrl = '<?php echo Yii::$app->homeUrl; ?>';</script>
-
-<?php
-//
-//echo "<script>";
-//
-//echo "homeUrl = '" . Yii::$app->homeUrl . "';";
-//
-//echo "</script>";
-//
-//?>
+<script type="text/javascript">
+    var homeUrl = '<?php echo Yii::$app->homeUrl; ?>';
+</script>
 
 <!-- end wrap -->
 <?php $this->endBody() ?>

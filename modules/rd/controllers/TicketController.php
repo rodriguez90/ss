@@ -395,7 +395,7 @@ class TicketController extends Controller
 
             $response['success'] = true;
             $response['msg'] = 'Reservas Realizada';
-            $response['url'] = Url::to('/site/index');
+            $response['url'] = Url::to(['/site/index']);
         }
         else
         {
