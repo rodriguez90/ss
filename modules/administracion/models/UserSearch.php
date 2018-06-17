@@ -19,8 +19,8 @@ class UserSearch extends AdmUser
     public function rules()
     {
         return [
-            [['id', 'created_at', 'updated_at'], 'integer'],
-            [['username', 'auth_key', 'password', 'email', 'nombre', 'apellidos', 'creado_por', 'password_reset_token', 'cedula','status','item_name','id','created_at'], 'safe'],
+            [['id', 'updated_at'], 'integer'],
+            [['username', 'auth_key', 'password', 'email', 'nombre', 'apellidos', 'creado_por', 'password_reset_token', 'cedula','status','item_name','id'], 'safe'],
         ];
     }
 
@@ -67,7 +67,7 @@ class UserSearch extends AdmUser
         $query->andFilterWhere([
             'id' => $this->id,
             //'status' => $this->status,
-            'created_at' => $this->created_at,
+            //'created_at' => $this->created_at,
         ]);
 
         if(isset($this->status) && !empty($this->status)){
@@ -85,7 +85,10 @@ class UserSearch extends AdmUser
         //$filter = AuthAssignment::find()->select('user_id')->where(['like','auth_assignment.user_id','adm_user.id']);
 
 
-        $query->andFilterWhere(['DATE(created_at)'=>$this->created_at,]);
+        if (isset($this->created_at) && !empty($this->created_at))
+        {
+            var_dump($this->created_at);
+        }
 
 
         $query->andFilterWhere(['like', 'username', $this->username])

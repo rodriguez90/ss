@@ -182,6 +182,17 @@ if(!Yii::$app->user->isGuest){
                     ?>
 
                     <?php
+
+                    if (Yii::$app->user->can("admin_mod") || Yii::$app->user->can("generating_card")) {
+                        echo "<li class='has-sub'>";
+                        echo "<a href=" . Url::to(['/rd/process/generatingcard']) . "> <i class='fa fa-credit-card'></i>";
+                        echo "<span> Carta de Servicio</span>";
+                        echo "</a>";
+                        echo "</li>";
+                    }
+                    ?>
+
+                    <?php
                         if(Yii::$app->user->can("admin_mod")){
                            echo "<li class='has-sub'>";
                            echo "<a href='javascript:;'> <b class='caret pull-right'></b> <i class='fa fa-cog'></i> <span>Administración</span> </a>";

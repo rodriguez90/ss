@@ -3,6 +3,8 @@
 namespace app\modules\rd\controllers;
 
 
+use app\modules\rd\models\Agency;
+use app\modules\rd\models\TransCompany;
 use DateTime;
 use DateTimeZone;
 use app\modules\administracion\models\AdmUser;
@@ -447,8 +449,17 @@ class ProcessController extends Controller
                     }
                 }
                 else {
+
+                    $error = "";
+                    foreach ($model->errors as $key => $value) {
+                        $error .=$value[0];
+
+                    }
+
+
+
                     $response['success'] = false;
-                    $response['msg'] =  "No fue posible crear la solicitud.";
+                    $response['msg'] =  "No fue posible crear la solicitud. " .$error ;
                 }
             }
             catch (Exception $e)
@@ -464,5 +475,69 @@ class ProcessController extends Controller
         }
 
         return $response;
+    }
+
+
+    public function actionGeneratingcard(){
+
+        if(Yii::$app->request->post())
+        {
+            $bl = Yii::$app->request->post("bl");
+            if($bl !=null){
+
+                $trans_company = TransCompany::find()
+                    ->innerJoin("user_transcompany","user_transcompany.transcompany_id = trans_company.id")
+                    ->where(["user_transcompany.user_id"=>Yii::$app->user->getId()])
+                    ->one();
+
+                $agency = Agency::find()
+                    ->innerJoin("process","process.agency_id = agency.id")
+                    ->where(["process.bl"=>$bl])
+                    ->one();
+
+
+
+                if($trans_company!=null){
+                    $tickes = ProcessTransaction::find()
+                        ->select("process.type,process.bl,process.delivery_date,container.code,container.tonnage,trans_company.name,calendar.start_datetime,calendar.end_datetime,warehouse.name")
+                        ->innerJoin("process","process_transaction.process_id = process.id ")
+                        ->innerJoin("container", "container.id = process_transaction.container_id")
+                        ->innerJoin("trans_company", "trans_company.id = process_transaction.trans_company_id")
+                        ->innerJoin("ticket", "ticket.process_transaction_id = process_transaction.id")
+                        ->innerJoin("calendar", "ticket.calendar_id = calendar.id")
+                        ->innerJoin("warehouse", "warehouse.id = calendar.id_warehouse")
+                        ->where(["process.bl"=>$bl])
+                        ->andWhere(["trans_company.name"=>$trans_company->name])
+                        ->asArray()
+                        ->all();
+
+
+
+                    //generar doc y enviar por email.....
+
+
+
+
+                    foreach ($tickes as $xx){
+                        var_dump($xx);
+                    }
+
+
+
+
+
+                    die;
+                }
+                //si todo OK informar en la vista......
+
+
+            }else{
+                //error en la vista
+                var_dump("no BL");die;
+            }
+        }
+
+        return $this->render('generating_card', [ ]);
+
     }
 }

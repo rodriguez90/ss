@@ -66,8 +66,8 @@ $this->params['breadcrumbs'][] = $this->title;
                                 'content' => function ($data) {
                                     return '<span class="fa fa-calendar">&nbsp;' . (new \yii\i18n\Formatter())->asDate($data->getCreate(), 'Y-MM-dd') . '</span>';
                                 },
-                                /*
-                                'filter' => yii\jui\DatePicker::widget([
+
+                                'filter' => DatePicker::widget([
                                     'model' => $searchModel,
                                     'attribute' => 'created_at',
                                     'value'=>'created_at',
@@ -77,7 +77,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                         'prevText' => '<i style="cursor: pointer" class="fa fa-chevron-left"></i>',
                                         'nextText' => '<i style="cursor: pointer" class="fa fa-chevron-right"></i>',
                                     ]
-                                ])*/
+                                ])
                             ],
 
 

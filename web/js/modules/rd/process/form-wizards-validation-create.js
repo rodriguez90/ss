@@ -175,7 +175,7 @@ var handleBootstrapWizardsValidation = function() {
                         };
 
                         var process = {
-                            "Process[agency_id]":agency.id, // FIXME THIS DEFINE BY USER WITH ROLE AGENCY OR IMPORTER/EXPORTER
+                            "Process[agency_id]": 2, //agency.id, // FIXME THIS DEFINE BY USER WITH ROLE AGENCY OR IMPORTER/EXPORTER
                             "Process[bl]":blCode,
                             "Process[active]":1,
                             "Process[delivery_date]":moment().format("YYYY/MM/DD"),

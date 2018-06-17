@@ -11,6 +11,7 @@ use app\modules\rd\models\ReceptionTransaction;
 use app\modules\rd\models\TicketSearch;
 use app\modules\rd\models\UserAgency;
 use app\modules\rd\models\UserTranscompany;
+use Mpdf\QrCode\QrCode;
 use Yii;
 use yii\filters\AccessControl;
 use yii\helpers\Url;
@@ -183,4 +184,12 @@ class SiteController extends Controller
     {
         return $this->render('about');
     }
+
+    public function actionQr()
+    {
+        //$qrCode = sprintf('%010d%',9006543200 + 55);
+
+        return 0;
+    }
+
 }
