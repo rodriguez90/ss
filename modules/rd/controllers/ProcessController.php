@@ -480,64 +480,89 @@ class ProcessController extends Controller
 
     public function actionGeneratingcard(){
 
+        $result = [];
+        $result ["status"]  = -1;
+        $result ["msg"] = "";
+
         if(Yii::$app->request->post())
         {
             $bl = Yii::$app->request->post("bl");
             if($bl !=null){
 
+
+                $user = AdmUser::findOne(["id"=>Yii::$app->user->getId()]);
+
                 $trans_company = TransCompany::find()
+                    ->select("trans_company.name,trans_company.ruc,adm_user.email")
                     ->innerJoin("user_transcompany","user_transcompany.transcompany_id = trans_company.id")
-                    ->where(["user_transcompany.user_id"=>Yii::$app->user->getId()])
+                    ->innerJoin("adm_user","user_transcompany.user_id = adm_user.id")
+                    ->where(["user_transcompany.user_id"=>$user->getId()])
+                    ->asArray()
                     ->one();
 
                 $agency = Agency::find()
+                    ->select("agency.name,agency.ruc,adm_user.email")
                     ->innerJoin("process","process.agency_id = agency.id")
+                    ->innerJoin("user_agency","user_agency.agency_id = agency.id")
+                    ->innerJoin("adm_user","user_agency.user_id = adm_user.id")
                     ->where(["process.bl"=>$bl])
+                    ->asArray()
                     ->one();
 
 
 
-                if($trans_company!=null){
-                    $tickes = ProcessTransaction::find()
-                        ->select("process.type,process.bl,process.delivery_date,container.code,container.tonnage,trans_company.name,calendar.start_datetime,calendar.end_datetime,warehouse.name")
-                        ->innerJoin("process","process_transaction.process_id = process.id ")
-                        ->innerJoin("container", "container.id = process_transaction.container_id")
-                        ->innerJoin("trans_company", "trans_company.id = process_transaction.trans_company_id")
-                        ->innerJoin("ticket", "ticket.process_transaction_id = process_transaction.id")
-                        ->innerJoin("calendar", "ticket.calendar_id = calendar.id")
-                        ->innerJoin("warehouse", "warehouse.id = calendar.id_warehouse")
-                        ->where(["process.bl"=>$bl])
-                        ->andWhere(["trans_company.name"=>$trans_company->name])
-                        ->asArray()
-                        ->all();
+                if($trans_company!=null && $agency!=null){
+                    try{
+                        $tickes = ProcessTransaction::find()
+                            ->select("process_transaction.register_truck,process_transaction.register_driver,process_transaction.name_driver,process.type,process.bl,process.delivery_date,container.code,container.tonnage,trans_company.name,trans_company.ruc,ticket.id,ticket.status,calendar.start_datetime,calendar.end_datetime,warehouse.name as w_name")
+                            ->innerJoin("process","process_transaction.process_id = process.id ")
+                            ->innerJoin("container", "container.id = process_transaction.container_id")
+                            ->innerJoin("trans_company", "trans_company.id = process_transaction.trans_company_id")
+                            ->innerJoin("ticket", "ticket.process_transaction_id = process_transaction.id")
+                            ->innerJoin("calendar", "ticket.calendar_id = calendar.id")
+                            ->innerJoin("warehouse", "warehouse.id = calendar.id_warehouse")
+                            ->where(["process.bl"=>$bl])
+                            ->andWhere(["trans_company.name"=>$trans_company["name"]])
+                            ->asArray()
+                            ->all();
 
 
 
-                    //generar doc y enviar por email.....
+                        foreach ($tickes as $ticket){
 
 
+                            $pdf =  new mPDF( );
+                            $pdf->SetTitle("Carta de Servicio");
+                            $pdf->WriteHTML($this->renderPartial('@app/mail/layouts/card.php', [
+                                "trans_company"=> $trans_company, "agency"=>$agency , "ticket"=>$ticket]));
+                            $path= $pdf->Output("","S");
+
+                            Yii::$app->mailer->compose()
+                                ->setFrom($user->email)
+                                ->setTo($trans_company["email"])
+                                ->setSubject("Carta de Servicio")
+                                ->setHtmlBody("<h5>Se adjunta carta de servicio.</h5>")
+                                ->attachContent($path,[ 'fileName'=> "Carta de Servicio.pdf",'contentType'=>'application/pdf'])
+                                ->send();
+                        }
+
+                        $result ["status"]  =1;
+                        $result ["msg"] .= "Cartas de servicio generadas correctamente.";
 
 
-                    foreach ($tickes as $xx){
-                        var_dump($xx);
+                    }catch (\Exception $ex){
+                        $result ["status"]  = 0;
+                        $result ["msg"] = "Error: ".$ex->getMessage();
                     }
 
-
-
-
-
-                    die;
                 }
-                //si todo OK informar en la vista......
-
-
             }else{
-                //error en la vista
-                var_dump("no BL");die;
+                $result ["status"]  =  0;
+                $result ["msg"] = "BL es requerido";
             }
         }
 
-        return $this->render('generating_card', [ ]);
+        return $this->render('generating_card', ["result"=>$result]);
 
     }
 }

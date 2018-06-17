@@ -40,7 +40,7 @@ class ProcessTransaction extends \yii\db\ActiveRecord
         return [
             [['process_id', 'container_id', 'delivery_date', 'active', 'trans_company_id'], 'required'],
             [['process_id', 'container_id', 'active', 'trans_company_id'], 'integer'],
-            [['regiter_truck', 'register_driver', 'name_driver'], 'string'],
+            [['register_truck', 'register_driver', 'name_driver'], 'string'],
             [['delivery_date'], 'safe'],
             [['container_id'], 'exist', 'skipOnError' => true, 'targetClass' => Container::class, 'targetAttribute' => ['container_id' => 'id']],
             [['process_id'], 'exist', 'skipOnError' => true, 'targetClass' => Process::class, 'targetAttribute' => ['process_id' => 'id']],
@@ -57,7 +57,7 @@ class ProcessTransaction extends \yii\db\ActiveRecord
             'id' => 'ID',
             'process_id' => 'Número',
             'container_id' => 'Contenedor',
-            'regiter_truck' => 'Placa del Camión',
+            'register_truck' => 'Placa del Camión',
             'register_driver' => 'Cédula del Chofer',
             'delivery_date' => 'Fecha de Devolución',
             'active' => 'Activa',

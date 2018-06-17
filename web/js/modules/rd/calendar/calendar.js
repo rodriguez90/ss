@@ -195,7 +195,9 @@ $(function (){
         success: function (response) {
 
             var calendar = $('#calendar').fullCalendar({
-
+                height: 500,
+                contentHeight:300,
+                allDaySlot: false,
                 header: {
                     //left: 'prev,next today',
                     left: 'next today',

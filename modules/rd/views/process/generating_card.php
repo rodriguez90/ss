@@ -18,6 +18,35 @@ FormAsset::register($this);
 
 <div class="user-form">
 
+    <?php if ($result["status"] != -1) {
+        ?>
+        <section>
+
+            <?php if ($result["status"] == 0) {
+                ?>
+                <div class="alert alert-danger fade in m-b-15">
+                    <i class="fa fa-warning"></i>
+                    <strong>Error!</strong> <?= $result["msg"] ?>
+                    <span class="close" data-dismiss="alert">×</span>
+                </div>
+
+            <?php } ?>
+
+
+            <?php if ($result["status"] == 1) {
+                ?>
+                <div class="alert alert-success fade in m-b-15">
+                    <?= $result["msg"] ?>
+                    <span class="close" data-dismiss="alert">×</span>
+                </div>
+
+            <?php } ?>
+
+        </section>
+
+
+    <?php } ?>
+
 
     <div class="row">
         <div class="col-md-8">

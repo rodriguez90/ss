@@ -11,7 +11,11 @@ use app\modules\rd\models\ReceptionTransaction;
 use app\modules\rd\models\TicketSearch;
 use app\modules\rd\models\UserAgency;
 use app\modules\rd\models\UserTranscompany;
-use Mpdf\QrCode\QrCode;
+
+use DateTime;
+use DateTimeZone;
+
+
 use Yii;
 use yii\filters\AccessControl;
 use yii\helpers\Url;
@@ -20,6 +24,8 @@ use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
+
+use Da\QrCode\QrCode;
 
 
 class SiteController extends Controller
@@ -185,11 +191,13 @@ class SiteController extends Controller
         return $this->render('about');
     }
 
-    public function actionQr()
-    {
-        //$qrCode = sprintf('%010d%',9006543200 + 55);
+    public function actionQr(){
 
-        return 0;
+        $qrCode = new QrCode("yopt");
+
+        $qrCode->writeFile(__DIR__ . '/my-code.png');
+
+
     }
 
 }
