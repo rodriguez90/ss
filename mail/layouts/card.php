@@ -80,7 +80,7 @@ $date = $aux->format("YmdHi");
 
         <tr>
             <td class="title" >ECAS</td>
-            <td class="data"  >22222</td>
+            <td class="data"  >??????</td>
             <td class="title" >F. CADUCIDAD</td>
             <td class="data"  > <?php echo $ticket["delivery_date"] ?></td>
         </tr>
