@@ -193,10 +193,10 @@ class SiteController extends Controller
 
     public function actionQr(){
 
-        $qrCode = new QrCode("yopt");
-
-        $qrCode->writeFile(__DIR__ . '/my-code.png');
-
+    var_dump(date('YmdHis'));die;
+   return $this->render('about', [
+            "path"=> Yii::$app->request->baseUrl."/qrcodes/1-qrcode.png"
+        ]);
 
     }
 

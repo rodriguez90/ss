@@ -26,6 +26,8 @@ use yii\helpers\Url;
 use kartik\mpdf\Pdf;
 use Mpdf\Mpdf;
 
+use Da\QrCode\QrCode;
+
 /**
  * ProcessController implements the CRUD actions for Process model.
  */
@@ -535,15 +537,28 @@ class ProcessController extends Controller
                             ->asArray()
                             ->all();
 
-
+                        $paths = [];
 
                         foreach ($tickes as $ticket){
 
+                            $aux = new DateTime( $ticket["start_datetime"] );
+                            $date = $aux->format("YmdHi");
+                            $info =  "TI-" . $date . "-".$ticket["id"];
+                            $qrCode = new QrCode($info);
+                            //$qrpath =  Yii::getAlias("@webroot"). "/qrcodes/".$ticket["id"]."-".date('YmdHis').".png";
+                            ///sgt/web/qrcodes/3-qrcode.png
+                            //$qrCode->writeFile($qrpath);
+                            //$paths [] = $qrpath;
+                            ob_start();
+                            \QRcode::png($info,null);
+                            $imageString = base64_encode(ob_get_contents());
+                            ob_end_clean();
 
-                            $pdf =  new mPDF( );
+                            $bodypdf = $this->renderPartial('@app/mail/layouts/card.php', ["trans_company"=> $trans_company, "agency"=>$agency , "ticket"=>$ticket,"qr"=>"data:image/png;base64, ".$imageString]);
+                            ini_set('max_execution_time', '5000');
+                            $pdf =  new mPDF(['mode'=>'utf-8' , 'format'=>'A4-L']);
                             $pdf->SetTitle("Carta de Servicio");
-                            $pdf->WriteHTML($this->renderPartial('@app/mail/layouts/card.php', [
-                                "trans_company"=> $trans_company, "agency"=>$agency , "ticket"=>$ticket]));
+                            $pdf->WriteHTML($bodypdf);
                             $path= $pdf->Output("","S");
 
                             Yii::$app->mailer->compose()
@@ -553,7 +568,9 @@ class ProcessController extends Controller
                                 ->setHtmlBody("<h5>Se adjunta carta de servicio.</h5>")
                                 ->attachContent($path,[ 'fileName'=> "Carta de Servicio.pdf",'contentType'=>'application/pdf'])
                                 ->send();
-                        }
+
+
+                        } 
 
                         $result ["status"]  =1;
                         $result ["msg"] .= "Cartas de servicio generadas correctamente.";

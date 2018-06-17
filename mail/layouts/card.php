@@ -34,9 +34,8 @@ use app\modules\rd\models\Process;
         }
 
         table td {
-            padding: 10px 10px 10px 10px;
+            padding: 10px 10px 0px 10px;
             width: 25%;
-
         }
 
         .title{
@@ -59,9 +58,12 @@ $date = $aux->format("YmdHi");
 
 ?>
 
-<div class="row" style=""  >
+<div class="row" style="background: #e4f1fb;">
+
+
 
     <table>
+
         <tr>
             <td class="title" > EMP. TRANSPORTE </td>
             <td class="data" > <?php echo $trans_company["name"] ?> </td>
@@ -121,71 +123,9 @@ $date = $aux->format("YmdHi");
 
     </table>
 
-
-
-
-</div>
-
-</body>
-</html>
-
-
-
-
-
-
-                            <table >
-                                <tr>
-                                    <td>
-                                        RUC/CI ??
-                                    </td>
-                                </tr>
-                            </table>
-
-                            <table >
-                                <tr>
-                                    <td>
-                                        <?php echo $ticket["register_truck"] ?>
-                                    </td>
-                                </tr>
-                            </table>
-
-                            <table >
-                                <tr>
-                                    <td>
-                                       1
-                                    </td>
-                                </tr>
-                            </table>
-
-                            <table >
-                                <tr>
-                                    <td>
-                                        <?php echo $ticket["tonnage"]. "??" ?>
-                                    </td>
-                                </tr>
-                            </table>
-
-                            <table >
-                                <tr>
-                                    <td>
-                                       EMITIDO?
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-
-            </td>
-
-        </tr>
-
-
-        </tbody>
-    </table>
-
+    <div style="padding: 0px 0px 20px 20px;">
+        <img src="<?=$qr?>" width="300" height="300">
+    </div>
 
 </div>
 
