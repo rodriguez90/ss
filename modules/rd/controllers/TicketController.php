@@ -2,6 +2,7 @@
 
 namespace app\modules\rd\controllers;
 
+use app\modules\rd\models\ReceptionSearch;
 use Yii;
 use app\modules\rd\models\Ticket;
 use app\modules\administracion\models\AdmUser;
@@ -219,16 +220,18 @@ class TicketController extends Controller
             throw new ForbiddenHttpException('Usted no tiene permiso ver esta vista');
 
         $tickets = Yii::$app->request->post('tickets');
-        return $this->doTicket($tickets, Ticket::RESERVE);
+        $reception = Yii::$app->request->post('reception');
+        return $this->doTicket($tickets, $reception, Ticket::RESERVE);
     }
 
     public function actionPrebooking()
     {
-        if(!Yii::$app->user->can("ticket_update"))
+        if(!Yii::$app->user->can('ticket_update'))
             throw new ForbiddenHttpException('Usted no tiene permiso ver esta vista');
 
         $tickets = Yii::$app->request->post('tickets');
-        return $this->doTicket($tickets, Ticket::PRE_BOOKING);
+        $reception = Yii::$app->request->post('reception');
+        return $this->doTicket($tickets, $reception, Ticket::PRE_BOOKING);
     }
 
     public function actionByReception()
@@ -260,7 +263,7 @@ class TicketController extends Controller
         return $response;
     }
 
-    private function doTicket($tickets, $status)
+    private function doTicket($tickets, $reception, $status)
     {
         $response = array();
 
@@ -349,17 +352,31 @@ class TicketController extends Controller
                     }
                     else // nuevo ticket
                     {
-                        $processStatus = $processStatus && $calendarSlot && $calendarSlot->amount > 0;
+                        if($calendarSlot === null)
+                        {
+                            $processStatus = false;
+                            $response['msg'] = 'No fue posible encontrar el calendario.';
+                        }
+
                         if($processStatus)
                         {
-                            $model->status = $status;
-                            $processStatus = $model->save();
+                            $processStatus = $calendarSlot->amount > 0;
+
+                            if(!$processStatus)
+                            {
+                                $processStatus = false;
+                                $response['msg'] = 'No hay disponibilidad en el calendario';
+                            }
+
                             if($processStatus)
                             {
+                                $model->status = $status;
+                                $processStatus = $model->save();
                                 $calendarSlot->amount--;
-                                $processStatus = $calendarSlot->update();
-                                if(!$processStatus)
+                                $result = $calendarSlot->update();
+                                if($result == false)
                                 {
+                                    $processStatus = false;
                                     $response['msg'] = 'Ah ocurrido un error al actualizar la disponibilidad del calendario: '.
                                         implode(" ", $oldTicket->getErrorSummary(false));
                                 }
@@ -370,10 +387,37 @@ class TicketController extends Controller
                                     implode(" ", $model->getErrorSummary(false));
                             }
                         }
-                        else
+                    }
+
+                    if($processStatus) // update reception status
+                    {
+                        $countTicketForReception = TicketSearch::find()->innerJoin('reception_transaction', 'ticket.reception_transaction_id = reception_transaction.id')
+                                                                       ->innerJoin('reception', 'reception.id=reception_transaction.reception_id')
+                                                                       ->where(['reception.id'=>$reception['id']])->count();
+
+                        $countReceptionTransaction = ReceptionTransaction::find()->where(['reception_id'=>$reception['id']])->count();
+
+                        $receptionModel = Reception::findOne(['id'=>$reception['id']]);
+
+                        if($receptionModel !== null)
                         {
+                            if($countTicketForReception === $countReceptionTransaction)
+                                $receptionModel->active =  0;
+                            else
+                                $receptionModel->active =  1;
+                            $result = $receptionModel->update();
+                            if($result === false)
+                            {
+//                                var_dump($receptionModel->getErrorSummary);die;
+                                $processStatus = false;
+                                $response['msg'] = 'Ah ocurrido un error al actualizar el estado de la recepción: ' .
+                                                    implode(" ", $receptionModel->getErrorSummary(false));
+                                var_dump($receptionModel->getErrorSummary(true));die("1");
+                            }
+                        }
+                        else {
                             $processStatus = false;
-                            $response['msg'] = 'No hay disponibilidad en el calendario';
+                            $response['msg'] = 'Ah ocurrido un error la recepción no es valida';
                         }
                     }
                 }

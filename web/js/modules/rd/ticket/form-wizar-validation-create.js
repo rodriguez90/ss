@@ -141,7 +141,7 @@ var handleBootstrapWizardsValidation = function() {
                                 ).draw();
                             }
                         } );
-                        console.log('Paso 1 error: ' + error);
+                        // console.log('Paso 1 error: ' + error);
 
                         return !error;
                 }
@@ -157,7 +157,7 @@ var handleBootstrapWizardsValidation = function() {
                             .rows( )
                             .data()
                             .each( function ( value, index ) {
-                                console.log(value);
+                                // console.log(value);
 
                                 if(error) return false;
 
@@ -165,7 +165,7 @@ var handleBootstrapWizardsValidation = function() {
                                 {
                                     tickets = [];
                                     error = true;
-                                    alert("Debe introducir la placa del carro y la cédual y nombre del chofer para todo los contenedores.");
+                                    alert("Debe introducir la placa del carro y la cédula del chofer para todo los contenedores.");
                                     return false;
                                 }
 
@@ -178,7 +178,7 @@ var handleBootstrapWizardsValidation = function() {
                                 if(ticketData)
                                 {
                                     var data = {
-                                        "reception_transaction_id":tId, // FIXME THIS DEFINE BY USER WITH ROLE AGENCY OR IMPORTER/EXPORTER
+                                        "reception_transaction_id":tId,
                                         "calendar_id":ticketData.calendarId,
                                         "status":1,
                                         "active":1,
@@ -186,11 +186,15 @@ var handleBootstrapWizardsValidation = function() {
                                         "registerDriver":value.registerDriver,
                                         "nameDriver":value.nameDriver,
                                     };
+                                    console.log(data);
                                     tickets.push(data);
                                 }
                             } );
 
                         if(error) return false;
+
+                        console.log("Ticket to reserve: ");
+                        console.log(tickets);
 
                         $.ajax({
                             async:false,
@@ -198,6 +202,7 @@ var handleBootstrapWizardsValidation = function() {
                             type: "POST",
                             dataType: "json",
                             data:  {
+                                reception:reception,
                                 tickets:tickets
                             },
                             success: function (response) {
@@ -224,7 +229,7 @@ var handleBootstrapWizardsValidation = function() {
                             }
                         });
 
-                        return true;
+                        return result;
                     }
 
                     alert("Debe confirmar que la información es valida.");

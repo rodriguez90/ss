@@ -34,8 +34,8 @@ var handleCalendarDemo = function () {
 
 	var calendar = $('#calendar').fullCalendar({
         locale: 'es',
-        // height: 1000,
-        // contentHeight:auto,
+        height: 500,
+        contentHeight:300,
         // aspectRatio:3.0,
 		header: buttonSetting,
 		selectable: true,
@@ -43,7 +43,6 @@ var handleCalendarDemo = function () {
 		selectHelper: true,
 		droppable:false,
         defaultView:'agendaWeek',
-        contentHeight:'auto',       //auto
         views: {
             day: {
                 titleFormat: 'MMM D, YYYY',
@@ -51,22 +50,20 @@ var handleCalendarDemo = function () {
                 // allDayText:'',
             },
             month: {
-                selectable: false,
                 titleFormat: 'MMM D, YYYY'
             },
             agenda: {
-                contentHeight:'auto',       //auto
+                titleFormat: 'MMM D, YYYY',
+                // contentHeight:'auto',       //auto
                 allDaySlot: false, //Disable the allDay slot in agenda view
-                // allDayText:'',
-                // scrollTime: '00:00:00' //This is to keep the scrollbar on top in the agenda week/day view so that we can see all events.
-                // slotEventOverlap: false
             }
         },
         slotEventOverlap:false,
         eventOverlap: false,
-        slotDuration:"00:60:00",
-        // slotLabelInterval:{hours:1},
-        slotLabelFormat:'h:mm',
+        // slotDuration:"00:60:00",
+        slotLabelInterval:{hours:1},
+        // slotLabelFormat:'H:mm',
+        // timeFormat: 'H(:mm)',
         // minTime:"07:00:00",
         // maxTime:"16:00:00",
         displayEventTime:false,
@@ -151,29 +148,18 @@ var handleCalendarDemo = function () {
 		},
         eventClick: function(calEvent, jsEvent, view) {
 
-            var result = findSlotEvent(calEvent.start, calEvent.end);
-
-            currentCalendarEventIndex = result.index;
-            currentCalendarEvent = result.event;
-            // currentCalendarEvent = calendarSlotMap.get();
+            // var result = findSlotEvent(calEvent.start, calEvent.end);
             //
-            // if(calEvent.type === 'D')
-            // {
-            //     currentCalendarEvent = calendarSlotMap.get(calEvent.id);
-            // }
-            // else if(calEvent.type === 'T20')
-            // {
-            //     currentCalendarEvent = calendarSlotMap.get(calEvent.id - 1);
-            // }
-            // else if(calEvent.type === 'T20')
-            // {
-            //     currentCalendarEvent = calendarSlotMap.get(calEvent.id - 2);
-            // }
-
+            // currentCalendarEventIndex = result.index;
+            // currentCalendarEvent = result.event;
 
             if(calEvent.type === 'D')
             {
-                if(result.event)
+                // var result = findSlotEvent(calEvent.start, calEvent.end);
+                var calendar = calendarSlotMap.get(calEvent.id);
+                currentCalendarEventIndex = calendar.index;
+                currentCalendarEvent = calEvent;
+                if(currentCalendarEvent)
                 {
                     if(currentCalendarEvent.count <= 0 )
                     {
@@ -216,7 +202,7 @@ var handleCalendarDemo = function () {
                     {
                         mode = 'create';
                         $("#modalTitle").get(0).textContent = 'Cupos disponibles: ' + currentCalendarEvent.title;
-                        $("#modalTicket").get(0).textContent = moment(currentCalendarEvent.start).format("dddd, MMMM YYYY h:mm");
+                        $("#modalTicket").get(0).textContent = moment(currentCalendarEvent.start).format("dddd, MMMM YYYY H:mm");
                         $("#modal-select-containers").modal("show");
                         $('#select-all')[0].checked = false;
                     }
@@ -224,8 +210,19 @@ var handleCalendarDemo = function () {
                         alert('Ya todas los contenedores de esta recepción tienen cupos');
                     }
                 }
+                else {
+                    alert("Error buscando calendar event");
+                }
             }
             else {
+                var id = calEvent.type === 'T20' ? calEvent.id - 1: calEvent.id - 2;
+                var result = calendarSlotMap.get(calEvent.calendarId);
+
+                if(!result)
+                    alert("Error buscando calendar");
+
+                currentCalendarEventIndex = result.index;
+                currentCalendarEvent = calendarSlotEvents.events[currentCalendarEventIndex];
 
                 var table = $('#data-table-modal').DataTable();
 

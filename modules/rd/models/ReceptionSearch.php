@@ -43,7 +43,7 @@ class ReceptionSearch extends Reception
     {
 //        var_dump($params); die('search');
         $query = Reception::find()->innerJoin('agency', 'agency.id = reception.agency_id')
-                                    ->innerJoin('trans_company', 'trans_company.id = reception.trans_company_id')->where(['reception.active'=>true]);
+                                  ->innerJoin('trans_company', 'trans_company.id = reception.trans_company_id');
 
         // add conditions that should always apply here
 

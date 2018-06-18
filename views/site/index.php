@@ -10,6 +10,7 @@ use yii\grid\GridView;
 use yii\widgets\Pjax;
 use yii\helpers\Url;
 use app\modules\administracion\models\AdmUser;
+use app\modules\administracion\models\AuthItem;
 $this->title = 'SGT';
 
 //var_dump($this->params) ;die;
@@ -19,28 +20,18 @@ $this->title = 'SGT';
 
 //var_dump($rol);die;
 
+
 $user = AdmUser::findOne(['id'=>Yii::$app->user->getId()]);
-//var_dump($user);die;
-$rol = $user->getRole();
+$rol = '';
+if($user)
+{
+    $rol = $user->getRole();
+}
+
 ?>
 
 <div class="row">
-    <!-- begin col-3 -->
-<!--    <div class="col-md-3 col-sm-6">-->
-<!--        <div class="widget widget-stats bg-green">-->
-<!--            <div class="stats-icon"><i class="fa fa-cubes"></i></div>-->
-<!--            <div class="stats-info">-->
-<!--                <h4>CONTENEDORES</h4>-->
-<!--                <p>3,291,922</p>-->
-<!--            </div>-->
-<!--            <div class="stats-link active">-->
-<!--                <a href="javascript:;">Ver Detalles <i class="fa fa-arrow-circle-o-right"></i></a>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
-    <!-- end col-3 -->
-
-    <!-- begin col-3 -->
+        <!-- begin col-3 -->
     <div id="reception" class="col-md-3 col-sm-6" style="display: none;">
         <div class="widget widget-stats bg-red">
             <div class="stats-icon"><i class="fa fa-rotate-90 fa-sign-in"></i></div>
@@ -49,7 +40,7 @@ $rol = $user->getRole();
                 <p><?php echo $receptionCount?></p>
             </div>
             <div class="stats-link">
-                <a href="<?php echo \yii\helpers\Url::to('/rd/reception/create');?>">Realice una solocitud de recepción.<i class="fa fa-arrow-circle-o-right"></i></a>
+                <a href="<?php echo Url::to(['/rd/reception/create']);?>">Realice una solocitud de recepción.<i class="fa fa-arrow-circle-o-right"></i></a>
             </div>
         </div>
     </div>
@@ -94,7 +85,7 @@ $rol = $user->getRole();
                 <p><?php echo $ticketCount?></p>
             </div>
             <div class="stats-link">
-                <a href="<?php echo \yii\helpers\Url::to(['/rd/ticket']);?>">Ver Detalles.<i class="fa fa-arrow-circle-o-right"></i></a>
+                <a href="<?php echo Url::to(['/rd/ticket']);?>">Ver Detalles.<i class="fa fa-arrow-circle-o-right"></i></a>
             </div>
         </div>
     </div>
@@ -205,16 +196,19 @@ $rol = $user->getRole();
                                     'myButton' => function($url, $model, $key) {
 
                                         $user = AdmUser::findOne(['id'=>Yii::$app->user->getId()]);
-                                        $role = $user->getRole();
+                                        $role = '';
+                                        if($user)
+                                            $role = $user->getRole();
+
                                         $result = '';
                                         $url1 = '/rd/reception/view?id='. $model->id;
                                         $url2 = '/rd/reception/trans-company?id='. $model->id;
-                                        $ticketClass = $model->hastReceptionTransactionsActive() ? 'btn-success' : 'btn-default';
-                                        if($role === 'Agencia')
+                                        $ticketClass = $model->active == 1 ? 'btn-success' : 'btn-default';
+                                        if($role === AuthItem::ROLE_AGENCY)
                                             $result = Html::a('Ver', [$url1], ['class' => 'btn btn-info btn-xs', 'data-pjax' => 0]);
-                                        else if($role === 'Cia_transporte')
+                                        else if($role === AuthItem::ROLE_CIA_TRANS_COMPANY)
                                             $result = Html::a('Turnos', [$url2], ['class' => 'btn btn-xs ' . $ticketClass, 'data-pjax' => 0]);
-                                        if($role === 'Administracion')
+                                        if($role === AuthItem::ROLE_ADMIN)
                                         {
 
                                             $result = Html::a('Ver', [$url1], ['class' => 'btn btn-info btn-xs', 'data-pjax' => 0])

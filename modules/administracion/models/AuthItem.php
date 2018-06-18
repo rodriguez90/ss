@@ -25,7 +25,8 @@ use Yii;
 class AuthItem extends \yii\db\ActiveRecord
 {
 
-    const ROLE_ADMIN = 'Administrador';
+//    const ROLE_ADMIN = 'Administrador';
+    const ROLE_ADMIN = 'Administracion';
     const ROLE_ADMIN_WHAREHOUSE = 'Administrador_depósito';
     const ROLE_WHAREHOUSE = 'Depósito';
     const ROLE_AGENCY = 'Agencia';

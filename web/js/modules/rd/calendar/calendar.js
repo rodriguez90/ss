@@ -19,8 +19,8 @@ $(function (){
         for(var i = 0, length=events.length; i < length ; i++)
         {
             var event = events[i];
-            event.start = moment(event.start).utc().format("YYYY-MM-DD hh:mm");
-            event.end = moment(event.end).utc().format("YYYY-MM-DD h:mm");
+            event.start = moment(event.start).utc().format("YYYY-MM-DD H:mm");
+            event.end = moment(event.end).utc().format("YYYY-MM-DD H:mm");
             events2.push(event);
         }
 

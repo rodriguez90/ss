@@ -36,6 +36,9 @@ var containers = new Map();
 var ticketDataMap =  new Map();
 var calendarSlotMap = new Map();
 
+var calendarEventMap = new Map();
+var ticketEventMap = new Map();
+
 var calendarSlotEvents = {
     id:'calendarSlotEvents',
     events:[]
@@ -50,8 +53,8 @@ var currentCalendarEventIndex = -1;
 var currentCalendarEvent = null;
 
 // el calendario se acota x la fecha de devolución de los contenedores relacionados en la recepcion
-var minDate = null;
-var maxDate = null;
+var minDeliveryDate = null;
+var maxDeliveryDate = null;
 
 var selectedTransactions = [];
 var transactionWithTicket = [];
@@ -65,29 +68,29 @@ var findSlotEvent = function (start, end) {
         index:-1,
         event:null
     };
-    var startFormated = start.format("YYYY-MM-dd h:mm");
-    var endFormated = end.format("YYYY-MM-dd h:mm");
+    var startFormated = start.format("YYYY-MM-DD H:mm");
+    var endFormated = end.format("YYYY-MM-DD H:mm");
     $.each(calendarSlotEvents.events,function (i)
     {
         var event = calendarSlotEvents.events[i];
-        // if(i== 0)
-        // {
-        //     console.log(event);
-        //     console.log('UTC');
-        //     console.log(start.utc() );
-        //     console.log(moment(event.start).utc() );
-        //     console.log('FORMAT');
-        //     console.log(start.format("YYYY-MM-DD h:mm") );
-        //     console.log(moment(event.start).format("YYYY-MM-DD h:mm") );
-        //     console.log('valueOf');
-        //     console.log(start.valueOf());
-        //     console.log(moment(event.start).valueOf());
-        //     console.log('COMPARE');
-        //     console.log(startFormated === moment(event.start).format("YYYY-MM-dd h:mm"));
-        // }
+        if(i== 0)
+        {
+            console.log(event);
+            console.log('UTC');
+            console.log(start.utc() );
+            console.log(event.start.utc());
+            console.log('FORMAT');
+            console.log(start.format("YYYY-MM-DD HH:mm") );
+            console.log(event.start.format("YYYY-MM-DD HH:mm") );
+            console.log('valueOf');
+            console.log(start.valueOf());
+            console.log(event.start.valueOf());
+            console.log('COMPARE');
+            console.log(startFormated === event.start.format("YYYY-MM-DD HH:mm"));
+        }
 
-        if(event.type === "D" && startFormated === moment(event.start).format("YYYY-MM-dd h:mm") &&
-            endFormated === moment(event.end).format("YYYY-MM-dd h:mm"))
+        if(event.type === "D" && startFormated === moment(event.start).format("YYYY-MM-DD HH:mm") &&
+            endFormated === moment(event.end).format("YYYY-MM-DD HH:mm"))
         {
             result.index = i;
             result.event = event;
@@ -293,6 +296,8 @@ var handleTableInWizar = function() {
 
 
         $('#data-table2').DataTable({
+            dom: '<"top"iflp<"clear">>rt',
+            pagingType: "full_numbers",
             responsive: true,
             info: true,
             processing:true,
@@ -341,9 +346,9 @@ var handleTableInWizar = function() {
 
         function  myCallbackFunction(updatedCell, updatedRow, oldValue) {
             var table = $('#data-table2').DataTable();
-            console.log("The new value for the cell is: " + updatedCell.data());
-            console.log(updatedCell);
-            console.log(updatedCell.index().row);
+            // console.log("The new value for the cell is: " + updatedCell.data());
+            // console.log(updatedCell);
+            // console.log(updatedCell.index().row);
             if(updatedCell.index().column === 6)
             {
                 var driverCell = table.cell(updatedCell.index().row, 7);
@@ -352,8 +357,8 @@ var handleTableInWizar = function() {
 
 
             // var cell = table.cell()
-            console.log("The values for each cell in that row are: " );
-            console.log(updatedRow.data())
+            // console.log("The values for each cell in that row are: " );
+            // console.log(updatedRow.data())
             //TODO: valdiar placa y cedula x el servicio y recuperar el nombre del chofe
         }
 
@@ -394,6 +399,8 @@ var handleTable3InWizar = function() {
         // table.destroy();
 
         $('#data-table3').DataTable({
+            dom: '<"top"iflp<"clear">>rt',
+            pagingType: "full_numbers",
             responsive: true,
             info: true,
             processing:true,
@@ -664,8 +671,8 @@ var handleModal = function () {
                                         ticketEvents[result.index] = result.event;
                                         // ticketEvents.events[result.index] = result.event; //TODO check this
                                     }
-                                    var indexTSWT = transactionWithTicket.indexOf(value.transactionId);
-                                    transactionWithTicket.splice(indexTSWT, 1);
+                                    var indexTWT = transactionWithTicket.indexOf(value.transactionId);
+                                    transactionWithTicket.splice(indexTWT, 1);
                                     ticketDataMap.delete(value.transactionId);
                                     calendarEvent.count = calendarEvent.count + 1;
                                 }
@@ -695,8 +702,9 @@ var handleModal = function () {
     });
 };
 
-var fetchCalendar = function (start, end) {
+var fetchCalendar = function (start, end, async) {
     $.ajax({
+        async:async,
         url: homeUrl + "/rd/calendar/getcalendar",
         type: "get",
         dataType:'json',
@@ -712,12 +720,15 @@ var fetchCalendar = function (start, end) {
 
             $.each(response,function (i) {
 
+                var startDate = moment(response[i].start).utc();//.format("YYYY-MM-DD HH:mm");
+                var endDate = moment(response[i].end).utc();//.format("YYYY-MM-DD HH:mm");
+
                 var event = {
                     id: response[i].id,
                     title: response[i].count,
                     count: response[i].count,
-                    start: response[i].start ,
-                    end:  response[i].end ,
+                    start: startDate ,
+                    end:  endDate  ,
                     allDay:false,
                     className : ['bg-blue'],
                     editable: false,
@@ -727,11 +738,13 @@ var fetchCalendar = function (start, end) {
                 // $('#calendar').fullCalendar('renderEvent', event);
 
                 calendarSlotEvents.events.push(event);
+
                 calendarSlotMap.set(response[i].id, {
                     id:response[i].id,
                     amount:response[i].count,
-                    start:response[i].start,
-                    end:response[i].end,
+                    start:startDate,
+                    end:endDate,
+                    index: calendarSlotEvents.events.length - 1
                 });
             });
             // console.log(calendarSlotEvents);
@@ -777,14 +790,27 @@ var fetchReceptionTransactions = function () {
                 var count =  response['transactions'].length;
                 if(count > 0)
                 {
-                    minDate = response['transactions'][0].delivery_date;
-                    maxDate =  response['transactions'][count - 1].delivery_date;
+                    minDeliveryDate = moment(response['transactions'][0].delivery_date).utc();
+                    maxDeliveryDate = moment(response['transactions'][count - 1].delivery_date).utc().add(1, 'days');
 
-                    var endDate = moment(maxDate).add(1, 'days');
-                    fetchCalendar(minDate, endDate.format('YYYY-MM-DD'));
+                    // $('#calendar').fullCalendar({
+                    //     visibleRange: {
+                    //         start: minDeliveryDate,
+                    //         end: maxDeliveryDate
+                    //     }
+                    // });
+
+                    var view = $('#calendar').fullCalendar('getView');
+                    view.start = minDeliveryDate;
+                    view.end = maxDeliveryDate;
+
+                    console.log(minDeliveryDate);
+                    console.log(maxDeliveryDate);
+
+                    fetchCalendar(minDeliveryDate.format('YYYY-MM-DD'), maxDeliveryDate.format('YYYY-MM-DD'), false);
+
+                    fetchTickets(modelId, false);
                 }
-
-                fetchTickets(modelId);
 
                 firstRun = false;
             }
@@ -798,8 +824,9 @@ var fetchReceptionTransactions = function () {
     });
 };
 
-var fetchTickets = function (receptionId) {
+var fetchTickets = function (receptionId, async) {
     $.ajax({
+        async:async,
         url: homeUrl + "/rd/ticket/by-reception",
         type: "get",
         dataType:'json',
@@ -869,9 +896,11 @@ var fetchTickets = function (receptionId) {
                         type:type,
                         count:count,
                         calendarId:calendar.id,
-                        rt:[tId]
+                        rt:[tId],
+                        index: -1
                     };
                     ticketEvents.events.push(event);
+                    event.index = ticketEvents.events.length - 1;
                 }
             });
             // console.log(calendarSlotEvents);
