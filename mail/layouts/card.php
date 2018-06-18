@@ -26,15 +26,24 @@ use app\modules\rd\models\Process;
 <html>
 <head>
     <style>
+
+        body{
+            background: #e4f1fb;
+            width:210mm;
+            height: 297mm;
+        }
+
+
         table{
             background: #0a6aa1 none repeat scroll 0% 0%;
-            border: #e4f1fb solid 20px ;
+            padding: 0px 20px 20px 20px;
             font-family: "Helvetica", "Arial", sans-serif;
             font-size: 14px;
+
         }
 
         table td {
-            padding: 10px 10px 0px 10px;
+            padding: 10px 10px 10px 10px;
             width: 25%;
         }
 
@@ -123,7 +132,7 @@ $date = $aux->format("YmdHi");
 
     </table>
 
-    <div style="padding: 0px 0px 20px 20px;">
+    <div style="padding: 20px 0px 0px 0px;">
         <img src="<?=$qr?>" width="300" height="300">
     </div>
 

@@ -441,7 +441,7 @@ class ProcessController extends Controller
                                 }
 
                                 //pdf create
-                                $pdf =  new mPDF( );
+                                $pdf =  new mPDF( ['format'=>"A4-L"]);
                                 $pdf->SetTitle("Prueba d generaciÃ³n de PDF.");
                                 $pdf->WriteHTML($this->renderPartial('@app/mail/layouts/html3.php', ['model' => $model,
                                     'containers1'=>$containers1,
@@ -575,7 +575,8 @@ class ProcessController extends Controller
                             $bodypdf = $this->renderPartial('@app/mail/layouts/card.php', ["trans_company"=> $trans_company, "ticket"=>$ticket,"qr"=>"data:image/png;base64, ".$imageString, 'dateImp'=>$dateImp]);
                             ini_set('max_execution_time', '5000');
                             $pdf =  new mPDF(['mode'=>'utf-8' , 'format'=>'A4-L']);
-                            $pdf->SetTitle("Carta de Servicio");
+                            //$pdf->SetHTMLHeader( "<div style='font-weight: bold; text-align: center;font-family: 'Helvetica', 'Arial', sans-serif;font-size: 14px;width: 100%> Carta de Servicio </div>");
+
                             $pdf->WriteHTML($bodypdf);
                             $path= $pdf->Output("","S");
 
@@ -607,6 +608,35 @@ class ProcessController extends Controller
         }
 
         return $this->render('generating_card', ["result"=>$result]);
+
+    }
+
+    public function actionPrint($id){
+        if(!Yii::$app->user->can("reception_view")) // FIXME: change permission to process_view
+            throw new ForbiddenHttpException('Usted no tiene acceso a esta recepción');
+
+        $model = $this->findModel($id);
+
+
+
+        $contenedores = Container::find()
+            ->innerJoin('process_transaction', 'process_transaction.container_id = container.id')
+            ->innerJoin('process', 'process_transaction.process_id = process.id')
+            ->where(['process.id'=>$id])
+            ->orderBy(['name' => SORT_ASC])
+            ->asArray()
+            ->all();
+
+       $body = $this->renderPartial('print', [
+            'model' => $model,'contenedores'=>$contenedores
+             ,
+        ]);
+
+
+        $pdf =  new mPDF(['mode'=>'utf-8' , 'format'=>'A4-L']);
+        $pdf->SetTitle("Carta de Servicio");
+        $pdf->WriteHTML($body);
+        $path= $pdf->Output("Detalles del Proceso.pdf","D");
 
     }
 }

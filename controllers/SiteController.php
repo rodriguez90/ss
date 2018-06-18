@@ -16,6 +16,7 @@ use DateTime;
 use DateTimeZone;
 
 
+use Mpdf\Mpdf;
 use Yii;
 use yii\filters\AccessControl;
 use yii\helpers\Url;
@@ -200,4 +201,57 @@ class SiteController extends Controller
 
     }
 
+
+    public function actionPrint(){
+        $user = AdmUser::findOne(['id'=>Yii::$app->user->getId()]);
+        $params = Yii::$app->request->queryParams;
+        if($user && $user->hasRol('Agencia'))
+        {
+            $userAgency = UserAgency::findOne(['user_id'=>$user->id]);
+            $params['agency_id'] = '';
+//            if($userAgency)
+//            {
+//                $params['agency_id'] = $userAgency->agency->name;
+//            }
+        }
+        else if ($user && $user->hasRol('Cia_transporte')){
+            $userCiaTrans = UserTranscompany::findOne(['user_id'=>$user->id]);
+            $params['trans_company_id'] = '';
+            if($userCiaTrans)
+            {
+                $params['trans_company_id'] = $userCiaTrans->transcompany->name;
+            }
+        }
+
+        $processExp = Process::find()
+            ->select( 'process.id,process.delivery_date,process.bl,process.type,agency.name as a_name')
+            ->innerJoin('agency','process.agency_id = agency.id')
+            ->innerJoin('process_transaction','process_transaction.process_id = process.id')
+            ->innerJoin('container','process_transaction.container_id = container.id')
+            ->where(['process.type'=>Process::PROCESS_EXPORT])
+            ->andWhere(['process.active'=>1])
+            ->asArray()
+            ->all();
+
+        $processImp = Process::find()
+            ->select( 'process.id,process.delivery_date,process.bl,process.type,agency.name as a_name')
+            ->innerJoin('agency','process.agency_id = agency.id')
+            ->innerJoin('process_transaction','process_transaction.process_id = process.id')
+            ->innerJoin('container','process_transaction.container_id = container.id')
+            ->where(['process.type'=>Process::PROCESS_IMPORT])
+            ->andWhere(['process.active'=>1])
+            ->asArray()
+            ->all();
+
+        $body = $this->renderPartial('print', [
+            'processExp' => $processExp,'processImp'=>$processImp
+            ,
+        ]);
+
+        $pdf =  new mPDF(['mode'=>'utf-8' , 'format'=>'A4-L']);
+        $pdf->SetTitle("Solicitudes Realizadas");
+        $pdf->WriteHTML($body);
+        $path= $pdf->Output("Solicitudes Realizadas.pdf","D");
+
+    }
 }
