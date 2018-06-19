@@ -33,10 +33,8 @@ var reception = null;
 var agency = null;
 var transactions = new Map();
 var containers = new Map();
-var ticketDataMap =  new Map();
-var calendarSlotMap = new Map();
-
-var calendarEventMap = new Map();
+var ticketDataMap =  new Map(); // transaction id - key
+var calendarEventMap = new Map(); // calendar id - key
 var ticketEventMap = new Map();
 
 var calendarSlotEvents = {
@@ -49,7 +47,6 @@ var ticketEvents = {
     events:[]
 };
 
-var currentCalendarEventIndex = -1;
 var currentCalendarEvent = null;
 
 // el calendario se acota x la fecha de devolución de los contenedores relacionados en la recepcion
@@ -513,6 +510,7 @@ var handleModal = function () {
                     }
 
                     currentCalendarEvent.count = currentCalendarEvent.count - 1;
+                    currentCalendarEvent.title = String(currentCalendarEvent.count);
 
                     // create event ticket
                     var className = ['bg-blue'];
@@ -520,13 +518,13 @@ var handleModal = function () {
                     var id = currentCalendarEvent.id;
                     if(value.tonnage === 20)
                     {
-                        id = currentCalendarEvent.id + 1;
+                        id = currentCalendarEvent.id + "T20";
                         className = ['bg-green'];
                         type = "T20";
                     }
                     else if(value.tonnage === 40)
                     {
-                        id = currentCalendarEvent.id + 2;
+                        id = currentCalendarEvent.id + "T40";
                         className = ['bg-purple'];
                         type = "T40";
                     }
@@ -562,8 +560,9 @@ var handleModal = function () {
                     }
                 });
 
-            currentCalendarEvent.title = currentCalendarEvent.count;
-            calendarSlotEvents.events[currentCalendarEventIndex]=currentCalendarEvent;
+            calendarEventMap.set(currentCalendarEvent.id, currentCalendarEvent);
+
+            calendarSlotEvents.events = Array.from(calendarEventMap.values());
         }
         else if(mode === 'delete')
         {
@@ -594,11 +593,11 @@ var handleModal = function () {
                         var id = currentCalendarEvent.id;
                         if(value.tonnage === 20)
                         {
-                            id = currentCalendarEvent.id + 1;
+                            id = currentCalendarEvent.id + 'T20';
                         }
                         else if(value.tonnage === 40)
                         {
-                            id = currentCalendarEvent.id + 2;
+                            id = currentCalendarEvent.id + 'T40';
                         }
 
                         var result = findTicketEvent(id);
@@ -627,31 +626,24 @@ var handleModal = function () {
                     else // delete ticket from db
                     {
                         $.ajax({
-                            async:false,
+                            async:false,  // FIXME: CHECK THIS
                             url: homeUrl + "/rd/ticket/delete/?id=" + ticket.id,
                             type: "post",
                             dataType:'json',
                             success: function(response) {
                                 console.log(response);
 
-                                var calendar = calendarSlotMap.get(response['ticket'].calendar_id);
-
-                                var result = findSlotEvent(moment(calendar.start), moment(calendar.end));
-
-                                console.log(result);
-
-                                var calendarEvent = result.event
-                                var calendarIndex = result.index
+                                var calendarEvent = calendarEventMap.get(response['ticket'].calendar_id);
 
                                 var id = calendarEvent.id;
 
                                 if(value.tonnage === 20)
                                 {
-                                    id = calendarEvent.id + 1;
+                                    id = calendarEvent.id + "T20";
                                 }
                                 else if(value.tonnage === 40)
                                 {
-                                    id = calendarEvent.id + 2;
+                                    id = calendarEvent.id + "T40";
                                 }
 
                                 var result = findTicketEvent(id);
@@ -687,8 +679,10 @@ var handleModal = function () {
                     }
                 });
 
-            currentCalendarEvent.title = currentCalendarEvent.count;
-            calendarSlotEvents.events[currentCalendarEventIndex]=currentCalendarEvent;
+            // currentCalendarEvent.title = currentCalendarEvent.count;
+            currentCalendarEvent.title = String(currentCalendarEvent.count);
+            calendarEventMap.set(currentCalendarEvent.id, currentCalendarEvent);
+            calendarSlotEvents.events = Array.from(calendarEventMap.values());
         }
 
         // console.log(ticketEvents);
@@ -719,9 +713,11 @@ var fetchCalendar = function (start, end, async) {
             calendarSlotEvents.events = [];
 
             $.each(response,function (i) {
-
-                var startDate = moment(response[i].start).utc();//.format("YYYY-MM-DD HH:mm");
-                var endDate = moment(response[i].end).utc();//.format("YYYY-MM-DD HH:mm");
+                // console.log(response[i].start)
+                var startDate = moment(response[i].start);
+                 // startDate = moment(startDate);
+                var endDate = moment(response[i].end);
+                 // endDate = moment(endDate);
 
                 var event = {
                     id: response[i].id,
@@ -737,17 +733,11 @@ var fetchCalendar = function (start, end, async) {
                 }
                 // $('#calendar').fullCalendar('renderEvent', event);
 
-                calendarSlotEvents.events.push(event);
-
-                calendarSlotMap.set(response[i].id, {
-                    id:response[i].id,
-                    amount:response[i].count,
-                    start:startDate,
-                    end:endDate,
-                    index: calendarSlotEvents.events.length - 1
-                });
+                calendarEventMap.set(response[i].id,event);
             });
             // console.log(calendarSlotEvents);
+            console.log(calendarEventMap.values());
+            calendarSlotEvents.events = Array.from(calendarEventMap.values());
 
             $('#calendar').fullCalendar('addEventSource', calendarSlotEvents);
             $('#calendar').fullCalendar('refetchEventSources');
@@ -848,7 +838,7 @@ var fetchTickets = function (receptionId, async) {
                 var tId = response['tickets'][i].reception_transaction_id;
                 var t = transactions.get(tId);
                 var container = containers.get(t.container_id);
-                var calendar = calendarSlotMap.get(id);
+                var calendar = calendarEventMap.get(id);
 
                 transactionWithTicket.push(tId);
                 ticketDataMap.set(tId, {
@@ -863,13 +853,13 @@ var fetchTickets = function (receptionId, async) {
 
                 if(container.tonnage === 20)
                 {
-                    id = id + 1;
+                    id = id + 'T20';
                     className = ['bg-green'];
                     type = "T20";
                 }
                 else if(container.tonnage === 40)
                 {
-                    id = id + 2;
+                    id = id + 'T40';
                     className = ['bg-purple'];
                     type = "T40";
                 }

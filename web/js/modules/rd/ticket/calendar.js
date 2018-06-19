@@ -60,7 +60,7 @@ var handleCalendarDemo = function () {
         },
         slotEventOverlap:false,
         eventOverlap: false,
-        // slotDuration:"00:60:00",
+        slotDuration:"00:60:00",
         slotLabelInterval:{hours:1},
         // slotLabelFormat:'H:mm',
         // timeFormat: 'H(:mm)',
@@ -68,7 +68,7 @@ var handleCalendarDemo = function () {
         // maxTime:"16:00:00",
         displayEventTime:false,
         displayEventEnd:false,
-        timezone:'UTC',
+        // timezone:'UTC',
         eventOrder:'id',
         viewRender:function( view, element ) {
             // var start = view.start;
@@ -156,8 +156,7 @@ var handleCalendarDemo = function () {
             if(calEvent.type === 'D')
             {
                 // var result = findSlotEvent(calEvent.start, calEvent.end);
-                var calendar = calendarSlotMap.get(calEvent.id);
-                currentCalendarEventIndex = calendar.index;
+                var calendar = calendarEventMap.get(calEvent.id);
                 currentCalendarEvent = calEvent;
                 if(currentCalendarEvent)
                 {
@@ -201,28 +200,31 @@ var handleCalendarDemo = function () {
                     if(count > 0)
                     {
                         mode = 'create';
+                        $('#select-all')[0].checked = false;
                         $("#modalTitle").get(0).textContent = 'Cupos disponibles: ' + currentCalendarEvent.title;
                         $("#modalTicket").get(0).textContent = moment(currentCalendarEvent.start).format("dddd, MMMM YYYY H:mm");
                         $("#modal-select-containers").modal("show");
-                        $('#select-all')[0].checked = false;
                     }
                     else {
                         alert('Ya todas los contenedores de esta recepción tienen cupos');
+                        return false;
                     }
                 }
                 else {
                     alert("Error buscando calendar event");
+                    return false;
                 }
             }
             else {
-                var id = calEvent.type === 'T20' ? calEvent.id - 1: calEvent.id - 2;
-                var result = calendarSlotMap.get(calEvent.calendarId);
+                var id = calEvent.calendarId; //calEvent.type === "T20"  ? calEvent.calendarId + "T20" : calEvent.calendarId + "T40" ;
+                console.log(id);
+                currentCalendarEvent =calendarEventMap.get(id) ;
 
-                if(!result)
+                if(!currentCalendarEvent)
+                {
                     alert("Error buscando calendar");
-
-                currentCalendarEventIndex = result.index;
-                currentCalendarEvent = calendarSlotEvents.events[currentCalendarEventIndex];
+                    return false;
+                }
 
                 var table = $('#data-table-modal').DataTable();
 
@@ -231,9 +233,6 @@ var handleCalendarDemo = function () {
                 table
                     .clear()
                     .draw();
-                // console.log(calEvent.rt);
-                // console.log(selectedTransactions);
-                // console.log(transactionWithTicket);
 
                 for(var i = 0, length = calEvent.rt.length ; i < length; i++) {
 
@@ -264,10 +263,10 @@ var handleCalendarDemo = function () {
                 if(count > 0)
                 {
                     mode = 'delete';
-                    $("#modalTitle").get(0).textContent = 'Eliminar Cupos';
-                    $("#modalTicket").get(0).textContent = moment(currentCalendarEvent.start).format("dddd, MMMM YYYY h:mm");
-                    $("#modal-select-containers").modal("show");
                     $('#select-all')[0].checked = false;
+                    $("#modalTitle").get(0).textContent = 'Eliminar Cupos';
+                    $("#modalTicket").get(0).textContent = moment(currentCalendarEvent.start).format("dddd, MMMM YYYY H:mm");
+                    $("#modal-select-containers").modal("show");
                 }
             }
         },

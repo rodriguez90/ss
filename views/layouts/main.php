@@ -35,8 +35,11 @@ if(!Yii::$app->user->isGuest){
 <body>
 <?php $this->beginBody() ?>
 
-<!--<div class="wrap">-->
+    <!-- begin #page-loader -->
+    <div id="page-loader" class="fade in"><span class="spinner"></span></div>
+    <!-- end #page-loader -->
 
+    <!-- begin page container -->
     <div id="page-container" class="fade page-sidebar-fixed page-header-fixed">
 
         <div id="header" class="header navbar navbar-default navbar-fixed-top">
@@ -216,8 +219,6 @@ if(!Yii::$app->user->isGuest){
 
     </div>
     <!-- end page container -->
-<!--</div>-->
-
 
 <script type="text/javascript">
     var homeUrl = '<?php echo Yii::$app->homeUrl; ?>';

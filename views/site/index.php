@@ -210,16 +210,25 @@ if($user)
                                             $result = Html::a('Turnos', [$url2], ['class' => 'btn btn-xs ' . $ticketClass, 'data-pjax' => 0]);
                                         if($role === AuthItem::ROLE_ADMIN)
                                         {
-
-                                            $result = Html::a('Ver', [$url1], ['class' => 'btn btn-info btn-xs', 'data-pjax' => 0])
-                                                      .Html::a('Turnos', [$url2], ['class' => 'btn btn-xs ' . $ticketClass, 'data-pjax' => 0]);
+                                            $result = Html::beginTag('div', ['class'=>'row'])
+                                                          . Html::beginTag('div', ['class'=>'col col-md-12'])
+                                                          . Html::beginTag('div', ['class'=>'col col-md-6'])
+                                                             . Html::a('Ver', [$url1], ['class' => 'btn btn-info btn-xs col-xs-', 'data-pjax' => 0])
+                                                          . Html::endTag('div')
+                                                         . Html::beginTag('div', ['class'=>'col col-md-6'])
+                                                            . Html::a('Turnos', [$url2], ['class' => 'btn btn-xs ' . $ticketClass, 'data-pjax' => 0])
+                                                         . Html::endTag('div')
+                                                         . Html::endTag('div')
+                                                      . Html::endTag('div');
                                         }
 
                                         return $result;
                                     }
                                 ]
                             ],
-                    ]
+                    ],
+//                        'options'=>['class' => 'table table-striped table-bordered table-condensed']
+                        'options'=>['class' => 'table table-striped table-bordered']
                     ]); ?>
                 <?php Pjax::end(); ?>
             </div>

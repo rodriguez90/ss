@@ -28,8 +28,8 @@ TableAsset::register($this);
     <div class="panel-heading">
         <div class="panel-heading-btn">
             <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
-            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fa fa-repeat"></i></a>
-            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+<!--            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fa fa-repeat"></i></a>-->
+<!--            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>-->
         </div>
         <h4 class="panel-title">Recepción</h4>
     </div>
@@ -113,17 +113,6 @@ TableAsset::register($this);
         <div class="row">
             <!-- begin col-12 -->
             <div class="col-md-12">
-                <!-- begin panel -->
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <!--                                    <div class="panel-heading-btn">-->
-                        <!--                                        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>-->
-                        <!--                                        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fa fa-repeat"></i></a>-->
-                        <!--                                        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>-->
-                        <!--                                    </div>-->
-                        <!--                                    <h4 class="panel-title">Proceso de Recepción</h4>-->
-                    </div>
-                    <div class="panel-body">
                         <form action="/" method="POST" data-parsley-validate="true" name="form-wizard">
                             <div id="wizard">
                                 <ol>
@@ -140,8 +129,8 @@ TableAsset::register($this);
                                                 <div class="panel-heading">
                                                     <div class="panel-heading-btn">
                                                         <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
-                                                        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fa fa-repeat"></i></a>
-                                                        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+<!--                                                        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fa fa-repeat"></i></a>-->
+<!--                                                        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>-->
                                                     </div>
                                                     <h4 class="panel-title">Listados de contenedores disponibles</h4>
                                                 </div>
@@ -221,8 +210,8 @@ TableAsset::register($this);
                                                 <div class="panel-heading">
                                                     <div class="panel-heading-btn">
                                                         <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
-                                                        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fa fa-repeat"></i></a>
-                                                        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+<!--                                                        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fa fa-repeat"></i></a>-->
+<!--                                                        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>-->
                                                     </div>
                                                     <h4 class="panel-title">Contenedores seleccionados</h4>
                                                 </div>
@@ -277,9 +266,6 @@ TableAsset::register($this);
                                 <!-- end wizard step-4 -->
                             </div>
                         </form>
-                    </div>
-                </div>
-                <!-- end panel -->
             </div>
             <!-- end col-12 -->
         </div>

@@ -15,20 +15,20 @@ var fullcalendatInit = false;
 $(function (){
 
     $("#grabar").click(function () {
-        var events2 = [];
-        for(var i = 0, length=events.length; i < length ; i++)
-        {
-            var event = events[i];
-            event.start = moment(event.start).utc().format("YYYY-MM-DD H:mm");
-            event.end = moment(event.end).utc().format("YYYY-MM-DD H:mm");
-            events2.push(event);
-        }
+        // var events2 = [];
+        // for(var i = 0, length=events.length; i < length ; i++)
+        // {
+        //     var event = events[i];
+        //     event.start = moment(event.start).utc().format("YYYY-MM-DD H:mm");
+        //     event.end = moment(event.end).utc().format("YYYY-MM-DD H:mm");
+        //     events2.push(event);
+        // }
 
         $.ajax({
             url: homeUrl + "/rd/calendar/create",
             dataType: 'json',
             type: "POST",
-            data: {'events':events2},
+            data: {'events':events},
 
             success: function (response) {
                 if(response['status']){
@@ -298,7 +298,7 @@ $(function (){
                 slotDuration:"00:60:00",
                 //contentHeight:'auto',
                 height:500,
-                locale:"es",
+                // locale:"es",
                 timezone:"UTC",
                 //minTime:"07:00:00",
                 //maxTime:"16:00:00",

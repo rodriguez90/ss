@@ -11,6 +11,7 @@ var handleDataTableSelect = function() {
     if ($('#data-table').length !== 0) {
 
         var  table = $('#data-table').DataTable({
+            dom: '<"top"iflp<"clear">>rt',
             processing:true,
             lengthMenu: [5, 10, 15],
             pageLength: 5,
@@ -101,6 +102,7 @@ var handleDataTableSelect = function() {
 
     if ($('#data-table2').length !== 0) {
         $('#data-table2').DataTable({
+            dom: '<"top"iflp<"clear">>rt',
             "columns": [
                 { "title": "Contenedor",
                     "data":"name",
