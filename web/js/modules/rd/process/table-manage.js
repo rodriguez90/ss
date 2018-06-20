@@ -11,7 +11,8 @@ var handleDataTableSelect = function() {
     if ($('#data-table').length !== 0) {
 
         var  table = $('#data-table').DataTable({
-            dom: '<"top"iflp<"clear">>rt',
+            // dom: '<"top"iflp<"clear">>rt',
+            dom: '<"top"ip<"clear">>t',
             processing:true,
             lengthMenu: [5, 10, 15],
             pageLength: 5,
@@ -40,13 +41,13 @@ var handleDataTableSelect = function() {
                 { "title": "Contenedor",
                    "data":"name",
                 },
-                { "title": "Tipo",
+                { "title": "Tipo/Tamaño",
                     // "data":"type_formate",
                 },
                 { "title": "Fecha Limite",
                   "data":"deliveryDate",
                 },
-                { "title": "Agencia",
+                { "title": "Cliente",
                     "data":"agency"
                 },
             ],
@@ -102,19 +103,61 @@ var handleDataTableSelect = function() {
 
     if ($('#data-table2').length !== 0) {
         $('#data-table2').DataTable({
-            dom: '<"top"iflp<"clear">>rt',
+            // dom: '<"top"iflp<"clear">>rt',
+            dom: '<"top"ip<"clear">>t',
             "columns": [
                 { "title": "Contenedor",
                     "data":"name",
                 },
-                { "title": "Tipo",
+                { "title": "Tipo/Tamaño",
                     // "data":"type_formate",
                 },
                 { "title": "Fecha Limite",
                     "data":"deliveryDate",
                 },
-                { "title": "Agencia",
+                { "title": "Cliente",
                     "data":"agency"
+                },
+            ],
+            processing:true,
+            lengthMenu: [5, 10, 15],
+            "pageLength": 5,
+            "language": lan,
+            responsive: true,
+            columnDefs: [
+                {
+                    targets: [1],
+                    title:"Tipo",
+                    data:null,
+                    render: function ( data, type, full, meta ) {
+                        // console.log("In render: " + data);
+                        return data.type + data.tonnage;
+                    },
+                },
+
+            ],
+            // language: {url: 'web/plugins/DataTables/i18/Spanish.json'
+        });
+    }
+
+    if ($('#data-table3').length !== 0) {
+        $('#data-table3').DataTable({
+            dom: '<"top"ip<"clear">>t',
+            "columns": [
+                { "title": "Contenedor",
+                    "data":"name",
+                },
+                { "title": "Tipo/Tamaño",
+                    // "data":"type_formate",
+                },
+                { "title": "Fecha Limite",
+                    "data":"deliveryDate",
+                },
+                { "title": "Cliente",
+                    "data":"agency"
+                },
+                { "title": "Empresa de Transporte",
+                    "data":"transCompany"
                 },
             ],
             processing:true,

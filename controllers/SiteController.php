@@ -3,6 +3,8 @@
 namespace app\controllers;
 
 use app\modules\administracion\models\AdmUser;
+use app\modules\rd\models\Process;
+use app\modules\rd\models\ProcessSearch;
 use app\modules\rd\models\Reception;
 use app\modules\rd\models\ReceptionSearch;
 use app\modules\rd\models\ReceptionTransaction;
@@ -90,14 +92,16 @@ class SiteController extends Controller
             }
         }
 
-        $searchModel = new ReceptionSearch();
+        $searchModel = new ProcessSearch();
         $dataProvider = $searchModel->search($params);
-        $receptionCount = $searchModel->search($params)->totalCount;
+        $importCount = $searchModel->search(["type"=>Process::PROCESS_IMPORT])->totalCount;
+        $exportCount = $searchModel->search(["type"=>Process::PROCESS_EXPORT])->totalCount;
         $ticketCount = TicketSearch::find()->count();
         $myparams = array();
         $myparams['searchModel'] = $searchModel;
         $myparams['dataProvider'] = $dataProvider;
-        $myparams['receptionCount'] = $receptionCount;
+        $myparams['importCount'] = $importCount;
+        $myparams['exportCount'] = $exportCount;
         $myparams['ticketCount'] = $ticketCount;
         return $this->render('index', $myparams);
     }

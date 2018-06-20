@@ -9,7 +9,7 @@ var handleBootstrapWizardsValidation = function() {
 	"use strict";
 	$("#wizard").bwizard(
 	    {
-            clickableSteps: false,
+            clickableSteps: true,
             activeIndexChanged:  function (e, ui) {
 
                 // alert("UI index: " + ui.index);
@@ -73,7 +73,7 @@ var handleBootstrapWizardsValidation = function() {
                 }
             },
             validating: function (e, ui) {
-
+                return true;
                 var result = false;
 
                 // back navigation no check validation

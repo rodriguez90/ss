@@ -12,12 +12,15 @@ use Yii;
  * @property string $code
  * @property int $tonnage
  * @property int $active
+ * @property string $status
+ *
+ * @property ProcessTransaction[] $processTransactions
  */
 class Container extends \yii\db\ActiveRecord
 {
-
     const DRY = 'DRY';
     const RRF  = 'RRF';
+
     /**
      * {@inheritdoc}
      */
@@ -32,8 +35,8 @@ class Container extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'code', 'tonnage'], 'required'],
-            [['name', 'code'], 'string'],
+            [['name', 'code', 'tonnage', 'status'], 'required'],
+            [['name', 'code', 'status'], 'string'],
             [['tonnage', 'active'], 'integer'],
         ];
     }
@@ -44,11 +47,20 @@ class Container extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'name' => 'Nombre',//ver esto
+            'id' => 'Número',
+            'name' => 'Contenedor',
             'code' => 'Código',
             'tonnage' => 'Toneladas',
             'active' => 'Activo',
+            'status' => 'Estado',
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProcessTransactions()
+    {
+        return $this->hasMany(ProcessTransaction::class, ['container_id' => 'id']);
     }
 }

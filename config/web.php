@@ -86,6 +86,9 @@ $config = [
                 ],
             ],
         ],
+        'formatter' => [
+            'dateFormat' => 'dd/MM/yyyy',
+        ],
     ],
     'modules' => [
         'rd' => 'app\modules\rd\RD',

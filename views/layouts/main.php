@@ -142,13 +142,11 @@ if(!Yii::$app->user->isGuest){
                     if(Yii::$app->user->can("admin_mod") || Yii::$app->user->can("reception_create")){
                         echo "<li class='has-sub'>";
                         echo "<a href=".Url::to(['/rd/reception/create'])."> <i class='fa fa-rotate-90 fa-sign-in'></i>";
-                        echo  "<span> Recepción</span>";
+                        echo  "<span> Importación</span>";
                         echo "</a>";
                         echo "</li>";
                     }
                     ?>
-
-
                     <!--                    <li class="has-sub">-->
                     <!--                        <a href="javascript:;"> <i class="fa fa-rotate-90 fa-sign-out"></i>-->
                     <!--                            <span> Despacho</span>-->

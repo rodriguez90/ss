@@ -8,9 +8,9 @@ use yii\data\ActiveDataProvider;
 use app\modules\rd\models\Container;
 
 /**
- * ContainerSearch represents the model behind the search form of `app\modules\rd\models\Container`.
+ * ContainerSearchOld represents the model behind the search form of `app\modules\rd\models\Container`.
  */
-class ContainerSearch extends Container
+class ContainerSearchOld extends Container
 {
     /**
      * {@inheritdoc}
@@ -18,8 +18,8 @@ class ContainerSearch extends Container
     public function rules()
     {
         return [
-            [['id', ], 'integer'],
-            [['active', 'tonnage', 'name', 'code', 'status'], 'safe'],
+            [['id'], 'integer'],
+            [['name', 'tonnage', 'active', 'code'], 'safe'],
         ];
     }
 
@@ -61,7 +61,7 @@ class ContainerSearch extends Container
         $query->andFilterWhere([
             'id' => $this->id,
             'tonnage' => $this->tonnage,
-//            'active' => $this->active,
+            //'active' => $this->active,
         ]);
 
         if(isset($this->active) && !empty($this->active)){
@@ -73,11 +73,11 @@ class ContainerSearch extends Container
             {
                 $query->andFilterWhere(['active' =>0]);
             }
+
         }
 
         $query->andFilterWhere(['like', 'name', $this->name])
-            ->andFilterWhere(['like', 'code', $this->code])
-            ->andFilterWhere(['like', 'status', $this->status]);
+            ->andFilterWhere(['like', 'code', $this->code]);
 
         return $dataProvider;
     }

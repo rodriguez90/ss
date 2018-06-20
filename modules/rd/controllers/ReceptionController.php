@@ -6,10 +6,8 @@ use DateTime;
 use DateTimeZone;
 use app\modules\administracion\models\AdmUser;
 use app\modules\rd\models\Container;
-use app\modules\rd\models\ContainerSearch;
 use app\modules\rd\models\ReceptionTransaction;
 use app\modules\rd\models\Reception;
-use app\modules\rd\models\ReceptionSearch;
 use app\modules\rd\models\UserAgency;
 use app\modules\rd\models\UserTranscompany;
 use Yii;
@@ -20,7 +18,6 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\helpers\Html;
 use yii\helpers\Url;
-use yii\rest\ActiveController;
 
 /**
  * ReceptionController implements the CRUD actions for Reception model.

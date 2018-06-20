@@ -2,17 +2,19 @@
 
 namespace app\modules\rd\controllers;
 
+use Codeception\Util\JsonArray;
 use Yii;
 use app\modules\rd\models\Container;
-use app\modules\rd\models\ContainerSearch;
+use app\modules\rd\models\ContainerSearchOld;
+use yii\helpers\Json;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * ContainerController implements the CRUD actions for Container model.
+ * ContainerControllerOld implements the CRUD actions for Container model.
  */
-class ContainerController extends Controller
+class ContainerControllerOld extends Controller
 {
     /**
      * {@inheritdoc}
@@ -38,7 +40,7 @@ class ContainerController extends Controller
         if(!Yii::$app->user->can("container_list"))
             throw new ForbiddenHttpException('Usted no tiene permiso ver esta vista');
 
-        $searchModel = new ContainerSearch();
+        $searchModel = new ContainerSearchOld();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -55,9 +57,8 @@ class ContainerController extends Controller
      */
     public function actionView($id)
     {
-        if(!Yii::$app->user->can("container_view"))
+        if(!Yii::$app->user->can("warehouse_view"))
             throw new ForbiddenHttpException('Usted no tiene permiso ver esta vista');
-
 
         return $this->render('view', [
             'model' => $this->findModel($id),
@@ -71,9 +72,8 @@ class ContainerController extends Controller
      */
     public function actionCreate()
     {
-        if(!Yii::$app->user->can("container_create"))
+        if(!Yii::$app->user->can("warehouse_create"))
             throw new ForbiddenHttpException('Usted no tiene permiso ver esta vista');
-
 
         $model = new Container();
 
@@ -95,7 +95,7 @@ class ContainerController extends Controller
      */
     public function actionUpdate($id)
     {
-        if(!Yii::$app->user->can("container_update"))
+        if(!Yii::$app->user->can("warehouse_update"))
             throw new ForbiddenHttpException('Usted no tiene permiso ver esta vista');
 
         $model = $this->findModel($id);
@@ -118,12 +118,31 @@ class ContainerController extends Controller
      */
     public function actionDelete($id)
     {
-        if(!Yii::$app->user->can("container_delete"))
+        if(!Yii::$app->user->can("warehouse_delete"))
             throw new ForbiddenHttpException('Usted no tiene permiso ver esta vista');
 
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
+    }
+
+    public function actionGetContainerJson($blCode)
+    {
+        $data =  [];
+        $types = ["DRY", "RRF"];
+        $tonnages = ["20", "40"];
+        // alert("Random: " +);;
+
+        for ($i = 0; $i < 10; $i++)
+        {
+            $container = [
+                'name'=>"Contenedor " + $i,
+                'type'=>"Type " + $i,
+                'deliver_date'=>new DateTime(),
+                'agency'=>"Agencia " + $i,
+            ];
+//            data.
+        }
     }
 
     /**
@@ -139,6 +158,6 @@ class ContainerController extends Controller
             return $model;
         }
 
-        throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
+        throw new NotFoundHttpException('The requested page does not exist.');
     }
 }

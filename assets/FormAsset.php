@@ -29,7 +29,8 @@ class FormAsset extends AssetBundle
         //'js/form-slider-switcher.demo.min.js',
         'js/form-slider-switcher.js',
         'plugins/bootstrap-select/bootstrap-select.min.js',
-        "plugins/select2/dist/js/select2.min.js",
+        'plugins/select2/dist/js/select2.min.js',
+        'plugins/select2/dist/js/i18n/es.js',
         'plugins/parsley/dist/parsley.js',
     ];
 

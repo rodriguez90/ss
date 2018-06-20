@@ -36,11 +36,11 @@ if($user)
         <div class="widget widget-stats bg-red">
             <div class="stats-icon"><i class="fa fa-rotate-90 fa-sign-in"></i></div>
             <div class="stats-info">
-                <h4>RECEPCIONES</h4>
-                <p><?php echo $receptionCount?></p>
+                <h4>Importación</h4>
+                <p><?php echo $importCount?></p>
             </div>
             <div class="stats-link">
-                <a href="<?php echo Url::to(['/rd/reception/create']);?>">Realice una solocitud de recepción.<i class="fa fa-arrow-circle-o-right"></i></a>
+                <a href="<?php echo Url::to(['/rd/process/create']);?>">Realice una solicitud de importación.<i class="fa fa-arrow-circle-o-right"></i></a>
             </div>
         </div>
     </div>
@@ -51,7 +51,7 @@ if($user)
         <div class="widget widget-stats bg-blue">
             <div class="stats-icon"><i class="fa fa-rotate-90 fa-sign-out"></i></div>
             <div class="stats-info">
-                <h4>DESPACHO</h4>
+                <h4>Exportaciones</h4>
                 <p>-</p>
             </div>
             <div class="stats-link">
@@ -130,7 +130,6 @@ if($user)
                         'dataProvider' => $dataProvider,
                         'filterModel' => $searchModel,
                         'columns' => [
-                            ['class' => 'yii\grid\SerialColumn'],
                             [
                                 'class' => 'yii\grid\DataColumn',
                                 'attribute' => 'id',
@@ -139,13 +138,13 @@ if($user)
                             [
                                 'class' => 'yii\grid\DataColumn',
                                 'attribute' => 'bl',
-                                'label' => 'Código BL'
+                                'label' => 'BL'
                             ],
-                            [
-                                'class' => 'yii\grid\DataColumn',
-                                'attribute' => 'trans_company_id',
-                                'value' => 'transCompany.name',
-                            ],
+//                            [
+//                                'class' => 'yii\grid\DataColumn',
+//                                'attribute' => 'trans_company_id',
+//                                'value' => 'transCompany.name',
+//                            ],
                             [
                                 'class' => 'yii\grid\DataColumn',
                                 'attribute' => 'agency_id',
@@ -184,7 +183,7 @@ if($user)
                                 'class' => 'yii\grid\DataColumn', // can be omitted, as it is the default
                                 'label' => Yii::t('app', "Proceso"),
                                 'value' => function($data) {
-                                    return 'Recepción';
+                                    return \app\modules\rd\models\Process::PROCESS_LABEL[$data.type];
                                 }
                             ],
                             [
