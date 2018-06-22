@@ -7,12 +7,13 @@ use Yii;
 /**
  * This is the model class for table "process".
  *
- * @property string $id
- * @property string $bl
- * @property int $agency_id
- * @property int $active
- * @property string $created_at
- * @property int $type
+ * @property string $id Número
+ * @property string $bl BL
+ * @property int $agency_id Cliente
+ * @property int $active Activo
+ * @property string $delivery_date Fecha Líimite
+ * @property int $type Processo
+ * @property string $created_at Fecha de Creación
  *
  * @property Agency $agency
  * @property ProcessTransaction[] $processTransactions
@@ -22,8 +23,8 @@ class Process extends \yii\db\ActiveRecord
     const PROCESS_IMPORT = 1;
     const PROCESS_EXPORT = 2;
 
-    const PROCESS_LABEL = [PROCESS_IMPORT=>'Importación',
-        PROCESS_EXPORT=>'Exportación'];
+    const PROCESS_LABEL = [1=>'Importación',
+        2=>'Exportación'];
 
     /**
      * {@inheritdoc}
@@ -39,10 +40,10 @@ class Process extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['bl', 'agency_id', 'active', 'type'], 'required'],
+            [['bl', 'agency_id', 'active', 'delivery_date', 'type'], 'required'],
             [['bl'], 'string'],
             [['agency_id', 'active', 'type'], 'integer'],
-            [['created_at'], 'safe'],
+            [['delivery_date', 'created_at'], 'safe'],
             [['agency_id'], 'exist', 'skipOnError' => true, 'targetClass' => Agency::className(), 'targetAttribute' => ['agency_id' => 'id']],
         ];
     }
@@ -56,9 +57,10 @@ class Process extends \yii\db\ActiveRecord
             'id' => 'Número',
             'bl' => 'BL',
             'agency_id' => 'Cliente',
-            'active' => 'Activa',
-            'created_at' => 'Fecha de Límite',
+            'active' => 'Activo',
+            'delivery_date' => 'Fecha Límite',
             'type' => 'Proceso',
+            'created_at' => 'Fecha de Creación',
         ];
     }
 
@@ -67,7 +69,7 @@ class Process extends \yii\db\ActiveRecord
      */
     public function getAgency()
     {
-        return $this->hasOne(Agency::class, ['id' => 'agency_id']);
+        return $this->hasOne(Agency::className(), ['id' => 'agency_id']);
     }
 
     /**
@@ -75,11 +77,11 @@ class Process extends \yii\db\ActiveRecord
      */
     public function getProcessTransactions()
     {
-        return $this->hasMany(ProcessTransaction::class, ['process_id' => 'id']);
+        return $this->hasMany(ProcessTransaction::className(), ['process_id' => 'id']);
     }
 
     public function getContainerAmount()
     {
-        return $this->getReceptionTransactions()->count();
+        return $this->getProcessTransactions()->count();
     }
 }

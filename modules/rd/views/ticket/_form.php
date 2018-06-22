@@ -57,10 +57,6 @@ TableAsset::register($this);
                        ],
                        'bl',
                        'created_at:datetime',
-                        [
-                                'attribute'=>'transCompany',
-                                'value'=>$model->transCompany->name
-                        ],
                        [
                            'attribute'=>'agency',
                            'value'=>$model->agency->name
@@ -71,7 +67,7 @@ TableAsset::register($this);
                        ],
                        [
                         'label'=>'Cantidad de Contenedores',
-                        'value'=>count($model->receptionTransactions)
+                        'value'=>count($model->processTransactions)
                         ]
                    ],
                    'options'=>['class' => 'table table-striped table-bordered table-condensed detail-view'],

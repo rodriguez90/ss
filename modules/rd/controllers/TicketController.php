@@ -2,6 +2,7 @@
 
 namespace app\modules\rd\controllers;
 
+use app\modules\rd\models\Process;
 use app\modules\rd\models\ReceptionSearch;
 use Yii;
 use app\modules\rd\models\Ticket;
@@ -70,35 +71,20 @@ class TicketController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-//    public function actionAdd()
-//    {
-////        $model = new Ticket();
-////
-////        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-////            return $this->redirect(['view', 'id' => $model->id]);
-////        }
-//
-//        $user = AdmUser::findOne(['id'=>Yii::$app->user->id]);
-//        if($user && !($user->hasRol('Cia_transporte')))
-//            throw new ForbiddenHttpException('Usted no tiene permiso para resevar cupos en la recepción');
-//
-//        return $this->render('_form', [
-//            'model' => $this->findModel($id),
-//        ]);
-//    }
-
-    public function actionTransCompany($id)
+    public function actionCreate($id)
     {
+        if(!Yii::$app->user->can("ticket_create"))
+            throw new ForbiddenHttpException('Usted no tiene permiso para resevar cupos.');
+
         $user = AdmUser::findOne(['id'=>Yii::$app->user->id]);
 
-        if(!Yii::$app->user->can("ticket_create"))
-            throw new ForbiddenHttpException('Usted no tiene permiso ver esta vista');
+        $model = Process::findOne(['id'=>$id]);
 
 //        if($user && !($user->hasRol('Cia_transporte')))
 //            throw new ForbiddenHttpException('Usted no tiene permiso para resevar cupos en la recepción');
 
-        return $this->render('_form', [
-            'model' => $this->findModel($id),
+        return $this->render('create', [
+            'model' => $model,
         ]);
     }
 
@@ -122,6 +108,7 @@ class TicketController extends Controller
 //        ]);
 //    }
 
+
     /**
      * Deletes an existing Ticket model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
@@ -129,29 +116,6 @@ class TicketController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-//    public function actionDelete($id)
-//    {
-//        $this->findModel($id)->delete();
-//
-//        return $this->redirect(['index']);
-//    }
-
-    /**
-     * Finds the Ticket model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param integer $id
-     * @return Ticket the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    protected function findModel($id)
-    {
-        if (($model = Ticket::findOne($id)) !== null) {
-            return $model;
-        }
-
-        throw new NotFoundHttpException('La página solicitda no existe.');
-    }
-
     public function actionDelete($id)
     {
         if(!Yii::$app->user->can("ticket_delete"))
@@ -249,10 +213,10 @@ class TicketController extends Controller
         if(isset($receptionId))
         {
             $tickets = Ticket::find()->innerJoin('reception_transaction', 'reception_transaction_id=reception_transaction.id')
-                                        ->innerJoin('calendar', 'calendar_id=calendar.id')
+                ->innerJoin('calendar', 'calendar_id=calendar.id')
 //                                        ->innerJoin('calendar', 'calendar_id=calendar.id')
-                                        ->where(['reception_transaction.reception_id'=>$receptionId])
-                                        ->all();
+                ->where(['reception_transaction.reception_id'=>$receptionId])
+                ->all();
             $response['tickets'] = $tickets;
             $response['success'] = true;
         }
@@ -261,6 +225,22 @@ class TicketController extends Controller
         }
 
         return $response;
+    }
+
+    /**
+     * Finds the Ticket model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param integer $id
+     * @return Ticket the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findModel($id)
+    {
+        if (($model = Ticket::findOne($id)) !== null) {
+            return $model;
+        }
+
+        throw new NotFoundHttpException('La página solicitda no existe.');
     }
 
     private function doTicket($tickets, $reception, $status)

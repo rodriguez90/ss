@@ -39,7 +39,17 @@ var handleWidgetOptions = function() {
 
 	if(role === 'Agencia')
     {
-        document.getElementById('reception').style.display = 'inline';
+        document.getElementById('import').style.display = 'inline';
+        document.getElementById('report').style.display = 'inline';
+    }
+    else if(role === 'Importador')
+    {
+        document.getElementById('import').style.display = 'inline';
+        document.getElementById('report').style.display = 'inline';
+    }
+    else if(role === 'Exportador')
+    {
+        document.getElementById('export').style.display = 'inline';
         document.getElementById('report').style.display = 'inline';
     }
     else if(role === 'Cia_transporte')
@@ -49,7 +59,8 @@ var handleWidgetOptions = function() {
     }
     else if(role === 'Administracion')
     {
-        document.getElementById('reception').style.display = 'inline';
+        document.getElementById('import').style.display = 'inline';
+        document.getElementById('export').style.display = 'inline';
         document.getElementById('ticket').style.display = 'inline';
         document.getElementById('report').style.display = 'inline';
     }

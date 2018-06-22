@@ -11,6 +11,7 @@ use yii\widgets\Pjax;
 use yii\helpers\Url;
 use app\modules\administracion\models\AdmUser;
 use app\modules\administracion\models\AuthItem;
+use app\modules\rd\models\Process;
 $this->title = 'SGT';
 
 //var_dump($this->params) ;die;
@@ -32,7 +33,7 @@ if($user)
 
 <div class="row">
         <!-- begin col-3 -->
-    <div id="reception" class="col-md-3 col-sm-6" style="display: none;">
+    <div id="import" class="col-md-3 col-sm-6" style="display: none;">
         <div class="widget widget-stats bg-red">
             <div class="stats-icon"><i class="fa fa-rotate-90 fa-sign-in"></i></div>
             <div class="stats-info">
@@ -40,29 +41,29 @@ if($user)
                 <p><?php echo $importCount?></p>
             </div>
             <div class="stats-link">
-                <a href="<?php echo Url::to(['/rd/process/create']);?>">Realice una solicitud de importación.<i class="fa fa-arrow-circle-o-right"></i></a>
+                <a href="<?php echo Url::to(['/rd/process/create','type'=>Process::PROCESS_IMPORT]);?>">Realice una solicitud de importación.<i class="fa fa-arrow-circle-o-right"></i></a>
             </div>
         </div>
     </div>
     <!-- end col-3 -->
 
     <!-- begin col-3 -->
-    <div id="wharehouse" class="col-md-3 col-sm-6" style="display: none;">
+    <div id="export" class="col-md-3 col-sm-6" style="display: none;">
         <div class="widget widget-stats bg-blue">
             <div class="stats-icon"><i class="fa fa-rotate-90 fa-sign-out"></i></div>
             <div class="stats-info">
-                <h4>Exportaciones</h4>
-                <p>-</p>
+                <h4>Exportación</h4>
+                <p><?php echo $exportCount?></p>
             </div>
             <div class="stats-link">
-                <a id="" href="javascript:;">Realice una solocitud de despacho.<i class="fa fa-arrow-circle-o-right"></i></a>
+                <a id="" href="<?php echo Url::to(['/rd/process/create','type'=>Process::PROCESS_EXPORT]);?>">Realice una solocitud de despacho.<i class="fa fa-arrow-circle-o-right"></i></a>
             </div>
         </div>
     </div>
     <!-- end col-3 -->
 
     <!-- begin col-3 -->
-    <div id="dispatch" class="col-md-3 col-sm-6"  style="display: none;">
+    <div id="wharehouse" class="col-md-3 col-sm-6"  style="display: none;">
         <div class="widget widget-stats bg-purple">
             <div class="stats-icon"><i class="fa fa-building"></i></div>
             <div class="stats-info">
@@ -75,6 +76,9 @@ if($user)
         </div>
     </div>
     <!-- end col-3 -->
+
+
+
 
     <!-- begin col-3 -->
     <div id="ticket" class="col-md-3 col-sm-6"  style="display: none;">
@@ -97,7 +101,7 @@ if($user)
             <div class="stats-icon"><i class="fa fa-clock-o"></i></div>
             <div class="stats-info">
                 <h4>REPORTES</h4>
-                <p>Linea del tiempo</p>
+                <p>Solicitudes</p>
             </div>
             <div class="stats-link">
                 <a href="javascript:;">Ver Detalles <i class="fa fa-arrow-circle-o-right"></i></a>
@@ -182,9 +186,11 @@ if($user)
                             [
                                 'class' => 'yii\grid\DataColumn', // can be omitted, as it is the default
                                 'label' => Yii::t('app', "Proceso"),
+                                'attribute' => 'type',
                                 'value' => function($data) {
-                                    return \app\modules\rd\models\Process::PROCESS_LABEL[$data.type];
-                                }
+                                    return Process::PROCESS_LABEL[$data['type']];
+                                },
+                                'filter' => ['1' =>'Importación' , '2'=>'Exportación',],
                             ],
                             [
                                 'class' => 'yii\grid\ActionColumn',
@@ -200,22 +206,22 @@ if($user)
                                             $role = $user->getRole();
 
                                         $result = '';
-                                        $url1 = '/rd/reception/view?id='. $model->id;
-                                        $url2 = '/rd/reception/trans-company?id='. $model->id;
+                                        $url1 = Url::toRoute(['rd/process/view','id'=>$model->id]);
+                                        $url2 = Url::toRoute(['rd/ticket/create','id'=>$model->id]);
                                         $ticketClass = $model->active == 1 ? 'btn-success' : 'btn-default';
                                         if($role === AuthItem::ROLE_AGENCY)
-                                            $result = Html::a('Ver', [$url1], ['class' => 'btn btn-info btn-xs', 'data-pjax' => 0]);
+                                            $result = Html::a('Ver', $url1, ['class' => 'btn btn-info btn-xs', 'data-pjax' => 0]);
                                         else if($role === AuthItem::ROLE_CIA_TRANS_COMPANY)
-                                            $result = Html::a('Turnos', [$url2], ['class' => 'btn btn-xs ' . $ticketClass, 'data-pjax' => 0]);
+                                            $result = Html::a('Turnos', $url2, ['class' => 'btn btn-xs ' . $ticketClass, 'data-pjax' => 0]);
                                         if($role === AuthItem::ROLE_ADMIN)
                                         {
                                             $result = Html::beginTag('div', ['class'=>'row'])
                                                           . Html::beginTag('div', ['class'=>'col col-md-12'])
                                                           . Html::beginTag('div', ['class'=>'col col-md-6'])
-                                                             . Html::a('Ver', [$url1], ['class' => 'btn btn-info btn-xs col-xs-', 'data-pjax' => 0])
+                                                             . Html::a('Ver', $url1, ['class' => 'btn btn-info btn-xs col-xs-', 'data-pjax' => 0])
                                                           . Html::endTag('div')
                                                          . Html::beginTag('div', ['class'=>'col col-md-6'])
-                                                            . Html::a('Turnos', [$url2], ['class' => 'btn btn-xs ' . $ticketClass, 'data-pjax' => 0])
+                                                            . Html::a('Turnos', $url2, ['class' => 'btn btn-xs ' . $ticketClass, 'data-pjax' => 0])
                                                          . Html::endTag('div')
                                                          . Html::endTag('div')
                                                       . Html::endTag('div');
@@ -229,7 +235,7 @@ if($user)
 //                        'options'=>['class' => 'table table-striped table-bordered table-condensed']
                         'options'=>['class' => 'table table-striped table-bordered']
                     ]); ?>
-                <?php Pjax::end(); ?>
+
             </div>
         </div>
     </div>

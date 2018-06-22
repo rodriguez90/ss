@@ -11,6 +11,7 @@ use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use app\assets\SystemAsset;
+use app\modules\rd\models\Process;
 
 SystemAsset::register($this);
 
@@ -141,8 +142,18 @@ if(!Yii::$app->user->isGuest){
                     <?php
                     if(Yii::$app->user->can("admin_mod") || Yii::$app->user->can("reception_create")){
                         echo "<li class='has-sub'>";
-                        echo "<a href=".Url::to(['/rd/reception/create'])."> <i class='fa fa-rotate-90 fa-sign-in'></i>";
+                        echo "<a href=".Url::to(['/rd/process/create','type'=>Process::PROCESS_IMPORT])."> <i class='fa fa-rotate-90 fa-sign-in'></i>";
                         echo  "<span> Importación</span>";
+                        echo "</a>";
+                        echo "</li>";
+                    }
+                    ?>
+
+                    <?php
+                    if(Yii::$app->user->can("admin_mod") || Yii::$app->user->can("reception_create")){
+                        echo "<li class='has-sub'>";
+                        echo "<a href=".Url::to(['/rd/process/create','type'=>Process::PROCESS_EXPORT])."> <i class='fa fa-rotate-90 fa-sign-in'></i>";
+                        echo  "<span> Exportación</span>";
                         echo "</a>";
                         echo "</li>";
                     }

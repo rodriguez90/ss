@@ -9,6 +9,9 @@ use yii\widgets\Pjax;
 /* @var $model app\modules\rd\models\Reception */
 /* @var $form yii\widgets\ActiveForm */
 
+use app\modules\rd\models\Process;
+use app\modules\rd\models\UserAgency;
+
 use app\assets\FormAsset;
 use app\assets\TableAsset;
 use app\assets\WizardAsset;
@@ -16,20 +19,45 @@ use app\assets\WizardAsset;
 WizardAsset::register($this);
 FormAsset::register($this);
 TableAsset::register($this);
+
+$userAgency = UserAgency::findOne(['user_id'=>Yii::$app->user->getId()]);
+
+$agency = null;
+
+if($userAgency)
+{
+    $agency = $userAgency->agency;
+}
+
+$filterLabel = "";
+$intVal = (int)$type;
+
+if( $intVal === Process::PROCESS_IMPORT)
+{
+    $filterLabel = "Búsqueda por BL";
+}
+else if ($intVal === Process::PROCESS_EXPORT)
+{
+    $filterLabel = "Búsqueda por Booking";
+}
+
 ?>
 <style>
     .select2.select2-container.select2-container--default.select2-container--below
     {
         width: 100% !important;
     }
+    .bwizard .well
+    {
+        padding: 0px 15px 0px 15px; !important;
+    }
 </style>
 
 <div class="panel panel-inverse p-3" data-sortable-id="ui-widget-1">
     <div class="panel-heading p-5">
         <div class="panel-heading-btn">
-<!--            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>-->
         </div>
-        <h4 class="panel-title">Nueva Importación</h4>
+        <h4 class="panel-title"><?php echo 'Nueva '. Process::PROCESS_LABEL[$type]?></h4>
     </div>
     <div class="panel-body p-1">
 
@@ -38,12 +66,12 @@ TableAsset::register($this);
             <div class="col-md-4">
                 <div class="panel panel-default m-1">
                     <div id="blCodeHeading" class="panel-heading p-2">
-                        <h4 class="panel-title">Búsqueda por BL</h4>
+                        <h4 class="panel-title"><?php echo $filterLabel; ?></h4>
                     </div>
                     <div class="panel-body p-5">
                         <div class="row">
                             <div class="col col-md-9">
-                                <input class="form-control" type="text" id="blCode" name="blCode" data-parsley-errors-container="#alert-widget" data-parsley-length="[5, 25]" data-parsley-focus="first" placeholder="Código"  data-parsley-trigger="focusin focusout" data-parsley-required="true"/>
+                                <input class="form-control" type="text" id="blCode" name="blCode" data-parsley-length="[5, 25]" data-parsley-focus="first" placeholder="Código"  data-parsley-trigger="focusin focusout" data-parsley-required="true"/>
                             </div>
                             <div class="col col-md-3">
                                 <button id="search-container" class="btn btn-sm btn-primary" disabled>Buscar</button>
@@ -55,7 +83,7 @@ TableAsset::register($this);
             <!-- end BL search-->
             <!-- begin wharehouse select-->
             <div class="col-md-4">
-                <div class="panel panel-default">
+                <div class="panel panel-default  m-1">
                     <div id="blCodeHeading" class="panel-heading p-2">
                         <h4 class="panel-title">Depósito Destino</h4>
                     </div>
@@ -97,7 +125,7 @@ TableAsset::register($this);
                             <fieldset>
                                 <!-- begin row -->
                                 <div class="row">
-                                    <table id="data-table" class="table table-striped table-bordered nowrap" width="100%">
+                                    <table id="data-table" class="table table-bordered nowrap" width="100%">
                                         <thead>
                                         <tr>
                                             <th>Seleccione <input type="checkbox" name="select_all" value="1" id="select-all"></th>
@@ -118,43 +146,35 @@ TableAsset::register($this);
                             <fieldset>
                                 <!-- begin row -->
                                 <div class="row">
-
-                                    <div class="panel panel-default">
-                                        <div class="panel-body">
-                                                <div class="row">
-                                                    <div class="col col-md-12">
-                                                            <label class="col-md-3 col-form-label">¿Múltiples empresas de transporte?</label>
-                                                            <input type="radio" name="radio_default_inline" id="yesRadio" value="1"/>
-                                                            <label for="defaultInlineRadio1">Si</label>
-                                                            <input type="radio" name="radio_default_inline" id="noRadio" value="0" checked/>
-                                                            <label for="defaultInlineRadio2">No</label>
-                                                    </div>
-                                                </div>
-                                                <div id="tContainer" class="row">
-                                                    <div id="tSingle" class="col col-md-12">
-                                                        <div class="col-md-5">
-                                                            <select class="form-control" id="select-agency"  class="form-control"/>
-                                                            </select>
-                                                        </div>
-                                                        <div class="col-md-5">
-                                                            <h5>Información de la Compañia de Transporte</h5>
-                                                        </div>
-                                                    </div>
-                                                    <div id="tMultiple" class="col col-md-12" style="display: none;">
-                                                        <table id="data-table3" class="table table-striped table-bordered nowrap" width="100%">
-                                                            <thead>
-                                                            <tr>
-                                                                <th>Contenedores</th>
-                                                                <th>Tipo/Tamaño</th>
-                                                                <th>Fecha Límite</th>
-                                                                <th>Cliente</th>
-                                                                <th>Empresa de Transporte</th>
-                                                            </tr>
-                                                            </thead>
-                                                        </table>
-                                                    </div>
-                                                </div>
+                                    <div class="col col-md-12">
+                                        <label class="col-md-3 col-form-label">¿Múltiples empresas de transporte?</label>
+                                        <input type="radio" name="radio_default_inline" id="yesRadio" value="1" />
+                                        <label for="defaultInlineRadio1">Si</label>
+                                        <input type="radio" name="radio_default_inline" id="noRadio" value="0" checked/>
+                                        <label for="defaultInlineRadio2">No</label>
+                                    </div>
+                                </div>
+                                <div id="tContainer" class="row">
+                                    <div id="tSingle" class="col col-md-12">
+                                        <div class="col-md-5">
+                                            <select class="form-control" id="select-agency"></select>
                                         </div>
+                                        <div class="col-md-5">
+                                            <h5>Información de la Compañia de Transporte</h5>
+                                        </div>
+                                    </div>
+                                    <div id="tMultiple" class="col col-md-12" style="display: none;">
+                                        <table id="data-table3" class="table table-bordered nowrap" width="100%">
+                                            <thead>
+                                            <tr>
+                                                <th>Contenedores</th>
+                                                <th>Tipo/Tamaño</th>
+                                                <th>Fecha Límite</th>
+                                                <th>Cliente</th>
+                                                <th>Empresa de Transporte</th>
+                                            </tr>
+                                            </thead>
+                                        </table>
                                     </div>
                                 </div>
                             </fieldset>
@@ -174,13 +194,9 @@ TableAsset::register($this);
                                 <!-- end row -->
                                 <!-- begin row -->
                                 <div class="row m-0 p-0">
-                                    <table id="data-table2" class="table table-striped table-bordered nowrap" width="100%">
+                                    <table id="data-table2" class="table table-bordered nowrap" width="100%">
                                         <thead>
                                         <tr>
-                                            <th>Contenedores</th>
-                                            <th>Tipo/Tamaño</th>
-                                            <th>Fecha Límite</th>
-                                            <th>Cliente</th>
                                         </tr>
                                         </thead>
                                     </table>
@@ -188,14 +204,14 @@ TableAsset::register($this);
                                 <!-- end row -->
                                 <!-- begin row -->
 <!--                                <div class="row">-->
-                                    <div class="panel panel-default">
-                                        <div class="panel-heading p-2">
-                                            <h4 class="panel-title">Compañia de transporte</h4>
-                                        </div>
-                                        <div class="panel-body">
-                                            <h5><strong id="trans_company"> -- </strong></h5>
-                                        </div>
-                                    </div>
+<!--                                    <div class="panel panel-default">-->
+<!--                                        <div class="panel-heading p-2">-->
+<!--                                            <h4 class="panel-title">Compañia de transporte</h4>-->
+<!--                                        </div>-->
+<!--                                        <div class="panel-body">-->
+<!--                                            <h5><strong id="trans_company"> -- </strong></h5>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
 <!--                                </div>-->
 <!--                                <div class="row p-0 m-auto">-->
                                     <div class="checkbox">
@@ -229,3 +245,9 @@ TableAsset::register($this);
 <?php $this->registerJsFile('@web/js/modules/rd/process/table-manage.js', ['depends' => ['app\assets\SystemAsset']]) ?>
 <?php $this->registerJsFile('@web/js/modules/rd/process/process-create.js', ['depends' => ['app\assets\SystemAsset', 'app\assets\FormAsset']]) ?>
 
+
+<script type="text/javascript">
+        var agency = <?php echo json_encode(['name'=>$agency->name,
+                                            'id'=>$agency->id  ]); ?>;
+        var processType = '<?php echo $type;?>';
+</script>

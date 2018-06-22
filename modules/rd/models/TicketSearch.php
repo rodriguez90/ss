@@ -18,7 +18,7 @@ class TicketSearch extends Ticket
     public function rules()
     {
         return [
-            [['id', 'reception_transaction_id', 'calendar_id', 'status', 'active'], 'integer'],
+            [['id', 'process_transaction_id', 'calendar_id', 'status', 'active'], 'integer'],
             [['created_at'], 'safe'],
         ];
     }
@@ -70,7 +70,7 @@ class TicketSearch extends Ticket
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'reception_transaction_id' => $this->reception_transaction_id,
+            'process_transaction_id' => $this->process_transaction_id,
             'calendar_id' => $this->calendar_id,
             'status' => $this->status,
             'created_at' => $this->created_at,

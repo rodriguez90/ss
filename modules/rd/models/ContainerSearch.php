@@ -61,7 +61,6 @@ class ContainerSearch extends Container
         $query->andFilterWhere([
             'id' => $this->id,
             'tonnage' => $this->tonnage,
-//            'active' => $this->active,
         ]);
 
         if(isset($this->active) && !empty($this->active)){

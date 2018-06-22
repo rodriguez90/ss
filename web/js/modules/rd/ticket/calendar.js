@@ -228,11 +228,12 @@ var handleCalendarDemo = function () {
 
                 var table = $('#data-table-modal').DataTable();
 
-                var count = 0;
-
                 table
                     .clear()
                     .draw();
+
+                var count = 0;
+
 
                 for(var i = 0, length = calEvent.rt.length ; i < length; i++) {
 

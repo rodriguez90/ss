@@ -36,10 +36,10 @@ class Ticket extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['reception_transaction_id', 'calendar_id', 'status', 'active'], 'required'],
-            [['reception_transaction_id', 'calendar_id', 'status', 'active'], 'integer'],
+            [['process_transaction_id', 'calendar_id', 'status', 'active'], 'required'],
+            [['process_transaction_id', 'calendar_id', 'status', 'active'], 'integer'],
             [['created_at'], 'safe'],
-            [['reception_transaction_id'], 'exist', 'skipOnError' => true, 'targetClass' => ReceptionTransaction::className(), 'targetAttribute' => ['reception_transaction_id' => 'id']],
+            [['process_transaction_id'], 'exist', 'skipOnError' => true, 'targetClass' => ProcessTransaction::className(), 'targetAttribute' => ['process_transaction_id' => 'id']],
             [['calendar_id'], 'exist', 'skipOnError' => true, 'targetClass' => Calendar::className(), 'targetAttribute' => ['calendar_id' => 'id']],
         ];
     }
@@ -51,7 +51,7 @@ class Ticket extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'Número'),
-            'reception_transaction_id' => Yii::t('app', 'Contenedor'),
+            'process_transaction_id' => Yii::t('app', 'Contenedor'),
             'calendar_id' => Yii::t('app', 'Fecha'),
             'status' => Yii::t('app', 'Estado'),
             'created_at' => Yii::t('app', 'Fecha de Creación'),
@@ -62,9 +62,9 @@ class Ticket extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getReceptionTransaction()
+    public function getProcessTransaction()
     {
-        return $this->hasOne(ReceptionTransaction::className(), ['id' => 'reception_transaction_id']);
+        return $this->hasOne(ProcessTransaction::className(), ['id' => 'process_transaction_id']);
     }
 
     /**

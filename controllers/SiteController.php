@@ -78,10 +78,10 @@ class SiteController extends Controller
         {
             $userAgency = UserAgency::findOne(['user_id'=>$user->id]);
             $params['agency_id'] = '';
-            if($userAgency)
-            {
-                $params['agency_id'] = $userAgency->agency->name;
-            }
+//            if($userAgency)
+//            {
+//                $params['agency_id'] = $userAgency->agency->name;
+//            }
         }
         else if ($user && $user->hasRol('Cia_transporte')){
             $userCiaTrans = UserTranscompany::findOne(['user_id'=>$user->id]);

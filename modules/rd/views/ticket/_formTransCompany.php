@@ -32,6 +32,10 @@ TableAsset::register($this);
     .fc-title {
         font-size: 16px !important;
     }
+    .bwizard .well
+    {
+        padding: 0px 15px 0px 15px; !important;
+    }
 </style>
 
 <div class="panel panel-inverse" data-sortable-id="ui-widget-1">

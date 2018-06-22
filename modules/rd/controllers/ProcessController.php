@@ -2,14 +2,18 @@
 
 namespace app\modules\rd\controllers;
 
-use app\modules\rd\models\ContainerSearch;
+
 use DateTime;
 use DateTimeZone;
 use app\modules\administracion\models\AdmUser;
 use app\modules\rd\models\Container;
 use app\modules\rd\models\Process;
+use app\modules\rd\models\UserAgency;
 use app\modules\rd\models\ProcessSearch;
+use app\modules\rd\models\ContainerSearch;
+use app\modules\rd\models\ProcessTransaction;
 use Yii;
+use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\ForbiddenHttpException;
@@ -85,17 +89,29 @@ class ProcessController extends Controller
             if($userCiaTrans && $userCiaTrans->transcompany_id !== $model->trans_company_id)
                 throw new ForbiddenHttpException('Usted no tiene acceso a este proceso');
         }
+        $searchModel = new ContainerSearch();
 
-        $containersSearchModel = new ContainerSearch();
-        $containerDataProvider = $containersSearchModel->innerJoin('process_transaction', 'process_transaction.container_id = container.id')
-            ->innerJoin('process', 'process_transaction.process_id = process.id')
-            ->where(['process.id'=>$id])
-            ->all();
+        $query = $searchModel->find()
+                ->innerJoin('process_transaction', 'process_transaction.container_id = container.id')
+                ->innerJoin('process', 'process_transaction.process_id = process.id')
+                ->where(['process.id'=>$id]);
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+            'pagination' => [
+                'pageSize' => 3,
+            ],
+            'sort' => [
+                'defaultOrder' => [
+                    'name' => SORT_ASC,
+                ]
+            ],
+        ]);
 
         return $this->render('view', [
             'model' => $model,
-            'containerDataProvider'=>$containerDataProvider,
-            'containersSearchModel'=>$containersSearchModel,
+            'dataProvider'=>$dataProvider,
+            'searchModel'=>$searchModel ,
         ]);
     }
 
@@ -104,19 +120,33 @@ class ProcessController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate($type)
     {
-        if(!Yii::$app->user->can("reception_create"))
-            throw new ForbiddenHttpException('Usted no tiene permiso para eliminar esta recepción');
+
+        if((int)$type !== Process::PROCESS_IMPORT && (int)$type  !== Process::PROCESS_EXPORT)
+            throw new ForbiddenHttpException('Error en el tipo de solicitud.');
+
+//        if(!Yii::$app->user->can("reception_create"))
+//            throw new ForbiddenHttpException('Usted no tiene permiso para crear un proceso');
 
         $model = new Process();
+        $user = AdmUser::findOne(['id'=>Yii::$app->user->getId()]);
+        $userAgency = UserAgency::findOne(['user_id'=>$user->id]);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        $agency = null;
+        if($userAgency)
+        {
+            $agency = $userAgency->agency;
+        }
+//        var_dump(Yii::$app->request->post());
+        if ($model->load(Yii::$app->request->post())) {
+            return $this->createProcess($model);
         }
 
         return $this->render('create', [
             'model' => $model,
+            'type'=>$type,
+//            'agency'=>$userAgency,
         ]);
     }
 
@@ -262,7 +292,7 @@ class ProcessController extends Controller
         return $response;
     }
 
-    protected function createReception($model)
+    protected function createProcess($model)
     {
         $response = array();
 
@@ -277,42 +307,81 @@ class ProcessController extends Controller
 //            print_r($model->agency_id);
 //            print_r($model->trans_company_id);
 //
-            $transaction = Reception::getDb()->beginTransaction();
+            $transaction = Process::getDb()->beginTransaction();
+            $containersByTransCompany = [];
 
             try {
+                $aux = new DateTime($model->delivery_date);
+                $aux->setTimezone(new DateTimeZone("UTC"));
+
+                $model->delivery_date = $aux->format("Y-m-d G:i:s");
+
                 if($model->save())
                 {
                     $containers = Yii::$app->request->post()["containers"];
                     $tmpResult = true;
                     foreach ($containers as $container)
                     {
-                        $containerModel = new Container();
-                        $containerModel->name = $container['name'];
-                        $containerModel->code = $container['type'];
-                        $containerModel->tonnage = $container['tonnage'];
-                        $containerModel->active = 1;
-                        if($containerModel->save())
+                        $containerModel = Container::findOne(['name'=>$container['name']]);
+
+                        if($containerModel !== null)
                         {
-                            $receptionTransModel = new ReceptionTransaction();
-                            $receptionTransModel->reception_id = $model->id;
-                            $receptionTransModel->container_id = $containerModel->id;
-
-                            $aux = new DateTime($container['deliveryDate']);
-                            $aux->setTimezone(new DateTimeZone("UTC"));
-
-                            $receptionTransModel->delivery_date = $aux->format("Y-m-d G:i:s");
-                            $receptionTransModel->active = 1;
-
-                            if(!$receptionTransModel->save()) {
+                            $containerModel->status = 'Pendiente';
+                            $result = $containerModel->update();
+                            if($result === false)
+                            {
                                 $tmpResult = false;
-                                $response['msg'] = implode(" ", $receptionTransModel->getErrorSummary(false));// implode(", ", $receptionTransModel->getErrors());
+                                $response['msg'] = "Ah ocurrido un error al actualizar el estado del contenedor.";
+                                $response['msg_dev'] = implode(", ", $containerModel->getErrorSummary(false));
                                 $transaction->rollBack();
                                 break;
                             }
                         }
-                        else{
+                        else
+                        {
+                            $containerModel = new Container();
+                            $containerModel->name = $container['name'];
+                            $containerModel->code = $container['type'];
+                            $containerModel->tonnage = $container['tonnage'];
+                            $containerModel->status = 'Pendiente';
+                            $containerModel->active = 1;
+
+                            if(!$containerModel->save())
+                            {
+                                $tmpResult = false;
+                                $response['msg'] = "Ah ocurrido un error al guardar los datos de los contenedores.";
+                                $response['msg_dev'] = implode(", ", $containerModel->getErrorSummary(false));
+                                $transaction->rollBack();
+                                break;
+                            }
+                        }
+
+                        $processTransModel = new ProcessTransaction();
+                        $processTransModel->process_id = $model->id;
+                        $processTransModel->container_id = $containerModel->id;
+//                        $processTransModel->delivery_date = $model->delivery_date;
+                        $processTransModel->active = 1;
+                        $processTransModel->trans_company_id = $container['transCompany']['id'];
+
+                        if(isset($containersByTransCompany[$processTransModel->trans_company_id]))
+                        {
+                            array_push($containersByTransCompany[$processTransModel->trans_company_id], $containerModel);
+                        }
+                        else {
+                            $containersByTransCompany[$processTransModel->trans_company_id]=[];
+                            array_push($containersByTransCompany[$processTransModel->trans_company_id], $containerModel);
+                        }
+
+                        $aux = new DateTime($container['deliveryDate']);
+                        $aux->setTimezone(new DateTimeZone("UTC"));
+
+                        $processTransModel->delivery_date = $aux->format("Y-m-d G:i:s");
+                        $processTransModel->active = 1;
+
+                        if(!$processTransModel->save()) {
                             $tmpResult = false;
-                            $response['msg'] = implode(", ", $containerModel->getErrorSummary(false)); // $containerModel->getFirstError();
+                            $response['msg'] = "Ah ocurrido un error al salvar los datos de los contenedores.";
+                            $response['msg_dev'] = implode(" ", $processTransModel->getErrorSummary(false));
                             $transaction->rollBack();
                             break;
                         }
@@ -324,25 +393,32 @@ class ProcessController extends Controller
 
                         // send email
                         $remitente = AdmUser::findOne(['id'=>\Yii::$app->user->getId()]);
-                        $destinatario = AdmUser::find()
-                            ->innerJoin("user_transcompany","user_transcompany.user_id = adm_user.id ")
-                            ->where(["user_transcompany.transcompany_id"=>$model->trans_company_id])
-                            ->one();
+                        foreach($containersByTransCompany as $t=>$c) {
 
-                        // TODO: send email user too from the admin system
+                            $destinatario = AdmUser::find()
+                                ->innerJoin("user_transcompany","user_transcompany.user_id = adm_user.id ")
+                                ->where(["user_transcompany.transcompany_id"=>$t])
+                                ->one();
+
+                            // TODO: send email user too from the admin system
 
 //                        $body = $this->renderFile('@app/modules/rd/views/reception/email', ['model' => $model]);
-                        //                        Yii::$app->mailer->compose('layouts/html')
+                            //                        Yii::$app->mailer->compose('layouts/html')
 //                        Yii::$app->mailer->compose('@app/modules/rd/views/reception/email', ['model' => $model])
-                        $body = Yii::$app->view->renderFile('@app/mail/layouts/html2.php', ['model' => $model,
-                            'containers'=>$containers]);
-                        Yii::$app->mailer->compose()
-                            ->setFrom($remitente->email)
-                            ->setTo($destinatario->email)
-                            ->setSubject("Nueva Solicitud de Recepción")
-                            ->setHtmlBody($body)
-                            ->send();
 
+                            if($destinatario)
+                            {
+                                $body = Yii::$app->view->renderFile('@app/mail/layouts/html2.php', ['model' => $model,
+                                    'containers'=>$c]);
+
+                                Yii::$app->mailer->compose()
+                                    ->setFrom($remitente->email)
+                                    ->setTo($destinatario->email)
+                                    ->setSubject("Nueva Solicitud de Recepción")
+                                    ->setHtmlBody($body)
+                                    ->send();
+                            }
+                        }
                         $response['success'] = true;
                         $response['msg'] = Yii::t("app", "Recepción creada correctamente.");
                         $response['url'] = Url::to(['/site/index']);
@@ -350,7 +426,7 @@ class ProcessController extends Controller
                 }
                 else {
                     $response['success'] = false;
-                    $response['msg'] =  $model->getFirstError();
+                    $response['msg'] =  "No fue posible crear la solicitud.";
                 }
             }
             catch (Exception $e)
@@ -365,6 +441,6 @@ class ProcessController extends Controller
             $response['msg'] = Yii::t("app", "No fue posible procesar los datos.");
         }
 
-        return json_encode($response);
+        return $response;
     }
 }

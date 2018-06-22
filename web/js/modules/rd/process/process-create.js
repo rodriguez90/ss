@@ -46,10 +46,11 @@ var handleStopWatch = function()
         $("#stop_watch_widget").addClass("bg-red")
     }
 
-    if(stop_watch_start === stop_watch_end)
+    if(stop_watch_start === stop_watch_end || stop_watch_start.minutes === 0)
     {
         alert("Ha espirado el tiempo de trabajo");
         window.location.reload();
+        return;
     }
     c.text("00:" + stop_watch_start.format('mm:ss'));
 };
@@ -64,8 +65,8 @@ var handleSelectAll = function () {
             .rows()
             .data()
             .each( function ( value, index ) {
-                console.log(index);
-                console.log(value);
+                // console.log(index);
+                // console.log(value);
 
                 if(value.id !== -1)
                 {
@@ -96,11 +97,37 @@ var handleSelectAll = function () {
 var handleSelectTransCompany = function () {
 
     $('#yesRadio').on('click', function() {
+
+        var table = $('#data-table').DataTable();
+
+        var table3 = $('#data-table3').DataTable();
+
+        table3
+            .clear()
+            .draw();
+
+        table
+            .rows( { selected: true } )
+            .data()
+            .each( function ( value, index ) {
+                // console.log( 'Data in index: '+index +' is: '+ value.name );
+                if(value.id === -1 || value.status === 'Pendiente')
+                    table3.row.add(
+                        value
+                    ).draw();
+            } );
+
         document.getElementById('tSingle').style.display = 'none';
         document.getElementById('tMultiple').style.display = 'inline';
     });
 
     $('#noRadio').on('click', function() {
+        var table = $('#data-table3').DataTable();
+
+        table
+            .clear()
+            .draw();
+
         document.getElementById('tMultiple').style.display = 'none';
         document.getElementById('tSingle').style.display = 'inline';
     });
@@ -164,7 +191,6 @@ var fetchContainers = function (bl) {
     });
 };
 
-
 var fetchContainersWS = function (bl, containers) {
     var data = [];
     var types = ["DRY", "RRF"];
@@ -189,18 +215,22 @@ var fetchContainersWS = function (bl, containers) {
             type: type,
             tonnage: tonnage,
             deliveryDate:moment().format('YYYY-MM-DD'),
-            agency:"Agency " + i,
-            wharehouse:1
+            agency:agency.name,
+            wharehouse:1,
+            transCompany:{name:'', id:-1},
+            status:''
         };
         var select = false;
+        var status = null;
         for(var j = 0, length = containers.length; j < length ; j++)
         {
             var container2 = containers[j];
-
-            // duda condicion
-            // container2.code === container.code &&
-            // container2.tonnage === container.tonnage
-            if(container2.name === container.name)
+            status = container2.status;
+            var statusIsDate = moment(status).isValid();
+            //FIXME: Here importan condition
+            if(container2.name === container.name &&
+                container2.status !== "Pendiente" &&
+                !statusIsDate)
             {
                 select = true;
                 container.id = container2.id
@@ -221,6 +251,8 @@ var fetchContainersWS = function (bl, containers) {
 
 $(document).ready(function () {
 
+    // console.log(agency);
+    console.log(processType);
     // init wizar
     FormWizardValidation.init();
 
@@ -238,8 +270,6 @@ $(document).ready(function () {
 
     // select all
    handleSelectAll();
-
-
 
     // search container
     $('#search-container').click( function() {

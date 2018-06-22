@@ -17,27 +17,50 @@ var handleBootstrapWizardsValidation = function() {
                 if(ui.index == 2)
                 {
                     // add to table2 selected containers
-                    var table = $('#data-table').DataTable();
+                    var selectedValue = $("input[name='radio_default_inline']:checked").val();
+
+                    var trans_company = null;
+
+                    var sourceTable = null;
+
+                    if(selectedValue === "1")
+                    {
+                        sourceTable = $('#data-table3').DataTable();
+                    }
+                    else
+                    {
+                        trans_company =  {
+                            "id":$("#select-agency option:selected")[0].value,
+                            "name": $("#select-agency option:selected").text(),
+                        };
+                        sourceTable = $('#data-table').DataTable();
+                    }
 
                     var table2 = $('#data-table2').DataTable();
-
                     table2
                         .clear()
                         .draw();
 
-                    table
+                    sourceTable
                         .rows( { selected: true } )
                         .data()
                         .each( function ( value, index ) {
                             // console.log( 'Data in index: '+index +' is: '+ value.name );
                             if(value.id === -1)
+                            {
+                                if(selectedValue === "0")
+                                {
+                                    value.transCompany = trans_company;
+                                }
+
                                 table2.row.add(
                                     value
                                 ).draw();
-                        } );
+                            }
+                        });
 
                     // set text value
-                    $("#trans_company").text($("#select-agency option:selected").text());
+                    // $("#trans_company").text($("#select-agency option:selected").text());
                 }
                 else if(ui.index==3)
                 {
@@ -73,13 +96,12 @@ var handleBootstrapWizardsValidation = function() {
                 }
             },
             validating: function (e, ui) {
-                return true;
                 var result = false;
 
                 // back navigation no check validation
                 if(ui.index > ui.nextIndex)
                 {
-                    if(ui.index == 2)
+                    if(ui.index == 2) // se desmarca el checkbox de confirmacion si c retrocede en el wizard
                         $('#confirming').prop('checked', false);
 
                     return true;
@@ -88,7 +110,7 @@ var handleBootstrapWizardsValidation = function() {
                 if (ui.index == 0) {
                     // step-1 validation
 
-                    // return true;
+                    return true;
                     var table = $('#data-table').DataTable();
 
                     // var count = table.rows( { selected: true } ).count();
@@ -114,6 +136,7 @@ var handleBootstrapWizardsValidation = function() {
                 } else if (ui.index == 1) {
 
                     // step-1 validation
+                    return true;
                     var transCompany = $("#select-agency option:selected").text();
                     if(transCompany.length) return true;
 
@@ -141,21 +164,22 @@ var handleBootstrapWizardsValidation = function() {
 
                         var blCode = $("#blCode").val();
 
-                        var tran_company_name =   $("#select-agency option:selected").text()
+                        var tran_company_name =   $("#select-agency option:selected").text();
 
                         // set label text
-                        $("#trans_company").text(tran_company_name);
+                        // $("#trans_company").text(tran_company_name);
 
                         var trans_company =  {
                             "id":$("#select-agency option:selected")[0].value,
                             "name": tran_company_name,
                         };
 
-                        var reception = {
-                            "Reception[agency_id]":1, // FIXME THIS DEFINE BY USER WITH ROLE AGENCY OR IMPORTER/EXPORTER
-                            "Reception[bl]":blCode,
-                            "Reception[trans_company_id]":trans_company.id,
-                            "Reception[active]":1,
+                        var process = {
+                            "Process[agency_id]":agency.id, // FIXME THIS DEFINE BY USER WITH ROLE AGENCY OR IMPORTER/EXPORTER
+                            "Process[bl]":blCode,
+                            "Process[active]":1,
+                            "Process[delivery_date]":moment().format("YYYY/MM/DD"),
+                            "Process[type]":processType,
                             "containers":containers
                         };
 
@@ -167,29 +191,28 @@ var handleBootstrapWizardsValidation = function() {
                         //     "containers":containers
                         // };
 
-                        // console.log(reception);
+                        console.log(process);
                         // console.log(JSON.stringify(reception));
 
                         $.ajax({
                             async:false,
-                            url: homeUrl + "/rd/reception/create",
+                            url: homeUrl + "/rd/process/create?type="+processType,
                             type: "POST",
                             dataType: "json",
-                            data:  reception,
+                            data:  process,
 //                            contentType: "application/json; charset=utf-8",
                             success: function (response) {
                                 // you will get response from your php page (what you echo or print)
-                                var obj = JSON.parse(response);
-                                console.log(obj);
+                                console.log(response);
 
-                                if(obj.success)
+                                if(response['success'])
                                 {
                                     result = true;
-                                    window.location.href = obj.url;
+                                    window.location.href = response['url'];
                                 }
                                 else
                                 {
-                                    alert(obj.msg);
+                                    alert(response['msg']);
                                 }
                                 // return true;
                             },

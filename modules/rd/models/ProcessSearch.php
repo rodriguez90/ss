@@ -18,8 +18,8 @@ class ProcessSearch extends Process
     public function rules()
     {
         return [
-            [['id', 'agency_id', 'active', 'type'], 'integer'],
-            [['bl', 'created_at'], 'safe'],
+            [['id', 'active', ], 'integer'],
+            [['bl', 'type', 'agency_id', 'delivery_date', 'created_at'], 'safe'],
         ];
     }
 
@@ -78,22 +78,15 @@ class ProcessSearch extends Process
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'id' => $this->id,
-            'agency_id' => $this->agency_id,
-            'active' => $this->active,
-            'created_at' => $this->created_at,
-            'type' => $this->type,
+            'process.id' => $this->id,
+            'process.agency_id' => $this->agency_id,
+            'process.active' => $this->active,
+            'process.type' => $this->type,
+            'process.delivery_date' => $this->delivery_date,
+            'process.created_at' => $this->created_at,
         ]);
 
         $query->andFilterWhere(['like', 'bl', $this->bl]);
-
-//        if(isset($this->trans_company_id))
-//        {
-//            $filter = TransCompany::find()->select('id')->where(['like', 'name', $this->trans_company_id]);
-//            $query->andFilterWhere(['trans_company_id'=>$filter]);
-////            $query->andFilterWhere(['like', 'trans_company.name', $this->trans_company_id]);
-//
-//        }
 
         if(isset($this->agency_id))
         {

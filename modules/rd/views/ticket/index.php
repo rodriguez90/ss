@@ -35,8 +35,8 @@ $this->params['breadcrumbs'][] = $this->title;
                     'id',
                     [
                         'class' => 'yii\grid\DataColumn',
-                        'attribute' => 'reception_transaction_id',
-                        'value' => 'receptionTransaction.container.name',
+                        'attribute' => 'process_transaction_id',
+                        'value' => 'processTransaction.container.name',
                     ],
                     [
                         'class' => 'yii\grid\DataColumn',

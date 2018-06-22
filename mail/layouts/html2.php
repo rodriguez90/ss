@@ -106,10 +106,6 @@ SystemAsset::register($this);
                                 'bl',
                                 'created_at:datetime',
                                 [
-                                    'attribute'=>'transCompany',
-                                    'value'=>$model->transCompany->name
-                                ],
-                                [
                                     'attribute'=>'agency',
                                     'value'=>$model->agency->name
                                 ],
@@ -119,7 +115,7 @@ SystemAsset::register($this);
                                 ],
                                 [
                                     'label'=>'Cantidad de Contenedores',
-                                    'value'=>count($model->receptionTransactions)
+                                    'value'=>count($containers)
                                 ]
                             ],
                             'options'=>['class' => 'table table-striped table-bordered table-condensed detail-view'],
@@ -134,7 +130,7 @@ SystemAsset::register($this);
                         $result = Html::ul($containers, ['item' => function($item, $index) {
                                 $li = Html::tag(
                                     'li',
-                                    Html::encode($item['name'] . ' '. $item['type'] . ' ' . $item['tonnage']),
+                                    Html::encode($item['name'] . ' '. $item['code'] . ' ' . $item['tonnage']),
                                     []
                                 );
                                 //                                        var_dump($li) ; die;
@@ -151,7 +147,7 @@ SystemAsset::register($this);
                         <table width="200" height="44" cellpadding="0" cellspacing="0" border="0" bgcolor="#2b3a63" style="border-radius:4px;">
                             <tr>
                                 <td align="center" valign="middle" height="44" style="font-family: Arial, sans-serif; font-size:14px; font-weight:bold;">
-                                    <a href="<?php echo Url::to(['/rd/reception/trans-company', 'id'=>$model->id], true);?>" target="_blank" style="font-family: Arial, sans-serif; color:#ffffff; display: inline-block; text-decoration: none; line-height:44px; width:200px; font-weight:bold;">Reservar Cupos</a>
+                                    <a href="<?php echo Url::to(['/rd/ticket/create', 'id'=>$model->id], true);?>" target="_blank" style="font-family: Arial, sans-serif; color:#ffffff; display: inline-block; text-decoration: none; line-height:44px; width:200px; font-weight:bold;">Reservar Cupos</a>
                                 </td>
                             </tr>
                         </table>
