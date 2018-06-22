@@ -26,6 +26,11 @@ TableAsset::register($this);
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Importaciones/Exportaciones'), 'url' => Url::to(['/site/index'])];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
+<style>
+    .detalle td, .detalle th, .detalle tr, .detalle tbody, table.detalle{
+        border: 0px !important;
+    }
+</style>
 
 <div class="panel panel-inverse m-1" data-sortable-id="ui-widget-1">
     <div class="panel-heading">
@@ -60,7 +65,7 @@ $this->params['breadcrumbs'][] = $this->title;
 //                        ]
                     ],
 //                    'options'=>['class' => 'table table-striped table-bordered table-condensed detail-view'],
-                    'options'=>['class' => 'table table-bordered table-condensed detail-view m-1 p-1'],
+                    'options'=>['class' => 'table table-bordered table-condensed detail-view m-1 p-1 detalle'],
                 ]) ?>
             </div>
             <div class="col-md-4">
@@ -74,7 +79,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         ],
                         'delivery_date:datetime',
                     ],
-                    'options'=>['class' => 'table table-bordered table-condensed detail-view'],
+                    'options'=>['class' => 'table table-condensed detalle'],
                 ]) ?>
             </div>
             <div class="col-md-5">
@@ -87,7 +92,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'value'=>$model->getContainerAmount()
                         ]
                     ],
-                    'options'=>['class' => 'table table-bordered table-condensed detail-view'],
+                    'options'=>['class' => 'table detail-view detalle'],
                 ]) ?>
             </div>
         </div>
