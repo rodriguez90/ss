@@ -20,7 +20,7 @@ class UserSearch extends AdmUser
     {
         return [
             [['id', 'created_at', 'updated_at'], 'integer'],
-            [['username', 'auth_key', 'password', 'email', 'nombre', 'apellidos', 'creado_por', 'password_reset_token', 'cedula','status','item_name','id'], 'safe'],
+            [['username', 'auth_key', 'password', 'email', 'nombre', 'apellidos', 'creado_por', 'password_reset_token', 'cedula','status','item_name','id','created_at'], 'safe'],
         ];
     }
 
@@ -38,7 +38,7 @@ class UserSearch extends AdmUser
 
         $query = AdmUser::find()
             ->innerJoin("auth_assignment","auth_assignment.user_id = adm_user.id")
-            ->select( 'id,username,nombre,apellidos,email,status,auth_assignment.item_name as item_name ,auth_assignment.user_id');
+            ->select( 'id,username,adm_user.created_at,nombre,apellidos,email,status,auth_assignment.item_name as item_name ,auth_assignment.user_id');
 
         //var_dump($query);die;
 
@@ -85,7 +85,7 @@ class UserSearch extends AdmUser
         //$filter = AuthAssignment::find()->select('user_id')->where(['like','auth_assignment.user_id','adm_user.id']);
 
 
-
+        $query->andFilterWhere(['DATE(created_at)'=>$this->created_at,]);
 
 
         $query->andFilterWhere(['like', 'username', $this->username])

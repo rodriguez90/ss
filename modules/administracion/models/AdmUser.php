@@ -84,6 +84,7 @@ class AdmUser extends ActiveRecord implements IdentityInterface
             [['username', 'auth_key', 'password', 'email','cedula', 'nombre', 'apellidos', 'creado_por', 'password_reset_token'], 'string'],
             [['status', 'created_at', 'updated_at'], 'integer']
 
+
         ];
 
     }
@@ -362,4 +363,12 @@ class AdmUser extends ActiveRecord implements IdentityInterface
 //
 //        return $role->name;
     }
+
+
+
+    public function getCreate()
+    {
+        return $this->created_at;
+    }
+
 }

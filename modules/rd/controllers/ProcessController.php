@@ -21,6 +21,8 @@ use Yii\web\Response;
 use yii\filters\VerbFilter;
 use yii\helpers\Html;
 use yii\helpers\Url;
+use kartik\mpdf\Pdf;
+use Mpdf\Mpdf;
 
 /**
  * ProcessController implements the CRUD actions for Process model.
@@ -393,6 +395,7 @@ class ProcessController extends Controller
 
                         // send email
                         $remitente = AdmUser::findOne(['id'=>\Yii::$app->user->getId()]);
+
                         foreach($containersByTransCompany as $t=>$c) {
 
                             $destinatario = AdmUser::find()
@@ -400,22 +403,41 @@ class ProcessController extends Controller
                                 ->where(["user_transcompany.transcompany_id"=>$t])
                                 ->one();
 
-                            // TODO: send email user too from the admin system
-
-//                        $body = $this->renderFile('@app/modules/rd/views/reception/email', ['model' => $model]);
-                            //                        Yii::$app->mailer->compose('layouts/html')
-//                        Yii::$app->mailer->compose('@app/modules/rd/views/reception/email', ['model' => $model])
-
                             if($destinatario)
                             {
-                                $body = Yii::$app->view->renderFile('@app/mail/layouts/html2.php', ['model' => $model,
-                                    'containers'=>$c]);
 
+                                $containers1 = [];
+                                $containers2 = [];
+                                $i=1;
+
+                                foreach ($c as $c2) {
+                                    if ($i % 2 !== 0) {
+                                        $containers1 []= $c2;
+                                    } else {
+                                        $containers2 []= $c2;
+                                    }
+                                    $i++;
+                                }
+
+                                //pdf create
+                                $pdf =  new mPDF( );
+                                $pdf->SetTitle("Prueba d generaciÃ³n de PDF.");
+                                $pdf->WriteHTML($this->renderPartial('@app/mail/layouts/html3.php', ['model' => $model,
+                                    'containers1'=>$containers1,
+                                    'containers2'=>$containers2]));
+                                $path= $pdf->Output("","S");
+
+                                $body = Yii::$app->view->renderFile('@app/mail/layouts/html3.php', ['model' => $model,
+                                    'containers1'=>$containers1,
+                                    'containers2'=>$containers2]);
+
+                                // TODO: send email user too from the admin system
                                 Yii::$app->mailer->compose()
                                     ->setFrom($remitente->email)
                                     ->setTo($destinatario->email)
                                     ->setSubject("Nueva Solicitud de Recepción")
                                     ->setHtmlBody($body)
+                                    ->attachContent($path,[ 'fileName'=> "Nueva Solicitud de RecepciÃ³n.pdf",'contentType'=>'application/pdf'])
                                     ->send();
                             }
                         }

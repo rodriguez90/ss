@@ -3,7 +3,9 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use yii\jui\DatePicker;
 use yii\widgets\Pjax;
+
 
 
 /* @var $this yii\web\View */
@@ -54,6 +56,31 @@ $this->params['breadcrumbs'][] = $this->title;
                             'nombre',
                             'apellidos',
                             'email',
+
+                            [
+                                'attribute' => 'created_at',
+                                'label' => 'Fecha de Creación',
+                                'format' => 'html',// 'date',//date,datetime, time
+                                'headerOptions' => ['width' => '120'],
+
+                                'content' => function ($data) {
+                                    return '<span class="fa fa-calendar">&nbsp;' . (new \yii\i18n\Formatter())->asDate($data->getCreate(), 'Y-MM-dd') . '</span>';
+                                },
+                                /*
+                                'filter' => yii\jui\DatePicker::widget([
+                                    'model' => $searchModel,
+                                    'attribute' => 'created_at',
+                                    'value'=>'created_at',
+                                    'language' => 'es',
+                                    'dateFormat' => 'php:Y-m-d',
+                                    'clientOptions' => [
+                                        'prevText' => '<i style="cursor: pointer" class="fa fa-chevron-left"></i>',
+                                        'nextText' => '<i style="cursor: pointer" class="fa fa-chevron-right"></i>',
+                                    ]
+                                ])*/
+                            ],
+
+
                             'item_name',
 
                             [
