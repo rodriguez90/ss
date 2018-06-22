@@ -59,7 +59,7 @@ class Process extends \yii\db\ActiveRecord
             'agency_id' => 'Cliente',
             'active' => 'Activo',
             'delivery_date' => 'Fecha Límite',
-            'type' => 'Proceso',
+            'type' => 'Tipo de trámite',
             'created_at' => 'Fecha de Creación',
         ];
     }

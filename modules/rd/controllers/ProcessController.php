@@ -3,6 +3,7 @@
 namespace app\modules\rd\controllers;
 
 
+use app\modules\rd\models\TransCompany;
 use DateTime;
 use DateTimeZone;
 use app\modules\administracion\models\AdmUser;
@@ -252,14 +253,14 @@ class ProcessController extends Controller
         $actived = Yii::$app->request->get('actived');
         if(isset($id))
         {
-            $reception = Reception::findOne(['id'=>$id]);
+            $process = Process::findOne(['id'=>$id]);
             $condition = 'reception_id = ' . $id;
             if(isset($actived))
             {
                 $condition = $condition . ' and active = ' . $actived;
             }
 
-            if($reception)
+            if($process)
             {
                 $transactions = ReceptionTransaction::find()->where($condition)
                     ->orderBy('delivery_date', SORT_ASC)
@@ -267,10 +268,10 @@ class ProcessController extends Controller
 
                 $response['success'] = true;
                 $response['msg'] = "Datos encontrados.";
-//                $transactions = $reception->receptionTransactions;
+//                $transactions = $process->receptionTransactions;
                 $response['transactions'] = [];
-                $response['reception'] = $reception;
-                $response['angecy'] = $reception->agency;
+                $response['reception'] = $process;
+                $response['angecy'] = $process->agency;
                 $response['containers'] = [];
                 foreach ( $transactions as $t)
                 {
@@ -357,28 +358,42 @@ class ProcessController extends Controller
                                 break;
                             }
                         }
+                        $transCompany = TransCompany::findOne(['id'=>$container['transCompany']['id']]);
+                        if($transCompany === null) // new trans company
+                        {
+                            $transCompany = new TransCompany();
+                            $transCompany->name = $container['transCompany']['name'];
+                            $transCompany->ruc = $container['transCompany']['ruc'];
+                            $transCompany->address = " ";
+                            $transCompany->active = 1;
 
+                            if(!$transCompany->save())
+                            {
+                                $tmpResult = false;
+                                $response['msg'] = "Ah ocurrido un error al salvar los datos de las nuevas Cia de Transporte.";
+                                $response['msg_dev'] = implode(" ", $transCompany->getErrorSummary(false));
+                                $transaction->rollBack();
+                                break;
+                            }
+                        }
                         $processTransModel = new ProcessTransaction();
                         $processTransModel->process_id = $model->id;
                         $processTransModel->container_id = $containerModel->id;
-//                        $processTransModel->delivery_date = $model->delivery_date;
                         $processTransModel->active = 1;
-                        $processTransModel->trans_company_id = $container['transCompany']['id'];
-
-                        if(isset($containersByTransCompany[$processTransModel->trans_company_id]))
-                        {
-                            array_push($containersByTransCompany[$processTransModel->trans_company_id], $containerModel);
-                        }
-                        else {
-                            $containersByTransCompany[$processTransModel->trans_company_id]=[];
-                            array_push($containersByTransCompany[$processTransModel->trans_company_id], $containerModel);
-                        }
+                        $processTransModel->trans_company_id = $transCompany->id;
 
                         $aux = new DateTime($container['deliveryDate']);
                         $aux->setTimezone(new DateTimeZone("UTC"));
-
                         $processTransModel->delivery_date = $aux->format("Y-m-d G:i:s");
-                        $processTransModel->active = 1;
+
+                        if(isset($containersByTransCompany[$transCompany->id]))
+                        {
+                            array_push($containersByTransCompany[$transCompany->id], $containerModel);
+                        }
+                        else {
+                            $containersByTransCompany[$transCompany->id]=[];
+                            array_push($containersByTransCompany[ $transCompany->id], $containerModel);
+                        }
 
                         if(!$processTransModel->save()) {
                             $tmpResult = false;

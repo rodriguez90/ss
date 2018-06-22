@@ -172,6 +172,10 @@ var handleDataTable3 = function () {
         $('#data-table3').DataTable({
             dom: '<"top"ip<"clear">>t',
             "columns": [
+                {
+                    // "title": "Selecionar",
+                    "data":'checkbox', // FIXME CHECK THIS
+                },
                 { "title": "Contenedor",
                     "data":"name",
                 },
@@ -192,162 +196,35 @@ var handleDataTable3 = function () {
             "pageLength": 3,
             "language": lan,
             responsive: true,
+            select: {
+                // items: 'cells',
+                style:    'multi',
+                selector: 'td:first-child'
+            },
             columnDefs: [
                 {
-                    targets: [1],
+                    orderable: false,
+                    searchable: false,
+                    className: 'select-checkbox',
+                    targets:   [0],
+                    // data: null,
+                },
+                {
+                    targets: [2],
                     title:"Tipo",
                     data:null,
                     render: function ( data, type, full, meta ) {
-                        // console.log("In render: " + data);
                         return data.type + data.tonnage;
                     },
                 },
-
+                {
+                    targets: [5],
+                    data:null,
+                    render: function ( data, type, full, meta ) {
+                        return data.name
+                    },
+                },
             ],
-            // "drawCallback": function( settings ) {
-            //     // alert( 'DataTables has redrawn the table' );
-            //     // $('.dt-select2').select2({
-            //     //     language: "es",
-            //     //     placeholder: 'Seleccione la compañia de transporte',
-            //     //     width: 'auto',
-            //     //     minimumInputLength:5,
-            //     //     // allowClear: true,
-            //     //     // tags: true,
-            //     //     closeOnSelect: false,
-            //     //     ajax: {
-            //     //         url: homeUrl + '/rd/api-trans-company',
-            //     //         dataType: 'json',
-            //     //         delay: 250,
-            //     //         processResults: function (data) {
-            //     //             // console.log(data);
-            //     //             var myResults  = [];
-            //     //             $.each(data, function (index, item) {
-            //     //                 // console.log(item);
-            //     //                 myResults .push({
-            //     //                     id: item.id,
-            //     //                     text: item.name
-            //     //                 });
-            //     //             });
-            //     //             return {
-            //     //                 results: myResults
-            //     //             };
-            //     //         },
-            //     //         cache: true,
-            //     //     },
-            //     // });
-            // },
-            // rows: {
-            //     callback: function(row, data, index) {
-            //         var id  = "selectTransCompany" + String(data.name).replace(" ","");
-            //         var html = "<select class=\"dt-select2\" id=\"" + id + "\"></select>";
-            //         console.log(data.name);
-            //         console.log(index);
-            //         console.log(row);
-            //         console.log(id);
-            //         console.log(html)
-            //     },
-            // },
-            "rowCallback": function ( row, data, index ) {
-
-                var id  = "selectTransCompany" + String(data.name).replace(" ","");
-                var html= null;
-                // console.log(data.name);
-                // console.log(index);
-                // console.log(row);
-                // console.log(id);
-
-                // $('td', row).eq(5).html(html);
-                var html = "<select id=\"" + id + "\"></select>";
-                console.log(html);
-                $('td:eq(4)', row).html( html);
-                console.log($('td:eq(4)', row).html());
-
-
-                $("#"+id).select2(
-                    {
-                        language: "es",
-                        placeholder: 'Seleccione la compañia de transporte',
-                        width: 'auto',
-                        minimumInputLength:5,
-                        // allowClear: true,
-                        // tags: true,
-                        closeOnSelect: true,
-                        ajax: {
-                            url: homeUrl + '/rd/api-trans-company',
-                            dataType: 'json',
-                            delay: 250,
-                            processResults: function (data) {
-                                // console.log(data);
-                                var myResults  = [];
-                                $.each(data, function (index, item) {
-                                    // console.log(item);
-                                    myResults .push({
-                                        id: item.id,
-                                        text: item.name
-                                    });
-                                });
-                                return {
-                                    results: myResults
-                                };
-                            },
-                            cache: true,
-                        },
-                    });
-
-                // if ($("#"+id).hasClass("select2-hidden-accessible")) {
-                //     // html = $("#"+id).html();
-                //     // html = $("#"+id).html();
-                //     console.log("Select2 :" + id + "has been initialized")
-                // }
-                // else
-                // {
-                //     html = "<select class=\"form-control\" id=\"" + id + "\"/>";
-                //
-                // }
-            }
-            // rowCallback: function( row, data, index ) {
-            //
-            //     var id  = "selectTransCompany" + String(data.name).replace(" ","");
-            //     var html = "<select class=\"dt-select2\" id=\"" + id + "\"></select>";
-            //     console.log(data.name);
-            //     console.log(index);
-            //     console.log(row);
-            //     console.log(id);
-            //     console.log(html)
-            //
-            //     $('td:eq(4)', row).html( html);
-            //
-            //     // $("#"+id).select2(
-            //     //     {
-            //     //         language: "es",
-            //     //         placeholder: 'Seleccione la compañia de transporte',
-            //     //         width: 'auto',
-            //     //         minimumInputLength:5,
-            //     //         // allowClear: true,
-            //     //         // tags: true,
-            //     //         closeOnSelect: false,
-            //     //         ajax: {
-            //     //             url: homeUrl + '/rd/api-trans-company',
-            //     //             dataType: 'json',
-            //     //             delay: 250,
-            //     //             processResults: function (data) {
-            //     //                 // console.log(data);
-            //     //                 var myResults  = [];
-            //     //                 $.each(data, function (index, item) {
-            //     //                     // console.log(item);
-            //     //                     myResults .push({
-            //     //                         id: item.id,
-            //     //                         text: item.name
-            //     //                     });
-            //     //                 });
-            //     //                 return {
-            //     //                     results: myResults
-            //     //                 };
-            //     //             },
-            //     //             cache: true,
-            //     //         },
-            //     //     });
-            // }
         });
     }
 };

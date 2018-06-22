@@ -755,7 +755,7 @@ var fetchReceptionTransactions = function () {
 
     $.ajax({
         // async:false,
-        url: homeUrl + "/rd/reception/transactions",
+        url: homeUrl + "/rd/process/transactions",
         type: "get",
         dataType: "json",
         data:  {id:modelId,
@@ -906,6 +906,29 @@ var fetchTickets = function (receptionId, async) {
     });
 };
 
+var stop_watch_start = moment().hour(0).minute(29).second(59);
+var stop_watch_end = moment(stop_watch_start).subtract({'minutes' : 30});
+
+var handleStopWatch = function()
+{
+    var c = $("#stop_watch");
+    stop_watch_start.subtract({seconds: 1});
+
+    if(stop_watch_start.minutes() < 10 )
+    {
+        $("#stop_watch_widget").removeClass("bg-green")
+        $("#stop_watch_widget").addClass("bg-red")
+    }
+
+    if(stop_watch_start === stop_watch_end || stop_watch_start.minutes === 0)
+    {
+        alert("Ha espirado el tiempo de trabajo");
+        window.location.reload();
+    }
+
+    c.text("00:" + stop_watch_start.format('mm:ss'));
+};
+
 $(document).ready(function () {
 
     moment.locale('es');
@@ -918,31 +941,9 @@ $(document).ready(function () {
     handleTableInModal();
     handleTableInWizar();
     handleTable3InWizar();
-    fetchReceptionTransactions();
+    // fetchReceptionTransactions();
 
-    // cronometer
-    setInterval(function () {
-        var m = $("#minutes");
-        var s = $("#seconds");
-        var currentMinutes = parseInt(m.text());
-        var currentSeconds = parseInt(s.text());
-        currentSeconds--;
-
-        if(currentSeconds === 0) {
-            currentMinutes--;
-            currentSeconds = 59;
-        }
-
-        if(currentMinutes === 0)
-        {
-            currentSeconds = 0;
-            alert("Ha espirado el tiempo de trabajo");
-            window.location.reload();
-        }
-
-        m.text(currentMinutes);
-        s.text(currentSeconds);
-
-    }, 1000);
+    // stop watch
+    setInterval(handleStopWatch, 1000);
 
 });

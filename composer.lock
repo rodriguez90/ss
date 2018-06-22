@@ -4,8 +4,66 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c3d9cfc881ddf43af7b5a05371e0ae81",
+    "content-hash": "18e4206fe3715dfb2c0d210d9a4a0c6d",
     "packages": [
+        {
+            "name": "2amigos/yii2-qrcode-helper",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/2amigos/yii2-qrcode-helper.git",
+                "reference": "b034402e98c19f914946cc868e0606e657458fc8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/2amigos/yii2-qrcode-helper/zipball/b034402e98c19f914946cc868e0606e657458fc8",
+                "reference": "b034402e98c19f914946cc868e0606e657458fc8",
+                "shasum": ""
+            },
+            "require": {
+                "yiisoft/yii2": "*"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.*",
+                "scrutinizer/ocular": "~1.1"
+            },
+            "type": "yii2-extension",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "dosamigos\\qrcode\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "2amigOS! Consulting Group",
+                    "email": "hola@2amigos.us",
+                    "homepage": "http://2amigos.us",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Create QrCodes based on libqrencode C library.",
+            "homepage": "http://yiiwheels.com/extension/qrcode-helper",
+            "keywords": [
+                "2amigos",
+                "extension",
+                "helper",
+                "qrcode",
+                "yii",
+                "yii 2",
+                "yii2"
+            ],
+            "abandoned": "2amigos/qrcode-library",
+            "time": "2017-06-21T10:56:44+00:00"
+        },
         {
             "name": "bower-asset/bootstrap",
             "version": "v3.3.7",
@@ -63,6 +121,28 @@
                 "url": "https://api.github.com/repos/jquery/jquery-dist/zipball/77d2a51d0520d2ee44173afdf4e40a9201f5964e",
                 "reference": "77d2a51d0520d2ee44173afdf4e40a9201f5964e",
                 "shasum": null
+            },
+            "type": "bower-asset",
+            "license": [
+                "MIT"
+            ]
+        },
+        {
+            "name": "bower-asset/jquery-ui",
+            "version": "1.12.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/components/jqueryui.git",
+                "reference": "44ecf3794cc56b65954cc19737234a3119d036cc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/components/jqueryui/zipball/44ecf3794cc56b65954cc19737234a3119d036cc",
+                "reference": "44ecf3794cc56b65954cc19737234a3119d036cc",
+                "shasum": null
+            },
+            "require": {
+                "bower-asset/jquery": ">=1.6"
             },
             "type": "bower-asset",
             "license": [
@@ -947,6 +1027,47 @@
             "time": "2018-01-23T07:37:21+00:00"
         },
         {
+            "name": "websightnl/yii2-sybase",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/websightnl/yii2-sybase.git",
+                "reference": "a3e548be1b2cbc683ede0f8a0fc1688bd0fc49ea"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/websightnl/yii2-sybase/zipball/a3e548be1b2cbc683ede0f8a0fc1688bd0fc49ea",
+                "reference": "a3e548be1b2cbc683ede0f8a0fc1688bd0fc49ea",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0",
+                "yiisoft/yii2": ">=2.0.6"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "websightnl\\yii2\\sybase\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause-Attribution"
+            ],
+            "authors": [
+                {
+                    "name": "Eric Bus",
+                    "email": "eric.bus@websight.nl",
+                    "homepage": "https://websight.nl"
+                }
+            ],
+            "description": "Yii2 schema support for Sybase database, tested with SQL Anywhere 12.0.",
+            "keywords": [
+                "sybase"
+            ],
+            "time": "2016-10-10T07:09:42+00:00"
+        },
+        {
             "name": "yiisoft/yii2",
             "version": "dev-master",
             "source": {
@@ -1161,6 +1282,64 @@
             "time": "2018-05-04T21:18:11+00:00"
         },
         {
+            "name": "yiisoft/yii2-jui",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/yiisoft/yii2-jui.git",
+                "reference": "5ff9bb81d739b69e6a9a52b4f61ac398e17b6227"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/yiisoft/yii2-jui/zipball/5ff9bb81d739b69e6a9a52b4f61ac398e17b6227",
+                "reference": "5ff9bb81d739b69e6a9a52b4f61ac398e17b6227",
+                "shasum": ""
+            },
+            "require": {
+                "bower-asset/jquery-ui": "~1.12.1",
+                "yiisoft/yii2": "~2.0.4"
+            },
+            "type": "yii2-extension",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "yii\\jui\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Alexander Kochetov",
+                    "email": "creocoder@gmail.com"
+                },
+                {
+                    "name": "Qiang Xue",
+                    "email": "qiang.xue@gmail.com"
+                },
+                {
+                    "name": "Carsten Brandt",
+                    "email": "mail@cebe.cc"
+                },
+                {
+                    "name": "Alexander Makarov",
+                    "email": "sam@rmcreative.ru"
+                }
+            ],
+            "description": "The Jquery UI extension for the Yii framework",
+            "keywords": [
+                "jQuery UI",
+                "yii2"
+            ],
+            "time": "2018-05-04T06:55:51+00:00"
+        },
+        {
             "name": "yiisoft/yii2-swiftmailer",
             "version": "2.0.7",
             "source": {
@@ -1209,6 +1388,44 @@
                 "yii2"
             ],
             "time": "2017-05-01T08:29:00+00:00"
+        },
+        {
+            "name": "ziplr/php-qr-code",
+            "version": "v1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ziplr/php-qr-code.git",
+                "reference": "dac8f3da6eaf0ee22fab85fae8eb16db8ab7da73"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ziplr/php-qr-code/zipball/dac8f3da6eaf0ee22fab85fae8eb16db8ab7da73",
+                "reference": "dac8f3da6eaf0ee22fab85fae8eb16db8ab7da73",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": [],
+                "files": [
+                    "src/qrconst.php",
+                    "src/qrconfig.php",
+                    "src/qrtools.php",
+                    "src/qrspec.php",
+                    "src/qrimage.php",
+                    "src/qrinput.php",
+                    "src/qrbitstream.php",
+                    "src/qrsplit.php",
+                    "src/qrrscode.php",
+                    "src/qrmask.php",
+                    "src/qrencode.php",
+                    "src/qrarea.php",
+                    "src/qrcanvas.php",
+                    "src/qrsvg.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "description": "PHP Qr Code Generator compatible with php 7.0",
+            "time": "2017-07-22T08:29:31+00:00"
         }
     ],
     "packages-dev": [
@@ -3767,7 +3984,10 @@
     "stability-flags": {
         "guzzlehttp/guzzle": 20,
         "mpdf/mpdf": 20,
-        "kartik-v/yii2-mpdf": 20
+        "kartik-v/yii2-mpdf": 20,
+        "websightnl/yii2-sybase": 20,
+        "yiisoft/yii2-jui": 20,
+        "2amigos/yii2-qrcode-helper": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

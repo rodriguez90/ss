@@ -53,7 +53,7 @@ else if ($intVal === Process::PROCESS_EXPORT)
     }
 </style>
 
-<div class="panel panel-inverse p-3" data-sortable-id="ui-widget-1">
+<div class="panel panel-inverse p-3">
     <div class="panel-heading p-5">
         <div class="panel-heading-btn">
         </div>
@@ -110,11 +110,11 @@ else if ($intVal === Process::PROCESS_EXPORT)
             <!-- end time-->
         </div>
         <!-- begin row wizard-->
-        <div class="row m-1">
+        <div class="row">
             <!-- begin col-12 -->
-            <div class="col-md-12 m-0">
+            <div class="col-md-12">
                 <form action="/" method="POST" data-parsley-validate="true" name="form-wizard">
-                    <div id="wizard" class="m-0">
+                    <div id="wizard">
                         <ol>
                             <li> Seleccionar contenedores</li>
                             <li> Seleccionar compañia de transporte</li>
@@ -146,27 +146,29 @@ else if ($intVal === Process::PROCESS_EXPORT)
                             <fieldset>
                                 <!-- begin row -->
                                 <div class="row">
-                                    <div class="col col-md-12">
-                                        <label class="col-md-3 col-form-label">¿Múltiples empresas de transporte?</label>
-                                        <input type="radio" name="radio_default_inline" id="yesRadio" value="1" />
-                                        <label for="defaultInlineRadio1">Si</label>
-                                        <input type="radio" name="radio_default_inline" id="noRadio" value="0" checked/>
-                                        <label for="defaultInlineRadio2">No</label>
+                                    <div class="col col-sm-6">
+                                        <div class="row">
+                                            <h5 class="col col-md-8">¿Múltiples empresas de transporte?</h5>
+                                            <div class="col col-md-2">
+                                                <input type="radio" name="radio_default_inline" id="yesRadio" value="1" />
+                                                <label for="defaultInlineRadio1">Si</label>
+                                            </div>
+                                            <div class="col col-md-2">
+                                                <input type="radio" name="radio_default_inline" id="noRadio" value="0" checked/>
+                                                <label for="defaultInlineRadio2">No</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <select class="form-control" id="selectTransCompany"></select>
                                     </div>
                                 </div>
-                                <div id="tContainer" class="row">
-                                    <div id="tSingle" class="col col-md-12">
-                                        <div class="col-md-5">
-                                            <select class="form-control" id="select-agency"></select>
-                                        </div>
-                                        <div class="col-md-5">
-                                            <h5>Información de la Compañia de Transporte</h5>
-                                        </div>
-                                    </div>
-                                    <div id="tMultiple" class="col col-md-12" style="display: none;">
+                                <div class="row">
+                                    <div class="col col-md-12">
                                         <table id="data-table3" class="table table-bordered nowrap" width="100%">
                                             <thead>
                                             <tr>
+                                                <th>Seleccione <input type="checkbox" name="select_all2" value="1" id="select-all"></th>
                                                 <th>Contenedores</th>
                                                 <th>Tipo/Tamaño</th>
                                                 <th>Fecha Límite</th>

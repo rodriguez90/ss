@@ -6,6 +6,17 @@ $host="190.63.174.169:7100";
 $user = "xedrux";
 $password = "xedrux";
 
+//return [
+//    'class' => 'yii\db\Connection',
+//    'driverName' => 'sybase',
+//    'schemaMap' => [
+//    'sybase' => \websightnl\yii2\sybase\Schema::className(),
+//    ],
+//    'dsn' => 'odbc:sgt_xedrux;',
+//    'username' => $user,
+//    'password' => $password,
+//];
+
 
 return [
     'class' => 'yii\db\Connection',
