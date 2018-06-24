@@ -120,14 +120,14 @@ TableAsset::register($this);
                                             <div class="row">
                                                 <div class="col-md-2">
                                                     <h4 class="m-b-20">Leyenda</h4>
-                                                    <div class="external-event bg-blue ui-draggable" style="position: relative;">
-                                                        <p>Disponibilidad en el calendario.</p>
+                                                    <div class="external-event bg-blue-darker ui-draggable" style="position: relative;">
+                                                        <p class="f-s-14">Disponibilidad en el calendario.</p>
                                                     </div>
-                                                    <div class="external-event bg-green ui-draggable" style="position: relative;">
-                                                        <p>Contenedores de 20 toneledas.</p>
+                                                    <div class="external-event bg-green-darker ui-draggable" style="position: relative;">
+                                                        <p class="f-s-14">Contenedores de 20 toneledas.</p>
                                                     </div>
-                                                    <div class="external-event bg-purple ui-draggable" style="position: relative;">
-                                                        <p>Contenedores de 40 toneledas.</p>
+                                                    <div class="external-event bg-purple-darker ui-draggable" style="position: relative;">
+                                                        <p class="f-s-14">Contenedores de 40 toneledas.</p>
                                                     </div>
                                                 </div>
                                                 <div id="calendar" class="col-md-10 p-15 calendar"></div>

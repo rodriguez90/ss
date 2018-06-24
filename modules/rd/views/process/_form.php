@@ -168,7 +168,7 @@ else if ($intVal === Process::PROCESS_EXPORT)
                                         <table id="data-table3" class="table table-bordered nowrap" width="100%">
                                             <thead>
                                             <tr>
-                                                <th>Seleccione <input type="checkbox" name="select_all2" value="1" id="select-all"></th>
+                                                <th>Seleccione <input type="checkbox" name="select_all2" id="select_all2" value="1" ></th>
                                                 <th>Contenedores</th>
                                                 <th>Tipo/Tamaño</th>
                                                 <th>Fecha Límite</th>

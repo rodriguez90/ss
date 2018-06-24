@@ -15,9 +15,9 @@ var handleBootstrapWizardsValidation = function() {
                 if(ui.index == 1)
                 {
                     var sourceTable = $('#data-table').DataTable();
-                    var table2 = $('#data-table3').DataTable();
+                    var table = $('#data-table3').DataTable();
 
-                    table2
+                    table
                         .clear()
                         .draw();
 
@@ -26,9 +26,11 @@ var handleBootstrapWizardsValidation = function() {
                         .data()
                         .each( function ( value, index ) {
                             // console.log( 'Data in index: '+ index +' is: '+ value.name );
+                            // if(value.id === -1 || value.status === 'Pendiente')
+
                             if(value.id === -1)
                             {
-                                table2.row.add(
+                                table.row.add(
                                     value
                                 ).draw();
                             }
@@ -137,6 +139,20 @@ var handleBootstrapWizardsValidation = function() {
                         .data()
                         .each( function ( value, index ) {
                             // console.log( 'Data in index: '+index +' is: '+ value.name );
+                            // FIXME: It Export -> Booking code -> check delyveryDate it's set
+                            if(processType === 2)
+                            {
+                                var deliveryDate = value.deliveryDate;
+                                if(!moment(deliveryDate).isValid())
+                                {
+                                    table
+                                        .clear()
+                                        .draw();
+                                    alert("Debe definir la Fecha Límite para los contenedores del Booking.");
+                                    return false;
+                                }
+                            }
+
                             if(value.id === -1 && !result) {
                                 result = true;
                                 return false;

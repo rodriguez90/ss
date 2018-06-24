@@ -28,9 +28,6 @@ var handleCalendarDemo = function () {
 	// calendar
 	var buttonSetting = {left: 'today prev,next ', center: 'title', right: 'month,agendaWeek,agendaDay'};
 	// var buttonSetting = {left: 'today prev,next ', center: 'title', right: 'month,basicWeek,basicDay'};
-	var date = new Date();
-	var m = date.getMonth();
-	var y = date.getFullYear();
 
 	var calendar = $('#calendar').fullCalendar({
         locale: 'es',
@@ -45,15 +42,15 @@ var handleCalendarDemo = function () {
         defaultView:'agendaWeek',
         views: {
             day: {
-                titleFormat: 'MMM D, YYYY',
+                // titleFormat: 'MMM D, YYYY',
                 allDaySlot:false,
                 // allDayText:'',
             },
             month: {
-                titleFormat: 'MMM D, YYYY'
+                // titleFormat: 'MMM D, YYYY'
             },
             agenda: {
-                titleFormat: 'MMM D, YYYY',
+                // titleFormat: 'MMM D, YYYY',
                 // contentHeight:'auto',       //auto
                 allDaySlot: false, //Disable the allDay slot in agenda view
             }

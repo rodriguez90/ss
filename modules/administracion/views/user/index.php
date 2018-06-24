@@ -96,12 +96,9 @@ $this->params['breadcrumbs'][] = $this->title;
 
                             ['class' => 'yii\grid\ActionColumn' ],
                         ],
-
-
+                        'options'=>['class' => 'table table-striped table-responsive table-bordered']
                     ]); ?>
-
                 </div>
-
                 <?php Pjax::end(); ?>
 
             </div>

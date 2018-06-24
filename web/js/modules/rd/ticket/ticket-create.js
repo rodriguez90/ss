@@ -513,19 +513,19 @@ var handleModal = function () {
                     currentCalendarEvent.title = String(currentCalendarEvent.count);
 
                     // create event ticket
-                    var className = ['bg-blue'];
+                    var className = ['bg-blue-darker'];
                     var type = "";
                     var id = currentCalendarEvent.id;
                     if(value.tonnage === 20)
                     {
                         id = currentCalendarEvent.id + "T20";
-                        className = ['bg-green'];
+                        className = ['bg-green-darker'];
                         type = "T20";
                     }
                     else if(value.tonnage === 40)
                     {
                         id = currentCalendarEvent.id + "T40";
-                        className = ['bg-purple'];
+                        className = ['bg-purple-darker'];
                         type = "T40";
                     }
 
@@ -726,7 +726,7 @@ var fetchCalendar = function (start, end, async) {
                     start: startDate ,
                     end:  endDate  ,
                     allDay:false,
-                    className : ['bg-blue'],
+                    className : ['bg-blue-darker'],
                     editable: false,
                     type:'D',
                     calendarId: response[i].id
@@ -854,13 +854,13 @@ var fetchTickets = function (receptionId, async) {
                 if(container.tonnage === 20)
                 {
                     id = id + 'T20';
-                    className = ['bg-green'];
+                    className = ['bg-green-darker'];
                     type = "T20";
                 }
                 else if(container.tonnage === 40)
                 {
                     id = id + 'T40';
-                    className = ['bg-purple'];
+                    className = ['bg-purple-darker'];
                     type = "T40";
                 }
 

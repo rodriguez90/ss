@@ -25,6 +25,7 @@ use yii\helpers\Url;
 use kartik\mpdf\Pdf;
 use Mpdf\Mpdf;
 
+
 /**
  * ProcessController implements the CRUD actions for Process model.
  */
@@ -295,6 +296,10 @@ class ProcessController extends Controller
         return $response;
     }
 
+    /**
+     * @param $model
+     * @return array
+     */
     protected function createProcess($model)
     {
         $response = array();
