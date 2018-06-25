@@ -63,7 +63,7 @@ FormAsset::register($this);
         <div class="form-group">
             <label class="col-md-3 col-sm-3 control-label">Teléfono</label>
             <div class="col-md-7 col-sm-7">
-                <input name="telefono-0"   type="text" value="<?= $number1->phone_number ?>"  class="form-control" data-parsley-required="true"/>
+                <input name="telefono-0"   type="text" value="<?= $number1->phone_number ?>"  class="form-control" data-parsley-required="true" data-parsley-type="number" data-parsley-maxlength="12" data-parsley-minlength="12" />
             </div>
             <div class="col-md-2 col-sm-2">
                 <a id="add-phone" class="btn btn-primary"  title="Adicionar Teléfono" > <i class="fa fa-plus"></i></a>
@@ -76,7 +76,7 @@ FormAsset::register($this);
                echo "<div id='group-" . $nphone . "' class='form-group phone' >";
                echo "<label class='col-md-3 col-sm-3 control-label'>Teléfono</label>";
                echo "<div class='col-md-7 col-sm-7'>";
-               echo "<input name='telefono-".$nphone."' type='text' value='".$p->phone_number."'  class='form-control' data-parsley-required='true'/>";
+               echo "<input name='telefono-".$nphone."' type='text' value='".$p->phone_number."'  class='form-control' data-parsley-required='true' data-parsley-type='number' data-parsley-maxlength='12' data-parsley-minlength='12'/>";
                echo " </div> ";
                echo "<div class='col-md-2 col-sm-2'>";
                echo " <a id='btn-".$nphone."' class='btn btn-danger'  title='Eliminar Teléfono' > ";
