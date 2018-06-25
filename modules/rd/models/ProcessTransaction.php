@@ -10,7 +10,7 @@ use Yii;
  * @property int $id
  * @property string $process_id
  * @property int $container_id
- * @property string $regiter_truck
+ * @property string $register_truck
  * @property string $register_driver
  * @property string $delivery_date
  * @property int $active

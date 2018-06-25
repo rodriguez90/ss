@@ -907,26 +907,28 @@ var fetchTickets = function (receptionId, async) {
 };
 
 var stop_watch_start = moment().hour(0).minute(29).second(59);
-var stop_watch_end = moment(stop_watch_start).subtract({'minutes' : 30});
+var timerId = null;
 
 var handleStopWatch = function()
 {
-    var c = $("#stop_watch");
+    var sw = $("#stop_watch");
     stop_watch_start.subtract({seconds: 1});
+    sw.text("00:" + stop_watch_start.format('mm:ss'));
 
-    if(stop_watch_start.minutes() < 10 )
+    if(stop_watch_start.format('mm:ss') === "00:00")
+    {
+        clearTimeout(timerId);
+        alert("Ha espirado el tiempo de trabajo");
+        window.location.reload();
+        return;
+    }
+
+    if(stop_watch_start.minutes() < 10 &&  !$("#stop_watch_widget").hasClass("bg-red") )
     {
         $("#stop_watch_widget").removeClass("bg-green")
         $("#stop_watch_widget").addClass("bg-red")
     }
 
-    if(stop_watch_start === stop_watch_end || stop_watch_start.minutes === 0)
-    {
-        alert("Ha espirado el tiempo de trabajo");
-        window.location.reload();
-    }
-
-    c.text("00:" + stop_watch_start.format('mm:ss'));
 };
 
 $(document).ready(function () {
@@ -944,6 +946,6 @@ $(document).ready(function () {
     // fetchReceptionTransactions();
 
     // stop watch
-    setInterval(handleStopWatch, 1000);
+    timerId = setInterval(handleStopWatch, 1000);
 
 });

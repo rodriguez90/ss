@@ -101,8 +101,8 @@ class SiteController extends Controller
 
         $searchModel = new ProcessSearch();
         $dataProvider = $searchModel->search($params);
-        $importCount = $searchModel->search(["type"=>Process::PROCESS_IMPORT])->totalCount;
-        $exportCount = $searchModel->search(["type"=>Process::PROCESS_EXPORT])->totalCount;
+        $importCount = Process::find()->where(['type'=>Process::PROCESS_IMPORT])->count();;
+        $exportCount = Process::find()->where(['type'=>Process::PROCESS_EXPORT])->count();
         $ticketCount = TicketSearch::find()->count();
         $myparams = array();
         $myparams['searchModel'] = $searchModel;

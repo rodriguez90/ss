@@ -25,10 +25,8 @@ var handleBootstrapWizardsValidation = function() {
                         .rows( { selected: true } )
                         .data()
                         .each( function ( value, index ) {
-                            // console.log( 'Data in index: '+ index +' is: '+ value.name );
-                            // if(value.id === -1 || value.status === 'Pendiente')
 
-                            if(value.id === -1)
+                            if(value.selectable)
                             {
                                 table.row.add(
                                     value
@@ -38,84 +36,34 @@ var handleBootstrapWizardsValidation = function() {
                 }
                 else if(ui.index == 2)
                 {
-                    // add to table2 selected containers
-                    // var selectedValue = $("input[name='radio_default_inline']:checked").val();
-                    //
-                    // var trans_company = null;
-                    //
-                    // var sourceTable = null;
-                    //
-                    // if(selectedValue === "1")
-                    // {
-                    //     sourceTable = $('#data-table3').DataTable();
-                    // }
-                    // else
-                    // {
-                    //     trans_company =  {
-                    //         "id":$("#selectTransCompany option:selected")[0].value,
-                    //         "name": $("#selectTransCompany option:selected").text(),
-                    //     };
-                    //     sourceTable = $('#data-table').DataTable();
-                    // }
-
                     var sourceTable = $('#data-table3').DataTable();
 
                     var table2 = $('#data-table2').DataTable();
+
                     table2
                         .clear()
                         .draw();
 
                     sourceTable
-                        .rows( { selected: true } )
+                        .rows( )
                         .data()
                         .each( function ( value, index ) {
-                            // console.log( 'Data in index: '+index +' is: '+ value.name );
-                            if(value.id === -1)
-                            {
-                                table2.row.add(
-                                    value
-                                ).draw();
-                            }
+                            table2.row.add(
+                                value
+                            ).draw();
                         });
-
-                    // set text value
-                    // $("#trans_company").text($("#selectTransCompany option:selected").text());
                 }
                 else if(ui.index==3)
                 {
-                    // var btn = $("[role='button']").eq(0);
-                    // var aTag = null;
-                    //
-                    // if(btn) {
-                    //     aTag = nextBtn.find("a")
-                    // }
-                    //
-                    // if(aTag)
-                    //     aTag.text('');
-                    //
-                    //  btn = $("[role='button']").eq(1);
-                    //
-                    // if(btn) {
-                    //     aTag = nextBtn.find("a")
-                    // }
-                    //
-                    // if(aTag)
-                    //     aTag.text('');
+
                 }
                 else
                 {
-                    // chagen text next button to next
-                    // var nextBtn = $("[role='button']").eq(1);
-                    // var aTag = null;
-                    // if(nextBtn)
-                    //     aTag = nextBtn.find("a")
-                    //
-                    // if(aTag)
-                    //     aTag.text('Siguiente');
+
                 }
             },
             validating: function (e, ui) {
-                var result = false;
+                var result = true;
 
                 // back navigation no check validation
                 if(ui.index > ui.nextIndex)
@@ -123,59 +71,62 @@ var handleBootstrapWizardsValidation = function() {
                     if(ui.index == 2) // se desmarca el checkbox de confirmacion si c retrocede en el wizard
                         $('#confirming').prop('checked', false);
 
-                    return true;
+                    return result;
                 }
 
-                if (ui.index == 0) {
-                    // step-1 validation
+                if (ui.index == 0) { // step-1 validation
 
-                    return true;
                     var table = $('#data-table').DataTable();
 
-                    // var count = table.rows( { selected: true } ).count();
+                    var count = table.rows( { selected: true } ).count();
+
+                    if(count <= 0)
+                    {
+                        alert("Debe seleccionar al menos uno contenedor en el paso 1.");
+                        return false;
+                    }
 
                     table
                         .rows( { selected: true } )
                         .data()
                         .each( function ( value, index ) {
                             // console.log( 'Data in index: '+index +' is: '+ value.name );
-                            // FIXME: It Export -> Booking code -> check delyveryDate it's set
-                            if(processType === 2)
-                            {
-                                var deliveryDate = value.deliveryDate;
-                                if(!moment(deliveryDate).isValid())
+                            if(result && value.selectable) {
+                                // FIXME: It Export -> Booking code -> check delyveryDate it's set
+                                if(processType === 2)
                                 {
-                                    table
-                                        .clear()
-                                        .draw();
-                                    alert("Debe definir la Fecha Límite para los contenedores del Booking.");
-                                    return false;
+                                    var deliveryDate = value.deliveryDate;
+                                    if(!moment(deliveryDate).isValid())
+                                    {
+                                        table
+                                            .clear()
+                                            .draw();
+                                        result = false;
+                                        alert("Debe definir la Fecha Límite para los contenedores del Booking.");
+                                        return false;
+                                    }
                                 }
                             }
-
-                            if(value.id === -1 && !result) {
-                                result = true;
-                                return false;
-                            }
                         } );
-
-                    if(!result)
-                    {
-                        alert("Debe seleccionar contenedores en el paso 1.");
-                    }
 
                     return result;
 
                 } else if (ui.index == 1) {
 
                     // step-1 validation
-                    return true;
-                    var transCompany = $("#selectTransCompany option:selected").text();
-                    if(transCompany.length) return true;
+                    var table = $('#data-table3').DataTable();
 
-                    alert("Debe seleccionar la compañia de transporte.");
-                    return false;
+                    table
+                        .rows( )
+                        .data()
+                        .each( function ( value, index ) {
 
+                            if(result && value.transCompany.id === -1){
+                                result = false;
+                                alert("Debe asignarle a todos los contenedores la empresa de transporte .");
+                            }
+                        });
+                    return result
                 } else if (ui.index == 2) {
 
                     // step-2 validation

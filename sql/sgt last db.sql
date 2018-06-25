@@ -212,7 +212,7 @@ CREATE TABLE [dbo].[reception_transaction] (
   [id] int  IDENTITY(1,1) NOT NULL,
   [reception_id] bigint  NOT NULL,
   [container_id] int  NOT NULL,
-  [regiter_truck] varchar(50) COLLATE Modern_Spanish_CI_AS  NULL,
+  [register_truck] varchar(50) COLLATE Modern_Spanish_CI_AS  NULL,
   [register_driver] varchar(50) COLLATE Modern_Spanish_CI_AS  NULL,
   [delivery_date] date  NOT NULL,
   [active] bit  NOT NULL

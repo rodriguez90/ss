@@ -9,7 +9,7 @@ use app\modules\rd\models\Ticket;
 use app\modules\administracion\models\AdmUser;
 use app\modules\rd\models\TicketSearch;
 use app\modules\rd\models\Reception;
-use app\modules\rd\models\ReceptionTransaction;
+use app\modules\rd\models\ProcessTransaction;
 use app\modules\rd\models\Container;
 use app\modules\rd\models\Calendar;
 use Yii\web\Response;
@@ -258,13 +258,13 @@ class TicketController extends Controller
         elseif ($status === Ticket::RESERVE)
             $customMsg = 'reserva';
 
-        $transaction = Reception::getDb()->beginTransaction();
+        $transaction = Process::getDb()->beginTransaction();
         $processStatus = true;
 
         foreach ($tickets as $data)
         {
             $model = new Ticket();
-            $model->reception_transaction_id = $data['reception_transaction_id'];
+            $model->process_transaction_id = $data['process_transaction_id'];
             $model->calendar_id = $data['calendar_id'];
             $model->active = $data['active'];
             $model->status = $data['status'];
@@ -275,20 +275,20 @@ class TicketController extends Controller
 
                     if($processStatus)
                     {
-                        $receptionTransaction = ReceptionTransaction::findOne(['id'=>$model->reception_transaction_id]);
-                        $receptionTransaction->regiter_truck = $data['registerTruck'];
-                        $receptionTransaction->register_driver = $data['registerDriver'];
-                        $receptionTransaction->name_driver = $data['nameDriver'];
+                        $processTransaction = ProcessTransaction::findOne(['id'=>$model->process_transaction_id]);
+                        $processTransaction->register_truck = $data['registerTruck'];
+                        $processTransaction->register_driver = $data['registerDriver'];
+                        $processTransaction->name_driver = $data['nameDriver'];
 
-                        if(!$receptionTransaction->update(true, ['regiter_truck', 'register_driver', 'name_driver']))
+                        if(!$processTransaction->update(true, ['register_truck', 'register_driver', 'name_driver']))
                         {
                             $processStatus = false;
                             $response['msg'] = 'Ah ocurrido un error al actualizar la placa del carro y la cédula del chofer: '.
-                                implode(" ", $receptionTransaction->getErrorSummary(false));
+                                implode(" ", $processTransaction->getErrorSummary(false));
                         }
                     }
 
-                    $oldTicket = Ticket::findOne(['reception_transaction_id'=>$model->reception_transaction_id]);
+                    $oldTicket = Ticket::findOne(['process_transaction_id'=>$model->process_transaction_id]);
                     $calendarSlot = Calendar::findOne(['id'=>$model->calendar_id]);
                     if($processStatus && $oldTicket) // existe un ticket para esta transaccion
                     {
@@ -371,11 +371,11 @@ class TicketController extends Controller
 
                     if($processStatus) // update reception status
                     {
-                        $countTicketForReception = TicketSearch::find()->innerJoin('reception_transaction', 'ticket.reception_transaction_id = reception_transaction.id')
-                                                                       ->innerJoin('reception', 'reception.id=reception_transaction.reception_id')
+                        $countTicketForReception = TicketSearch::find()->innerJoin('process_transaction', 'ticket.process_transaction_id = process_transaction.id')
+                                                                       ->innerJoin('reception', 'reception.id=process_transaction.reception_id')
                                                                        ->where(['reception.id'=>$reception['id']])->count();
 
-                        $countReceptionTransaction = ReceptionTransaction::find()->where(['reception_id'=>$reception['id']])->count();
+                        $countReceptionTransaction = ProcessTransaction::find()->where(['reception_id'=>$reception['id']])->count();
 
                         $receptionModel = Reception::findOne(['id'=>$reception['id']]);
 
