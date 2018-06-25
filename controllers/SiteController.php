@@ -314,7 +314,7 @@ class SiteController extends Controller
             ->innerJoin('process_transaction','process_transaction.process_id = process.id')
             ->innerJoin('container','process_transaction.container_id = container.id')
             ->where(['process.type'=>Process::PROCESS_EXPORT])
-            ->andWhere(['process.active'=>1])
+
             ->all();
 
         $processImp = Process::find()
@@ -322,7 +322,7 @@ class SiteController extends Controller
             ->innerJoin('process_transaction','process_transaction.process_id = process.id')
             ->innerJoin('container','process_transaction.container_id = container.id')
             ->where(['process.type'=>Process::PROCESS_IMPORT])
-            ->andWhere(['process.active'=>1])
+
             ->all();
 
         $body = $this->renderPartial('print', [

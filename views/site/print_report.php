@@ -18,11 +18,11 @@ use app\modules\rd\models\Process;
     <style type="text/css">
 
         table {
-            font-family: "Helvetica", "Arial", sans-serif;
-            font-size: 12px;
-            margin-top: 10px;
-            text-align: center;
-        }
+             font-family: "Helvetica", "Arial", sans-serif;
+             font-size: 12px;
+             margin-top: 10px;
+             text-align: center;
+         }
 
 
         body {
@@ -57,7 +57,21 @@ use app\modules\rd\models\Process;
         }
 
 
+        #logo
+        {
+            position: relative;
+            float: left;
 
+        }
+        #fecha{
+            position: relative;
+            float: right;
+        }
+
+        #pdfhead td{
+            padding: 10px 10px 10px 10px;
+            width: 33.333333333333%;
+        }
 
     </style>
 
@@ -66,7 +80,23 @@ use app\modules\rd\models\Process;
 
 <div class="row">
 
-    <h4 style="text-align: center">Procesos</h4>
+    <table id="pdfhead" width="100%">
+        <tr>
+            <td>
+                <div id="logo">
+                    <img src="<?= Yii::$app->homeUrl ?>/../img/logo.png">
+                </div>
+            </td>
+            <td><h4 style="text-align: center">DETALLES DE PROCESOS</h4> </td>
+            <td><div id="fecha">
+                    <label>GUAYAQUIL <?= date('d') . ' de ' . date('F') . ' del ' . date('Y') ?></label>
+                </div>
+            </td>
+        </tr>
+    </table>
+
+
+
 
     <?php
 
