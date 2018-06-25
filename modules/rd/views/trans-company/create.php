@@ -11,7 +11,7 @@ $this->params['breadcrumbs'][] = ['label' => 'Compañías de Transporte', 'url' 
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-10 col-sm-10">
         <div class="panel panel-inverse">
             <div class="panel-heading">
                 <div class="panel-heading-btn">

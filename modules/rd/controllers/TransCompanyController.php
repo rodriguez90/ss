@@ -2,6 +2,7 @@
 
 namespace app\modules\rd\controllers;
 
+use app\modules\rd\models\TransCompanyPhone;
 use Yii;
 use app\modules\rd\models\TransCompany;
 use app\modules\rd\models\TransCompanySearch;
@@ -69,6 +70,8 @@ class TransCompanyController extends Controller
         if(!Yii::$app->user->can("trans_company_view"))
             throw new ForbiddenHttpException('Usted no tiene permiso ver esta vista');
 
+
+
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -88,6 +91,18 @@ class TransCompanyController extends Controller
         $model = new TransCompany();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+
+            for ($count = 0; $count <1000; $count++) {
+                $phone = Yii::$app->request->post('telefono-' . $count);
+                if ($phone != null) {
+                    $phonenumber = new TransCompanyPhone();
+                    $phonenumber->phone_number = $phone;
+                    $phonenumber->trans_company_id = $model->id;
+                    $phonenumber->save();
+                }else{
+                    break;
+                }
+            }
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
@@ -109,13 +124,38 @@ class TransCompanyController extends Controller
             throw new ForbiddenHttpException('Usted no tiene permiso ver esta vista');
 
         $model = $this->findModel($id);
+        $phones = TransCompanyPhone::findAll(['trans_company_id'=>$model->id]);
+        $number1 = null;
+        if(count($phones)>0 ){
+            $number1 = array_shift($phones);
+        }
+
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+
+            foreach ($phones as $p){
+                $p->delete();
+            }
+            if($number1!=null)
+                $number1->delete();
+
+            for ($count = 0; $count <1000; $count++) {
+                $phone = Yii::$app->request->post('telefono-' . $count);
+                if ($phone != null) {
+                    $phonenumber = new TransCompanyPhone();
+                    $phonenumber->phone_number = $phone;
+                    $phonenumber->trans_company_id = $model->id;
+                    $phonenumber->save();
+                }else{
+                    break;
+                }
+            }
+
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('update', [
-            'model' => $model,
+            'model' => $model,'phones'=>$phones,'number1'=>$number1,
         ]);
     }
 

@@ -23,6 +23,8 @@ $this->params['breadcrumbs'][] = 'Update';
             <div class="panel-body">
     <?= $this->render('_form', [
         'model' => $model,
+        'phones'=>$phones,
+        'number1'=>$number1
     ]) ?>
 
             </div>

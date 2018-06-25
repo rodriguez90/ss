@@ -35,6 +35,13 @@ class TransCompany extends \yii\db\ActiveRecord
         ];
     }
 
+    public function attributes()
+    {
+        $attr = parent::attributes();
+        $attr[] = 'phones';
+        return $attr;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -46,6 +53,13 @@ class TransCompany extends \yii\db\ActiveRecord
             'ruc' => 'RUC',
             'address' => 'Dirección',
             'active' => 'Activa',
+            'phones' => 'Teléfonos',
         ];
     }
+
+    public function getPhones()
+    {
+        return $this->hasMany(TransCompanyPhone::className(), ['trans_company_id' => 'id']);
+    }
+
 }
