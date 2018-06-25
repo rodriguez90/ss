@@ -131,23 +131,25 @@ use app\modules\rd\models\Process;
         <table id="datalle" width="100%" >
             <thead>
             <tr>
-                <td style="font-weight: bold">Número del Trámite</td>
-                <td style="font-weight: bold">BL</td>
-                <td style="font-weight: bold">Fecha Límite</td>
-                <td style="font-weight: bold">Agencia</td>
-                <td style="font-weight: bold">Tipo de Trámite</td>
-                <td style="font-weight: bold">Cantidad de Contenedores</td>
+                <td style='background: silver;'> <?= ( $processImp->type === Process::PROCESS_IMPORT ? 'BL':'Booking' ) ?> </td>
+                <td style='background: silver;'>No.</td>
+                <td style='background: silver;'>Tipo de trámite</td>
+                <td style='background: silver;'>Fecha de Creación</td>
+                <td style='background: silver;'>Fecha Límite</td>
+                <td style='background: silver;'>Cantidad de Contenedores</td>
             </tr>
             </thead>
             <tbody>
             <?php
             foreach ($processExp as $exp) {
                 echo "<tr>";
-                echo "<td >" . $exp['id']."</td>";
-                echo "<td >" . $exp['bl']. "</td>";
-                echo "<td >" . (new \yii\i18n\Formatter())->asDate($exp['delivery_date'], 'dd/M/yyyy'). "</td>";
-                echo "<td >" . $exp->agency->name . "</td>";
-                echo "<td >" . Process::PROCESS_LABEL[$exp['type']] . "</td>";
+                echo "<td>". $exp->bl ."</td>";
+                echo "<td>".$exp->id."</td>";
+                $type = $exp->type;
+                echo "<td>".Process::PROCESS_LABEL[$type]."</td>";
+                $create_at = $exp->created_at;
+                echo "<td>".(new \yii\i18n\Formatter())->asDate($create_at , 'dd/M/yyyy')."</td>";
+                echo "<td>".(new \yii\i18n\Formatter())->asDate($exp->delivery_date, 'dd/M/yyyy')."</td>";
                 echo "<td >" . $exp->getContainerAmount()  . "</td>";
                 echo "</tr>";
             }
