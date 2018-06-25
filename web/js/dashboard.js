@@ -42,41 +42,26 @@ var handleWidgetOptions = function() {
         document.getElementById('import').style.display = 'inline';
         document.getElementById('report').style.display = 'inline';
     }
-    else if(role === 'Importador')
+    else if(role === 'Importador' || role === 'Exportador')
     {
         document.getElementById('import').style.display = 'inline';
-        document.getElementById('report').style.display = 'inline';
-    }
-    else if(role === 'Exportador')
-    {
         document.getElementById('export').style.display = 'inline';
         document.getElementById('report').style.display = 'inline';
     }
     else if(role === 'Cia_transporte')
     {
-        document.getElementById('ticket').style.display = 'inline';
+        document.getElementById('import').style.display = 'inline';
+        document.getElementById('export').style.display = 'inline';
         document.getElementById('report').style.display = 'inline';
     }
     else if(role === 'Administracion')
     {
         document.getElementById('import').style.display = 'inline';
         document.getElementById('export').style.display = 'inline';
-        document.getElementById('ticket').style.display = 'inline';
+        // document.getElementById('ticket').style.display = 'inline';
         document.getElementById('report').style.display = 'inline';
     }
 
-};
-
-var handleTableByOption = function (option) {
-
-    switch (option)
-    {
-        case 1: // receptions
-        {
-
-            break;
-        }
-    }
 };
 
 var Dashboard = function () {

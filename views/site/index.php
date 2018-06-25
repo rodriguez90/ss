@@ -34,7 +34,7 @@ if($user)
 <div class="row">
         <!-- begin col-3 -->
     <div id="import" class="col-md-3 col-sm-6" style="display: none;">
-        <div class="widget widget-stats bg-red">
+        <div class="widget widget-stats bg-green">
             <div class="stats-icon"><i class="fa fa-rotate-90 fa-sign-in"></i></div>
             <div class="stats-info">
                 <h4>Importación</h4>
@@ -63,36 +63,18 @@ if($user)
     <!-- end col-3 -->
 
     <!-- begin col-3 -->
-    <div id="wharehouse" class="col-md-3 col-sm-6"  style="display: none;">
-        <div class="widget widget-stats bg-purple">
-            <div class="stats-icon"><i class="fa fa-building"></i></div>
-            <div class="stats-info">
-                <h4>DEPÓSITOS</h4>
-                <p>1,291,922</p>
-            </div>
-            <div class="stats-link">
-                <a href="javascript:;">Ver Detalles <i class="fa fa-arrow-circle-o-right"></i></a>
-            </div>
-        </div>
-    </div>
-    <!-- end col-3 -->
-
-
-
-
-    <!-- begin col-3 -->
-    <div id="ticket" class="col-md-3 col-sm-6"  style="display: none;">
-        <div class="widget widget-stats bg-green">
-            <div class="stats-icon"><i class="fa fa-ticket"></i></div>
-            <div class="stats-info">
-                <h4>CUPOS</h4>
-                <p><?php echo $ticketCount?></p>
-            </div>
-            <div class="stats-link">
-                <a href="<?php echo Url::to(['/rd/ticket']);?>">Ver Detalles.<i class="fa fa-arrow-circle-o-right"></i></a>
-            </div>
-        </div>
-    </div>
+<!--    <div id="ticket" class="col-md-3 col-sm-6"  style="display: none;">-->
+<!--        <div class="widget widget-stats bg-red">-->
+<!--            <div class="stats-icon"><i class="fa fa-ticket"></i></div>-->
+<!--            <div class="stats-info">-->
+<!--                <h4>CUPOS</h4>-->
+<!--                <p>--><?php //echo $ticketCount?><!--</p>-->
+<!--            </div>-->
+<!--            <div class="stats-link">-->
+<!--                <a href="--><?php //echo Url::to(['/rd/ticket']);?><!--">Asignación de turnos importación.<i class="fa fa-arrow-circle-o-right"></i></a>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
     <!-- end col-3 -->
 
     <!-- begin col-3 -->
@@ -156,7 +138,7 @@ if($user)
                             ],
                             [
 //                                'class' => 'yii\grid\DataColumn',
-                                'attribute' => 'created_at',
+                                'attribute' => 'delivery_date',
                                 'format' => 'date',
                             ],
 //                            'created_at:datetime',
@@ -185,7 +167,6 @@ if($user)
 //                            ],
                             [
                                 'class' => 'yii\grid\DataColumn', // can be omitted, as it is the default
-                                'label' => Yii::t('app', "Proceso"),
                                 'attribute' => 'type',
                                 'value' => function($data) {
                                     return Process::PROCESS_LABEL[$data['type']];

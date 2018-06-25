@@ -79,10 +79,10 @@ var handleDataTable = function() {
             // console.log(dt.row(index.row, index.column).data());
             var id = dt.row(index.row, index.column).data().id;
             var name = dt.row(index.row, index.column).data().name;
-
-            if(id !== -1 )
+            var status = dt.row(index.row, index.column).data().status;
+            if(status !== 'PENDIENTE' && !moment(status).isValid())
             {
-                alert('Este contenedor ya fue seleccionado en uan recepción previa.')
+                alert('Este contenedor no puede ser seleccionado su estado es: ' + status);
                 e.preventDefault();
                 return false;
             }
@@ -167,17 +167,37 @@ var handleDataTable2 = function () {
 
 var handleDataTable3 = function () {
     "use strict";
-
+    // <th>Seleccione <input type="checkbox" name="select_all2" value="1" id="select-all"></th>
+    // <th>Contenedores</th>
+    // <th>Tipo/Tamaño</th>
+    // <th>Fecha Límite</th>
+    // <th>Cliente</th>
+    // <th>Empresa de Transporte</th>
     if ($('#data-table3').length !== 0) {
         $('#data-table3').DataTable({
             dom: '<"top"ip<"clear">>t',
+            processing:true,
+            lengthMenu: [5, 10, 15],
+            "pageLength": 3,
+            "language": lan,
+            responsive: true,
+            rowId: 'name',
+            select: {
+                // items: 'cells',
+                style:    'multi',
+                selector: 'td:first-child'
+            },
             "columns": [
+                {
+                    // "title": "Seleccione",
+                    "data":'checkbox', // FIXME CHECK THIS
+                },
                 { "title": "Contenedor",
                     "data":"name",
                 },
                 { "title": "Tipo/Tamaño",
                 },
-                { "title": "Fecha Limite",
+                { "title": "Fecha Límite",
                     "data":"deliveryDate",
                 },
                 { "title": "Cliente",
@@ -187,169 +207,36 @@ var handleDataTable3 = function () {
                     "data":"transCompany"
                 },
             ],
-            processing:true,
-            lengthMenu: [5, 10, 15],
-            "pageLength": 3,
-            "language": lan,
-            responsive: true,
             columnDefs: [
                 {
-                    targets: [1],
+                    orderable: false,
+                    searchable: false,
+                    className: 'select-checkbox',
+                    targets:   [0],
+                    visible:false
+                    // data: null,
+                },
+                {
+                    targets: [2],
                     title:"Tipo",
                     data:null,
                     render: function ( data, type, full, meta ) {
-                        // console.log("In render: " + data);
                         return data.type + data.tonnage;
                     },
                 },
-
+                {
+                    targets: [5],
+                    // data:null,
+                    render: function ( data, type, full, meta ) {
+                        return data.name
+                    },
+                },
             ],
-            // "drawCallback": function( settings ) {
-            //     // alert( 'DataTables has redrawn the table' );
-            //     // $('.dt-select2').select2({
-            //     //     language: "es",
-            //     //     placeholder: 'Seleccione la compañia de transporte',
-            //     //     width: 'auto',
-            //     //     minimumInputLength:5,
-            //     //     // allowClear: true,
-            //     //     // tags: true,
-            //     //     closeOnSelect: false,
-            //     //     ajax: {
-            //     //         url: homeUrl + '/rd/api-trans-company',
-            //     //         dataType: 'json',
-            //     //         delay: 250,
-            //     //         processResults: function (data) {
-            //     //             // console.log(data);
-            //     //             var myResults  = [];
-            //     //             $.each(data, function (index, item) {
-            //     //                 // console.log(item);
-            //     //                 myResults .push({
-            //     //                     id: item.id,
-            //     //                     text: item.name
-            //     //                 });
-            //     //             });
-            //     //             return {
-            //     //                 results: myResults
-            //     //             };
-            //     //         },
-            //     //         cache: true,
-            //     //     },
-            //     // });
-            // },
-            // rows: {
-            //     callback: function(row, data, index) {
-            //         var id  = "selectTransCompany" + String(data.name).replace(" ","");
-            //         var html = "<select class=\"dt-select2\" id=\"" + id + "\"></select>";
-            //         console.log(data.name);
-            //         console.log(index);
-            //         console.log(row);
-            //         console.log(id);
-            //         console.log(html)
-            //     },
-            // },
-            "rowCallback": function ( row, data, index ) {
-
-                var id  = "selectTransCompany" + String(data.name).replace(" ","");
-                var html= null;
-                // console.log(data.name);
-                // console.log(index);
-                // console.log(row);
-                // console.log(id);
-
-                // $('td', row).eq(5).html(html);
-                var html = "<select id=\"" + id + "\"></select>";
-                console.log(html);
-                $('td:eq(4)', row).html( html);
-                console.log($('td:eq(4)', row).html());
-
-
-                $("#"+id).select2(
-                    {
-                        language: "es",
-                        placeholder: 'Seleccione la compañia de transporte',
-                        width: 'auto',
-                        minimumInputLength:5,
-                        // allowClear: true,
-                        // tags: true,
-                        closeOnSelect: true,
-                        ajax: {
-                            url: homeUrl + '/rd/api-trans-company',
-                            dataType: 'json',
-                            delay: 250,
-                            processResults: function (data) {
-                                // console.log(data);
-                                var myResults  = [];
-                                $.each(data, function (index, item) {
-                                    // console.log(item);
-                                    myResults .push({
-                                        id: item.id,
-                                        text: item.name
-                                    });
-                                });
-                                return {
-                                    results: myResults
-                                };
-                            },
-                            cache: true,
-                        },
-                    });
-
-                // if ($("#"+id).hasClass("select2-hidden-accessible")) {
-                //     // html = $("#"+id).html();
-                //     // html = $("#"+id).html();
-                //     console.log("Select2 :" + id + "has been initialized")
-                // }
-                // else
-                // {
-                //     html = "<select class=\"form-control\" id=\"" + id + "\"/>";
-                //
-                // }
-            }
-            // rowCallback: function( row, data, index ) {
-            //
-            //     var id  = "selectTransCompany" + String(data.name).replace(" ","");
-            //     var html = "<select class=\"dt-select2\" id=\"" + id + "\"></select>";
-            //     console.log(data.name);
-            //     console.log(index);
-            //     console.log(row);
-            //     console.log(id);
-            //     console.log(html)
-            //
-            //     $('td:eq(4)', row).html( html);
-            //
-            //     // $("#"+id).select2(
-            //     //     {
-            //     //         language: "es",
-            //     //         placeholder: 'Seleccione la compañia de transporte',
-            //     //         width: 'auto',
-            //     //         minimumInputLength:5,
-            //     //         // allowClear: true,
-            //     //         // tags: true,
-            //     //         closeOnSelect: false,
-            //     //         ajax: {
-            //     //             url: homeUrl + '/rd/api-trans-company',
-            //     //             dataType: 'json',
-            //     //             delay: 250,
-            //     //             processResults: function (data) {
-            //     //                 // console.log(data);
-            //     //                 var myResults  = [];
-            //     //                 $.each(data, function (index, item) {
-            //     //                     // console.log(item);
-            //     //                     myResults .push({
-            //     //                         id: item.id,
-            //     //                         text: item.name
-            //     //                     });
-            //     //                 });
-            //     //                 return {
-            //     //                     results: myResults
-            //     //                 };
-            //     //             },
-            //     //             cache: true,
-            //     //         },
-            //     //     });
-            // }
         });
     }
+
+    var table3 = $('#data-table3').DataTable();
+    table3.column(0).visible(false);
 };
 
 var TableManageTableSelect = function () {

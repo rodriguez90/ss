@@ -4,8 +4,121 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c3d9cfc881ddf43af7b5a05371e0ae81",
+    "content-hash": "c2c37fee093e7a6ff47d5dea3558988a",
     "packages": [
+        {
+            "name": "2amigos/qrcode-library",
+            "version": "1.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/2amigos/qrcode-library.git",
+                "reference": "5356f2355c7ba9a9ced67753411c88c2c095deb0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/2amigos/qrcode-library/zipball/5356f2355c7ba9a9ced67753411c88c2c095deb0",
+                "reference": "5356f2355c7ba9a9ced67753411c88c2c095deb0",
+                "shasum": ""
+            },
+            "require": {
+                "bacon/bacon-qr-code": "^1.0",
+                "ext-gd": "*",
+                "khanamiryan/qrcode-detector-decoder": "^1.0",
+                "php": ">=5.6"
+            },
+            "require-dev": {
+                "codeception/codeception": "*",
+                "codeception/specify": "^0.4.3",
+                "codeception/verify": "^0.3.1",
+                "friendsofphp/php-cs-fixer": "^2.3",
+                "phpmd/phpmd": "@stable",
+                "scrutinizer/ocular": "~1.1",
+                "squizlabs/php_codesniffer": "*",
+                "yiisoft/yii2": "*"
+            },
+            "type": "yii2-extension",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Da\\QrCode\\": "./src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "2amigOS! Consulting Group",
+                    "email": "hola@2amigos.us",
+                    "homepage": "http://2amigos.us",
+                    "role": "Developer"
+                }
+            ],
+            "description": "QrCode Generator",
+            "homepage": "http://www.2amigos.us/open-source/details/qrcode-library",
+            "keywords": [
+                "2amigos",
+                "component",
+                "extension",
+                "qr",
+                "qrcode",
+                "yii",
+                "yii 2",
+                "yii2"
+            ],
+            "time": "2017-08-25T15:23:58+00:00"
+        },
+        {
+            "name": "bacon/bacon-qr-code",
+            "version": "1.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Bacon/BaconQrCode.git",
+                "reference": "5a91b62b9d37cee635bbf8d553f4546057250bee"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Bacon/BaconQrCode/zipball/5a91b62b9d37cee635bbf8d553f4546057250bee",
+                "reference": "5a91b62b9d37cee635bbf8d553f4546057250bee",
+                "shasum": ""
+            },
+            "require": {
+                "ext-iconv": "*",
+                "php": "^5.4|^7.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.8"
+            },
+            "suggest": {
+                "ext-gd": "to generate QR code images"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "BaconQrCode": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-2-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Ben Scholzen 'DASPRiD'",
+                    "email": "mail@dasprids.de",
+                    "homepage": "http://www.dasprids.de",
+                    "role": "Developer"
+                }
+            ],
+            "description": "BaconQrCode is a QR code generator for PHP.",
+            "homepage": "https://github.com/Bacon/BaconQrCode",
+            "time": "2017-10-17T09:59:25+00:00"
+        },
         {
             "name": "bower-asset/bootstrap",
             "version": "v3.3.7",
@@ -63,6 +176,28 @@
                 "url": "https://api.github.com/repos/jquery/jquery-dist/zipball/77d2a51d0520d2ee44173afdf4e40a9201f5964e",
                 "reference": "77d2a51d0520d2ee44173afdf4e40a9201f5964e",
                 "shasum": null
+            },
+            "type": "bower-asset",
+            "license": [
+                "MIT"
+            ]
+        },
+        {
+            "name": "bower-asset/jquery-ui",
+            "version": "1.12.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/components/jqueryui.git",
+                "reference": "44ecf3794cc56b65954cc19737234a3119d036cc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/components/jqueryui/zipball/44ecf3794cc56b65954cc19737234a3119d036cc",
+                "reference": "44ecf3794cc56b65954cc19737234a3119d036cc",
+                "shasum": null
+            },
+            "require": {
+                "bower-asset/jquery": ">=1.6"
             },
             "type": "bower-asset",
             "license": [
@@ -487,6 +622,105 @@
             "time": "2014-11-10T18:09:37+00:00"
         },
         {
+            "name": "kartik-v/yii2-report",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/kartik-v/yii2-report.git",
+                "reference": "9d163aa3b15a63936c33d46a3235f24fc6f53c0f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/kartik-v/yii2-report/zipball/9d163aa3b15a63936c33d46a3235f24fc6f53c0f",
+                "reference": "9d163aa3b15a63936c33d46a3235f24fc6f53c0f",
+                "shasum": ""
+            },
+            "type": "yii2-extension",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "kartik\\report\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Kartik Visweswaran",
+                    "email": "kartikv2@gmail.com",
+                    "homepage": "http://www.krajee.com/"
+                }
+            ],
+            "description": "A Yii2 component to generate beautiful formatted reports using MS Word Templates in PDF/DOC/DOCX format",
+            "homepage": "https://github.com/kartik-v/yii2-report",
+            "keywords": [
+                "doc",
+                "docx",
+                "extension",
+                "pdf",
+                "report",
+                "template",
+                "yii2"
+            ],
+            "time": "2018-05-07T03:08:11+00:00"
+        },
+        {
+            "name": "khanamiryan/qrcode-detector-decoder",
+            "version": "1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/khanamiryan/php-qrcode-detector-decoder.git",
+                "reference": "a75482d3bc804e3f6702332bfda6cccbb0dfaa76"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/khanamiryan/php-qrcode-detector-decoder/zipball/a75482d3bc804e3f6702332bfda6cccbb0dfaa76",
+                "reference": "a75482d3bc804e3f6702332bfda6cccbb0dfaa76",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.6|^7.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^5.7"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Zxing\\": "lib/"
+                },
+                "files": [
+                    "lib/Common/customFunctions.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ashot Khanamiryan",
+                    "email": "a.khanamiryan@gmail.com",
+                    "homepage": "https://github.com/khanamiryan",
+                    "role": "Developer"
+                }
+            ],
+            "description": "QR code decoder / reader",
+            "homepage": "https://github.com/khanamiryan/php-qrcode-detector-decoder/",
+            "keywords": [
+                "barcode",
+                "qr",
+                "zxing"
+            ],
+            "time": "2018-04-26T11:41:33+00:00"
+        },
+        {
             "name": "mdmsoft/yii2-admin",
             "version": "dev-master",
             "source": {
@@ -543,6 +777,57 @@
                 "yii"
             ],
             "time": "2017-11-18T13:27:11+00:00"
+        },
+        {
+            "name": "motion/yii2-language-provider",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/motion-web-production/yii2-language-provider.git",
+                "reference": "018d829ee12c2de653e799c374616b965c49e22d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/motion-web-production/yii2-language-provider/zipball/018d829ee12c2de653e799c374616b965c49e22d",
+                "reference": "018d829ee12c2de653e799c374616b965c49e22d",
+                "shasum": ""
+            },
+            "require": {
+                "yiisoft/yii2": "~2.0.13"
+            },
+            "require-dev": {
+                "codeception/codeception": "~2.0"
+            },
+            "type": "yii2-extension",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "motion\\i18n\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Vladimir Kuprienko",
+                    "email": "vldmr.kuprienko@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "This package provides interface for language provider for Yii2 Framework",
+            "keywords": [
+                "i18n",
+                "language",
+                "provider",
+                "yii2"
+            ],
+            "time": "2018-03-18T17:06:20+00:00"
         },
         {
             "name": "mpdf/mpdf",
@@ -947,6 +1232,189 @@
             "time": "2018-01-23T07:37:21+00:00"
         },
         {
+            "name": "synctech/yii2-sybase",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://gitlab.com/merizrizal/yii2-sybase.git",
+                "reference": "b322d3df4735f5ead69c64c02d3a0ceb45001980"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://gitlab.com/api/v4/projects/merizrizal%2Fyii2-sybase/repository/archive.zip?sha=b322d3df4735f5ead69c64c02d3a0ceb45001980",
+                "reference": "b322d3df4735f5ead69c64c02d3a0ceb45001980",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0",
+                "yiisoft/yii2": "~2.0.6"
+            },
+            "type": "yii2-extension",
+            "autoload": {
+                "psr-4": {
+                    "sybase\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "description": "Property of synctech.id",
+            "time": "2018-01-24T09:06:04+00:00"
+        },
+        {
+            "name": "websightnl/yii2-sybase",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/websightnl/yii2-sybase.git",
+                "reference": "a3e548be1b2cbc683ede0f8a0fc1688bd0fc49ea"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/websightnl/yii2-sybase/zipball/a3e548be1b2cbc683ede0f8a0fc1688bd0fc49ea",
+                "reference": "a3e548be1b2cbc683ede0f8a0fc1688bd0fc49ea",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0",
+                "yiisoft/yii2": ">=2.0.6"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "websightnl\\yii2\\sybase\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause-Attribution"
+            ],
+            "authors": [
+                {
+                    "name": "Eric Bus",
+                    "email": "eric.bus@websight.nl",
+                    "homepage": "https://websight.nl"
+                }
+            ],
+            "description": "Yii2 schema support for Sybase database, tested with SQL Anywhere 12.0.",
+            "keywords": [
+                "sybase"
+            ],
+            "time": "2016-10-10T07:09:42+00:00"
+        },
+        {
+            "name": "yiimaker/yii2-email-templates",
+            "version": "4.1.x-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/yiimaker/yii2-email-templates.git",
+                "reference": "368f1b477441f2bc34fd88302981e21b685bd9c9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/yiimaker/yii2-email-templates/zipball/368f1b477441f2bc34fd88302981e21b685bd9c9",
+                "reference": "368f1b477441f2bc34fd88302981e21b685bd9c9",
+                "shasum": ""
+            },
+            "require": {
+                "motion/yii2-language-provider": "~2.1",
+                "php": ">=5.6.0",
+                "yiimaker/yii2-translatable": "~1.0.1",
+                "yiisoft/yii2": "^2.0.13"
+            },
+            "require-dev": {
+                "codeception/codeception": "~2.0",
+                "yiisoft/yii2-gii": "~2.0.0"
+            },
+            "suggest": {
+                "vova07/yii2-imperavi-widget": "If you want use Imperavi editor you should install this package",
+                "yiisoft/yii2-bootstrap": "If you want use default view files in backend you should install this package"
+            },
+            "type": "yii2-extension",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "4.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "ymaker\\email\\templates\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Vladimir Kuprienko",
+                    "email": "vldmr.kuprienko@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Extension for creating of email templates and manage using your site dashboard",
+            "keywords": [
+                "email",
+                "gii",
+                "module",
+                "placeholders",
+                "templates",
+                "yii2"
+            ],
+            "time": "2018-05-24T17:11:00+00:00"
+        },
+        {
+            "name": "yiimaker/yii2-translatable",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/yiimaker/yii2-translatable.git",
+                "reference": "3c40cd3fa5821abc471a971fd21bfa591ecd25b5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/yiimaker/yii2-translatable/zipball/3c40cd3fa5821abc471a971fd21bfa591ecd25b5",
+                "reference": "3c40cd3fa5821abc471a971fd21bfa591ecd25b5",
+                "shasum": ""
+            },
+            "require": {
+                "yiisoft/yii2": "^2.0.0"
+            },
+            "require-dev": {
+                "codeception/codeception": "~2.3"
+            },
+            "type": "yii2-extension",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "ymaker\\translatable\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Vladimir Kuprienko",
+                    "email": "vldmr.kuprienko@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Translatable behavior aggregates logic of linking translations to the primary model",
+            "keywords": [
+                "Behavior",
+                "ar",
+                "translatable",
+                "translation",
+                "translations",
+                "yii2"
+            ],
+            "time": "2018-05-23T17:46:09+00:00"
+        },
+        {
             "name": "yiisoft/yii2",
             "version": "dev-master",
             "source": {
@@ -1161,6 +1629,64 @@
             "time": "2018-05-04T21:18:11+00:00"
         },
         {
+            "name": "yiisoft/yii2-jui",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/yiisoft/yii2-jui.git",
+                "reference": "5ff9bb81d739b69e6a9a52b4f61ac398e17b6227"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/yiisoft/yii2-jui/zipball/5ff9bb81d739b69e6a9a52b4f61ac398e17b6227",
+                "reference": "5ff9bb81d739b69e6a9a52b4f61ac398e17b6227",
+                "shasum": ""
+            },
+            "require": {
+                "bower-asset/jquery-ui": "~1.12.1",
+                "yiisoft/yii2": "~2.0.4"
+            },
+            "type": "yii2-extension",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "yii\\jui\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Alexander Kochetov",
+                    "email": "creocoder@gmail.com"
+                },
+                {
+                    "name": "Qiang Xue",
+                    "email": "qiang.xue@gmail.com"
+                },
+                {
+                    "name": "Carsten Brandt",
+                    "email": "mail@cebe.cc"
+                },
+                {
+                    "name": "Alexander Makarov",
+                    "email": "sam@rmcreative.ru"
+                }
+            ],
+            "description": "The Jquery UI extension for the Yii framework",
+            "keywords": [
+                "jQuery UI",
+                "yii2"
+            ],
+            "time": "2018-05-04T06:55:51+00:00"
+        },
+        {
             "name": "yiisoft/yii2-swiftmailer",
             "version": "2.0.7",
             "source": {
@@ -1209,6 +1735,44 @@
                 "yii2"
             ],
             "time": "2017-05-01T08:29:00+00:00"
+        },
+        {
+            "name": "ziplr/php-qr-code",
+            "version": "v1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ziplr/php-qr-code.git",
+                "reference": "dac8f3da6eaf0ee22fab85fae8eb16db8ab7da73"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ziplr/php-qr-code/zipball/dac8f3da6eaf0ee22fab85fae8eb16db8ab7da73",
+                "reference": "dac8f3da6eaf0ee22fab85fae8eb16db8ab7da73",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": [],
+                "files": [
+                    "src/qrconst.php",
+                    "src/qrconfig.php",
+                    "src/qrtools.php",
+                    "src/qrspec.php",
+                    "src/qrimage.php",
+                    "src/qrinput.php",
+                    "src/qrbitstream.php",
+                    "src/qrsplit.php",
+                    "src/qrrscode.php",
+                    "src/qrmask.php",
+                    "src/qrencode.php",
+                    "src/qrarea.php",
+                    "src/qrcanvas.php",
+                    "src/qrsvg.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "description": "PHP Qr Code Generator compatible with php 7.0",
+            "time": "2017-07-22T08:29:31+00:00"
         }
     ],
     "packages-dev": [
@@ -3767,7 +4331,13 @@
     "stability-flags": {
         "guzzlehttp/guzzle": 20,
         "mpdf/mpdf": 20,
-        "kartik-v/yii2-mpdf": 20
+        "kartik-v/yii2-mpdf": 20,
+        "websightnl/yii2-sybase": 20,
+        "yiisoft/yii2-jui": 20,
+        "synctech/yii2-sybase": 20,
+        "yiimaker/yii2-email-templates": 20,
+        "kartik-v/yii2-report": 20,
+        "2amigos/qrcode-library": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

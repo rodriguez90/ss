@@ -49,6 +49,8 @@ var handleStopWatch = function()
     if(stop_watch_start === stop_watch_end || stop_watch_start.minutes === 0)
     {
         alert("Ha espirado el tiempo de trabajo");
+        stop_watch_start = moment().hour(0).minute(29).second(59);
+        stop_watch_end = moment(stop_watch_start).subtract({'minutes' : 30});
         window.location.reload();
         return;
     }
@@ -98,41 +100,37 @@ var handleSelectTransCompany = function () {
 
     $('#yesRadio').on('click', function() {
 
-        var table = $('#data-table').DataTable();
+        // var table = $('#data-table').DataTable();
 
-        var table3 = $('#data-table3').DataTable();
+        var table = $('#data-table3').DataTable();
 
-        table3
-            .clear()
-            .draw();
+        table.rows().deselect();
+        table.column(0).visible(true);
 
-        table
-            .rows( { selected: true } )
-            .data()
-            .each( function ( value, index ) {
-                // console.log( 'Data in index: '+index +' is: '+ value.name );
-                if(value.id === -1 || value.status === 'Pendiente')
-                    table3.row.add(
-                        value
-                    ).draw();
-            } );
+        $('#select_all2').on('click', function(){
 
-        document.getElementById('tSingle').style.display = 'none';
-        document.getElementById('tMultiple').style.display = 'inline';
+            var table = $('#data-table3').DataTable();
+            var checked = this.checked;
+
+            if(checked)
+            {
+                table
+                    .rows().select();
+            }
+            else {
+                table
+                    .rows().deselect();
+            }
+        });
     });
 
     $('#noRadio').on('click', function() {
         var table = $('#data-table3').DataTable();
-
-        table
-            .clear()
-            .draw();
-
-        document.getElementById('tMultiple').style.display = 'none';
-        document.getElementById('tSingle').style.display = 'inline';
+        table.rows().deselect();
+        table.column(0).visible(false);
     });
 
-    $("#select-agency").select2(
+    $("#selectTransCompany").select2(
     {
         language: "es",
 
@@ -141,11 +139,12 @@ var handleSelectTransCompany = function () {
         minimumInputLength:5,
         // allowClear: true,
         // tags: true,
-        closeOnSelect: false,
+        closeOnSelect: true,
         ajax: {
             url: homeUrl + '/rd/api-trans-company',
             dataType: 'json',
-            delay: 250,
+            // delay: 250,
+            cache: true,
             processResults: function (data) {
                 // console.log(data);
                 var myResults  = [];
@@ -153,16 +152,64 @@ var handleSelectTransCompany = function () {
                     // console.log(item);
                     myResults .push({
                         id: item.id,
-                        text: item.name
+                        text: item.name,
+                        ruc: item.ruc
                     });
                 });
                 return {
                     results: myResults
                 };
             },
-            cache: true,
         },
-        // minimumInputLength: 2
+    });
+
+    $('#selectTransCompany').on('select2:opening', function (e) {
+        var table = $('#data-table3').DataTable();
+        var count = table.rows( { selected: true } ).count();
+        var selectedValue = $("input[name='radio_default_inline']:checked").val();
+
+        // if(selectedValue === "1" && count <= 0)
+        // {
+        //     // e.stopPropagation();
+        //     // e.preventDefault();
+        //     // alert("Debe seleccionar los contenedores para asignar la Cia de Transporte");
+        //     console.log(e);
+        //
+        //     return;
+        // }
+    });
+
+    $('#selectTransCompany').on('select2:select', function (e) {
+        var table = $('#data-table3').DataTable();
+
+        var data = e.params.data;
+        console.log(data);
+
+        var trans_company =  {
+            "id":data.id,
+            "name":data.text,
+            "ruc":data.ruc,
+        };
+
+        var selectedValue = $("input[name='radio_default_inline']:checked").val();
+
+        var condition = {};
+        if(selectedValue === "1")
+        {
+            condition = { selected: true };
+        }
+
+        table
+            .rows( condition )
+            .indexes()
+            .each( function ( value, index ) {
+                var data = table.row(value).data();
+                data.transCompany = trans_company;
+                table.row(value).data( data).draw();
+            } );
+
+        table.rows().deselect();
+        // table.draw();
     });
 };
 
@@ -195,7 +242,14 @@ var fetchContainersWS = function (bl, containers) {
     var data = [];
     var types = ["DRY", "RRF"];
     var tonnages = [20, 40];
-    // alert("Random: " +);
+    var statusArray = [
+                'PENDIENTE',
+                 moment().format(),
+                'PONCHADO',
+                'TRASLADO',
+                'EN PATIO',
+                'EMBARCADO',
+                'DESPACHADO'];
 
     var table = $('#data-table').DataTable();
 
@@ -203,11 +257,13 @@ var fetchContainersWS = function (bl, containers) {
         .clear()
         .draw();
 
-
     for (var i = 0; i < 10; i++)
     {
         var type = types[Math.round(Math.random())];
-        var tonnage = tonnages[Math.round(Math.random())]
+        var tonnage = tonnages[Math.round(Math.random())];
+        var randomIndex = Math.floor(Math.random() * 6);
+        var status = statusArray[randomIndex];
+        console.log(status);
         var container =  {
             id:-1,
             checkbox:"",
@@ -217,26 +273,33 @@ var fetchContainersWS = function (bl, containers) {
             deliveryDate:moment().format('YYYY-MM-DD'),
             agency:agency.name,
             wharehouse:1,
-            transCompany:{name:'', id:-1},
-            status:''
+            transCompany:{name:'', id:-1, ruc:""},
+            status:status
         };
         var select = false;
         var status = null;
-        for(var j = 0, length = containers.length; j < length ; j++)
+        var statusIsDate = moment(status).isValid();
+        if( container.status !== "PENDIENTE" &&
+            !statusIsDate)
         {
-            var container2 = containers[j];
-            status = container2.status;
-            var statusIsDate = moment(status).isValid();
-            //FIXME: Here importan condition
-            if(container2.name === container.name &&
-                container2.status !== "Pendiente" &&
-                !statusIsDate)
-            {
-                select = true;
-                container.id = container2.id
-                break;
-            }
+            select = true;
         }
+        // for(var j = 0, length = containers.length; j < length ; j++)
+        // {
+        //     var container2 = containers[j];
+        //     status = container2.status;
+        //     var statusIsDate = moment(status).isValid();
+        //     //FIXME: Here importan condition
+        //
+        //     if(container2.name === container.name &&
+        //         container2.status !== "PENDIENTE" &&
+        //         !statusIsDate)
+        //     {
+        //         select = true;
+        //         container.id = container2.id
+        //         break;
+        //     }
+        // }
 
         if(select)
             table.row.add(
@@ -287,5 +350,6 @@ $(document).ready(function () {
 
     // select2 to agency
     handleSelectTransCompany();
+
 
 });

@@ -99,7 +99,48 @@ if(!Yii::$app->user->isGuest){
             <!-- begin sidebar scrollbar -->
             <div data-scrollbar="true" data-height="100%">
                 <!-- begin sidebar nav -->
-                <ul class="nav">
+                <ul class="nav" style="font-size: 14px">
+
+                    <?php
+                    if(Yii::$app->user->can("admin_mod") || Yii::$app->user->can("reception_create")){
+                        echo "<li class='has-sub'>";
+                        echo "<a href=".Url::to(['/rd/process/create','type'=>Process::PROCESS_IMPORT])."> <i class='fa fa-rotate-90 fa-sign-in'></i>";
+                        echo  "<span> Importación</span>";
+                        echo "</a>";
+                        echo "</li>";
+                    }
+                    ?>
+
+                    <?php
+                    if(Yii::$app->user->can("admin_mod") || Yii::$app->user->can("reception_create")){
+                        echo "<li class='has-sub'>";
+                        echo "<a href=".Url::to(['/rd/process/create','type'=>Process::PROCESS_EXPORT])."> <i class='fa fa-rotate-90 fa-sign-in'></i>";
+                        echo  "<span> Exportación</span>";
+                        echo "</a>";
+                        echo "</li>";
+                    }
+                    ?>
+
+                    <?php
+                    if(Yii::$app->user->can("admin_mod") || Yii::$app->user->can("reception_create")){
+                        echo "<li class='has-sub'>";
+                        echo "<a href=\"#\"> <i class='fa fa-rotate-90 fa-sign-in'></i>";
+                        echo  "<span> Reporte</span>";
+                        echo "</a>";
+                        echo "</li>";
+                    }
+                    ?>
+
+                    <?php
+                    if(Yii::$app->user->can("admin_mod") || Yii::$app->user->can("reception_create")){
+                        echo "<li class='has-sub'>";
+                        echo "<a href=\"#\"> <i class='fa fa-rotate-90 fa-sign-in'></i>";
+                        echo  "<span> Mi Calendario</span>";
+                        echo "</a>";
+                        echo "</li>";
+                    }
+                    ?>
+
                     <?php
                     if(Yii::$app->user->can("admin_mod") || Yii::$app->user->can("warehouse_list") ){
                         echo "<li class='has-sub'>";
@@ -135,25 +176,6 @@ if(!Yii::$app->user->isGuest){
                         echo "<li class='has-sub'>";
                         echo "<a href=" . Url::to(['/rd/trans-company'])."> <i class='fa fa-truck'></i>";
                         echo "<span> Transporte</span>";
-                        echo "</a>";
-                        echo "</li>";
-                    }
-                    ?>
-                    <?php
-                    if(Yii::$app->user->can("admin_mod") || Yii::$app->user->can("reception_create")){
-                        echo "<li class='has-sub'>";
-                        echo "<a href=".Url::to(['/rd/process/create','type'=>Process::PROCESS_IMPORT])."> <i class='fa fa-rotate-90 fa-sign-in'></i>";
-                        echo  "<span> Importación</span>";
-                        echo "</a>";
-                        echo "</li>";
-                    }
-                    ?>
-
-                    <?php
-                    if(Yii::$app->user->can("admin_mod") || Yii::$app->user->can("reception_create")){
-                        echo "<li class='has-sub'>";
-                        echo "<a href=".Url::to(['/rd/process/create','type'=>Process::PROCESS_EXPORT])."> <i class='fa fa-rotate-90 fa-sign-in'></i>";
-                        echo  "<span> Exportación</span>";
                         echo "</a>";
                         echo "</li>";
                     }

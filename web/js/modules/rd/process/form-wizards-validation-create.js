@@ -12,29 +12,53 @@ var handleBootstrapWizardsValidation = function() {
             clickableSteps: true,
             activeIndexChanged:  function (e, ui) {
 
-                // alert("UI index: " + ui.index);
+                if(ui.index == 1)
+                {
+                    var sourceTable = $('#data-table').DataTable();
+                    var table = $('#data-table3').DataTable();
 
-                if(ui.index == 2)
+                    table
+                        .clear()
+                        .draw();
+
+                    sourceTable
+                        .rows( { selected: true } )
+                        .data()
+                        .each( function ( value, index ) {
+                            // console.log( 'Data in index: '+ index +' is: '+ value.name );
+                            // if(value.id === -1 || value.status === 'Pendiente')
+
+                            if(value.id === -1)
+                            {
+                                table.row.add(
+                                    value
+                                ).draw();
+                            }
+                        });
+                }
+                else if(ui.index == 2)
                 {
                     // add to table2 selected containers
-                    var selectedValue = $("input[name='radio_default_inline']:checked").val();
+                    // var selectedValue = $("input[name='radio_default_inline']:checked").val();
+                    //
+                    // var trans_company = null;
+                    //
+                    // var sourceTable = null;
+                    //
+                    // if(selectedValue === "1")
+                    // {
+                    //     sourceTable = $('#data-table3').DataTable();
+                    // }
+                    // else
+                    // {
+                    //     trans_company =  {
+                    //         "id":$("#selectTransCompany option:selected")[0].value,
+                    //         "name": $("#selectTransCompany option:selected").text(),
+                    //     };
+                    //     sourceTable = $('#data-table').DataTable();
+                    // }
 
-                    var trans_company = null;
-
-                    var sourceTable = null;
-
-                    if(selectedValue === "1")
-                    {
-                        sourceTable = $('#data-table3').DataTable();
-                    }
-                    else
-                    {
-                        trans_company =  {
-                            "id":$("#select-agency option:selected")[0].value,
-                            "name": $("#select-agency option:selected").text(),
-                        };
-                        sourceTable = $('#data-table').DataTable();
-                    }
+                    var sourceTable = $('#data-table3').DataTable();
 
                     var table2 = $('#data-table2').DataTable();
                     table2
@@ -48,11 +72,6 @@ var handleBootstrapWizardsValidation = function() {
                             // console.log( 'Data in index: '+index +' is: '+ value.name );
                             if(value.id === -1)
                             {
-                                if(selectedValue === "0")
-                                {
-                                    value.transCompany = trans_company;
-                                }
-
                                 table2.row.add(
                                     value
                                 ).draw();
@@ -60,7 +79,7 @@ var handleBootstrapWizardsValidation = function() {
                         });
 
                     // set text value
-                    // $("#trans_company").text($("#select-agency option:selected").text());
+                    // $("#trans_company").text($("#selectTransCompany option:selected").text());
                 }
                 else if(ui.index==3)
                 {
@@ -120,6 +139,20 @@ var handleBootstrapWizardsValidation = function() {
                         .data()
                         .each( function ( value, index ) {
                             // console.log( 'Data in index: '+index +' is: '+ value.name );
+                            // FIXME: It Export -> Booking code -> check delyveryDate it's set
+                            if(processType === 2)
+                            {
+                                var deliveryDate = value.deliveryDate;
+                                if(!moment(deliveryDate).isValid())
+                                {
+                                    table
+                                        .clear()
+                                        .draw();
+                                    alert("Debe definir la Fecha Límite para los contenedores del Booking.");
+                                    return false;
+                                }
+                            }
+
                             if(value.id === -1 && !result) {
                                 result = true;
                                 return false;
@@ -137,7 +170,7 @@ var handleBootstrapWizardsValidation = function() {
 
                     // step-1 validation
                     return true;
-                    var transCompany = $("#select-agency option:selected").text();
+                    var transCompany = $("#selectTransCompany option:selected").text();
                     if(transCompany.length) return true;
 
                     alert("Debe seleccionar la compañia de transporte.");
@@ -164,14 +197,12 @@ var handleBootstrapWizardsValidation = function() {
 
                         var blCode = $("#blCode").val();
 
-                        var tran_company_name =   $("#select-agency option:selected").text();
-
                         // set label text
                         // $("#trans_company").text(tran_company_name);
 
                         var trans_company =  {
-                            "id":$("#select-agency option:selected")[0].value,
-                            "name": tran_company_name,
+                            "id":$("#selectTransCompany option:selected")[0].value,
+                            "name":$("#selectTransCompany option:selected").text(),
                         };
 
                         var process = {

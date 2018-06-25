@@ -66,7 +66,6 @@ $this->params['breadcrumbs'][] = $this->title;
                                 'content' => function ($data) {
                                     return '<span class="fa fa-calendar">&nbsp;' . (new \yii\i18n\Formatter())->asDate($data->getCreate(), 'Y-MM-dd') . '</span>';
                                 },
-
                                 'filter' => DatePicker::widget([
                                     'model' => $searchModel,
                                     'attribute' => 'created_at',
@@ -97,12 +96,9 @@ $this->params['breadcrumbs'][] = $this->title;
 
                             ['class' => 'yii\grid\ActionColumn' ],
                         ],
-
-
+                        'options'=>['class' => 'table table-striped table-responsive table-bordered']
                     ]); ?>
-
                 </div>
-
                 <?php Pjax::end(); ?>
 
             </div>
