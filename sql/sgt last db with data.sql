@@ -1978,7 +1978,7 @@ CREATE TABLE [dbo].[reception_transaction] (
   [id] int  IDENTITY(1,1) NOT NULL,
   [reception_id] bigint  NOT NULL,
   [container_id] int  NOT NULL,
-  [regiter_truck] varchar(50) COLLATE Modern_Spanish_CI_AS  NULL,
+  [register_truck] varchar(50) COLLATE Modern_Spanish_CI_AS  NULL,
   [register_driver] varchar(50) COLLATE Modern_Spanish_CI_AS  NULL,
   [delivery_date] date  NOT NULL,
   [active] bit  NOT NULL
@@ -1995,1240 +1995,1240 @@ GO
 SET IDENTITY_INSERT [dbo].[reception_transaction] ON
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'1', N'14', N'8', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'1', N'14', N'8', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'2', N'14', N'9', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'2', N'14', N'9', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'3', N'15', N'10', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'3', N'15', N'10', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'4', N'15', N'11', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'4', N'15', N'11', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'5', N'16', N'12', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'5', N'16', N'12', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'6', N'17', N'13', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'6', N'17', N'13', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'7', N'18', N'14', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'7', N'18', N'14', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'8', N'19', N'15', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'8', N'19', N'15', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'9', N'19', N'16', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'9', N'19', N'16', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'10', N'20', N'17', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'10', N'20', N'17', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'11', N'20', N'18', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'11', N'20', N'18', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'12', N'21', N'19', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'12', N'21', N'19', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'13', N'21', N'20', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'13', N'21', N'20', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'14', N'22', N'21', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'14', N'22', N'21', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'15', N'22', N'22', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'15', N'22', N'22', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'16', N'23', N'23', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'16', N'23', N'23', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'17', N'23', N'24', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'17', N'23', N'24', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'18', N'23', N'25', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'18', N'23', N'25', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'19', N'23', N'26', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'19', N'23', N'26', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'20', N'23', N'27', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'20', N'23', N'27', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'21', N'23', N'28', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'21', N'23', N'28', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'22', N'23', N'29', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'22', N'23', N'29', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'23', N'23', N'30', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'23', N'23', N'30', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'24', N'23', N'31', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'24', N'23', N'31', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'25', N'23', N'32', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'25', N'23', N'32', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'26', N'24', N'33', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'26', N'24', N'33', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'27', N'24', N'34', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'27', N'24', N'34', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'28', N'25', N'35', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'28', N'25', N'35', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'29', N'25', N'36', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'29', N'25', N'36', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'30', N'26', N'37', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'30', N'26', N'37', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'31', N'26', N'38', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'31', N'26', N'38', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'32', N'27', N'39', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'32', N'27', N'39', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'33', N'27', N'40', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'33', N'27', N'40', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'34', N'27', N'41', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'34', N'27', N'41', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'35', N'27', N'42', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'35', N'27', N'42', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'36', N'27', N'43', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'36', N'27', N'43', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'37', N'27', N'44', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'37', N'27', N'44', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'38', N'27', N'45', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'38', N'27', N'45', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'39', N'27', N'46', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'39', N'27', N'46', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'40', N'27', N'47', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'40', N'27', N'47', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'41', N'27', N'48', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'41', N'27', N'48', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'42', N'28', N'49', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'42', N'28', N'49', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'43', N'28', N'50', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'43', N'28', N'50', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'44', N'28', N'51', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'44', N'28', N'51', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'45', N'28', N'52', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'45', N'28', N'52', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'46', N'28', N'53', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'46', N'28', N'53', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'47', N'28', N'54', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'47', N'28', N'54', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'48', N'28', N'55', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'48', N'28', N'55', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'49', N'28', N'56', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'49', N'28', N'56', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'50', N'28', N'57', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'50', N'28', N'57', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'51', N'28', N'58', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'51', N'28', N'58', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'52', N'29', N'59', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'52', N'29', N'59', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'53', N'29', N'60', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'53', N'29', N'60', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'54', N'29', N'61', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'54', N'29', N'61', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'55', N'29', N'62', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'55', N'29', N'62', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'56', N'29', N'63', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'56', N'29', N'63', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'57', N'29', N'64', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'57', N'29', N'64', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'58', N'29', N'65', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'58', N'29', N'65', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'59', N'29', N'66', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'59', N'29', N'66', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'60', N'29', N'67', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'60', N'29', N'67', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'61', N'29', N'68', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'61', N'29', N'68', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'62', N'30', N'69', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'62', N'30', N'69', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'63', N'30', N'70', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'63', N'30', N'70', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'64', N'30', N'71', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'64', N'30', N'71', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'65', N'30', N'72', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'65', N'30', N'72', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'66', N'30', N'73', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'66', N'30', N'73', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'67', N'30', N'74', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'67', N'30', N'74', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'68', N'30', N'75', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'68', N'30', N'75', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'69', N'30', N'76', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'69', N'30', N'76', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'70', N'30', N'77', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'70', N'30', N'77', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'71', N'30', N'78', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'71', N'30', N'78', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'72', N'31', N'79', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'72', N'31', N'79', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'73', N'31', N'80', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'73', N'31', N'80', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'74', N'31', N'81', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'74', N'31', N'81', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'75', N'31', N'82', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'75', N'31', N'82', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'76', N'31', N'83', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'76', N'31', N'83', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'77', N'31', N'84', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'77', N'31', N'84', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'78', N'31', N'85', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'78', N'31', N'85', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'79', N'31', N'86', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'79', N'31', N'86', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'80', N'31', N'87', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'80', N'31', N'87', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'81', N'31', N'88', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'81', N'31', N'88', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'82', N'32', N'89', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'82', N'32', N'89', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'83', N'32', N'90', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'83', N'32', N'90', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'84', N'32', N'91', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'84', N'32', N'91', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'85', N'32', N'92', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'85', N'32', N'92', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'86', N'32', N'93', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'86', N'32', N'93', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'87', N'32', N'94', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'87', N'32', N'94', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'88', N'32', N'95', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'88', N'32', N'95', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'89', N'32', N'96', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'89', N'32', N'96', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'90', N'32', N'97', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'90', N'32', N'97', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'91', N'32', N'98', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'91', N'32', N'98', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'92', N'33', N'99', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'92', N'33', N'99', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'93', N'33', N'100', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'93', N'33', N'100', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'94', N'33', N'101', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'94', N'33', N'101', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'95', N'33', N'102', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'95', N'33', N'102', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'96', N'33', N'103', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'96', N'33', N'103', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'97', N'33', N'104', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'97', N'33', N'104', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'98', N'33', N'105', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'98', N'33', N'105', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'99', N'33', N'106', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'99', N'33', N'106', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'100', N'33', N'107', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'100', N'33', N'107', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'101', N'33', N'108', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'101', N'33', N'108', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'102', N'34', N'109', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'102', N'34', N'109', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'103', N'34', N'110', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'103', N'34', N'110', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'104', N'34', N'111', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'104', N'34', N'111', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'105', N'34', N'112', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'105', N'34', N'112', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'106', N'34', N'113', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'106', N'34', N'113', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'107', N'34', N'114', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'107', N'34', N'114', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'108', N'34', N'115', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'108', N'34', N'115', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'109', N'34', N'116', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'109', N'34', N'116', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'110', N'34', N'117', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'110', N'34', N'117', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'111', N'34', N'118', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'111', N'34', N'118', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'112', N'35', N'119', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'112', N'35', N'119', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'113', N'35', N'120', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'113', N'35', N'120', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'114', N'35', N'121', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'114', N'35', N'121', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'115', N'35', N'122', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'115', N'35', N'122', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'116', N'35', N'123', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'116', N'35', N'123', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'117', N'35', N'124', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'117', N'35', N'124', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'118', N'35', N'125', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'118', N'35', N'125', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'119', N'35', N'126', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'119', N'35', N'126', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'120', N'35', N'127', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'120', N'35', N'127', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'121', N'35', N'128', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'121', N'35', N'128', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'122', N'36', N'129', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'122', N'36', N'129', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'123', N'36', N'130', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'123', N'36', N'130', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'124', N'36', N'131', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'124', N'36', N'131', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'125', N'36', N'132', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'125', N'36', N'132', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'126', N'36', N'133', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'126', N'36', N'133', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'127', N'36', N'134', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'127', N'36', N'134', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'128', N'36', N'135', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'128', N'36', N'135', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'129', N'36', N'136', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'129', N'36', N'136', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'130', N'36', N'137', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'130', N'36', N'137', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'131', N'36', N'138', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'131', N'36', N'138', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'132', N'37', N'139', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'132', N'37', N'139', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'133', N'37', N'140', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'133', N'37', N'140', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'134', N'37', N'141', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'134', N'37', N'141', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'135', N'37', N'142', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'135', N'37', N'142', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'136', N'37', N'143', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'136', N'37', N'143', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'137', N'37', N'144', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'137', N'37', N'144', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'138', N'37', N'145', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'138', N'37', N'145', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'139', N'37', N'146', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'139', N'37', N'146', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'140', N'37', N'147', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'140', N'37', N'147', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'141', N'37', N'148', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'141', N'37', N'148', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'142', N'38', N'149', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'142', N'38', N'149', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'143', N'38', N'150', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'143', N'38', N'150', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'144', N'38', N'151', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'144', N'38', N'151', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'145', N'38', N'152', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'145', N'38', N'152', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'146', N'38', N'153', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'146', N'38', N'153', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'147', N'38', N'154', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'147', N'38', N'154', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'148', N'38', N'155', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'148', N'38', N'155', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'149', N'38', N'156', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'149', N'38', N'156', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'150', N'38', N'157', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'150', N'38', N'157', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'151', N'38', N'158', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'151', N'38', N'158', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'152', N'39', N'159', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'152', N'39', N'159', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'153', N'39', N'160', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'153', N'39', N'160', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'154', N'39', N'161', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'154', N'39', N'161', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'155', N'39', N'162', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'155', N'39', N'162', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'156', N'39', N'163', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'156', N'39', N'163', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'157', N'39', N'164', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'157', N'39', N'164', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'158', N'39', N'165', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'158', N'39', N'165', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'159', N'39', N'166', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'159', N'39', N'166', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'160', N'39', N'167', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'160', N'39', N'167', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'161', N'39', N'168', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'161', N'39', N'168', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'162', N'40', N'169', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'162', N'40', N'169', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'163', N'40', N'170', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'163', N'40', N'170', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'164', N'40', N'171', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'164', N'40', N'171', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'165', N'40', N'172', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'165', N'40', N'172', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'166', N'40', N'173', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'166', N'40', N'173', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'167', N'40', N'174', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'167', N'40', N'174', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'168', N'40', N'175', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'168', N'40', N'175', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'169', N'40', N'176', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'169', N'40', N'176', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'170', N'40', N'177', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'170', N'40', N'177', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'171', N'40', N'178', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'171', N'40', N'178', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'172', N'41', N'179', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'172', N'41', N'179', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'173', N'41', N'180', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'173', N'41', N'180', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'174', N'41', N'181', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'174', N'41', N'181', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'175', N'41', N'182', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'175', N'41', N'182', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'176', N'41', N'183', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'176', N'41', N'183', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'177', N'41', N'184', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'177', N'41', N'184', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'178', N'41', N'185', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'178', N'41', N'185', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'179', N'41', N'186', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'179', N'41', N'186', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'180', N'41', N'187', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'180', N'41', N'187', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'181', N'41', N'188', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'181', N'41', N'188', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'182', N'42', N'189', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'182', N'42', N'189', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'183', N'42', N'190', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'183', N'42', N'190', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'184', N'42', N'191', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'184', N'42', N'191', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'185', N'42', N'192', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'185', N'42', N'192', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'186', N'42', N'193', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'186', N'42', N'193', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'187', N'42', N'194', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'187', N'42', N'194', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'188', N'42', N'195', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'188', N'42', N'195', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'189', N'42', N'196', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'189', N'42', N'196', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'190', N'42', N'197', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'190', N'42', N'197', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'191', N'42', N'198', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'191', N'42', N'198', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'192', N'43', N'199', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'192', N'43', N'199', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'193', N'43', N'200', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'193', N'43', N'200', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'194', N'43', N'201', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'194', N'43', N'201', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'195', N'43', N'202', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'195', N'43', N'202', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'196', N'43', N'203', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'196', N'43', N'203', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'197', N'43', N'204', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'197', N'43', N'204', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'198', N'43', N'205', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'198', N'43', N'205', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'199', N'43', N'206', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'199', N'43', N'206', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'200', N'43', N'207', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'200', N'43', N'207', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'201', N'43', N'208', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'201', N'43', N'208', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'202', N'44', N'209', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'202', N'44', N'209', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'203', N'44', N'210', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'203', N'44', N'210', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'204', N'44', N'211', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'204', N'44', N'211', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'205', N'44', N'212', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'205', N'44', N'212', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'206', N'44', N'213', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'206', N'44', N'213', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'207', N'44', N'214', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'207', N'44', N'214', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'208', N'44', N'215', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'208', N'44', N'215', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'209', N'44', N'216', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'209', N'44', N'216', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'210', N'44', N'217', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'210', N'44', N'217', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'211', N'44', N'218', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'211', N'44', N'218', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'212', N'45', N'219', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'212', N'45', N'219', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'213', N'45', N'220', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'213', N'45', N'220', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'214', N'45', N'221', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'214', N'45', N'221', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'215', N'45', N'222', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'215', N'45', N'222', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'216', N'45', N'223', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'216', N'45', N'223', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'217', N'45', N'224', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'217', N'45', N'224', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'218', N'45', N'225', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'218', N'45', N'225', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'219', N'45', N'226', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'219', N'45', N'226', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'220', N'45', N'227', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'220', N'45', N'227', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'221', N'45', N'228', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'221', N'45', N'228', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'222', N'46', N'229', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'222', N'46', N'229', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'223', N'46', N'230', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'223', N'46', N'230', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'224', N'46', N'231', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'224', N'46', N'231', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'225', N'46', N'232', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'225', N'46', N'232', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'226', N'46', N'233', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'226', N'46', N'233', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'227', N'46', N'234', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'227', N'46', N'234', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'228', N'46', N'235', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'228', N'46', N'235', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'229', N'46', N'236', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'229', N'46', N'236', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'230', N'46', N'237', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'230', N'46', N'237', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'231', N'46', N'238', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'231', N'46', N'238', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'232', N'47', N'239', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'232', N'47', N'239', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'233', N'47', N'240', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'233', N'47', N'240', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'234', N'47', N'241', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'234', N'47', N'241', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'235', N'47', N'242', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'235', N'47', N'242', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'236', N'47', N'243', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'236', N'47', N'243', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'237', N'47', N'244', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'237', N'47', N'244', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'238', N'47', N'245', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'238', N'47', N'245', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'239', N'47', N'246', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'239', N'47', N'246', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'240', N'47', N'247', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'240', N'47', N'247', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'241', N'47', N'248', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'241', N'47', N'248', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'242', N'48', N'249', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'242', N'48', N'249', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'243', N'48', N'250', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'243', N'48', N'250', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'244', N'48', N'251', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'244', N'48', N'251', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'245', N'48', N'252', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'245', N'48', N'252', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'246', N'48', N'253', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'246', N'48', N'253', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'247', N'48', N'254', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'247', N'48', N'254', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'248', N'48', N'255', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'248', N'48', N'255', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'249', N'48', N'256', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'249', N'48', N'256', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'250', N'48', N'257', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'250', N'48', N'257', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'251', N'48', N'258', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'251', N'48', N'258', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'252', N'49', N'259', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'252', N'49', N'259', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'253', N'49', N'260', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'253', N'49', N'260', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'254', N'49', N'261', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'254', N'49', N'261', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'255', N'49', N'262', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'255', N'49', N'262', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'256', N'49', N'263', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'256', N'49', N'263', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'257', N'49', N'264', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'257', N'49', N'264', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'258', N'49', N'265', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'258', N'49', N'265', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'259', N'49', N'266', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'259', N'49', N'266', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'260', N'49', N'267', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'260', N'49', N'267', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'261', N'49', N'268', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'261', N'49', N'268', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'262', N'50', N'269', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'262', N'50', N'269', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'263', N'50', N'270', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'263', N'50', N'270', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'264', N'50', N'271', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'264', N'50', N'271', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'265', N'50', N'272', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'265', N'50', N'272', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'266', N'50', N'273', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'266', N'50', N'273', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'267', N'50', N'274', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'267', N'50', N'274', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'268', N'50', N'275', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'268', N'50', N'275', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'269', N'50', N'276', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'269', N'50', N'276', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'270', N'50', N'277', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'270', N'50', N'277', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'271', N'50', N'278', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'271', N'50', N'278', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'272', N'51', N'279', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'272', N'51', N'279', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'273', N'51', N'280', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'273', N'51', N'280', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'274', N'51', N'281', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'274', N'51', N'281', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'275', N'51', N'282', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'275', N'51', N'282', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'276', N'51', N'283', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'276', N'51', N'283', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'277', N'51', N'284', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'277', N'51', N'284', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'278', N'51', N'285', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'278', N'51', N'285', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'279', N'51', N'286', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'279', N'51', N'286', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'280', N'51', N'287', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'280', N'51', N'287', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'281', N'51', N'288', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'281', N'51', N'288', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'282', N'52', N'289', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'282', N'52', N'289', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'283', N'52', N'290', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'283', N'52', N'290', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'284', N'52', N'291', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'284', N'52', N'291', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'285', N'52', N'292', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'285', N'52', N'292', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'286', N'52', N'293', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'286', N'52', N'293', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'287', N'52', N'294', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'287', N'52', N'294', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'288', N'52', N'295', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'288', N'52', N'295', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'289', N'52', N'296', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'289', N'52', N'296', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'290', N'52', N'297', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'290', N'52', N'297', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'291', N'52', N'298', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'291', N'52', N'298', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'292', N'53', N'299', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'292', N'53', N'299', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'293', N'53', N'300', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'293', N'53', N'300', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'294', N'53', N'301', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'294', N'53', N'301', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'295', N'53', N'302', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'295', N'53', N'302', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'296', N'53', N'303', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'296', N'53', N'303', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'297', N'53', N'304', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'297', N'53', N'304', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'298', N'53', N'305', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'298', N'53', N'305', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'299', N'53', N'306', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'299', N'53', N'306', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'300', N'53', N'307', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'300', N'53', N'307', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'301', N'53', N'308', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'301', N'53', N'308', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'302', N'54', N'309', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'302', N'54', N'309', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'303', N'54', N'310', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'303', N'54', N'310', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'304', N'54', N'311', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'304', N'54', N'311', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'305', N'54', N'312', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'305', N'54', N'312', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'306', N'54', N'313', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'306', N'54', N'313', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'307', N'54', N'314', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'307', N'54', N'314', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'308', N'54', N'315', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'308', N'54', N'315', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'309', N'54', N'316', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'309', N'54', N'316', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'310', N'54', N'317', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'310', N'54', N'317', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'311', N'54', N'318', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'311', N'54', N'318', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'312', N'55', N'319', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'312', N'55', N'319', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'313', N'55', N'320', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'313', N'55', N'320', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'314', N'55', N'321', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'314', N'55', N'321', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'315', N'55', N'322', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'315', N'55', N'322', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'316', N'55', N'323', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'316', N'55', N'323', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'317', N'55', N'324', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'317', N'55', N'324', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'318', N'55', N'325', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'318', N'55', N'325', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'319', N'55', N'326', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'319', N'55', N'326', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'320', N'55', N'327', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'320', N'55', N'327', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'321', N'55', N'328', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'321', N'55', N'328', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'322', N'56', N'329', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'322', N'56', N'329', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'323', N'56', N'330', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'323', N'56', N'330', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'324', N'56', N'331', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'324', N'56', N'331', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'325', N'56', N'332', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'325', N'56', N'332', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'326', N'56', N'333', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'326', N'56', N'333', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'327', N'56', N'334', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'327', N'56', N'334', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'328', N'56', N'335', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'328', N'56', N'335', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'329', N'56', N'336', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'329', N'56', N'336', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'330', N'56', N'337', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'330', N'56', N'337', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'331', N'56', N'338', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'331', N'56', N'338', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'332', N'57', N'339', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'332', N'57', N'339', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'333', N'57', N'340', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'333', N'57', N'340', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'334', N'57', N'341', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'334', N'57', N'341', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'335', N'57', N'342', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'335', N'57', N'342', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'336', N'57', N'343', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'336', N'57', N'343', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'337', N'57', N'344', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'337', N'57', N'344', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'338', N'57', N'345', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'338', N'57', N'345', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'339', N'57', N'346', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'339', N'57', N'346', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'340', N'57', N'347', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'340', N'57', N'347', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'341', N'57', N'348', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'341', N'57', N'348', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'342', N'58', N'349', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'342', N'58', N'349', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'343', N'58', N'350', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'343', N'58', N'350', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'344', N'58', N'351', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'344', N'58', N'351', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'345', N'58', N'352', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'345', N'58', N'352', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'346', N'58', N'353', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'346', N'58', N'353', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'347', N'58', N'354', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'347', N'58', N'354', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'348', N'58', N'355', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'348', N'58', N'355', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'349', N'58', N'356', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'349', N'58', N'356', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'350', N'58', N'357', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'350', N'58', N'357', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'351', N'58', N'358', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'351', N'58', N'358', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'352', N'59', N'359', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'352', N'59', N'359', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'353', N'59', N'360', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'353', N'59', N'360', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'354', N'59', N'361', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'354', N'59', N'361', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'355', N'59', N'362', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'355', N'59', N'362', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'356', N'59', N'363', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'356', N'59', N'363', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'357', N'59', N'364', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'357', N'59', N'364', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'358', N'59', N'365', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'358', N'59', N'365', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'359', N'59', N'366', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'359', N'59', N'366', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'360', N'59', N'367', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'360', N'59', N'367', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'361', N'59', N'368', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'361', N'59', N'368', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'362', N'60', N'369', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'362', N'60', N'369', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'363', N'60', N'370', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'363', N'60', N'370', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'364', N'60', N'371', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'364', N'60', N'371', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'365', N'60', N'372', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'365', N'60', N'372', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'366', N'60', N'373', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'366', N'60', N'373', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'367', N'60', N'374', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'367', N'60', N'374', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'368', N'60', N'375', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'368', N'60', N'375', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'369', N'60', N'376', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'369', N'60', N'376', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'370', N'60', N'377', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'370', N'60', N'377', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'371', N'60', N'378', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'371', N'60', N'378', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'372', N'61', N'379', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'372', N'61', N'379', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'373', N'61', N'380', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'373', N'61', N'380', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'374', N'61', N'381', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'374', N'61', N'381', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'375', N'61', N'382', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'375', N'61', N'382', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'376', N'61', N'383', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'376', N'61', N'383', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'377', N'61', N'384', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'377', N'61', N'384', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'378', N'61', N'385', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'378', N'61', N'385', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'379', N'61', N'386', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'379', N'61', N'386', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'380', N'61', N'387', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'380', N'61', N'387', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'381', N'61', N'388', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'381', N'61', N'388', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'382', N'62', N'389', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'382', N'62', N'389', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'383', N'62', N'390', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'383', N'62', N'390', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'384', N'62', N'391', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'384', N'62', N'391', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'385', N'62', N'392', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'385', N'62', N'392', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'386', N'62', N'393', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'386', N'62', N'393', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'387', N'62', N'394', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'387', N'62', N'394', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'388', N'62', N'395', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'388', N'62', N'395', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'389', N'62', N'396', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'389', N'62', N'396', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'390', N'62', N'397', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'390', N'62', N'397', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'391', N'62', N'398', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'391', N'62', N'398', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'392', N'63', N'399', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'392', N'63', N'399', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'393', N'63', N'400', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'393', N'63', N'400', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'394', N'63', N'401', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'394', N'63', N'401', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'395', N'63', N'402', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'395', N'63', N'402', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'396', N'63', N'403', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'396', N'63', N'403', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'397', N'63', N'404', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'397', N'63', N'404', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'398', N'63', N'405', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'398', N'63', N'405', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'399', N'63', N'406', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'399', N'63', N'406', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'400', N'63', N'407', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'400', N'63', N'407', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'401', N'63', N'408', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'401', N'63', N'408', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'402', N'64', N'409', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'402', N'64', N'409', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'403', N'64', N'410', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'403', N'64', N'410', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'404', N'64', N'411', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'404', N'64', N'411', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'405', N'64', N'412', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'405', N'64', N'412', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'406', N'64', N'413', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'406', N'64', N'413', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'407', N'64', N'414', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'407', N'64', N'414', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'408', N'64', N'415', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'408', N'64', N'415', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'409', N'64', N'416', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'409', N'64', N'416', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'410', N'64', N'417', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'410', N'64', N'417', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'411', N'64', N'418', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'411', N'64', N'418', NULL, NULL, N'1900-01-01', N'1')
 GO
 
-INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [regiter_truck], [register_driver], [delivery_date], [active]) VALUES (N'412', N'65', N'419', NULL, NULL, N'1900-01-01', N'1')
+INSERT INTO [dbo].[reception_transaction] ([id], [reception_id], [container_id], [register_truck], [register_driver], [delivery_date], [active]) VALUES (N'412', N'65', N'419', NULL, NULL, N'1900-01-01', N'1')
 GO
 
 SET IDENTITY_INSERT [dbo].[reception_transaction] OFF

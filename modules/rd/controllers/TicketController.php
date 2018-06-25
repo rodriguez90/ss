@@ -276,11 +276,11 @@ class TicketController extends Controller
                     if($processStatus)
                     {
                         $receptionTransaction = ReceptionTransaction::findOne(['id'=>$model->reception_transaction_id]);
-                        $receptionTransaction->regiter_truck = $data['registerTruck'];
+                        $receptionTransaction->register_truck = $data['registerTruck'];
                         $receptionTransaction->register_driver = $data['registerDriver'];
                         $receptionTransaction->name_driver = $data['nameDriver'];
 
-                        if(!$receptionTransaction->update(true, ['regiter_truck', 'register_driver', 'name_driver']))
+                        if(!$receptionTransaction->update(true, ['register_truck', 'register_driver', 'name_driver']))
                         {
                             $processStatus = false;
                             $response['msg'] = 'Ah ocurrido un error al actualizar la placa del carro y la cédula del chofer: '.

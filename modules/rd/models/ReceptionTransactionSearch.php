@@ -23,7 +23,7 @@ class ReceptionTransactionSearch extends  ReceptionTransaction
     {
         return [
             [['reception_id', 'container_id', 'active'], 'integer'],
-            [['regiter_truck', 'register_driver'], 'string'],
+            [['register_truck', 'register_driver'], 'string'],
             [['delivery_date'], 'safe'],
         ];
     }
@@ -75,7 +75,7 @@ class ReceptionTransactionSearch extends  ReceptionTransaction
             'id' => $this->id,
             'reception_id' => $this->reception_id,
             'container_id' => $this->container_id,
-            'regiter_truck' => $this->regiter_truck,
+            'register_truck' => $this->register_truck,
             'register_driver' => $this->register_driver,
             'active' => $this->active,
             'delivery_date' => $this->delivery_date,
