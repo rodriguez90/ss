@@ -345,14 +345,18 @@ class SiteController extends Controller
 
         $trans_company = TransCompany::findAll(["active"=>1]);
         $agency = Agency::findAll(["active"=>1]);
-        //process relacionados con el usuario
-        $process = Process::findAll(["active"=>1]);
+        $process = Process::find()
+            ->all();
 
-        $params = Yii::$app->request->queryParams;
-        $searchModel = new ProcessSearch();
-        $dataProvider = $searchModel->search($params);
+        $searchModel = null;
+        $dataProvider = null;
 
         if(Yii::$app->request->isPost){
+
+            $params = Yii::$app->request->queryParams;
+            $searchModel = new ProcessSearch();
+            $dataProvider = $searchModel->search($params);
+
             $search_bl = Yii::$app->request->post("bl");
             $search_agency_id =  Yii::$app->request->post("agency_id");
             $search_trans_company =  Yii::$app->request->post("trans_company");
@@ -370,13 +374,10 @@ class SiteController extends Controller
                     $dataProvider->query->andFilterWhere(['process.id'=>$filter]);
             }
 
-            /*
-            if(isset($search_trans_company)) {
-                $dataProvider->query->andFilterWhere(['like', 'process_transaction.process_id', $search_trans_company]);
-            }*/
-
 
         }
+
+
 
         return $this->render('report', [
             'searchModel'=>$searchModel,
@@ -407,34 +408,30 @@ class SiteController extends Controller
             $row = [];
             $row["process"] = $p;
             $containers = Container::find()
+                ->select('container.id,container.name,container.tonnage,calendar.start_datetime')
                 ->innerJoin("process_transaction","process_transaction.container_id = container.id")
+                ->innerJoin("ticket","ticket.process_transaction_id = process_transaction.id")
+                ->innerJoin("calendar","calendar.id = ticket.calendar_id")
                 ->innerJoin("process","process_transaction.process_id = process.id")
                 ->where(["process.id"=>$p->id])
+                ->asArray()
                 ->all();
             $row["containers"] = $containers;
-            $tikets = Ticket::find()
-                ->innerJoin("calendar","calendar.id = ticket.calendar_id")
-                ->innerJoin("process_transaction","process_transaction.id = ticket.process_transaction_id")
-                ->innerJoin("process","process_transaction.process_id = process.id")
-                ->where(["process.id"=>$p->id])
-                ->all();
-            $row["tyckets"] = $tikets;
+
+
             $result [] = $row;
         }
 
-        var_dump($result);die;
+        //return $this->render('print_report',['result'=>$result]);
 
-       return $this->render('print_report',['process'=>$process]);
-        /*
 
-        $body = $this->renderPartial('print_report', [
-
-        ]);
+        $body = $this->renderPartial('print_report',
+            ['result'=>$result]);
 
         $pdf =  new mPDF(['mode'=>'utf-8' , 'format'=>'A4-L']);
         $pdf->SetTitle("Solicitudes Realizadas");
         $pdf->WriteHTML($body);
         $path= $pdf->Output("Solicitudes Realizadas.pdf","D");
-        */
+
     }
 }
