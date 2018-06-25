@@ -77,22 +77,21 @@ class ProcessController extends Controller
         if(!Yii::$app->user->can("reception_view")) // FIXME: change permission to process_view
             throw new ForbiddenHttpException('Usted no tiene acceso a esta recepción');
 
-        $user = AdmUser::findOne(['id'=>Yii::$app->user->id]);
-
         $model = $this->findModel($id);
 
         if($user && $user->hasRol('Agencia')) // FIXME: change role to Importer/Exporter
         {
-            $userAgency = UserAgency::findOne(['user_id'=>$user->id]);
+            $userAgency = UserAgency::findOne(['user_id'=>Yii::$app->user->id]);
             if($userAgency && $userAgency->agency_id !== $model->agency_id)
                 throw new ForbiddenHttpException('Usted no tiene acceso a este proceso');
 
         }
         else if ($user && $user->hasRol('Cia_transporte')){
-            $userCiaTrans = UserTranscompany::findOne(['user_id'=>$user->id]);
+            $userCiaTrans = UserTranscompany::findOne(['user_id'=>Yii::$app->user->id]);
             if($userCiaTrans && $userCiaTrans->transcompany_id !== $model->trans_company_id)
                 throw new ForbiddenHttpException('Usted no tiene acceso a este proceso');
         }
+
         $searchModel = new ContainerSearch();
 
         $query = $searchModel->find()

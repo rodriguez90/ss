@@ -33,6 +33,14 @@ var handleDataTable = function() {
             //         // $('td:eq(0)', row).html( '<b>A</b>' );
             //     }
             // },
+            "createdRow": function ( row, data, index ) {
+                if (!data.selectable ) {
+                    // $('td', row).eq(5).addClass('bg-silver-darker');
+                    $('td', row).eq(0).removeClass('select-checkbox');
+                    console.log(row);
+                    $(row).addClass('bg-silver-darker');
+                }
+            },
             "columns": [
                 {
                     // "title": "Selecionar",

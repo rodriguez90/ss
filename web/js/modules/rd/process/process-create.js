@@ -11,6 +11,9 @@ var lan = {
     "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
     "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
     "sInfoPostFix":    "",
+    "select":{
+        _: "%d filas selecionadas",
+    },
     "sSearch":         "Buscar:",
     "sUrl":            "",
     "sInfoThousands":  ",",
@@ -31,23 +34,24 @@ var lan = {
     }
 };
 
-var stop_watch_start = moment().hour(0).minute(29).second(59);
-var stop_watch_end = moment(stop_watch_start).subtract({'minutes' : 30});
+
 var selectedContainers = [];
+
+
+var stop_watch_start = moment().hour(0).minute(29).second(59);
 var timerId = null;
 
 var handleStopWatch = function()
 {
     var sw = $("#stop_watch");
     stop_watch_start.subtract({seconds: 1});
+    sw.text("00:" + stop_watch_start.format('mm:ss'));
 
     if(stop_watch_start.format('mm:ss') === "00:00")
     {
         clearTimeout(timerId);
         alert("Ha espirado el tiempo de trabajo");
-        // stop_watch_start = moment().hour(0).minute(29).second(59);
-        // stop_watch_end = moment(stop_watch_start).subtract({'minutes' : 30});
-        window.location.reload();
+         window.location.reload();
         return;
     }
 
@@ -56,7 +60,7 @@ var handleStopWatch = function()
         $("#stop_watch_widget").removeClass("bg-green")
         $("#stop_watch_widget").addClass("bg-red")
     }
-    sw.text("00:" + stop_watch_start.format('mm:ss'));
+
 };
 
 var handleSelectAll = function () {
@@ -72,7 +76,7 @@ var handleSelectAll = function () {
                 // console.log(index);
                 // console.log(value);
 
-                if(value.id !== -1)
+                if(!value.selectable)
                 {
                     return false;
                 }
@@ -108,6 +112,8 @@ var handleSelectTransCompany = function () {
 
         table.rows().deselect();
         table.column(0).visible(true);
+        $( table.column( 0 ).nodes() ).addClass( 'highlight' );
+        $( table.column( 5 ).nodes() ).addClass( 'highlight' );
 
         $('#select_all2').on('click', function(){
 
@@ -170,15 +176,13 @@ var handleSelectTransCompany = function () {
         var count = table.rows( { selected: true } ).count();
         var selectedValue = $("input[name='radio_default_inline']:checked").val();
 
-        // if(selectedValue === "1" && count <= 0)
-        // {
-        //     // e.stopPropagation();
-        //     // e.preventDefault();
-        //     // alert("Debe seleccionar los contenedores para asignar la Cia de Transporte");
-        //     console.log(e);
-        //
-        //     return;
-        // }
+        if(selectedValue === "1" && count <= 0)
+        {
+            e.stopPropagation();
+            e.preventDefault();
+            alert("Debe seleccionar los contenedores para asignar la Cia de Transporte");
+            return false;
+        }
     });
 
     $('#selectTransCompany').on('select2:select', function (e) {
@@ -276,7 +280,8 @@ var fetchContainersWS = function (bl, containers) {
             agency:agency.name,
             wharehouse:1,
             transCompany:{name:'', id:-1, ruc:""},
-            status:status
+            status:status,
+            selectable:true
         };
         var select = false;
         var status = null;
@@ -284,7 +289,8 @@ var fetchContainersWS = function (bl, containers) {
         if( container.status !== "PENDIENTE" &&
             !statusIsDate)
         {
-            select = true;
+            container.selectable = false
+            // select = true;
         }
         // for(var j = 0, length = containers.length; j < length ; j++)
         // {
@@ -303,14 +309,18 @@ var fetchContainersWS = function (bl, containers) {
         //     }
         // }
 
-        if(select)
-            table.row.add(
-                container
-            ).draw().select();
-        else
-            table.row.add(
-                container
-            ).draw();
+        table.row.add(
+            container
+        ).draw();
+
+        // if(!container.selectable)
+        //     table.row.add(
+        //         container
+        //     ).draw().select();
+        // else
+        //     table.row.add(
+        //         container
+        //     ).draw();
     }
 };
 
