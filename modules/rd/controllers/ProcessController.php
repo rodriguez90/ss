@@ -448,38 +448,28 @@ class ProcessController extends Controller
                                if($destinatario)
                                {
 
-                                   $containers1 = [];
-                                   $containers2 = [];
-                                   $i=1;
-
+                                   $containers = [];
                                    foreach ($c as $c2) {
-                                       if ($i % 2 !== 0) {
-                                           $containers1 []= $c2;
-                                       } else {
-                                           $containers2 []= $c2;
-                                       }
-                                       $i++;
+                                       $containers[]= $c2;
                                    }
-
+                                    /*
                                    //pdf create
                                    $pdf =  new mPDF( ['format'=>"A4-L"]);
-                                   $pdf->SetTitle("Prueba d generaciÃ³n de PDF.");
+                                   $pdf->SetTitle("Notificación.pdf");
                                    $pdf->WriteHTML($this->renderPartial('@app/mail/layouts/html3.php', ['model' => $model,
-                                       'containers1'=>$containers1,
-                                       'containers2'=>$containers2]));
-                                   $path= $pdf->Output("","S");
+                                       'containers'=>$containers]));
+                                   $path= $pdf->Output("","S");*/
 
-                                   $body = Yii::$app->view->renderFile('@app/mail/layouts/html3.php', ['model' => $model,
-                                       'containers1'=>$containers1,
-                                       'containers2'=>$containers2]);
+                                   $body = Yii::$app->view->renderFile('notification.php', ['model' => $model,
+                                       'containers'=>$containers]);
 
                                    // TODO: send email user too from the admin system
                                    $result = Yii::$app->mailer->compose()
                                                    ->setFrom($remitente->email)
                                                    ->setTo($destinatario->email)
-                                                   ->setSubject("Nueva Solicitud de Recepción")
+                                                   ->setSubject("Notificación de nuevo Proceso.")
                                                    ->setHtmlBody($body)
-                                                   ->attachContent($path,[ 'fileName'=> "Nueva Solicitud de RecepciÃ³n.pdf",'contentType'=>'application/pdf'])
+                                                   //->attachContent($path,[ 'fileName'=> "Nueva Solicitud de RecepciÃ³n.pdf",'contentType'=>'application/pdf'])
                                                    ->send();
 
                                    if($result === false)

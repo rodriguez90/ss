@@ -269,7 +269,11 @@ class SiteController extends Controller
     /**                */
     public function actionAbout()
     {
-        return $this->render('about');
+        $containers = Container::find()
+            ->all();
+
+
+        return $this->render('about',['containers'=>$containers]);
     }
 
     public function actionQr(){
