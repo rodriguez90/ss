@@ -764,7 +764,7 @@ var fetchReceptionTransactions = function () {
         success: function (response) {
             // console.log(response);
 
-            reception = response['reception'];
+            reception = response['process'];
             agency = response['angecy'];
 
             $.each( response['transactions'], function (i) {
@@ -943,7 +943,7 @@ $(document).ready(function () {
     handleTableInModal();
     handleTableInWizar();
     handleTable3InWizar();
-    // fetchReceptionTransactions();
+    fetchReceptionTransactions();
 
     // stop watch
     timerId = setInterval(handleStopWatch, 1000);

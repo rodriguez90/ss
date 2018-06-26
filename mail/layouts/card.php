@@ -87,7 +87,7 @@ $date = $aux->format("YmdHi");
 
         <tr>
             <td class="title" >CLIENTE</td>
-            <td class="data"  ><?php echo $agency["name"] ?></td>
+            <td class="data"  ><?php echo $ticket["a_name"] ?></td>
             <td class="title" >RUC/CI</td>
             <td class="data"  ><?php echo $ticket["ruc"]."/" .$ticket["register_driver"] ?></td>
         </tr>
@@ -115,7 +115,7 @@ $date = $aux->format("YmdHi");
 
         <tr>
             <td class="title" >IMPRESO</td>
-            <td class="data"  ><?php echo date('d/m/Y H:i'); ?></td>
+            <td class="data"  ><?php echo $dateImp; ?></td>
             <td class="title" >ESTADO</td>
             <td class="data"  > <?php echo $ticket["status"] ==1? "EMITIDO":"---" ?>  </td>
         </tr>

@@ -202,13 +202,13 @@ GO
 
 
 -- ----------------------------
--- Table structure for reception_transaction
+-- Table structure for process_transaction
 -- ----------------------------
-IF EXISTS (SELECT * FROM sys.all_objects WHERE object_id = OBJECT_ID(N'[dbo].[reception_transaction]') AND type IN ('U'))
-	DROP TABLE [dbo].[reception_transaction]
+IF EXISTS (SELECT * FROM sys.all_objects WHERE object_id = OBJECT_ID(N'[dbo].[process_transaction]') AND type IN ('U'))
+	DROP TABLE [dbo].[process_transaction]
 GO
 
-CREATE TABLE [dbo].[reception_transaction] (
+CREATE TABLE [dbo].[process_transaction] (
   [id] int  IDENTITY(1,1) NOT NULL,
   [reception_id] bigint  NOT NULL,
   [container_id] int  NOT NULL,
@@ -219,7 +219,7 @@ CREATE TABLE [dbo].[reception_transaction] (
 )
 GO
 
-ALTER TABLE [dbo].[reception_transaction] SET (LOCK_ESCALATION = TABLE)
+ALTER TABLE [dbo].[process_transaction] SET (LOCK_ESCALATION = TABLE)
 GO
 
 
@@ -495,9 +495,9 @@ GO
 
 
 -- ----------------------------
--- Primary Key structure for table reception_transaction
+-- Primary Key structure for table process_transaction
 -- ----------------------------
-ALTER TABLE [dbo].[reception_transaction] ADD CONSTRAINT [PK__receptio__3213E83FCE7F60D5] PRIMARY KEY CLUSTERED ([id])
+ALTER TABLE [dbo].[process_transaction] ADD CONSTRAINT [PK__receptio__3213E83FCE7F60D5] PRIMARY KEY CLUSTERED ([id])
 WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)  
 ON [PRIMARY]
 GO
@@ -617,9 +617,9 @@ GO
 
 
 -- ----------------------------
--- Foreign Keys structure for table reception_transaction
+-- Foreign Keys structure for table process_transaction
 -- ----------------------------
-ALTER TABLE [dbo].[reception_transaction] ADD CONSTRAINT [FK__reception__conta__49C3F6B7] FOREIGN KEY ([container_id]) REFERENCES [dbo].[container] ([id]) ON DELETE CASCADE ON UPDATE CASCADE
+ALTER TABLE [dbo].[process_transaction] ADD CONSTRAINT [FK__reception__conta__49C3F6B7] FOREIGN KEY ([container_id]) REFERENCES [dbo].[container] ([id]) ON DELETE CASCADE ON UPDATE CASCADE
 GO
 
 
@@ -629,7 +629,7 @@ GO
 ALTER TABLE [dbo].[ticket] ADD CONSTRAINT [FK__ticket__calendar__7E37BEF6] FOREIGN KEY ([calendar_id]) REFERENCES [dbo].[calendar] ([id]) ON DELETE CASCADE ON UPDATE CASCADE
 GO
 
-ALTER TABLE [dbo].[ticket] ADD CONSTRAINT [FK__ticket__receptio__4BAC3F29] FOREIGN KEY ([reception_transaction_id]) REFERENCES [dbo].[reception_transaction] ([id]) ON DELETE CASCADE ON UPDATE CASCADE
+ALTER TABLE [dbo].[ticket] ADD CONSTRAINT [FK__ticket__receptio__4BAC3F29] FOREIGN KEY ([reception_transaction_id]) REFERENCES [dbo].[process_transaction] ([id]) ON DELETE CASCADE ON UPDATE CASCADE
 GO
 
 

@@ -12,6 +12,7 @@ use app\modules\rd\models\CalendarSearch;
 use yii\db\Exception;
 use yii\helpers\Url;
 use yii\web\Controller;
+use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\web\Response;
@@ -87,6 +88,11 @@ class CalendarController extends Controller
 
             $text = "";
 
+            $transaction = Calendar::getDb()->beginTransaction();
+
+            $ok = true;
+
+
             try{
                 $id_warehouse = Warehouse::find()
                     ->innerJoin("","")
@@ -94,7 +100,8 @@ class CalendarController extends Controller
                     ->select("id");
 
                 foreach ( $events as $event) {
-                    if($event['id'] == -1){
+                    if($event['id'] === -1){
+//                        $modelOld = Calendar::
 
                         $model = new Calendar();
                         $aux = new DateTime($event['start']);
@@ -107,11 +114,18 @@ class CalendarController extends Controller
 
                         $model->amount = $event['title'];
                         $model->id_warehouse =  1;
-                        $model->save();
+
+                        if($ok && !$model->save())
+                        {
+                            $ok = false;
+                            $result ['status']= 1;
+                            $result['msg'] = "Error al crear a disponibilidad en el calendario.";
+                            $result['msg_dev'] = implode(" ", $model->getErrors(false));
+                            break;
+                        }
 
                         $event = ['update'=>false, 'id'=>$model->id, 'title'=>$model->amount,'start'=>$model->start_datetime,'end'=>$model->end_datetime  , 'url'=>Url::toRoute('/rd/calendar/delete?id='.$model->id),   'allDay'=>false, 'className'=>['event_rd'], 'editable'=>false];
                         $result ['events'] [] = $event;
-
 
                     }else{
                         $model = $this->findModel($event['id']);
@@ -128,30 +142,39 @@ class CalendarController extends Controller
                             ->innerJoin("ticket","calendar.id = ticket.calendar_id")
                             ->where(["calendar.id"=>$model->id])
                             ->count();
+
                         if( (int)$reservados <= (int)$event['title'] ){
                             $model->amount = $event['title'];
-                            $model->save();
 
+                            if($ok && !$model->update())
+                            {
+                                $ok = false;
+                                $result ['status']= 1;
+                                $result['msg'] = "Error al crear a disponibilidad en el calendario.";
+                                $result['msg_dev'] = implode(" ", $model->getErrors(false));
+                                break;
+                            }
                         }
 
                         $event = ['update'=>false, 'id'=>$model->id, 'title'=>$model->amount,'start'=>$model->start_datetime,'end'=>$model->end_datetime  , 'url'=>Url::toRoute('/rd/calendar/delete?id='.$model->id),   'allDay'=>false, 'className'=>['event_rd'], 'editable'=>false];
                         $result ['events'] [] = $event;
-
                     }
-
-
                 }
 
-
-
-                $result ['status']= 1;
-
-                $result['msg'] = "Cupos añadidos correctamente." . $text;
-
+                if($ok)
+                {
+                    $transaction->commit();
+                    $result ['status']= 1;
+                    $result['msg'] = "Disponibilidad creada correctamente." . $text;
+                }
+                else{
+                    $transaction->rollBack();
+                }
 
             }catch (\yii\base\Exception $ex){
                 $result ['status']= 0;
                 $result['msg'] = "!Error. ".$ex->getMessage();
+                $transaction->rollBack();
             }
 
             return $result;

@@ -256,7 +256,7 @@ class ProcessController extends Controller
         if(isset($id))
         {
             $process = Process::findOne(['id'=>$id]);
-            $condition = 'reception_id = ' . $id;
+            $condition = 'process_id = ' . $id;
             if(isset($actived))
             {
                 $condition = $condition . ' and active = ' . $actived;
@@ -264,7 +264,7 @@ class ProcessController extends Controller
 
             if($process)
             {
-                $transactions = ReceptionTransaction::find()->where($condition)
+                $transactions = ProcessTransaction::find()->where($condition)
                     ->orderBy('delivery_date', SORT_ASC)
                     ->all();
 
@@ -272,7 +272,7 @@ class ProcessController extends Controller
                 $response['msg'] = "Datos encontrados.";
 //                $transactions = $process->receptionTransactions;
                 $response['transactions'] = [];
-                $response['reception'] = $process;
+                $response['process'] = $process;
                 $response['angecy'] = $process->agency;
                 $response['containers'] = [];
                 foreach ( $transactions as $t)
@@ -497,52 +497,68 @@ class ProcessController extends Controller
         if(Yii::$app->request->post())
         {
             $bl = Yii::$app->request->post("bl");
-            if($bl !=null){
+            if($bl !== null){
 
 
                 $user = AdmUser::findOne(["id"=>Yii::$app->user->getId()]);
 
                 $trans_company = TransCompany::find()
-                    ->select("trans_company.name,trans_company.ruc,adm_user.email")
+                    ->select("trans_company.name,trans_company.id,trans_company.ruc,adm_user.email")
                     ->innerJoin("user_transcompany","user_transcompany.transcompany_id = trans_company.id")
                     ->innerJoin("adm_user","user_transcompany.user_id = adm_user.id")
                     ->where(["user_transcompany.user_id"=>$user->getId()])
                     ->asArray()
                     ->one();
+//
+//                $agency = Agency::find()
+//                    ->select("agency.name,agency.ruc,adm_user.email")
+//                    ->innerJoin("process","process.agency_id = agency.id")
+//                    ->innerJoin("user_agency","user_agency.agency_id = agency.id")
+//                    ->innerJoin("adm_user","user_agency.user_id = adm_user.id")
+//                    ->where(["process.bl"=>$bl])
+//                    ->asArray()
+//                    ->one();
 
-                $agency = Agency::find()
-                    ->select("agency.name,agency.ruc,adm_user.email")
-                    ->innerJoin("process","process.agency_id = agency.id")
-                    ->innerJoin("user_agency","user_agency.agency_id = agency.id")
-                    ->innerJoin("adm_user","user_agency.user_id = adm_user.id")
-                    ->where(["process.bl"=>$bl])
-                    ->asArray()
-                    ->one();
 
-
-
-                if($trans_company!=null && $agency!=null){
+                if($trans_company !== null){
                     try{
                         $tickes = ProcessTransaction::find()
-                            ->select("process_transaction.register_truck,process_transaction.register_driver,process_transaction.name_driver,process.type,process.bl,process.delivery_date,container.code,container.tonnage,trans_company.name,trans_company.ruc,ticket.id,ticket.status,calendar.start_datetime,calendar.end_datetime,warehouse.name as w_name")
+                            ->select("process_transaction.register_truck,process_transaction.register_driver,process_transaction.name_driver,process.type,process.bl,process.delivery_date,container.code,container.tonnage,trans_company.name,trans_company.ruc,ticket.id,ticket.status,calendar.start_datetime,calendar.end_datetime,warehouse.name as w_name, agency.name as a_name")
                             ->innerJoin("process","process_transaction.process_id = process.id ")
                             ->innerJoin("container", "container.id = process_transaction.container_id")
                             ->innerJoin("trans_company", "trans_company.id = process_transaction.trans_company_id")
                             ->innerJoin("ticket", "ticket.process_transaction_id = process_transaction.id")
                             ->innerJoin("calendar", "ticket.calendar_id = calendar.id")
                             ->innerJoin("warehouse", "warehouse.id = calendar.id_warehouse")
+                            ->innerJoin("agency", "process.agency_id = agency.id")
                             ->where(["process.bl"=>$bl])
-                            ->andWhere(["trans_company.name"=>$trans_company["name"]])
+                            ->andWhere(["trans_company.id"=>$trans_company["id"]])
                             ->asArray()
                             ->all();
 
                         $paths = [];
 
+
+
+
                         foreach ($tickes as $ticket){
 
                             $aux = new DateTime( $ticket["start_datetime"] );
                             $date = $aux->format("YmdHi");
-                            $info =  "TI-" . $date . "-".$ticket["id"];
+                            $dateImp = date('d/m/Y H:i');
+                            $info.= $trans_company["name"]. '  ';
+                            $info.= "TI-" . $date . "-".$ticket["id"]. '  ';
+                            $info.= $ticket["type"] ==Process::PROCESS_IMPORT ? "IMPORT":"EXPOT" . '  ';
+                            $info.= $ticket["w_name"]. '  ';
+                            $info.= $ticket["delivery_date"]. '  ';
+                            $info.= $ticket["a_name"]. '  ';
+                            $info.= $ticket["name_driver"]. '  ';
+                            $info.= $ticket["register_truck"]. '  ';
+                            $info.= substr($ticket["start_datetime"],0,16). '  ';
+                            $info.= $ticket["bl"]. '  ';
+                            $info.= $ticket["tonnage"] .$ticket["code"]. '  ';
+                            $info.= $dateImp . '  ';
+                            $info.= $ticket["status"] == 1 ? "EMITIDO":"---". '  ';
                             $qrCode = new QrCode($info);
                             //$qrpath =  Yii::getAlias("@webroot"). "/qrcodes/".$ticket["id"]."-".date('YmdHis').".png";
                             ///sgt/web/qrcodes/3-qrcode.png
@@ -553,7 +569,7 @@ class ProcessController extends Controller
                             $imageString = base64_encode(ob_get_contents());
                             ob_end_clean();
 
-                            $bodypdf = $this->renderPartial('@app/mail/layouts/card.php', ["trans_company"=> $trans_company, "agency"=>$agency , "ticket"=>$ticket,"qr"=>"data:image/png;base64, ".$imageString]);
+                            $bodypdf = $this->renderPartial('@app/mail/layouts/card.php', ["trans_company"=> $trans_company, "ticket"=>$ticket,"qr"=>"data:image/png;base64, ".$imageString, 'dateImp'=>$dateImp]);
                             ini_set('max_execution_time', '5000');
                             $pdf =  new mPDF(['mode'=>'utf-8' , 'format'=>'A4-L']);
                             $pdf->SetTitle("Carta de Servicio");
@@ -569,7 +585,7 @@ class ProcessController extends Controller
                                 ->send();
 
 
-                        } 
+                        }
 
                         $result ["status"]  =1;
                         $result ["msg"] .= "Cartas de servicio generadas correctamente.";

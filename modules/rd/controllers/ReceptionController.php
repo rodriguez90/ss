@@ -106,8 +106,8 @@ class ReceptionController extends Controller
         }
 
         $containers = Container::find()
-            ->innerJoin('reception_transaction', 'reception_transaction.container_id = container.id')
-            ->innerJoin('reception', 'reception_transaction.reception_id = reception.id')
+            ->innerJoin('process_transaction', 'process_transaction.container_id = container.id')
+            ->innerJoin('reception', 'process_transaction.reception_id = reception.id')
             ->where(['reception.id'=>$id])
             ->all();
 
@@ -253,8 +253,8 @@ class ReceptionController extends Controller
         if(isset($bl))
         {
             $response['containers'] = Container::find()
-                                    ->innerJoin('reception_transaction', 'reception_transaction.container_id = container.id')
-                                    ->innerJoin('reception', 'reception_transaction.reception_id = reception.id')
+                                    ->innerJoin('process_transaction', 'process_transaction.container_id = container.id')
+                                    ->innerJoin('reception', 'process_transaction.reception_id = reception.id')
                                     ->where(['bl'=>$bl])
                                     ->all();
             $response['success'] = true;

@@ -212,10 +212,10 @@ class TicketController extends Controller
 
         if(isset($receptionId))
         {
-            $tickets = Ticket::find()->innerJoin('reception_transaction', 'reception_transaction_id=reception_transaction.id')
+            $tickets = Ticket::find()->innerJoin('process_transaction', 'process_transaction_id=process_transaction.id')
                 ->innerJoin('calendar', 'calendar_id=calendar.id')
 //                                        ->innerJoin('calendar', 'calendar_id=calendar.id')
-                ->where(['reception_transaction.reception_id'=>$receptionId])
+                ->where(['process_transaction.process_id'=>$receptionId])
                 ->all();
             $response['tickets'] = $tickets;
             $response['success'] = true;
@@ -354,7 +354,7 @@ class TicketController extends Controller
                                 $processStatus = $model->save();
                                 $calendarSlot->amount--;
                                 $result = $calendarSlot->update();
-                                if($result == false)
+                                if($result === false)
                                 {
                                     $processStatus = false;
                                     $response['msg'] = 'Ah ocurrido un error al actualizar la disponibilidad del calendario: '.
@@ -372,27 +372,27 @@ class TicketController extends Controller
                     if($processStatus) // update reception status
                     {
                         $countTicketForReception = TicketSearch::find()->innerJoin('process_transaction', 'ticket.process_transaction_id = process_transaction.id')
-                                                                       ->innerJoin('reception', 'reception.id=process_transaction.reception_id')
-                                                                       ->where(['reception.id'=>$reception['id']])->count();
+                                                                       ->innerJoin('process', 'process.id=process_transaction.process_id')
+                                                                       ->where(['process.id'=>$reception['id']])->count();
 
-                        $countReceptionTransaction = ProcessTransaction::find()->where(['reception_id'=>$reception['id']])->count();
+                        $countReceptionTransaction = ProcessTransaction::find()->where(['process_id'=>$reception['id']])->count();
 
-                        $receptionModel = Reception::findOne(['id'=>$reception['id']]);
+                        $processModel = Process::findOne(['id'=>$reception['id']]);
 
-                        if($receptionModel !== null)
+                        if($processModel !== null)
                         {
                             if($countTicketForReception === $countReceptionTransaction)
-                                $receptionModel->active =  0;
+                                $processModel->active =  0;
                             else
-                                $receptionModel->active =  1;
-                            $result = $receptionModel->update();
+                                $processModel->active =  1;
+                            $result = $processModel->update();
                             if($result === false)
                             {
-//                                var_dump($receptionModel->getErrorSummary);die;
+//                                var_dump($processModel->getErrorSummary);die;
                                 $processStatus = false;
                                 $response['msg'] = 'Ah ocurrido un error al actualizar el estado de la recepción: ' .
-                                                    implode(" ", $receptionModel->getErrorSummary(false));
-                                var_dump($receptionModel->getErrorSummary(true));die("1");
+                                                    implode(" ", $processModel->getErrorSummary(false));
+//                                var_dump($processModel->getErrorSummary(true));die("1");
                             }
                         }
                         else {

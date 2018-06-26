@@ -14,7 +14,19 @@ var fullcalendatInit = false;
 
 $(function (){
 
+
     $("#grabar").click(function () {
+
+
+        // var events2 = [];
+        // for(var i =0 , count = events.length; i < count; i++)
+        // {
+        //     var event = events[i];
+        //     event.start = moment(event.start).format('YYYY-MM-DD HH:mm:ss');
+        //     event.end = moment(event.end).format('YYYY-MM-DD HH:mm:ss');
+        //     events2.push(event);
+        //
+        // }
 
         $.ajax({
             url: homeUrl + "/rd/calendar/create",
@@ -195,6 +207,7 @@ $(function (){
         success: function (response) {
 
             var calendar = $('#calendar').fullCalendar({
+
                 height: 500,
                 contentHeight:300,
                 allDaySlot: false,

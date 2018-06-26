@@ -178,7 +178,7 @@ var handleBootstrapWizardsValidation = function() {
                                 if(ticketData)
                                 {
                                     var data = {
-                                        "reception_transaction_id":tId,
+                                        "process_transaction_id":tId,
                                         "calendar_id":ticketData.calendarId,
                                         "status":1,
                                         "active":1,

@@ -5,7 +5,7 @@ namespace app\modules\rd\models;
 use Yii;
 
 /**
- * This is the model class for table "reception_transaction".
+ * This is the model class for table "process_transaction".
  *
  * @property int $id
  * @property string $reception_id
@@ -27,7 +27,7 @@ class ReceptionTransaction extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'reception_transaction';
+        return 'process_transaction';
     }
 
     /**
