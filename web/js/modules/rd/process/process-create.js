@@ -276,7 +276,7 @@ var fetchContainersWS = function (bl, containers) {
             name:"Contenedor " + i,
             type: type,
             tonnage: tonnage,
-            deliveryDate:moment().format('DD/MM/YYYY'),
+            deliveryDate:moment().format('DD-MM-YYYY'),
             agency:agency.name,
             wharehouse:1,
             transCompany:{name:'', id:-1, ruc:""},

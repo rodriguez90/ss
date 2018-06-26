@@ -53,14 +53,6 @@ var handleBootstrapWizardsValidation = function() {
                             ).draw();
                         });
                 }
-                else if(ui.index==3)
-                {
-
-                }
-                else
-                {
-
-                }
             },
             validating: function (e, ui) {
                 var result = true;
@@ -149,32 +141,18 @@ var handleBootstrapWizardsValidation = function() {
                         var blCode = $("#blCode").val();
 
                         // set label text
-                        // $("#trans_company").text(tran_company_name);
-
-                        var trans_company =  {
-                            "id":$("#selectTransCompany option:selected")[0].value,
-                            "name":$("#selectTransCompany option:selected").text(),
-                        };
 
                         var process = {
                             "Process[agency_id]": 2, //agency.id, // FIXME THIS DEFINE BY USER WITH ROLE AGENCY OR IMPORTER/EXPORTER
                             "Process[bl]":blCode,
                             "Process[active]":1,
                             "Process[delivery_date]":moment().format("YYYY/MM/DD"),
+                            // "Process[delivery_date]":moment().format("DD/MM/YYYY HH:mm"),
                             "Process[type]":processType,
                             "containers":containers
                         };
 
-                        // var reception = {
-                        //     "agency_id":1, // FIXME THIS DEFINE BY USER WITH ROLE AGENCY OR IMPORTER/EXPORTER
-                        //     "bl":blCode,
-                        //     "trans_company_id":trans_company.id,
-                        //     "active":1,
-                        //     "containers":containers
-                        // };
-
                         console.log(process);
-                        // console.log(JSON.stringify(reception));
 
                         $.ajax({
                             async:false,

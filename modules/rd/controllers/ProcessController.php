@@ -397,7 +397,7 @@ class ProcessController extends Controller
                         $processTransModel->container_id = $containerModel->id;
                         $processTransModel->active = 1;
                         $processTransModel->trans_company_id = $transCompany->id;
-
+//                        var_dump($container['deliveryDate']);die;
                         $aux = new DateTime($container['deliveryDate']);
                         $aux->setTimezone(new DateTimeZone("UTC"));
                         $processTransModel->delivery_date = $aux->format("Y-m-d G:i:s");

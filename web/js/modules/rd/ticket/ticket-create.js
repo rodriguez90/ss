@@ -824,7 +824,7 @@ var fetchTickets = function (receptionId, async) {
             receptionId: receptionId,
         },
         success: function(response) {
-            // console.log(response);
+            console.log(response);
 
             $('#calendar').fullCalendar('removeEventSources', ticketEvents.id);
             ticketEvents.events = [];

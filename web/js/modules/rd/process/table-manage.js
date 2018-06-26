@@ -101,7 +101,7 @@ var handleDataTable = function() {
                             $('td:eq(3)', row).datepicker({
                                 title:"Seleccione la Fecha Límite",
                                 language: 'es',
-                                format: 'dd/mm/yyyy',
+                                format: 'dd-mm-yyyy',
                                 // todayHighlight: true,
                                 autoclose: true,
                                 immediateUpdates:true,
@@ -109,10 +109,21 @@ var handleDataTable = function() {
                                 // zIndexOffset:20
                                 // container:"#data-table"
                                 // toggleActive:true
-                            });
+                            }).on('changeDate', function(event){
+                                // var dateValue = moment(event.date).format('DD/MM/YYYY');
+                                var dateValue = moment(event.date).format('DD-MM-YYYY');
+                                console.log(row);
+                                console.log($(row));
+                                console.log(data);
+                                console.log(index);
+                                data.deliveryDate = dateValue;
+                                table.row(index).data(data)
 
-                            console.log("After Initialized: ")
-                            console.log($('#' + elementId));
+                                // var driverCell = table.cell(updatedCell.index().row, 7);
+                                // driverCell.data("Chico el cojo");
+                                // $('td:eq(3)', row).setAttribute('value', dateValue);
+                                // console.log(dateValue);
+                            });
                         }
                     }
                 }
