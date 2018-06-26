@@ -98,18 +98,6 @@ var handleDataTable = function() {
 
                             console.log($('td:eq(3)', row).html());
 
-                            // $('#' + elementId).datepicker({
-                            //     title:"Seleccione la Fecha Límite",
-                            //     language: 'es',
-                            //     format: 'dd/mm/yyyy',
-                            //     // todayHighlight: true,
-                            //     autoclose: true,
-                            //     startDate: '-3d',
-                            //     // zIndexOffset:20
-                            //     container:"#data-table"
-                            //     // toggleActive:true
-                            // });
-
                             $('td:eq(3)', row).datepicker({
                                 title:"Seleccione la Fecha Límite",
                                 language: 'es',

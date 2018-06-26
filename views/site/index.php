@@ -80,7 +80,7 @@ if($user)
     <!-- begin col-3 -->
     <div id="report" class="col-md-3 col-sm-6"  style="display: none;">
         <div class="widget widget-stats bg-orange">
-            <div class="stats-icon"><i class="fa fa-clock-o"></i></div>
+            <div class="stats-icon"><i class="fa fa-file-pdf-o"></i></div>
             <div class="stats-info">
                 <h4>REPORTES</h4>
                 <p>Solicitudes</p>
