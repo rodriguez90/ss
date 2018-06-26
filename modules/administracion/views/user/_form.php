@@ -107,7 +107,7 @@ FormAsset::register($this);
 
                             <div class="col-md-8 col-sm-8">
                                 <input class="form-control" name="AdmUser[cedula]" placeholder=""
-                                       data-parsley-cedula data-parsley-required="true"  data-parsley-type="number" data-parsley-maxlength="10" data-parsley-minlength="10"  type="text" value="<?= $model['cedula'] ?>">
+                                       data-parsley-cedula data-parsley-required="true"  data-parsley-maxlength="10" data-parsley-minlength="10"  type="text" value="<?= $model['cedula'] ?>">
                                 <ul class="parsley-errors-list"></ul>
                             </div>
                         </div>

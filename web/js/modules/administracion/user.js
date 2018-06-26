@@ -122,7 +122,7 @@ $(function () {
     var msg;
     window.Parsley.addValidator(
       'cedula',{
-          validateNumber:function (value) {
+            validateString:function (value) {
              return validarCedula(value);
           },
           requirementType:'integer',
