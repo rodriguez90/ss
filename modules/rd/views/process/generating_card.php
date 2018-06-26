@@ -11,7 +11,6 @@ use yii\widgets\ActiveForm;
 
 
 use app\assets\FormAsset;
-
 FormAsset::register($this);
 ?>
 
@@ -86,7 +85,7 @@ FormAsset::register($this);
                             <select id="selectpicker-bl" name="bl"  data-parsley-required="true" class="form-control selectpicker" data-size="10" data-live-search="true"  >
                                 <?php
 
-                                echo "<option  value=''>Seleccione un Rol</option>";
+                                echo "<option  value=''>Seleccione BL o Booking</option>";
 
                                 foreach($procesos as $p){
                                     //$selected = $bl == $p->bl ? 'selected': '';

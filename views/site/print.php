@@ -18,10 +18,13 @@ use app\modules\rd\models\Process;
 
     <style type="text/css"><!--
 
+
         table{
+
             font-family: "Helvetica", "Arial", sans-serif;
             font-size: 12px;
-            text-align: center;
+            margin-top: 0px;
+            width: 100%;
         }
 
         body {
@@ -77,7 +80,7 @@ use app\modules\rd\models\Process;
             </td>
             <td style="text-align: center"><h4 >SOLICITUDES REALIZADAS</h4> </td>
             <td style="text-align: right"><div id="fecha">
-                    <label>GUAYAQUIL <?= date('d') . ' de ' . date('F') . ' del ' . date('Y') ?></label>
+                    <label> <?= date('d/m/Y')?></label>
                 </div>
             </td>
         </tr>
@@ -92,12 +95,12 @@ use app\modules\rd\models\Process;
     <table id='head' width='100%'>
     <thead>
      <tr>
-         <td style='background: silver;'> <?= ( $processImp->type === Process::PROCESS_IMPORT ? 'BL':'Booking' ) ?> </td>
-         <td style='background: silver;'>No.</td>
-         <td style='background: silver;'>Tipo de trámite</td>
-         <td style='background: silver;'>Fecha de Creación</td>
-         <td style='background: silver;'>Fecha Límite</td>
-         <td style='background: silver;'>Cantidad de Contenedores</td>
+         <td style='font-weight: bold;'> BL </td>
+         <td style='font-weight: bold;'>No.</td>
+         <td style='font-weight: bold;'>Tipo de trámite</td>
+         <td style='font-weight: bold;'>Fecha de Creación</td>
+         <td style='font-weight: bold;'>Fecha Límite</td>
+         <td style='font-weight: bold;'>Cant. de Contenedores</td>
      </tr>
     </thead>
         <tbody>
@@ -131,12 +134,12 @@ use app\modules\rd\models\Process;
         <table id="datalle" width="100%" >
             <thead>
             <tr>
-                <td style='background: silver;'> <?= ( $processImp->type === Process::PROCESS_IMPORT ? 'BL':'Booking' ) ?> </td>
-                <td style='background: silver;'>No.</td>
-                <td style='background: silver;'>Tipo de trámite</td>
-                <td style='background: silver;'>Fecha de Creación</td>
-                <td style='background: silver;'>Fecha Límite</td>
-                <td style='background: silver;'>Cantidad de Contenedores</td>
+                <td style='font-weight: bold;'> Booking </td>
+                <td style='font-weight: bold;'>No.</td>
+                <td style='font-weight: bold;'>Tipo de trámite</td>
+                <td style='font-weight: bold;'>Fecha de Creación</td>
+                <td style='font-weight: bold;'>Fecha Límite</td>
+                <td style='font-weight: bold;'>Cant. de Contenedores</td>
             </tr>
             </thead>
             <tbody>

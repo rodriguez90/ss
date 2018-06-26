@@ -405,7 +405,7 @@ class SiteController extends Controller
             $row = [];
             $row["process"] = $p;
             $containers = Container::find()
-                ->select('container.id,container.name,container.tonnage,calendar.start_datetime')
+                ->select('container.id,container.status,container.name,container.tonnage,calendar.start_datetime')
                 ->innerJoin("process_transaction","process_transaction.container_id = container.id")
                 ->innerJoin("ticket","ticket.process_transaction_id = process_transaction.id")
                 ->innerJoin("calendar","calendar.id = ticket.calendar_id")

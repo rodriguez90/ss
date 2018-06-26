@@ -14,17 +14,20 @@ use app\modules\rd\models\Process;
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 
 
-    <style type="text/css"><!--
+    <style type="text/css">
 
         table{
             font-family: "Helvetica", "Arial", sans-serif;
-            font-size: 14px;
+            font-size: 12px;
+            margin-top: 0px;
+            width: 100%;
         }
 
 
         #datalle td {
             padding: 10px 10px 10px 10px;
             width: 25%;
+            border: 1px solid #DDD;
         }
 
         #contenedores td {
@@ -53,8 +56,11 @@ use app\modules\rd\models\Process;
             width: 33.333333333333%;
         }
 
+        .title{
+            font-weight: bold;
+        }
 
-        --></style>
+    </style>
 </head>
 <body>
 
@@ -69,7 +75,7 @@ use app\modules\rd\models\Process;
             </td>
             <td style="text-align: center"><h4 >DETALLES DEL PROCESO</h4> </td>
             <td style="text-align: right"><div id="fecha">
-                    <label>GUAYAQUIL <?= date('d') . ' de ' . date('F') . ' del ' . date('Y') ?></label>
+                    <label> <?= date('d/m/Y')?></label>
                 </div>
             </td>
         </tr>
@@ -80,11 +86,11 @@ use app\modules\rd\models\Process;
     <table id="datalle" width="100%">
         <thead>
         <tr>
-            <td style='background: silver;'> <?= ( $processImp->type === Process::PROCESS_IMPORT ? 'BL':'Booking' ) ?> </td>
-            <td style='background: silver;'>No.</td>
-            <td style='background: silver;'>Tipo de trámite</td>
-            <td style='background: silver;'>Fecha de Creación</td>
-            <td style='background: silver;'>Fecha Límite</td>
+            <td class="title" > <?= ( $model->type === Process::PROCESS_IMPORT ? 'BL':'Booking' ) ?> </td>
+            <td class="title">No.</td>
+            <td class="title" >Tipo de trámite</td>
+            <td class="title">Fecha de Creación</td>
+            <td class="title">Fecha Límite</td>
 
         </tr>
         </thead>
@@ -111,11 +117,11 @@ use app\modules\rd\models\Process;
 
     <table id="contenedores" width="100%" >
         <thead>
-            <tr style='font-weight: bold;text-align: left;'>
+            <tr >
             <td></td>
-            <td style='border: solid 1px #DDD;background: silver;'>Contenedor</td>
-            <td style='border: solid 1px #DDD;background: silver;'>Tipo/Tamaño</td>
-            <td style='border: solid 1px #DDD;background: silver;'>Estado</td>
+            <td style='border: solid 1px #DDD;' class="title">Contenedor</td>
+            <td style='border: solid 1px #DDD;' class="title">Tipo/Tamaño</td>
+            <td style='border: solid 1px #DDD;' class="title">Estado</td>
             <td></td>
             </tr>
         </thead>
@@ -135,8 +141,8 @@ use app\modules\rd\models\Process;
         <tr >
         <td ></td>
         <td ></td>
-        <td style='font-weight: bold;border: solid 1px #DDD;background: silver;'>Cantidad de Contenedores</td>
-        <td style='font-weight: bold;border: solid 1px #DDD;background: silver;'><?= $model->getContainerAmount() ?> </td>
+        <td style='font-weight: bold;border: solid 1px #DDD;'>Cantidad de Contenedores</td>
+        <td style='font-weight: bold;border: solid 1px #DDD;'><?= $model->getContainerAmount() ?> </td>
         <td ></td>
         </tr>
 

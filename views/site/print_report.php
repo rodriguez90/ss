@@ -17,11 +17,13 @@ use app\modules\rd\models\Process;
 
     <style type="text/css">
 
-        table {
+
+        table{
+
             font-family: "Helvetica", "Arial", sans-serif;
             font-size: 12px;
-            margin-top: 10px;
-            text-align: center;
+            margin-top: 0px;
+            width: 100%;
         }
 
 
@@ -38,7 +40,7 @@ use app\modules\rd\models\Process;
 
         #containers td {
             padding: 10px 10px 10px 10px;
-            width: 20%;
+            width: 16.6666666667%;
 
         }
 
@@ -47,7 +49,7 @@ use app\modules\rd\models\Process;
 
         }
 
-        h4{
+        h4,h5{
             margin-top: 5px;
             margin-bottom: 5px;
         }
@@ -73,6 +75,10 @@ use app\modules\rd\models\Process;
             width: 33.333333333333%;
         }
 
+        .title{
+            font-weight: bold;
+        }
+
     </style>
 
 </head>
@@ -87,9 +93,9 @@ use app\modules\rd\models\Process;
                     <img src="<?= Yii::$app->homeUrl ?>/../img/logo.png">
                 </div>
             </td>
-            <td><h4 style="text-align: center">DETALLES DE PROCESOS</h4> </td>
-            <td><div id="fecha">
-                    <label>GUAYAQUIL <?= date('d') . ' de ' . date('F') . ' del ' . date('Y') ?></label>
+            <td style="text-align: center"><h4 >DETALLES DE PROCESOS</h4> </td>
+            <td style="text-align: right"><div id="fecha">
+                    <label> <?= date('d/m/Y')?></label>
                 </div>
             </td>
         </tr>
@@ -103,19 +109,19 @@ use app\modules\rd\models\Process;
     foreach ($result as $row){
         echo "<table id='head' width='100%'>";
         echo "<tbody>";
-
+        $type = $row['process']->type;
         echo "<tr>";
-        echo "<td style='background: silver;'>" . ( $type === Process::PROCESS_IMPORT ? 'BL':'Booking' ) ."</td>";
-        echo "<td style='background: silver;'>No.</td>";
-        echo "<td style='background: silver;'>Tipo de trámite</td>";
-        echo "<td style='background: silver;'>Fecha de Creación</td>";
-        echo "<td style='background: silver;'>Fecha Límite</td>";
+        echo "<td  class='title' >" . ( $type === Process::PROCESS_IMPORT ? 'BL':'Booking' ) ."</td>";
+        echo "<td class='title' >No.</td>";
+        echo "<td  class='title' >Tipo de trámite</td>";
+        echo "<td  class='title'>Fecha de Creación</td>";
+        echo "<td class='title' >Fecha Límite</td>";
         echo "</tr>";
 
         echo "<tr>";
         echo "<td>". $row['process']->bl ."</td>";
         echo "<td>".$row['process']->id."</td>";
-        $type = $row['process']->type;
+
         echo "<td>".Process::PROCESS_LABEL[$type]."</td>";
         $create_at = $row['process']->created_at;
         echo "<td>".(new \yii\i18n\Formatter())->asDate($create_at , 'dd/M/yyyy')."</td>";
@@ -126,15 +132,16 @@ use app\modules\rd\models\Process;
         echo "</table>";
 
 
-        echo "<h5 style='text-align: center'>Contenedores</h5>";
+        echo "<h5 style='text-align: center;'>Contenedores</h5>";
 
         echo "<table id='containers' width='100%'>";
         echo "<thead>";
-        echo "<tr style='font-weight: bold;text-align: left;' >";
+        echo "<tr >";
         echo "<td></td>";
-        echo "<td style='border: solid 1px #DDD;background: silver;'>Contenedor</td>";
-        echo "<td style='border: solid 1px #DDD;background: silver;'>Tipo/Tamaño</td>";
-        echo "<td style='border: solid 1px #DDD;background: silver;'>Fecha del Turno</td>";
+        echo "<td style='border: solid 1px #DDD;font-weight: bold;'>Contenedor</td>";
+        echo "<td style='border: solid 1px #DDD;font-weight: bold;'>Tipo/Tamaño</td>";
+        echo "<td style='border: solid 1px #DDD;font-weight: bold;'>Fecha del Turno</td>";
+        echo "<td style='border: solid 1px #DDD;font-weight: bold;'>Estado</td>";
         echo "<td></td>";
         echo "</tr>";
         echo "</thead>";
@@ -146,7 +153,8 @@ use app\modules\rd\models\Process;
             echo "<td></td>";
             echo "<td style='border: solid 1px #DDD;'>" . $container['name'] . "</td>";
             echo "<td style='border: solid 1px #DDD;'>" . $container['code'] . $container['tonnage'] . "</td>";
-            echo "<td style='border: solid 1px #DDD;'>" . (new \yii\i18n\Formatter())->asDate($container['start_datetime'], 'dd/M/yyyy') . "</td>";
+            echo "<td style='border: solid 1px #DDD;'>" . (new \yii\i18n\Formatter())->asDate($container['start_datetime'], 'dd/M/yyyy H:i') . "</td>";
+            echo "<td style='border: solid 1px #DDD;'>" . $container['status'] . "</td>";
             echo "<td></td>";
             echo "</tr>";
         }
@@ -154,8 +162,8 @@ use app\modules\rd\models\Process;
         echo "<tr >";
         echo "<td ></td>";
         echo "<td ></td>";
-        echo "<td style='font-weight: bold;border: solid 1px #DDD;background: silver;'>Total</td>";
-        echo "<td style='font-weight: bold;border: solid 1px #DDD;background: silver;'>". $row['process']->getContainerAmount()."</td>";
+        echo "<td style='font-weight: bold;border: solid 1px #DDD;'>Total</td>";
+        echo "<td style='font-weight: bold;border: solid 1px #DDD;'>". $row['process']->getContainerAmount()."</td>";
         echo "<td ></td>";
         echo "</tr>";
 

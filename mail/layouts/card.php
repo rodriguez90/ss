@@ -31,7 +31,7 @@ use app\modules\rd\models\Process;
 
 
         #info{
-            background: #0a6aa1 none repeat scroll 0% 0%;
+
             padding: 0px 20px 0px 20px;
             font-family: "Helvetica", "Arial", sans-serif;
             font-size: 12px;
@@ -46,13 +46,12 @@ use app\modules\rd\models\Process;
         }
 
         .title{
-            background: #0a6aa1;
-            color: white;
+            font-weight: bold;
         }
 
-        .data{
-            background: #e4f1fb;
-        }
+
+
+
 
     </style>
 </head>
@@ -75,7 +74,7 @@ $date = $aux->format("YmdHi");
         </td>
         <td style="text-align: center;" ><h4 >DETALLES DEL PROCESO</h4> </td>
         <td style="text-align: right;" ><div id="fecha" >
-                <label>GUAYAQUIL <?= date('d') . ' de ' . date('F') . ' del ' . date('Y') ?></label>
+                <label> <?= date('d/m/Y')?></label>
             </div>
         </td>
     </tr>
@@ -83,7 +82,7 @@ $date = $aux->format("YmdHi");
 
 
 
-<div class="row" style="background: #e4f1fb;">
+<div class="row" >
 
 
 
@@ -105,8 +104,8 @@ $date = $aux->format("YmdHi");
 
         <tr>
             <td class="title" >ECAS</td>
-            <td class="data"  >??????</td>
-            <td class="title" >F. CADUCIDAD</td>
+            <td class="data"  ><?php echo (new \yii\i18n\Formatter())->asDate($ticket["delivery_date"], 'dd/M/yyyy') ?></td>
+            <td class="title" >FECHA LIMITE</td>
             <td class="data"  > <?php echo (new \yii\i18n\Formatter())->asDate($ticket["delivery_date"], 'dd/M/yyyy') ?></td>
         </tr>
 
@@ -126,7 +125,7 @@ $date = $aux->format("YmdHi");
 
         <tr>
             <td class="title" >FECHA TURNO</td>
-            <td class="data"  > <?php echo (new \yii\i18n\Formatter())->asDate($ticket["start_datetime"], 'dd/M/yyyy')?></td>
+            <td class="data"  > <?php echo (new \yii\i18n\Formatter())->asDate($ticket["start_datetime"], 'dd/M/yyyy H:i')?></td>
             <td class="title" >CANTIDAD</td>
             <td class="data"  >1</td>
         </tr>
@@ -139,7 +138,7 @@ $date = $aux->format("YmdHi");
         </tr>
 
         <tr>
-            <td class="title" >IMPRESO</td>
+            <td class="title" >GENERADO</td>
             <td class="data"  ><?php echo $dateImp; ?></td>
             <td class="title" >ESTADO</td>
             <td class="data"  > <?php echo $ticket["status"] ==1? "EMITIDO":"---" ?>  </td>
