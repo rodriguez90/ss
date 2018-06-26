@@ -82,7 +82,19 @@ FormAsset::register($this);
                     <div class="form-group">
                         <label class="col-md-4 col-sm-4 control-label">BL o Booking</label>
                         <div class="col-md-8 col-sm-8">
-                            <input class="form-control" name="bl" ata-parsley-required="true" type="text">
+
+                            <select id="selectpicker-bl" name="bl"  data-parsley-required="true" class="form-control selectpicker" data-size="10" data-live-search="true"  >
+                                <?php
+
+                                echo "<option  value=''>Seleccione un Rol</option>";
+
+                                foreach($procesos as $p){
+                                    //$selected = $bl == $p->bl ? 'selected': '';
+                                    echo "<option value='".$p->bl ."'>". $p->bl ."</option>";
+                                }
+
+                                ?>
+                            </select>
                         </div>
                     </div>
 
@@ -107,4 +119,13 @@ FormAsset::register($this);
 
 
 </div>
+
+
+
+
+<?php $this->registerJsFile('@web/js/modules/rd/process/generatingcard.js',              ['depends' => ['app\assets\FormAsset']]);?>
+
+
+
+
 

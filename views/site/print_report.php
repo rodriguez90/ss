@@ -18,11 +18,11 @@ use app\modules\rd\models\Process;
     <style type="text/css">
 
         table {
-             font-family: "Helvetica", "Arial", sans-serif;
-             font-size: 12px;
-             margin-top: 10px;
-             text-align: center;
-         }
+            font-family: "Helvetica", "Arial", sans-serif;
+            font-size: 12px;
+            margin-top: 10px;
+            text-align: center;
+        }
 
 
         body {

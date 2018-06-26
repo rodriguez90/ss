@@ -27,20 +27,18 @@ use app\modules\rd\models\Process;
 <head>
     <style>
 
-        body{
-            background: #e4f1fb;
-            width:210mm;
-            height: 297mm;
-        }
 
 
-        table{
+
+        #info{
             background: #0a6aa1 none repeat scroll 0% 0%;
-            padding: 0px 20px 20px 20px;
+            padding: 0px 20px 0px 20px;
             font-family: "Helvetica", "Arial", sans-serif;
-            font-size: 14px;
+            font-size: 12px;
 
         }
+
+
 
         table td {
             padding: 10px 10px 10px 10px;
@@ -67,11 +65,29 @@ $date = $aux->format("YmdHi");
 
 ?>
 
+
+<table id="pdfhead" width="100%" style="margin-bottom: 0px;">
+    <tr>
+        <td>
+            <div id="logo">
+                <img src="<?= Yii::$app->homeUrl ?>/../img/logo.png"?>
+            </div>
+        </td>
+        <td style="text-align: center;" ><h4 >DETALLES DEL PROCESO</h4> </td>
+        <td style="text-align: right;" ><div id="fecha" >
+                <label>GUAYAQUIL <?= date('d') . ' de ' . date('F') . ' del ' . date('Y') ?></label>
+            </div>
+        </td>
+    </tr>
+</table>
+
+
+
 <div class="row" style="background: #e4f1fb;">
 
 
 
-    <table>
+    <table width="100%" id="info">
 
         <tr>
             <td class="title" > EMP. TRANSPORTE </td>
@@ -132,8 +148,8 @@ $date = $aux->format("YmdHi");
 
     </table>
 
-    <div style="padding: 20px 0px 0px 0px;">
-        <img src="<?=$qr?>" width="300" height="300">
+    <div style="padding: 5px 0px 5px 5px;">
+        <img src="<?=$qr?>" width="250" height="250">
     </div>
 
 </div>

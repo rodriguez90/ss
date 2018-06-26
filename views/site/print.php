@@ -75,8 +75,8 @@ use app\modules\rd\models\Process;
                     <img src="<?= Yii::$app->homeUrl ?>/../img/logo.png">
                 </div>
             </td>
-            <td><h4 style="text-align: center">SOLICITUDES REALIZADAS</h4> </td>
-            <td><div id="fecha">
+            <td style="text-align: center"><h4 >SOLICITUDES REALIZADAS</h4> </td>
+            <td style="text-align: right"><div id="fecha">
                     <label>GUAYAQUIL <?= date('d') . ' de ' . date('F') . ' del ' . date('Y') ?></label>
                 </div>
             </td>
@@ -87,7 +87,7 @@ use app\modules\rd\models\Process;
 <?php if(count($processImp)>0) {
 
     ?>
-    <h4 style="text-align: left">Importación</h4>
+    <h5 style="text-align: left">Importación</h5>
 
     <table id='head' width='100%'>
     <thead>
@@ -126,7 +126,7 @@ use app\modules\rd\models\Process;
 
 
     <?php if(count($processExp)>0) { ?>
-        <h4 style="text-align: left">Exportación</h4>
+        <h5 style="text-align: left">Exportación</h5>
 
         <table id="datalle" width="100%" >
             <thead>
