@@ -232,7 +232,7 @@ GO
 
 CREATE TABLE [dbo].[ticket] (
   [id] int  IDENTITY(1,1) NOT NULL,
-  [reception_transaction_id] int  NOT NULL,
+  [process_transaction_id] int  NOT NULL,
   [calendar_id] int  NOT NULL,
   [status] smallint  NOT NULL,
   [created_at] datetime DEFAULT (getdate()) NOT NULL,
@@ -506,7 +506,7 @@ GO
 -- ----------------------------
 -- Uniques structure for table ticket
 -- ----------------------------
-ALTER TABLE [dbo].[ticket] ADD CONSTRAINT [UQ__ticket__E2E9858FDC308CCE] UNIQUE NONCLUSTERED ([reception_transaction_id] ASC)
+ALTER TABLE [dbo].[ticket] ADD CONSTRAINT [UQ__ticket__E2E9858FDC308CCE] UNIQUE NONCLUSTERED ([process_transaction_id] ASC)
 WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)  
 ON [PRIMARY]
 GO
@@ -629,7 +629,7 @@ GO
 ALTER TABLE [dbo].[ticket] ADD CONSTRAINT [FK__ticket__calendar__7E37BEF6] FOREIGN KEY ([calendar_id]) REFERENCES [dbo].[calendar] ([id]) ON DELETE CASCADE ON UPDATE CASCADE
 GO
 
-ALTER TABLE [dbo].[ticket] ADD CONSTRAINT [FK__ticket__receptio__4BAC3F29] FOREIGN KEY ([reception_transaction_id]) REFERENCES [dbo].[process_transaction] ([id]) ON DELETE CASCADE ON UPDATE CASCADE
+ALTER TABLE [dbo].[ticket] ADD CONSTRAINT [FK__ticket__receptio__4BAC3F29] FOREIGN KEY ([process_transaction_id]) REFERENCES [dbo].[process_transaction] ([id]) ON DELETE CASCADE ON UPDATE CASCADE
 GO
 
 

@@ -30,9 +30,9 @@ var handleCalendarDemo = function () {
 	// var buttonSetting = {left: 'today prev,next ', center: 'title', right: 'month,basicWeek,basicDay'};
 
 	var calendar = $('#calendar').fullCalendar({
-        locale: 'es',
-        height: 500,
-        contentHeight:300,
+        // locale: 'es',
+        height: 300,
+        contentHeight:250,
         // aspectRatio:3.0,
 		header: buttonSetting,
 		selectable: true,

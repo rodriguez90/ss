@@ -83,6 +83,6 @@ class ReceptionTransaction extends \yii\db\ActiveRecord
      */
     public function getTickets()
     {
-        return $this->hasMany(Ticket::className(), ['reception_transaction_id' => 'id']);
+        return $this->hasMany(Ticket::className(), ['process_transaction_id' => 'id']);
     }
 }

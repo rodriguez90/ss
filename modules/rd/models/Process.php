@@ -3,6 +3,7 @@
 namespace app\modules\rd\models;
 
 use Yii;
+use app\modules\rd\models\Ticket;
 
 /**
  * This is the model class for table "process".
@@ -83,5 +84,14 @@ class Process extends \yii\db\ActiveRecord
     public function getContainerAmount()
     {
         return $this->getProcessTransactions()->count();
+    }
+
+    public function getCountTicketReserved()
+    {
+        return Ticket::find()
+                ->innerJoin('process_transaction', 'process_transaction.id=ticket.process_transaction_id')
+                ->innerJoin('process', 'process_transaction.process_id=process.id')
+                ->where(['process.id'=>$this->id])
+                ->count();
     }
 }

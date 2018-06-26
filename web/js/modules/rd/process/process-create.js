@@ -269,14 +269,14 @@ var fetchContainersWS = function (bl, containers) {
         var tonnage = tonnages[Math.round(Math.random())];
         var randomIndex = Math.floor(Math.random() * 6);
         var status = statusArray[randomIndex];
-        console.log(status);
+        // console.log(status);
         var container =  {
             id:-1,
             checkbox:"",
             name:"Contenedor " + i,
             type: type,
             tonnage: tonnage,
-            deliveryDate:moment().format('YYYY-MM-DD'),
+            deliveryDate:moment().format('DD/MM/YYYY'),
             agency:agency.name,
             wharehouse:1,
             transCompany:{name:'', id:-1, ruc:""},
@@ -284,7 +284,6 @@ var fetchContainersWS = function (bl, containers) {
             selectable:true
         };
         var select = false;
-        var status = null;
         var statusIsDate = moment(status).isValid();
         if( container.status !== "PENDIENTE" &&
             !statusIsDate)

@@ -2,8 +2,10 @@
 
 namespace app\modules\rd\controllers;
 
+use DateTime;
+use DateTimeZone;
 use app\modules\rd\models\Process;
-use app\modules\rd\models\ReceptionSearch;
+use app\modules\rd\models\TransCompany;
 use Yii;
 use app\modules\rd\models\Ticket;
 use app\modules\administracion\models\AdmUser;
@@ -18,6 +20,8 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\helpers\Url;
 use yii\web\ForbiddenHttpException;
+use Da\QrCode\QrCode;
+use Mpdf\Mpdf;
 /**
  * TicketController implements the CRUD actions for Ticket model.
  */
@@ -134,7 +138,7 @@ class TicketController extends Controller
         if($model)
         {
             try {
-                $transaction = Reception::getDb()->beginTransaction();
+                $transaction = Ticket::getDb()->beginTransaction();
                 $calendarSlot = Calendar::findOne(['id'=>$model->calendar_id]);
 
                 if($model->delete())
@@ -143,7 +147,8 @@ class TicketController extends Controller
                     if(!$calendarSlot->update())
                     {
                         $response['success'] = false;
-                        $response['msg'] = 'Ah ocurrido un error al actualizar la disponibilidad del calendario: '.
+                        $response['msg'] = 'Ah ocurrido un error al actualizar la disponibilidad del calendario.';
+                        $response['msg_dev'] = 'Ah ocurrido un error al actualizar la disponibilidad del calendario: '.
                             implode(" ", $calendarSlot->getErrorSummary(false));
 
                     }
@@ -151,7 +156,8 @@ class TicketController extends Controller
                 else
                 {
                     $response['success'] = false;
-                    $response['msg'] = 'Ah ocurrido un error al eliminar el ticket: '.
+                    $response['msg'] = 'Ah ocurrido un error al eliminar el ticket.'.
+                    $response['msg_dev'] = 'Ah ocurrido un error al eliminar el ticket: '.
                         implode(" ", $model->getErrorSummary(false));
                 }
 
@@ -166,7 +172,8 @@ class TicketController extends Controller
             catch (\Exception $e)
             {
                 $response['success'] = false;
-                $response['msg'] = $e->getMessage();
+                $response['msg'] = 'Ah ocurrido un error inesperado en el servidor.';
+                $response['msg_dev'] = $e->getMessage();
                 $transaction->rollBack();
             }
         }
@@ -198,7 +205,7 @@ class TicketController extends Controller
         return $this->doTicket($tickets, $reception, Ticket::PRE_BOOKING);
     }
 
-    public function actionByReception()
+    public function actionByProcess()
     {
         $response = array();
 
@@ -261,6 +268,8 @@ class TicketController extends Controller
         $transaction = Process::getDb()->beginTransaction();
         $processStatus = true;
 
+        $ticketIds = [];
+
         foreach ($tickets as $data)
         {
             $model = new Ticket();
@@ -279,8 +288,8 @@ class TicketController extends Controller
                         $processTransaction->register_truck = $data['registerTruck'];
                         $processTransaction->register_driver = $data['registerDriver'];
                         $processTransaction->name_driver = $data['nameDriver'];
-
-                        if(!$processTransaction->update(true, ['register_truck', 'register_driver', 'name_driver']))
+                        $resul = $processTransaction->update(true, ['register_truck', 'register_driver', 'name_driver']);
+                        if($resul === false)
                         {
                             $processStatus = false;
                             $response['msg'] = 'Ah ocurrido un error al actualizar la placa del carro y la cédula del chofer: '.
@@ -292,6 +301,7 @@ class TicketController extends Controller
                     $calendarSlot = Calendar::findOne(['id'=>$model->calendar_id]);
                     if($processStatus && $oldTicket) // existe un ticket para esta transaccion
                     {
+                        $ticketIds []= $oldTicket->id;;
                         if($oldTicket->active === 1) // activa
                         {
                             if($model->calendar_id !== $oldTicket->calendar_id) // cambio de calendario (fecha) del ticket
@@ -352,13 +362,24 @@ class TicketController extends Controller
                             {
                                 $model->status = $status;
                                 $processStatus = $model->save();
+                                if(!$processStatus)
+                                {
+                                    $processStatus = false;
+                                    $response['msg'] = 'Ah ocurrido un error al crear el cupo.';
+                                    $response['msg_dev'] = 'Ah ocurrido un error al crear el cupo'.
+                                                implode(" ", $model->getErrorSummary(false));
+                                }
+                                else
+                                {
+                                    $ticketIds []= $model->id;
+                                }
                                 $calendarSlot->amount--;
                                 $result = $calendarSlot->update();
                                 if($result === false)
                                 {
                                     $processStatus = false;
                                     $response['msg'] = 'Ah ocurrido un error al actualizar la disponibilidad del calendario: '.
-                                        implode(" ", $oldTicket->getErrorSummary(false));
+                                        implode(" ", $calendarSlot->getErrorSummary(false));
                                 }
                             }
                             else {
@@ -397,7 +418,7 @@ class TicketController extends Controller
                         }
                         else {
                             $processStatus = false;
-                            $response['msg'] = 'Ah ocurrido un error la recepción no es valida';
+                            $response['msg'] = 'Ah ocurrido un error el proceso no es vaido';
                         }
                     }
                 }
@@ -420,13 +441,92 @@ class TicketController extends Controller
             $response['success'] = true;
             $response['msg'] = 'Reservas Realizada';
             $response['url'] = Url::to(['/site/index']);
+
+            foreach ($ticketIds as $ticketId)
+            {
+                $this->generateServiceCardByTicket($ticketId);
+            }
         }
         else
         {
             $response['success'] = false;
             $transaction->rollBack();
         }
-        return json_encode($response);
+//        return json_encode($response);
+        return $response;
     }
 
+    protected function generateServiceCardByTicket($id)
+    {
+        $user = AdmUser::findOne(["id"=>Yii::$app->user->getId()]);
+
+        $trans_company = TransCompany::find()
+            ->select("trans_company.name,trans_company.id,trans_company.ruc,adm_user.email")
+            ->innerJoin("user_transcompany","user_transcompany.transcompany_id = trans_company.id")
+            ->innerJoin("adm_user","user_transcompany.user_id = adm_user.id")
+            ->where(["user_transcompany.user_id"=>$user->getId()])
+            ->asArray()
+            ->one();
+
+        if($trans_company !== null){
+            try{
+                $ticket = ProcessTransaction::find()
+                    ->select("process_transaction.register_truck,process_transaction.register_driver,process_transaction.name_driver,process.type,process.bl,process.delivery_date,container.code,container.tonnage,trans_company.name,trans_company.ruc,ticket.id,ticket.status,calendar.start_datetime,calendar.end_datetime,warehouse.name as w_name, agency.name as a_name")
+                    ->innerJoin("process","process_transaction.process_id = process.id ")
+                    ->innerJoin("container", "container.id = process_transaction.container_id")
+                    ->innerJoin("trans_company", "trans_company.id = process_transaction.trans_company_id")
+                    ->innerJoin("ticket", "ticket.process_transaction_id = process_transaction.id")
+                    ->innerJoin("calendar", "ticket.calendar_id = calendar.id")
+                    ->innerJoin("warehouse", "warehouse.id = calendar.id_warehouse")
+                    ->innerJoin("agency", "process.agency_id = agency.id")
+                    ->where(["ticket.id"=>$id])
+                    ->asArray()
+                    ->one();
+
+                if($ticket !== null)
+                {
+                    $aux = new DateTime( $ticket["start_datetime"] );
+                    $date = $aux->format("YmdHi");
+                    $dateImp = date('d/m/Y H:i');
+
+                    $info.= $trans_company["name"]. '  ';
+                    $info.= "TI-" . $date . "-".$ticket["id"]. '  ';
+                    $info.= $ticket["type"] == Process::PROCESS_IMPORT ? "IMPORT":"EXPOT" . '  ';
+                    $info.= $ticket["w_name"]. '  ';
+                    $info.= $ticket["delivery_date"]. '  ';
+                    $info.= $ticket["a_name"]. '  ';
+                    $info.= $ticket["name_driver"]. '  ';
+                    $info.= $ticket["register_truck"]. '  ';
+                    $info.= substr($ticket["start_datetime"],0,16). '  ';
+                    $info.= $ticket["bl"]. '  ';
+                    $info.= $ticket["tonnage"] .$ticket["code"]. '  ';
+                    $info.= $dateImp . '  ';
+                    $info.= $ticket["status"] == 1 ? "EMITIDO":"---". '  ';
+                    $qrCode = new QrCode($info);
+
+                    ob_start();
+                    \QRcode::png($info,null);
+                    $imageString = base64_encode(ob_get_contents());
+                    ob_end_clean();
+
+                    $bodypdf = $this->renderPartial('@app/mail/layouts/card.php', ["trans_company"=> $trans_company, "ticket"=>$ticket,"qr"=>"data:image/png;base64, ".$imageString, 'dateImp'=>$dateImp]);
+                    ini_set('max_execution_time', '5000');
+                    $pdf =  new mPDF(['mode'=>'utf-8' , 'format'=>'A4-L']);
+                    $pdf->SetTitle("Carta de Servicio");
+                    $pdf->WriteHTML($bodypdf);
+                    $path= $pdf->Output("","S");
+
+                    Yii::$app->mailer->compose()
+                        ->setFrom($user->email)
+                        ->setTo($trans_company["email"])
+                        ->setSubject("Carta de Servicio")
+                        ->setHtmlBody("<h5>Se adjunta carta de servicio.</h5>")
+                        ->attachContent($path,[ 'fileName'=> "Carta de Servicio.pdf",'contentType'=>'application/pdf'])
+                        ->send();
+                }
+            }catch (\Exception $ex){
+                var_dump($ex->getMessage());die;
+            }
+        }
+    }
 }

@@ -140,7 +140,7 @@ class ApiTicketController extends  ActiveController
             $processStatus = true;
 
             try {
-                $oldTicket = Ticket::findOne(['reception_transaction_id'=>$model->reception_transaction_id]);
+                $oldTicket = Ticket::findOne(['process_transaction_id'=>$model->process_transaction_id]);
                 $calendarSlot = Calendar::findOne(['id'=>$model->calendar_id]);
                 if($oldTicket) // existe un ticket para esta transaccion
                 {
