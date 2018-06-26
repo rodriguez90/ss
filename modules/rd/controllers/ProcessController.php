@@ -253,18 +253,28 @@ class ProcessController extends Controller
         $response['transactions'] = [];
         $id = Yii::$app->request->get('id');
         $actived = Yii::$app->request->get('actived');
+
+        $user = AdmUser::findOne(["id"=>Yii::$app->user->getId()]);
+
+        $trans_company = TransCompany::find()
+            ->innerJoin("user_transcompany","user_transcompany.transcompany_id = trans_company.id")
+            ->innerJoin("adm_user","user_transcompany.user_id = adm_user.id")
+            ->where(["user_transcompany.user_id"=>$user->getId()])
+            ->one();
+
         if(isset($id))
         {
             $process = Process::findOne(['id'=>$id]);
-            $condition = 'process_id = ' . $id;
-            if(isset($actived))
-            {
-                $condition = $condition . ' and active = ' . $actived;
-            }
+//            $condition = 'process_id = ' . $id;
+//            if(isset($actived))
+//            {
+//                $condition = $condition . ' and active = ' . $actived;
+//            }
 
             if($process)
             {
-                $transactions = ProcessTransaction::find()->where($condition)
+                $transactions = ProcessTransaction::find()->where(['process_id'=>$id])
+                                                          ->andWhere(['trans_company_id'=>$trans_company->id])
                     ->orderBy('delivery_date', SORT_ASC)
                     ->all();
 

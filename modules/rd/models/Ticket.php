@@ -8,7 +8,7 @@ use Yii;
  * This is the model class for table "ticket".
  *
  * @property int $id
- * @property int $reception_transaction_id
+ * @property int process_transaction_id
  * @property int $calendar_id
  * @property int $status
  * @property string $created_at

@@ -22,6 +22,7 @@ class TableAsset extends AssetBundle
 	'plugins/DataTables/extensions/Select/css/select.bootstrap.min.css',
 	'plugins/DataTables/extensions/Responsive/css/responsive.bootstrap.min.css'	,
     'plugins/DataTables/extensions/KeyTable/css/keyTable.bootstrap.min.css',
+    'plugins/bootstrap-datepicker/css/datepicker.css'
     ];
 
     public $js = [
@@ -38,6 +39,8 @@ class TableAsset extends AssetBundle
 	'plugins/DataTables/extensions/Responsive/js/dataTables.responsive.min.js',
     'plugins/DataTables/extensions/CellEdit/js/dataTables.cellEdit.js',
     'plugins/fullcalendar/lib/moment.min.js',
+    'plugins/bootstrap-datepicker/js/bootstrap-datepicker.js',
+    'plugins/bootstrap-datepicker/locales/bootstrap-datepicker.es.js'
     ];
 
     public $depends = [

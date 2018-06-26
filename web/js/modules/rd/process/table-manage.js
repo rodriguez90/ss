@@ -26,19 +26,107 @@ var handleDataTable = function() {
             responsive: true,
             // rowCallback: function( row, data, index ) {
             //     // console.log(data);
-            //     if ( data.id !== -1) {
-            //         // console.log(row);
+            //     if ( data.selectable) {
+            //         console.log("Seletectable");
             //         // /table.row(':eq(0)', { page: 'current' }).deselect();
             //         // row().select();
             //         // $('td:eq(0)', row).html( '<b>A</b>' );
+            //         if(processType === "2")
+            //         {
+            //             var elementId =  String(data.name).replace(' ','');
+            //
+            //             console.log("element length " + $('#' + elementId).length);
+            //             console.log($('#' + elementId));
+            //
+            //             if($('#' + elementId).length <= 0)
+            //             {
+            //
+            //                 console.log("Element Id: " + elementId)
+            //                 console.log($('td:eq(3)', row).html());
+            //
+            //                 var  html = '<input type=\"text\" class=\"form-control\" id=\"' + elementId +  '\" placeholder=\"Fecha Límite\"' + 'data-date-format=\"dd/mm/yyyy\"' + '/>';
+            //
+            //                 console.log(html);
+            //
+            //                 $('td', row).eq(3).html(html)
+            //                 // $('td:eq(3)', row).html(html);
+            //
+            //                 console.log($('td:eq(3)', row).html());
+            //
+            //                 $('#' + elementId).datepicker({
+            //                     title:"Seleccione la Fecha Límite",
+            //                     language: 'es',
+            //                     todayHighlight: true,
+            //                     autoclose: true,
+            //                     toggleActive:true
+            //                 });
+            //             }
+            //         }
             //     }
             // },
-            "createdRow": function ( row, data, index ) {
+            "createdRow": function ( row, data, index, cells ) {
                 if (!data.selectable ) {
                     // $('td', row).eq(5).addClass('bg-silver-darker');
                     $('td', row).eq(0).removeClass('select-checkbox');
-                    console.log(row);
+                    // console.log(row);
                     $(row).addClass('bg-silver-darker');
+                }
+                else {
+                    console.log("Seletectable");
+                    // /table.row(':eq(0)', { page: 'current' }).deselect();
+                    // row().select();
+                    // $('td:eq(0)', row).html( '<b>A</b>' );
+                    if(processType === "2")
+                    {
+                        var elementId =  String(data.name).replace(' ','');
+
+                        console.log("Element Id: " + elementId)
+                        console.log("element length " + $('#' + elementId).length);
+                        console.log($('#' + elementId));
+
+                        if($('#' + elementId).length === 0)
+                        {
+                            console.log($('td:eq(3)', row).html());
+
+                            // var  html = '<input type=\"text\" class=\"form-control\" id=\"' + elementId +  '\" placeholder=\"Fecha Límite\"' + ' data-provide=\"datepicker-inline\"' + '/>';
+                            var  html = '<input type=\"text\" class=\"form-control\" id=\"' + elementId +  '\" placeholder=\"Seleccionar\"' + 'value=\"' + data.deliveryDate + '\" >';
+                            console.log("Generate HTML: ")
+                            console.log(html);
+
+                            $('td', row).eq(3).html(html)
+                            // $('td:eq(3)', row).html(html);
+
+                            console.log($('td:eq(3)', row).html());
+
+                            // $('#' + elementId).datepicker({
+                            //     title:"Seleccione la Fecha Límite",
+                            //     language: 'es',
+                            //     format: 'dd/mm/yyyy',
+                            //     // todayHighlight: true,
+                            //     autoclose: true,
+                            //     startDate: '-3d',
+                            //     // zIndexOffset:20
+                            //     container:"#data-table"
+                            //     // toggleActive:true
+                            // });
+
+                            $('td:eq(3)', row).datepicker({
+                                title:"Seleccione la Fecha Límite",
+                                language: 'es',
+                                format: 'dd/mm/yyyy',
+                                // todayHighlight: true,
+                                autoclose: true,
+                                immediateUpdates:true,
+                                // startDate: '-3d',
+                                // zIndexOffset:20
+                                // container:"#data-table"
+                                // toggleActive:true
+                            });
+
+                            console.log("After Initialized: ")
+                            console.log($('#' + elementId));
+                        }
+                    }
                 }
             },
             "columns": [
@@ -94,19 +182,7 @@ var handleDataTable = function() {
                 e.preventDefault();
                 return false;
             }
-
-            // var index = selectedContainers.indexOf(name);
-            // if(index === -1) // seleccionando
-            //     selectedContainers.push(name);
-            // else // quitando selección
-            // {
-            //     selectedContainers.splice(name, 1);
-            // }
-            //
-            // console.log(selectedContainers);
-
         } );
-
     }
 };
 
@@ -175,12 +251,6 @@ var handleDataTable2 = function () {
 
 var handleDataTable3 = function () {
     "use strict";
-    // <th>Seleccione <input type="checkbox" name="select_all2" value="1" id="select-all"></th>
-    // <th>Contenedores</th>
-    // <th>Tipo/Tamaño</th>
-    // <th>Fecha Límite</th>
-    // <th>Cliente</th>
-    // <th>Empresa de Transporte</th>
     if ($('#data-table3').length !== 0) {
         $('#data-table3').DataTable({
             dom: '<"top"ip<"clear">>t',

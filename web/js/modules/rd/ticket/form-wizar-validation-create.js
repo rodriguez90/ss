@@ -207,17 +207,18 @@ var handleBootstrapWizardsValidation = function() {
                             },
                             success: function (response) {
                                 // you will get response from your php page (what you echo or print)
-                                var obj = JSON.parse(response);
-                                console.log(obj);
+                                console.log(response);
+                                // var obj = response;
+                                // console.log(obj);
 
-                                if(obj.success)
+                                if(response.success)
                                 {
                                     result = true;
-                                    window.location.href = obj.url;
+                                    window.location.href = response.url;
                                 }
                                 else
                                 {
-                                    alert(obj.msg);
+                                    alert(response.msg);
                                 }
                                 // return true;
                             },

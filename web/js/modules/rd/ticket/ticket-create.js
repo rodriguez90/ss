@@ -369,10 +369,10 @@ var handleTableInWizar = function() {
                 "columns": [5, 6],
                 "errorClass": 'error'
             },
-            "confirmationButton": {
-                "confirmCss": 'my-confirm-class',
-                "cancelCss": 'my-cancel-class'
-            },
+            // "confirmationButton": {
+            //     "confirmCss": 'my-confirm-class',
+            //     "cancelCss": 'my-cancel-class'
+            // },
             "inputTypes": [
                 {
                     "column":5,

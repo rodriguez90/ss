@@ -84,24 +84,24 @@ class CalendarController extends Controller
             $result = [];
             $result ['events'] = [];
 
-            $events =Yii::$app->request->post('events');
+            $events = Yii::$app->request->post('events');
 
-            $text = "";
+            $text = '';
 
             $transaction = Calendar::getDb()->beginTransaction();
 
             $ok = true;
 
-
             try{
+
                 $id_warehouse = Warehouse::find()
                     ->innerJoin("","")
                     ->where(['user_id'=>\Yii::$app->user->getId()])
                     ->select("id");
 
                 foreach ( $events as $event) {
-                    if($event['id'] === -1){
-//                        $modelOld = Calendar::
+
+                    if($event['id'] == -1){
 
                         $model = new Calendar();
                         $aux = new DateTime($event['start']);
@@ -128,7 +128,7 @@ class CalendarController extends Controller
                         $result ['events'] [] = $event;
 
                     }else{
-                        $model = $this->findModel($event['id']);
+                        $model = Calendar::findOne((int)$id);
 
                         $aux = new \DateTime($event['start']);
                         $aux->setTimezone(new DateTimeZone("UTC"));
@@ -175,6 +175,7 @@ class CalendarController extends Controller
                 $result ['status']= 0;
                 $result['msg'] = "!Error. ".$ex->getMessage();
                 $transaction->rollBack();
+                var_dump($ex);die;
             }
 
             return $result;

@@ -27,7 +27,7 @@ TableAsset::register($this);
     }
     .fc-time-grid .fc-slats td
     {
-        height:5.5em !important;
+        height: 2.5em !important;
     }
     .fc-title {
         font-size: 16px !important;

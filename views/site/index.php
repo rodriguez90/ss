@@ -56,7 +56,7 @@ if($user)
                 <p><?php echo $exportCount?></p>
             </div>
             <div class="stats-link">
-                <a id="" href="<?php echo Url::to(['/rd/process/create','type'=>Process::PROCESS_EXPORT]);?>">Realice una solocitud de despacho.<i class="fa fa-arrow-circle-o-right"></i></a>
+                <a id="" href="<?php echo Url::to(['/rd/process/create','type'=>Process::PROCESS_EXPORT]);?>">Realice una solocitud de exportación.<i class="fa fa-arrow-circle-o-right"></i></a>
             </div>
         </div>
     </div>
@@ -189,7 +189,8 @@ if($user)
                                         $result = '';
                                         $url1 = Url::toRoute(['rd/process/view','id'=>$model->id]);
                                         $url2 = Url::toRoute(['rd/ticket/create','id'=>$model->id]);
-                                        $ticketClass = $model->active == 1 ? 'btn-success' : 'btn-default';
+//                                        $ticketClass = $model->active == 1 ? 'btn-success' : 'btn-default';
+                                        $ticketClass = $model->getContainerAmount() !== $model->getCountTicketReserved() ? 'btn-success' : 'btn-default';
                                         if($role === AuthItem::ROLE_AGENCY)
                                             $result = Html::a('Ver', $url1, ['class' => 'btn btn-info btn-xs', 'data-pjax' => 0]);
                                         else if($role === AuthItem::ROLE_CIA_TRANS_COMPANY)

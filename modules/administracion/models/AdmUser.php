@@ -363,12 +363,4 @@ class AdmUser extends ActiveRecord implements IdentityInterface
 //
 //        return $role->name;
     }
-
-
-
-    public function getCreate()
-    {
-        return $this->created_at;
-    }
-
 }

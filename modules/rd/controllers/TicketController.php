@@ -2,6 +2,8 @@
 
 namespace app\modules\rd\controllers;
 
+use DateTime;
+use DateTimeZone;
 use app\modules\rd\models\Process;
 use app\modules\rd\models\TransCompany;
 use Yii;
@@ -18,6 +20,8 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\helpers\Url;
 use yii\web\ForbiddenHttpException;
+use Da\QrCode\QrCode;
+use Mpdf\Mpdf;
 /**
  * TicketController implements the CRUD actions for Ticket model.
  */
@@ -134,7 +138,7 @@ class TicketController extends Controller
         if($model)
         {
             try {
-                $transaction = Reception::getDb()->beginTransaction();
+                $transaction = Ticket::getDb()->beginTransaction();
                 $calendarSlot = Calendar::findOne(['id'=>$model->calendar_id]);
 
                 if($model->delete())
@@ -143,7 +147,8 @@ class TicketController extends Controller
                     if(!$calendarSlot->update())
                     {
                         $response['success'] = false;
-                        $response['msg'] = 'Ah ocurrido un error al actualizar la disponibilidad del calendario: '.
+                        $response['msg'] = 'Ah ocurrido un error al actualizar la disponibilidad del calendario.';
+                        $response['msg_dev'] = 'Ah ocurrido un error al actualizar la disponibilidad del calendario: '.
                             implode(" ", $calendarSlot->getErrorSummary(false));
 
                     }
@@ -151,7 +156,8 @@ class TicketController extends Controller
                 else
                 {
                     $response['success'] = false;
-                    $response['msg'] = 'Ah ocurrido un error al eliminar el ticket: '.
+                    $response['msg'] = 'Ah ocurrido un error al eliminar el ticket.'.
+                    $response['msg_dev'] = 'Ah ocurrido un error al eliminar el ticket: '.
                         implode(" ", $model->getErrorSummary(false));
                 }
 
@@ -166,7 +172,8 @@ class TicketController extends Controller
             catch (\Exception $e)
             {
                 $response['success'] = false;
-                $response['msg'] = $e->getMessage();
+                $response['msg'] = 'Ah ocurrido un error inesperado en el servidor.';
+                $response['msg_dev'] = $e->getMessage();
                 $transaction->rollBack();
             }
         }
@@ -261,6 +268,8 @@ class TicketController extends Controller
         $transaction = Process::getDb()->beginTransaction();
         $processStatus = true;
 
+        $ticketIds = [];
+
         foreach ($tickets as $data)
         {
             $model = new Ticket();
@@ -268,8 +277,6 @@ class TicketController extends Controller
             $model->calendar_id = $data['calendar_id'];
             $model->active = $data['active'];
             $model->status = $data['status'];
-
-            $ticketId = -1;
 
             if($model->validate())
             {
@@ -281,8 +288,8 @@ class TicketController extends Controller
                         $processTransaction->register_truck = $data['registerTruck'];
                         $processTransaction->register_driver = $data['registerDriver'];
                         $processTransaction->name_driver = $data['nameDriver'];
-
-                        if(!$processTransaction->update(true, ['register_truck', 'register_driver', 'name_driver']))
+                        $resul = $processTransaction->update(true, ['register_truck', 'register_driver', 'name_driver']);
+                        if($resul === false)
                         {
                             $processStatus = false;
                             $response['msg'] = 'Ah ocurrido un error al actualizar la placa del carro y la cédula del chofer: '.
@@ -294,7 +301,7 @@ class TicketController extends Controller
                     $calendarSlot = Calendar::findOne(['id'=>$model->calendar_id]);
                     if($processStatus && $oldTicket) // existe un ticket para esta transaccion
                     {
-                        $ticketId = $oldTicket->id;
+                        $ticketIds []= $oldTicket->id;;
                         if($oldTicket->active === 1) // activa
                         {
                             if($model->calendar_id !== $oldTicket->calendar_id) // cambio de calendario (fecha) del ticket
@@ -364,7 +371,7 @@ class TicketController extends Controller
                                 }
                                 else
                                 {
-                                    $ticketId = $oldTicket->id;
+                                    $ticketIds []= $model->id;
                                 }
                                 $calendarSlot->amount--;
                                 $result = $calendarSlot->update();
@@ -414,11 +421,6 @@ class TicketController extends Controller
                             $response['msg'] = 'Ah ocurrido un error el proceso no es vaido';
                         }
                     }
-
-                    if($processStatus)
-                    {
-                        TicketController::generateServiceCardByTicket($ticketId);
-                    }
                 }
                 catch (Exception $e)
                 {
@@ -439,17 +441,22 @@ class TicketController extends Controller
             $response['success'] = true;
             $response['msg'] = 'Reservas Realizada';
             $response['url'] = Url::to(['/site/index']);
+
+            foreach ($ticketIds as $ticketId)
+            {
+                $this->generateServiceCardByTicket($ticketId);
+            }
         }
         else
         {
             $response['success'] = false;
             $transaction->rollBack();
         }
-        return json_encode($response);
+//        return json_encode($response);
+        return $response;
     }
 
-
-    static function generateServiceCardByTicket($id)
+    protected function generateServiceCardByTicket($id)
     {
         $user = AdmUser::findOne(["id"=>Yii::$app->user->getId()]);
 
@@ -460,7 +467,6 @@ class TicketController extends Controller
             ->where(["user_transcompany.user_id"=>$user->getId()])
             ->asArray()
             ->one();
-
 
         if($trans_company !== null){
             try{
@@ -477,8 +483,6 @@ class TicketController extends Controller
                     ->asArray()
                     ->one();
 
-                $paths = [];
-
                 if($ticket !== null)
                 {
                     $aux = new DateTime( $ticket["start_datetime"] );
@@ -487,7 +491,7 @@ class TicketController extends Controller
 
                     $info.= $trans_company["name"]. '  ';
                     $info.= "TI-" . $date . "-".$ticket["id"]. '  ';
-                    $info.= $ticket["type"] ==Process::PROCESS_IMPORT ? "IMPORT":"EXPOT" . '  ';
+                    $info.= $ticket["type"] == Process::PROCESS_IMPORT ? "IMPORT":"EXPOT" . '  ';
                     $info.= $ticket["w_name"]. '  ';
                     $info.= $ticket["delivery_date"]. '  ';
                     $info.= $ticket["a_name"]. '  ';
@@ -505,7 +509,7 @@ class TicketController extends Controller
                     $imageString = base64_encode(ob_get_contents());
                     ob_end_clean();
 
-                    $bodypdf = TicketController::renderPartial('@app/mail/layouts/card.php', ["trans_company"=> $trans_company, "ticket"=>$ticket,"qr"=>"data:image/png;base64, ".$imageString, 'dateImp'=>$dateImp]);
+                    $bodypdf = $this->renderPartial('@app/mail/layouts/card.php', ["trans_company"=> $trans_company, "ticket"=>$ticket,"qr"=>"data:image/png;base64, ".$imageString, 'dateImp'=>$dateImp]);
                     ini_set('max_execution_time', '5000');
                     $pdf =  new mPDF(['mode'=>'utf-8' , 'format'=>'A4-L']);
                     $pdf->SetTitle("Carta de Servicio");
@@ -521,7 +525,7 @@ class TicketController extends Controller
                         ->send();
                 }
             }catch (\Exception $ex){
-
+                var_dump($ex->getMessage());die;
             }
         }
     }

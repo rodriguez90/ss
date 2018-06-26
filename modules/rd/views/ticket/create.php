@@ -7,7 +7,7 @@ use yii\helpers\Html;
 /* @var $model app\modules\rd\models\Ticket */
 
 $this->title = Yii::t('app', 'Reservar Cupos');
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Tickets'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Cupos'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="ticket-create">
