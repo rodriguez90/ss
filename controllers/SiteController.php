@@ -194,10 +194,10 @@ class SiteController extends Controller
 
     public function actionQr(){
 
-    var_dump(date('YmdHis'));die;
-   return $this->render('about', [
-            "path"=> Yii::$app->request->baseUrl."/qrcodes/1-qrcode.png"
-        ]);
+//    var_dump(date('YmdHis'));die;
+       return $this->render('about', [
+                "path"=> Yii::$app->request->baseUrl."/qrcodes/1-qrcode.png"
+            ]);
 
     }
 
@@ -224,23 +224,19 @@ class SiteController extends Controller
         }
 
         $processExp = Process::find()
-            ->select( 'process.id,process.delivery_date,process.bl,process.type,agency.name as a_name')
             ->innerJoin('agency','process.agency_id = agency.id')
             ->innerJoin('process_transaction','process_transaction.process_id = process.id')
             ->innerJoin('container','process_transaction.container_id = container.id')
             ->where(['process.type'=>Process::PROCESS_EXPORT])
             ->andWhere(['process.active'=>1])
-            ->asArray()
             ->all();
 
         $processImp = Process::find()
-            ->select( 'process.id,process.delivery_date,process.bl,process.type,agency.name as a_name')
             ->innerJoin('agency','process.agency_id = agency.id')
             ->innerJoin('process_transaction','process_transaction.process_id = process.id')
             ->innerJoin('container','process_transaction.container_id = container.id')
             ->where(['process.type'=>Process::PROCESS_IMPORT])
             ->andWhere(['process.active'=>1])
-            ->asArray()
             ->all();
 
         $body = $this->renderPartial('print', [

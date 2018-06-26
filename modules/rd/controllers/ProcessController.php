@@ -626,8 +626,6 @@ class ProcessController extends Controller
 
         $model = $this->findModel($id);
 
-
-
         $contenedores = Container::find()
             ->innerJoin('process_transaction', 'process_transaction.container_id = container.id')
             ->innerJoin('process', 'process_transaction.process_id = process.id')
@@ -641,11 +639,9 @@ class ProcessController extends Controller
              ,
         ]);
 
-
         $pdf =  new mPDF(['mode'=>'utf-8' , 'format'=>'A4-L']);
         $pdf->SetTitle("Carta de Servicio");
         $pdf->WriteHTML($body);
         $path= $pdf->Output("Detalles del Proceso.pdf","D");
-
     }
 }

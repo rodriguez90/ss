@@ -52,11 +52,12 @@ use app\modules\rd\models\Process;
     <table id="datalle" width="100%" >
         <thead>
         <tr>
-            <td style="font-weight: bold">Número de recepción</td>
+            <td style="font-weight: bold">Número de Trámite</td>
             <td style="font-weight: bold">BL</td>
             <td style="font-weight: bold">Fecha Límite</td>
             <td style="font-weight: bold">Agencia</td>
             <td style="font-weight: bold">Tipo de Trámite</td>
+            <td style="font-weight: bold">Cantidad de Contenedores</td>
         </tr>
         </thead>
         <tbody>
@@ -66,8 +67,9 @@ use app\modules\rd\models\Process;
             echo "<td >" . $imp['id']."</td>";
             echo "<td >" . $imp['bl']. "</td>";
             echo "<td >" . $imp['delivery_date'] . "</td>";
-            echo "<td >" . $imp['a_name'] . "</td>";
+            echo "<td >" . $imp->agency->name . "</td>";
             echo "<td >" . Process::PROCESS_LABEL[$imp['type']] . "</td>";
+            echo "<td >" . $imp->getContainerAmount()  . "</td>";
             echo "</tr>";
         }
         ?>
@@ -84,11 +86,12 @@ use app\modules\rd\models\Process;
         <table id="datalle" width="100%" >
             <thead>
             <tr>
-                <td style="font-weight: bold">Número de recepción</td>
+                <td style="font-weight: bold">Número del Trámite</td>
                 <td style="font-weight: bold">BL</td>
                 <td style="font-weight: bold">Fecha Límite</td>
                 <td style="font-weight: bold">Agencia</td>
                 <td style="font-weight: bold">Tipo de Trámite</td>
+                <td style="font-weight: bold">Cantidad de Contenedores</td>
             </tr>
             </thead>
             <tbody>
@@ -98,8 +101,9 @@ use app\modules\rd\models\Process;
                 echo "<td >" . $exp['id']."</td>";
                 echo "<td >" . $exp['bl']. "</td>";
                 echo "<td >" . $exp['delivery_date'] . "</td>";
-                echo "<td >" . $exp['a_name'] . "</td>";
+                echo "<td >" . $exp->agency->name . "</td>";
                 echo "<td >" . Process::PROCESS_LABEL[$exp['type']] . "</td>";
+                echo "<td >" . $exp->getContainerAmount()  . "</td>";
                 echo "</tr>";
             }
             ?>
