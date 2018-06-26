@@ -238,7 +238,7 @@ var handleTableInModal = function () {
             // }
 
             // var ticket = {
-            //     "Ticket[reception_transaction_id]":1, // FIXME THIS DEFINE BY USER WITH ROLE AGENCY OR IMPORTER/EXPORTER
+            //     "Ticket[process_transaction_id]":1, // FIXME THIS DEFINE BY USER WITH ROLE AGENCY OR IMPORTER/EXPORTER
             //     "Ticket[calendar_id]":1,
             //     "Ticket[status]":1,
             //     "Ticket[active]":1,
@@ -817,7 +817,7 @@ var fetchReceptionTransactions = function () {
 var fetchTickets = function (receptionId, async) {
     $.ajax({
         async:async,
-        url: homeUrl + "/rd/ticket/by-reception",
+        url: homeUrl + "/rd/ticket/by-process",
         type: "get",
         dataType:'json',
         data: {
@@ -835,7 +835,7 @@ var fetchTickets = function (receptionId, async) {
                 var type = "";
                 var count = 1;
                 var id = response['tickets'][i].calendar_id ;
-                var tId = response['tickets'][i].reception_transaction_id;
+                var tId = response['tickets'][i].process_transaction_id;
                 var t = transactions.get(tId);
                 var container = containers.get(t.container_id);
                 var calendar = calendarEventMap.get(id);
@@ -847,7 +847,6 @@ var fetchTickets = function (receptionId, async) {
                     dateEndTicket:calendar.end,
                     calendarId:id,
                 });
-
 
                 // console.log(c);
 

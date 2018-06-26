@@ -604,6 +604,5 @@ class ProcessController extends Controller
         }
 
         return $this->render('generating_card', ["result"=>$result]);
-
     }
 }
