@@ -529,4 +529,54 @@ class TicketController extends Controller
             }
         }
     }
+
+    public function actionMyCalendar()
+    {
+        $user = AdmUser::findOne(['id'=>Yii::$app->user->getId()]);
+
+        return $this->render('calendar', [
+            'user' =>$user,
+        ]);
+    }
+
+    public function actionShedule()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        $user = AdmUser::findOne(['id'=>Yii::$app->user->getId()]);
+
+        $transCompany = $user->getTransCompany();
+
+        $response = array();
+
+        $response['msg'] = '';
+        $response['msg_dev'] = '';
+        $response['sucess'] = true;
+
+
+        if($transCompany)
+        {
+            $tickets = Ticket::find()
+                ->select('ticket.id, 
+                                ticket.calendar_id, 
+                                ticket.status, 
+                                calendar.start_datetime, 
+                                calendar.end_datetime, 
+                                process_transaction.container_id,
+                                container.name,
+                                container.code,
+                                container.tonnage')
+                ->innerJoin('process_transaction', 'process_transaction.id=ticket.process_transaction_id')
+                ->innerJoin('calendar', 'calendar.id=ticket.calendar_id')
+                ->innerJoin('container', 'container.id=process_transaction.container_id')
+                ->where(['process_transaction.trans_company_id'=>$transCompany->id])
+                ->andWhere(['ticket.active'=>1])
+                ->asArray()
+                ->all();
+            $response['tickets'] = $tickets;
+            $response['success'] = true;
+        }
+
+
+        return $response;
+    }
 }

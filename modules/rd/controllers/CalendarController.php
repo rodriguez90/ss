@@ -2,6 +2,7 @@
 
 namespace app\modules\rd\controllers;
 
+use app\modules\administracion\models\AdmUser;
 use app\modules\rd\models\Ticket;
 use app\modules\rd\models\Warehouse;
 use DateTime;
@@ -350,7 +351,5 @@ class CalendarController extends Controller
         } else{
             throw new ForbiddenHttpException('Acceso denegado');
         }
-
-
     }
 }

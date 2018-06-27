@@ -1,6 +1,7 @@
 <?php
 namespace app\modules\administracion\models;
 
+use app\modules\rd\models\UserTranscompany;
 use Yii;
 use yii\base\NotSupportedException;
 use yii\db\ActiveRecord;
@@ -362,5 +363,15 @@ class AdmUser extends ActiveRecord implements IdentityInterface
 //        $role = current($roles);
 //
 //        return $role->name;
+    }
+
+    public function getTransCompany()
+    {
+        $transCompany = UserTranscompany::findOne(['user_id'=>$this->id]);
+
+        if($transCompany)
+            return $transCompany->transcompany;
+
+        return null;
     }
 }

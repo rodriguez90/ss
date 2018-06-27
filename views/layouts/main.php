@@ -124,7 +124,7 @@ if(!Yii::$app->user->isGuest){
                     <?php
                     if(Yii::$app->user->can("admin_mod") || Yii::$app->user->can("reception_create")){
                         echo "<li class='has-sub'>";
-                        echo "<a href=\"#\"> <i class='fa fa-file-pdf-o'></i>";
+                        echo "<a href=".Url::to(['/rd/ticket/my-calendar'])."> <i class='fa fa-file-pdf-o'></i>";
                         echo  "<span> Reporte</span>";
                         echo "</a>";
                         echo "</li>";
@@ -134,7 +134,7 @@ if(!Yii::$app->user->isGuest){
                     <?php
                     if(Yii::$app->user->can("ticket_create")){
                         echo "<li class='has-sub'>";
-                        echo "<a href=\"#\"> <i class='fa fa-calendar'></i>";
+                        echo "<a href=".Url::to(['/rd/ticket/my-calendar'])."> <i class='fa fa-calendar'></i>";
                         echo  "<span> Mi Calendario</span>";
                         echo "</a>";
                         echo "</li>";
