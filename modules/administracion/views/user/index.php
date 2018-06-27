@@ -64,7 +64,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 'headerOptions' => ['width' => '120'],
 
                                 'content' => function ($data) {
-                                    return '<span class="fa fa-calendar">&nbsp;' . (new \yii\i18n\Formatter())->asDate($data->getCreate(), 'Y-MM-dd') . '</span>';
+                                    return '<span class="fa fa-calendar">&nbsp;' . (new \yii\i18n\Formatter())->asDate($data->created_at, 'Y-MM-dd') . '</span>';
                                 },
                                 'filter' => DatePicker::widget([
                                     'model' => $searchModel,

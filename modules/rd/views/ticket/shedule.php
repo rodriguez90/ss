@@ -43,7 +43,8 @@ $this->params['breadcrumbs'][] = $this->title;
                         <p class="f-s-14">Contenedores de 40 toneledas.</p>
                     </div>
                 </div>
-                <div id="calendar" class="col-md-10 p-15 calendar"></div>
+<!--                <div id="calendar" class="col-md-10 p-15 calendar"></div>-->
+                <div id="calendar" class="vertical-box-column p-15 calendar fc fc-ltr"></div>
             </div>
         </div>
     </div>

@@ -8,10 +8,19 @@ use yii\data\ActiveDataProvider;
 use app\modules\rd\models\Process;
 
 /**
+ * This is the model class for table "process search".
+ *
+ * @property string $id trans_company
+ */
+
+/**
  * ProcessSearch represents the model behind the search form of `app\modules\rd\models\Process`.
  */
 class ProcessSearch extends Process
 {
+
+    public $trans_company;
+
     /**
      * {@inheritdoc}
      */
@@ -19,9 +28,25 @@ class ProcessSearch extends Process
     {
         return [
             [['id', 'active', ], 'integer'],
-            [['bl', 'type', 'agency_id', 'delivery_date', 'created_at'], 'safe'],
+            [['trans_company', ], 'string'],
+            [['bl', 'type', 'agency_id', 'delivery_date', 'created_at', 'trans_company'], 'safe'],
         ];
     }
+
+    public function attributeLabels()
+    {
+        $attributeLabels = parent::attributeLabels();
+        $attributeLabels[] = ['trans_company'=>"Empresa de Transpote"];
+        return $attributeLabels;
+    }
+
+    public function fields()
+    {
+        $fields = parent::fields();
+        $fields[] = 'trans_company';
+
+        return $fields;
+   }
 
     /**
      * {@inheritdoc}

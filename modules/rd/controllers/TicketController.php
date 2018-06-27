@@ -534,7 +534,7 @@ class TicketController extends Controller
     {
         $user = AdmUser::findOne(['id'=>Yii::$app->user->getId()]);
 
-        return $this->render('calendar', [
+        return $this->render('shedule', [
             'user' =>$user,
         ]);
     }

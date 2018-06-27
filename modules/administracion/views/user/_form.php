@@ -14,8 +14,6 @@ FormAsset::register($this);
 
 ?>
 
-
-
 <div class="user-form">
 
 
@@ -34,8 +32,6 @@ FormAsset::register($this);
             <?php } ?>
         </section>
     <?php } ?>
-
-
 
     <div class="row">
         <div class="col-md-12">
@@ -62,7 +58,6 @@ FormAsset::register($this);
                                 ],
                         ]
                     ); ?>
-
 
                     <div class="col-md-6">
 
@@ -173,12 +168,6 @@ FormAsset::register($this);
 
                             </div>
                         </div>
-
-
-
-
-
-
 
                         <div class="form-group">
                             <label class="control-label col-md-4 col-sm-4">Activo</label>

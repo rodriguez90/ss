@@ -388,9 +388,6 @@ class UserController extends Controller
         throw new NotFoundHttpException('The requested page does not exist.');
     }
 
-
-
-
     public function actionGetagencias(){
 
         Yii::$app->response->format = Response::FORMAT_JSON;
@@ -404,10 +401,6 @@ class UserController extends Controller
         return false;
 
     }
-
-
-
-
 
     public function actionGetdeposito(){
 
@@ -423,8 +416,6 @@ class UserController extends Controller
 
     }
 
-
-
     public function actionGetagenciastrans(){
 
         Yii::$app->response->format = Response::FORMAT_JSON;
@@ -438,7 +429,4 @@ class UserController extends Controller
         return false;
 
     }
-
-
-
 }

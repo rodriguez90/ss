@@ -250,4 +250,16 @@ class SiteController extends Controller
         $path= $pdf->Output("Solicitudes Realizadas.pdf","D");
 
     }
+
+    public function actionReport()
+    {
+        $params = Yii::$app->request->queryParams;
+        $searchModel = new ProcessSearch();
+        $dataProvider = $searchModel->search($params);
+
+        return $this->render('report', [
+            'searchModel'=>$searchModel,
+            'dataProvider'=>$dataProvider,
+        ]);
+    }
 }

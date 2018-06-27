@@ -86,7 +86,7 @@ if($user)
                 <p>Solicitudes</p>
             </div>
             <div class="stats-link">
-                <a href="javascript:;">Ver Detalles <i class="fa fa-arrow-circle-o-right"></i></a>
+                <a href="<?php echo Url::to(['/site/report']);?>">Ver Detalles <i class="fa fa-arrow-circle-o-right"></i></a>
             </div>
         </div>
     </div>
@@ -123,7 +123,7 @@ if($user)
                             [
                                 'class' => 'yii\grid\DataColumn',
                                 'attribute' => 'bl',
-                                'label' => 'BL'
+                                'label' => 'BL o Booking'
                             ],
 //                            [
 //                                'class' => 'yii\grid\DataColumn',

@@ -120,11 +120,10 @@ if(!Yii::$app->user->isGuest){
                         echo "</li>";
                     }
                     ?>
-
                     <?php
                     if(Yii::$app->user->can("admin_mod") || Yii::$app->user->can("reception_create")){
                         echo "<li class='has-sub'>";
-                        echo "<a href=".Url::to(['/rd/ticket/my-calendar'])."> <i class='fa fa-file-pdf-o'></i>";
+                        echo "<a href=".Url::to(['/site/report'])."> <i class='fa fa-file-pdf-o'></i>";
                         echo  "<span> Reporte</span>";
                         echo "</a>";
                         echo "</li>";
