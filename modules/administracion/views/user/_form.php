@@ -173,7 +173,7 @@ FormAsset::register($this);
                             <label class="control-label col-md-4 col-sm-4">Activo</label>
                             <div class="col-md-8 col-sm-8"  <?= \Yii::$app->user->can('Admin_mod') ? "": "style='visibility: hidden'"?>>
 
-                                <input data-switchery="true"    id="admuser-status" name="AdmUser[status]" value="1" data-render="switchery" type="checkbox" <?= $model->status  ? 'checked': '' ?> >
+                                <input data-switchery="true"    id="admuser-status" name="AdmUser[status]" value="1" data-render="switchery" type="checkbox" <?= $model->isNewRecord || $model->status  ? 'checked=""' : '' ?> >
 
                             </div>
                         </div>

@@ -10,7 +10,7 @@ var handleFormPasswordIndicator = function() {
 };
 
 
-var handleJqueryAutocomplete2 = function(op) {
+var handleJqueryAutocomplete2 = function(op,changeRol) {
 
     var action = '';
     var option0 = '';
@@ -47,8 +47,13 @@ var handleJqueryAutocomplete2 = function(op) {
                     var conten = "<select id='selectpicker-type' name='type' class='form-control'  data-parsley-required='true'  data-size='10' data-live-search='true'>";
                     conten += option0;
                     var selected = '';
+
                     $.each(data,function(i){
-                    selected = aux ==  data[i].id ? "selected=''": '';
+
+                        if(!changeRol){
+                            selected = aux ==  data[i].id ? "selected=''": '';
+                        }
+
                     conten += "<option value='"+ data[i].id+"' "+ selected + ">"+data[i].name +"</option>";
                     })
                     conten+="</select>"
@@ -72,30 +77,44 @@ var handleJqueryAutocomplete2 = function(op) {
 
 var handleSelectpicker = function() {
     var div = $('#select-conten');
+    var ini = 0;
+    var ini_rol="";
+
     $('#selectpicker-rol').change(function(){
+        var distint = true;
         var label = $("#label-type");
         var input = $('#selectpicker-type');
+
+        if(ini == 0){
+            ini_rol = $(this).val();
+            ini++;
+        }
+
+        if(ini_rol == $(this).val()){
+            distint = false;
+        }
+
         input.empty();
         switch ($(this).val()){
             case 'Agencia':
                 label.text("Agencia*");
-                handleJqueryAutocomplete2(1);
+                handleJqueryAutocomplete2(1,distint);
                 break;
             case 'Importador_Exportador':
                 label.text("Agencia*");
-                handleJqueryAutocomplete2(1);
+                handleJqueryAutocomplete2(1,distint);
                 break;
             case 'Administrador_depósito':
                 label.text("Depósito*");
-                handleJqueryAutocomplete2(2);
+                handleJqueryAutocomplete2(2,distint);
                 break;
             case 'Depósito':
                 label.text("Depósito*");
-                handleJqueryAutocomplete2(2);
+                handleJqueryAutocomplete2(2,distint);
                 break;
             case 'Cia_transporte':
                 label.text("Compañía de Transporte*");
-                handleJqueryAutocomplete2(3);
+                handleJqueryAutocomplete2(3,distint);
                 break;
 
             default :
@@ -116,7 +135,7 @@ $(function () {
     //handleFormPasswordIndicator();
     handleSelectpicker();
 
-    if($('#selectpicker-rol').val() == 'Importador_Exportador'|| $('#selectpicker-rol').val() == 'Administrador_depósito' || $('#selectpicker-rol').val() == 'Cia_transporte' || $('#selectpicker-rol').val() == 'Agencia' ){
+    if($('#selectpicker-rol').val() == 'Importador_Exportador'|| $('#selectpicker-rol').val() == 'Administrador_depósito' || $('#selectpicker-rol').val() == 'Cia_transporte' || $('#selectpicker-rol').val() == 'Agencia' || $('#selectpicker-rol').val() == 'Depósito' ){
         $('#selectpicker-rol').change();
     }
     var msg;

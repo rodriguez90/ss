@@ -2,6 +2,7 @@
 
 namespace app\modules\rd\models;
 
+use app\modules\administracion\models\AdmUser;
 use Yii;
 
 /**

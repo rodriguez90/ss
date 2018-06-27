@@ -3,12 +3,14 @@
 namespace app\controllers;
 
 use app\modules\administracion\models\AdmUser;
+use app\modules\rd\models\Agency;
 use app\modules\rd\models\Process;
 use app\modules\rd\models\ProcessSearch;
 use app\modules\rd\models\Reception;
 use app\modules\rd\models\ReceptionSearch;
 use app\modules\rd\models\ReceptionTransaction;
 use app\modules\rd\models\TicketSearch;
+use app\modules\rd\models\TransCompany;
 use app\modules\rd\models\UserAgency;
 use app\modules\rd\models\UserTranscompany;
 
@@ -253,6 +255,22 @@ class SiteController extends Controller
 
     public function actionReport()
     {
+        $trans_company = TransCompany::findAll(["active"=>1]);
+        $agency = Agency::findAll(["active"=>1]);
+        $process = Process::findAll(["active"=>1]);
+
+
+        /*
+        $process = Process::find()
+            ->innerJoin("process_transaction","process_transaction.process_id = process.id")
+            ->innerJoin("trans_company","trans_company.id =  process_transaction.trans_company_id")
+            ->innerJoin("","user_transcompany", "user_transcompany.transcompany_id = trans_company.id")
+            ->where(["user_transcompany.user_id"=>\yii::$app->user->getId()]);*/
+
+
+
+        //$ = Agency::findAll(["active"=>1]);
+
         $params = Yii::$app->request->queryParams;
         $searchModel = new ProcessSearch();
         $dataProvider = $searchModel->search($params);
@@ -260,6 +278,9 @@ class SiteController extends Controller
         return $this->render('report', [
             'searchModel'=>$searchModel,
             'dataProvider'=>$dataProvider,
+            'trans_company'=>$trans_company,
+            'agency'=>$agency,
+             'process'=>$process
         ]);
     }
 }

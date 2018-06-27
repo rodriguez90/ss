@@ -30,8 +30,8 @@ class UserWarehouse extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id', 'user_id', 'warehouse_id'], 'required'],
-            [['id', 'user_id', 'warehouse_id'], 'integer'],
+            [[ 'user_id', 'warehouse_id'], 'required'],
+            [[ 'user_id', 'warehouse_id'], 'integer'],
 
         ];
     }

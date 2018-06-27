@@ -43,7 +43,11 @@ $this->params['breadcrumbs'][] = $this->title;
 
             <div id="panel-body" class="panel-body">
                 <?php Pjax::begin(); ?>
-                <?php  echo $this->render('_search', ['model' => $searchModel]); ?>
+                <?php  echo $this->render('_search', ['model' => $searchModel,
+                    'trans_company'=>$trans_company,
+                    'agency'=>$agency,
+                    'process'=>$process
+                    ]); ?>
                 <?=
                 GridView::widget([
                     'dataProvider' => $dataProvider,
@@ -89,4 +93,8 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
     </div>
 </div>
+
+
+<?php $this->registerJsFile('@web/js/report.js',['depends' => ['app\assets\FormAsset']]); ?>
+
 

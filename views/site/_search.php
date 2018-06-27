@@ -28,15 +28,70 @@ use yii\bootstrap\ActiveForm;
     <div class="row">
         <div class="col col-md-6">
 
-            <?= $form->field($model, 'bl')->label('BL o Booking') ?>
+            <div class="form-group">
 
-            <?= $form->field($model, 'agency_id') ?>
+
+                <select id="trans_company" name="trans_company" class="form-control selectpicker" data-size="10"
+                        data-live-search="true">
+                    <?php
+
+                    echo "<option  value=''>Seleccione BL o Booking</option>";
+
+                    foreach ($process as $p) {
+                        echo "<option value='" . $p->bl . "'>" . $p->bl . "</option>";
+                    }
+
+                    ?>
+                </select>
+
+            </div>
+
+
+
+
+            <div class="form-group">
+
+
+                    <select id="selectpicker-agency" name="agency_id" class="form-control selectpicker" data-size="10"
+                            data-live-search="true">
+                        <?php
+
+                        echo "<option  value=''>Seleccione Agencia</option>";
+
+                        foreach ($agency as $a) {
+                            echo "<option value='" . $a->id . "'>" . $a->name . "</option>";
+                        }
+
+                        ?>
+                    </select>
+
+            </div>
+
+
+
 
         </div>
 
         <div class="col col-md-6">
 
-            <?= $form->field($model, 'trans_company') ?>
+            <div class="form-group">
+
+
+                <select id="selectpicker-bl" name="bl" class="form-control selectpicker" data-size="10"
+                        data-live-search="true">
+                    <?php
+
+                    echo "<option  value=''>Seleccione Compañía de Trabsporte</option>";
+
+                    foreach ($trans_company as $t) {
+                        echo "<option value='" . $t->id . "'>" . $t->name . "</option>";
+                    }
+
+                    ?>
+                </select>
+
+            </div>
+
 
         </div>
     </div>
