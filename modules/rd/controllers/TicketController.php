@@ -221,7 +221,6 @@ class TicketController extends Controller
         {
             $tickets = Ticket::find()->innerJoin('process_transaction', 'process_transaction_id=process_transaction.id')
                 ->innerJoin('calendar', 'calendar_id=calendar.id')
-//                                        ->innerJoin('calendar', 'calendar_id=calendar.id')
                 ->where(['process_transaction.process_id'=>$receptionId])
                 ->all();
             $response['tickets'] = $tickets;
@@ -434,18 +433,26 @@ class TicketController extends Controller
             }
         }
 
+        if($processStatus) {
+            foreach ($ticketIds as $ticketId) {
+                if($this->generateServiceCardByTicket($ticketId) === false)
+                {
+                    $processStatus = false;
+                    $response['msg'] = 'Ah ocurrido un error al generar las cartas de servicio.';
+                    break;
+                }
+            }
+        }
+
         if($processStatus)
         {
+
             $transaction->commit();
 
             $response['success'] = true;
             $response['msg'] = 'Reservas Realizada';
             $response['url'] = Url::to(['/site/index']);
 
-            foreach ($ticketIds as $ticketId)
-            {
-                $this->generateServiceCardByTicket($ticketId);
-            }
         }
         else
         {
@@ -516,16 +523,19 @@ class TicketController extends Controller
                     $pdf->WriteHTML($bodypdf);
                     $path= $pdf->Output("","S");
 
-                    Yii::$app->mailer->compose()
-                        ->setFrom($user->email)
-                        ->setTo($trans_company["email"])
-                        ->setSubject("Carta de Servicio")
-                        ->setHtmlBody("<h5>Se adjunta carta de servicio.</h5>")
-                        ->attachContent($path,[ 'fileName'=> "Carta de Servicio.pdf",'contentType'=>'application/pdf'])
-                        ->send();
+                    $result = Yii::$app->mailer->compose()
+                                                ->setFrom($user->email)
+                                                ->setTo($trans_company["email"])
+                                                ->setSubject("Carta de Servicio")
+                                                ->setHtmlBody("<h5>Se adjunta carta de servicio.</h5>")
+                                                ->attachContent($path,[ 'fileName'=> "Carta de Servicio.pdf",'contentType'=>'application/pdf'])
+                                                ->send();
+
+                    return $result;
                 }
             }catch (\Exception $ex){
-                var_dump($ex->getMessage());die;
+                var_dump($ex->getMessage());//die;
+                return false;
             }
         }
     }

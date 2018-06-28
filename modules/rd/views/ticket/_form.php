@@ -73,14 +73,13 @@ TableAsset::register($this);
                             'label'=>'Cantidad de Contenedores',
                             'value'=>function($model){
                                 $user = \app\modules\administracion\models\AdmUser::findOne(['id'=>Yii::$app->user->getId()]);
-                                if($user)
+                                if($user) // FIXME: CHECK to Administration Role
                                 {
                                     $trasCompany = $user->getTransCompany();
                                     if($trasCompany)
                                         return count($model->getProcessTransactionsByTransCompany($trasCompany->id));
                                     else
                                         return 0;
-
                                 }
                             }
                         ]
@@ -117,32 +116,39 @@ TableAsset::register($this);
                                 <!-- begin row -->
                                 <div class="row">
                                     <!-- begin panel -->
-                                    <div class="panel panel-default col-sm-12">
-                                        <!--                                                <div class="panel-heading">-->
-                                        <!--                                                    <div class="panel-heading-btn">-->
-                                        <!--                                                        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>-->
-                                        <!--                                                        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fa fa-repeat"></i></a>-->
-                                        <!--                                                        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>-->
-                                        <!--                                                        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>-->
-                                        <!--                                                    </div>-->
-                                        <!--                                                    <h4 class="panel-title">Calendario</h4>-->
-                                        <!--                                                </div>-->
-                                        <div class="panel-body p-5">
-                                            <div class="row">
-                                                <div class="col-md-2">
-                                                    <h4 class="m-b-20">Leyenda</h4>
-                                                    <div class="external-event bg-blue-darker ui-draggable" style="position: relative;">
-                                                        <p class="f-s-14">Disponibilidad en el calendario.</p>
-                                                    </div>
-                                                    <div class="external-event bg-green-darker ui-draggable" style="position: relative;">
-                                                        <p class="f-s-14">Contenedores de 20 toneledas.</p>
-                                                    </div>
-                                                    <div class="external-event bg-purple-darker ui-draggable" style="position: relative;">
-                                                        <p class="f-s-14">Contenedores de 40 toneledas.</p>
+                                    <div class="panel panel-default">
+                                        <div class="panel-body p-0">
+                                            <div class="vertical-box">
+                                                <div class="vertical-box-column p-15 bg-silver width-sm">
+                                                    <div id="external-events" class="calendar-event">
+                                                        <div class="external-event bg-blue-darker ui-draggable" style="position: relative;">
+                                                            <p class="f-s-14">Disponibilidad en el calendario.</p>
+                                                        </div>
+                                                        <div class="external-event bg-green-darker ui-draggable" style="position: relative;">
+                                                            <p class="f-s-14">Contenedores de 20 toneledas.</p>
+                                                        </div>
+                                                        <div class="external-event bg-purple-darker ui-draggable" style="position: relative;">
+                                                            <p class="f-s-14">Contenedores de 40 toneledas.</p>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div id="calendar" class="col-md-10 p-15 calendar"></div>
+                                                <div id="calendar" class="vertical-box-column p-15 calendar"></div>
                                             </div>
+<!--                                            <div class="row">-->
+<!--                                                <div class="col-md-2">-->
+<!--                                                    <h4 class="m-b-20">Leyenda</h4>-->
+<!--                                                    <div class="external-event bg-blue-darker ui-draggable" style="position: relative;">-->
+<!--                                                        <p class="f-s-14">Disponibilidad en el calendario.</p>-->
+<!--                                                    </div>-->
+<!--                                                    <div class="external-event bg-green-darker ui-draggable" style="position: relative;">-->
+<!--                                                        <p class="f-s-14">Contenedores de 20 toneledas.</p>-->
+<!--                                                    </div>-->
+<!--                                                    <div class="external-event bg-purple-darker ui-draggable" style="position: relative;">-->
+<!--                                                        <p class="f-s-14">Contenedores de 40 toneledas.</p>-->
+<!--                                                    </div>-->
+<!--                                                </div>-->
+<!--                                                <div id="calendar" class="col-md-10 p-15 calendar"></div>-->
+<!--                                            </div>-->
 
                                         </div> <!-- end panel body-->
                                     </div>
@@ -161,16 +167,18 @@ TableAsset::register($this);
                                         <div class="panel-heading">
                                             <div class="panel-heading-btn">
                                                 <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
-                                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fa fa-repeat"></i></a>
-                                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+<!--                                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fa fa-repeat"></i></a>-->
+<!--                                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>-->
                                             </div>
                                             <h4 class="panel-title">Contenedores seleccionados</h4>
                                         </div>
                                         <div class="panel-body">
-                                            <table id="data-table2" class="table table-striped table-bordered nowrap" width="100%">
-                                                <thead>
-                                                </thead>
-                                            </table>
+                                            <div class="table-responsive">
+                                                <table id="data-table2" class="table table-striped table-bordered nowrap" width="100%">
+                                                    <thead>
+                                                    </thead>
+                                                </table>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -200,16 +208,18 @@ TableAsset::register($this);
                                         <div class="panel-heading">
                                             <div class="panel-heading-btn">
                                                 <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
-                                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fa fa-repeat"></i></a>
-                                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+<!--                                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fa fa-repeat"></i></a>-->
+<!--                                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>-->
                                             </div>
                                             <h4 class="panel-title">Cupos a reservar</h4>
                                         </div>
                                         <div class="panel-body">
-                                            <table id="data-table3" class="table table-striped table-bordered nowrap" width="100%">
-                                                <thead>
-                                                </thead>
-                                            </table>
+                                            <div class="table-responsive">
+                                                <table id="data-table3" class="table table-striped table-bordered nowrap" width="100%">
+                                                    <thead>
+                                                    </thead>
+                                                </table>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -255,6 +265,7 @@ TableAsset::register($this);
                 <h5 id="modalTicket" class="modal-title"></h5>
             </div>
             <div class="modal-body p-15">
+                <div class="table-responsive">
                     <table id="data-table-modal" class="table table-striped table-bordered table-condensed nowrap" width="100%">
                         <thead>
                         <tr>
@@ -266,6 +277,7 @@ TableAsset::register($this);
                         </tr>
                         </thead>
                     </table>
+                </div>
             </div>
             <div class="modal-footer">
                 <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Cancelar</a>

@@ -831,7 +831,8 @@ var fetchTickets = function (receptionId, async) {
             receptionId: receptionId,
         },
         success: function(response) {
-            // console.log(response);
+            console.log("success");
+            console.log(response);
 
             $('#calendar').fullCalendar('removeEventSources', ticketEvents.id);
             ticketEvents.events = [];
@@ -843,62 +844,64 @@ var fetchTickets = function (receptionId, async) {
                 var count = 1;
                 var id = response['tickets'][i].calendar_id ;
                 var tId = response['tickets'][i].process_transaction_id;
-                var t = transactions.get(tId, null);
-                if(t === null) return true;
-
-                var container = containers.get(t.container_id);
-                var calendar = calendarEventMap.get(id);
-
-                transactionWithTicket.push(tId);
-                ticketDataMap.set(tId, {
-                    id:response['tickets'][i].id,
-                    dateTicket:calendar.start,
-                    dateEndTicket:calendar.end,
-                    calendarId:id,
-                });
-
-                // console.log(c);
-
-                if(container.tonnage === 20)
+                var transaction = transactions.get(tId, null);
+                console.log(transaction);
+                if(transaction)
                 {
-                    id = id + 'T20';
-                    className = ['bg-green-darker'];
-                    type = "T20";
-                }
-                else if(container.tonnage === 40)
-                {
-                    id = id + 'T40';
-                    className = ['bg-purple-darker'];
-                    type = "T40";
-                }
+                    var container = containers.get(transaction.container_id);
+                    var calendar = calendarEventMap.get(id);
 
-                var result = findTicketEvent(id);
-                if(result.event)
-                {
-                    result.event.count = result.event.count + count;
-                    result.event.title = result.event.count;
-                    ticketEvents[result.index]= result.event;
-                    result.event.rt.push(tId);
-                    // $('#calendar').fullCalendar( 'updateEvent', oldEvent);
-                }
-                else
-                {
-                    var event = {
-                        id: id,
-                        title: count,
-                        start: calendar.start,
-                        end:  calendar.end ,
-                        allDay:false,
-                        className : className ,
-                        editable: false,
-                        type:type,
-                        count:count,
-                        calendarId:calendar.id,
-                        rt:[tId],
-                        index: -1
-                    };
-                    ticketEvents.events.push(event);
-                    event.index = ticketEvents.events.length - 1;
+                    transactionWithTicket.push(tId);
+                    ticketDataMap.set(tId, {
+                        id:response['tickets'][i].id,
+                        dateTicket:calendar.start,
+                        dateEndTicket:calendar.end,
+                        calendarId:id,
+                    });
+
+                    // console.log(c);
+
+                    if(container.tonnage === 20)
+                    {
+                        id = id + 'T20';
+                        className = ['bg-green-darker'];
+                        type = "T20";
+                    }
+                    else if(container.tonnage === 40)
+                    {
+                        id = id + 'T40';
+                        className = ['bg-purple-darker'];
+                        type = "T40";
+                    }
+
+                    var result = findTicketEvent(id);
+                    if(result.event)
+                    {
+                        result.event.count = result.event.count + count;
+                        result.event.title = result.event.count;
+                        ticketEvents[result.index]= result.event;
+                        result.event.rt.push(tId);
+                        // $('#calendar').fullCalendar( 'updateEvent', oldEvent);
+                    }
+                    else
+                    {
+                        var event = {
+                            id: id,
+                            title: count,
+                            start: calendar.start,
+                            end:  calendar.end ,
+                            allDay:false,
+                            className : className ,
+                            editable: false,
+                            type:type,
+                            count:count,
+                            calendarId:calendar.id,
+                            rt:[tId],
+                            index: -1
+                        };
+                        ticketEvents.events.push(event);
+                        event.index = ticketEvents.events.length - 1;
+                    }
                 }
             }
 

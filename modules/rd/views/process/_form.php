@@ -125,17 +125,19 @@ else if ($intVal === Process::PROCESS_EXPORT)
                             <fieldset>
                                 <!-- begin row -->
                                 <div class="row">
-                                    <table id="data-table" class="table table-bordered nowrap" width="100%">
-                                        <thead>
-                                        <tr>
-                                            <th>Seleccione <input type="checkbox" name="select_all" value="1" id="select-all"></th>
-                                            <th>Contenedores</th>
-                                            <th>Tipo/Tamaño</th>
-                                            <th>Fecha Límite</th>
-                                            <th>Cliente</th>
-                                        </tr>
-                                        </thead>
-                                    </table>
+                                    <div class="table-responsive">
+                                        <table id="data-table" class="table table-bordered nowrap" width="100%">
+                                            <thead>
+                                            <tr>
+                                                <th>Seleccione <input type="checkbox" name="select_all" value="1" id="select-all"></th>
+                                                <th>Contenedores</th>
+                                                <th>Tipo/Tamaño</th>
+                                                <th>Fecha Límite</th>
+                                                <th>Cliente</th>
+                                            </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
                                 </div>
                                 <!-- end row -->
                             </fieldset>
@@ -165,18 +167,20 @@ else if ($intVal === Process::PROCESS_EXPORT)
                                 </div>
                                 <div class="row">
                                     <div class="col col-md-12">
-                                        <table id="data-table3" class="table table-bordered nowrap" width="100%">
-                                            <thead>
-                                            <tr>
-                                                <th>Seleccione <input type="checkbox" name="select_all2" id="select_all2" value="1" ></th>
-                                                <th>Contenedores</th>
-                                                <th>Tipo/Tamaño</th>
-                                                <th>Fecha Límite</th>
-                                                <th>Cliente</th>
-                                                <th>Empresa de Transporte</th>
-                                            </tr>
-                                            </thead>
-                                        </table>
+                                        <div class="table-responsive">
+                                            <table id="data-table3" class="table table-bordered nowrap" width="100%">
+                                                <thead>
+                                                <tr>
+                                                    <th>Seleccione <input type="checkbox" name="select_all2" id="select_all2" value="1" ></th>
+                                                    <th>Contenedores</th>
+                                                    <th>Tipo/Tamaño</th>
+                                                    <th>Fecha Límite</th>
+                                                    <th>Cliente</th>
+                                                    <th>Empresa de Transporte</th>
+                                                </tr>
+                                                </thead>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                             </fieldset>
@@ -196,12 +200,14 @@ else if ($intVal === Process::PROCESS_EXPORT)
                                 <!-- end row -->
                                 <!-- begin row -->
                                 <div class="row m-0 p-0">
-                                    <table id="data-table2" class="table table-bordered nowrap" width="100%">
-                                        <thead>
-                                        <tr>
-                                        </tr>
-                                        </thead>
-                                    </table>
+                                    <div class="table-responsive">
+                                        <table id="data-table2" class="table table-bordered nowrap" width="100%">
+                                            <thead>
+                                            <tr>
+                                            </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
                                 </div>
                                 <!-- end row -->
                                 <!-- begin row -->
