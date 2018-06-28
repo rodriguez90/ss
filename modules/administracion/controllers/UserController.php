@@ -120,10 +120,8 @@ class UserController extends Controller
         }else{
             $type = Yii::$app->request->post("type");
             switch($rol){
-                case 'Importador_Exportador':
-                    if($type == '')
-                    $model->addError('error', "Seleccione una agencia." );
-                    break;
+                case 'Importador':
+                case 'Exportador':
                 case 'Agencia':
                     if($type == '')
                         $model->addError('error', "Seleccione una agencia." );
@@ -168,12 +166,8 @@ class UserController extends Controller
 
                     //cambiar la comparacion a minuscula
                     switch($rol){
-                        case 'Importador_Exportador':
-                            $userAgency = new UserAgency();
-                            $userAgency->user_id = $model->id;
-                            $userAgency->agency_id = $type;
-                            $userAgency->save();
-                            break;
+                        case 'Importador':
+                        case 'Exportador':
                         case 'Agencia':
                             $userAgency = new UserAgency();
                             $userAgency->user_id = $model->id;
@@ -253,7 +247,8 @@ class UserController extends Controller
 
             $modelAux=null;
             switch($rol_actual->name){
-                case 'Importador_Exportador':
+                case 'Importador':
+                case 'Exportador':
                 case 'Agencia':
                     $error  = "Seleccione una agencia.";
                     $modelAux = UserAgency::findOne(['user_id'=>$model->id]);
@@ -314,21 +309,8 @@ class UserController extends Controller
 
                         if($type_actual!= $type) {
                             switch($rol){
-                                case 'Importador_Exportador':
-                                    if($change_rol){
-                                        $userAgency = new UserAgency();
-                                        $userAgency->agency_id = $type;
-                                        $userAgency->user_id = $model->id;
-                                        $ok = $ok && $userAgency->save();
-                                        if($modelAux!=null)
-                                            $modelAux->delete();
-
-                                    }else{
-                                        $userAgency = UserAgency::findOne(['user_id'=>$model->id]);
-                                        $userAgency->agency_id = $type;
-                                        $ok = $ok && $userAgency->update();
-                                    }
-                                    break;
+                                case 'Importador':
+                                case 'Exportador':
                                 case 'Agencia':
                                     if($change_rol){
                                         $userAgency = new UserAgency();
@@ -364,7 +346,7 @@ class UserController extends Controller
                                         $userWarehouse->warehouse_id = $type;
                                         $userWarehouse->user_id =$model->id;
                                         $ok = $ok && $userWarehouse->save();
-                                        if($modelAux!=null)
+                                        if($modelAux != null)
                                             $modelAux->delete();
                                     }else{
                                         $userWarehouse = UserWarehouse::findOne(['user_id'=>$model->id]);
