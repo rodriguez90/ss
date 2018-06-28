@@ -89,7 +89,7 @@ var handleDataTable = function() {
                             console.log($('td:eq(3)', row).html());
 
                             // var  html = '<input type=\"text\" class=\"form-control\" id=\"' + elementId +  '\" placeholder=\"Fecha Límite\"' + ' data-provide=\"datepicker-inline\"' + '/>';
-                            var  html = '<input type=\"text\" class=\"form-control\" id=\"' + elementId +  '\" placeholder=\"Seleccionar\"' + 'value=\"' + data.deliveryDate + '\" >';
+                            var  html = '<input type=\"text\" class=\"form-control\" id=\"' + elementId +  '\" placeholder=\"Seleccionar\"' + 'value=\"' + moment(data.deliveryDate).format('DD/MM/YYYY') + '\" >';
                             console.log("Generate HTML: ")
                             console.log(html);
 
@@ -101,7 +101,7 @@ var handleDataTable = function() {
                             $('td:eq(3)', row).datepicker({
                                 title:"Seleccione la Fecha Límite",
                                 language: 'es',
-                                format: 'dd-mm-yyyy',
+                                // format: 'dd/mm/yyyy',
                                 // todayHighlight: true,
                                 autoclose: true,
                                 immediateUpdates:true,
@@ -111,18 +111,14 @@ var handleDataTable = function() {
                                 // toggleActive:true
                             }).on('changeDate', function(event){
                                 // var dateValue = moment(event.date).format('DD/MM/YYYY');
-                                var dateValue = moment(event.date).format('DD-MM-YYYY');
-                                console.log(row);
-                                console.log($(row));
-                                console.log(data);
-                                console.log(index);
+                                var dateValue = moment(event.date).format('YYYY/MM/DD');
+                                // console.log(row);
+                                // console.log($(row));
+                                // console.log(data);
+                                // console.log(index);
+                                console.log(dateValue);
                                 data.deliveryDate = dateValue;
                                 table.row(index).data(data)
-
-                                // var driverCell = table.cell(updatedCell.index().row, 7);
-                                // driverCell.data("Chico el cojo");
-                                // $('td:eq(3)', row).setAttribute('value', dateValue);
-                                // console.log(dateValue);
                             });
                         }
                     }
@@ -163,7 +159,16 @@ var handleDataTable = function() {
                         return data.type + data.tonnage;
                     },
                 },
-
+                {
+                    targets: [3],
+                    data:'deliveryDate',
+                    render: function ( data, type, full, meta ) {
+                        console.log("Render Date");
+                        console.log(data);
+                        console.log(moment(data).format("DD/MM/YYYY"));
+                        return moment(data).format("DD/MM/YYYY");
+                    },
+                },
             ],
         });
 
@@ -203,14 +208,6 @@ var handleDataTable2 = function () {
             // "data":"transCompany"
         }
     ];
-    // var multiple = $('#yesRadio').val();
-    // if(multiple)
-    // {
-    //     columns.push({ "title": "Empresa de Transporte",
-    //         "data":"transCompany"
-    //     });
-    // }
-
     if ($('#data-table2').length !== 0) {
 
         $('#data-table2').DataTable({
@@ -233,6 +230,14 @@ var handleDataTable2 = function () {
                     },
                 },
                 {
+                    targets: [2],
+                    data:'deliveryDate',
+                    render: function ( data, type, full, meta ) {
+                        // console.log("In render: " + data);
+                        return moment(data).format("DD/MM/YYYY");
+                    },
+                },
+                {
                     targets: [4],
                     // title:"Tipo",
                     data:null,
@@ -241,7 +246,6 @@ var handleDataTable2 = function () {
                         return data.transCompany.name
                     },
                 },
-
             ],
             // language: {url: 'web/plugins/DataTables/i18/Spanish.json'
         });
@@ -299,6 +303,14 @@ var handleDataTable3 = function () {
                     data:null,
                     render: function ( data, type, full, meta ) {
                         return data.type + data.tonnage;
+                    },
+                },
+                {
+                    targets: [3],
+                    data:'deliveryDate',
+                    render: function ( data, type, full, meta ) {
+                        // console.log("In render: " + data);
+                        return moment(data).format("DD/MM/YYYY");
                     },
                 },
                 {

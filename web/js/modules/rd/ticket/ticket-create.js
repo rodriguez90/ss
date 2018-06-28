@@ -461,7 +461,15 @@ var handleTable3InWizar = function() {
                     render: function ( data, type, full, meta ) {
                         return data.type + data.tonnage;
                     }
-                }
+                },
+                {
+                    targets: [2],
+                    data:'deliveryDate',
+                    render: function ( data, type, full, meta ) {
+                        // console.log("In render: " + data);
+                        return moment(data).format("DD/MM/YYYY");
+                    },
+                },
             ]
         });
     }
@@ -806,6 +814,7 @@ var fetchReceptionTransactions = function () {
                     // maxDeliveryDate = moment(response['transactions'][count - 1].delivery_date).utc().add(1, 'days');
                     minDeliveryDate = moment(response['transactions'][0].delivery_date).hours(0).minutes(0).seconds(0);
                     maxDeliveryDate = moment(response['transactions'][count - 1].delivery_date).hours(23).minutes(59).seconds(0);
+                    // moment().set({'year': 2013, 'month': 3});
 
                     // $('#calendar').fullCalendar({
                     //     visibleRange: {

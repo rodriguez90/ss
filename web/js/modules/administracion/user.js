@@ -17,7 +17,7 @@ var handleJqueryAutocomplete2 = function(op,changeRol) {
     switch (op){
         case 1:
             action = "/administracion/user/getagencias";
-            option0 = "<option value='' selected=''>Seleccione Agencia</option>";
+            option0 = "<option value='' selected=''>Seleccione agencia</option>";
             break;
         case 2:
             action = "/administracion/user/getdeposito";
@@ -68,12 +68,7 @@ var handleJqueryAutocomplete2 = function(op,changeRol) {
                     // return false;
                 }
             });
-
-
-
 };
-
-
 
 var handleSelectpicker = function() {
     var div = $('#select-conten');
@@ -97,7 +92,7 @@ var handleSelectpicker = function() {
         input.empty();
         switch ($(this).val()){
             case 'Importador':
-            case 'Exportador'
+            case 'Exportador':
             case 'Agencia':
                 label.text("Agencia*");
                 handleJqueryAutocomplete2(1,distint);

@@ -44,7 +44,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 <?php Pjax::begin(); ?>
 
-                <div class="dataTables_wrapper form-inline dt-bootstrap no-footer" id="data-table_wrapper">
+<!--                <div class="dataTables_wrapper form-inline dt-bootstrap no-footer" id="data-table_wrapper">-->
 
                     <?= GridView::widget([
                         'dataProvider' => $dataProvider,
@@ -61,10 +61,10 @@ $this->params['breadcrumbs'][] = $this->title;
                                 'attribute' => 'created_at',
                                 'label' => 'Fecha de Creación',
                                 'format' => 'html',// 'date',//date,datetime, time
-                                'headerOptions' => ['width' => '120'],
+//                                'headerOptions' => ['width' => '120'],
 
                                 'content' => function ($data) {
-                                    return '<span class="fa fa-calendar">&nbsp;' . (new \yii\i18n\Formatter())->asDate($data->created_at, 'Y-MM-dd') . '</span>';
+                                    return (new \yii\i18n\Formatter())->asDate($data->created_at, 'dd/mm/yyyy');
                                 },
                                 'filter' => DatePicker::widget([
                                     'model' => $searchModel,
@@ -79,7 +79,6 @@ $this->params['breadcrumbs'][] = $this->title;
                                 ])
                             ],
 
-
                             'item_name',
 
                             [
@@ -93,12 +92,11 @@ $this->params['breadcrumbs'][] = $this->title;
                                 ], ['class' => 'form-control', 'prompt' => ''])
                             ],
 
-
                             ['class' => 'yii\grid\ActionColumn' ],
                         ],
-                        'options'=>['class' => 'table table-striped table-responsive table-bordered']
+                        'options'=>['class' => 'table table-striped table-responsive table-condensed table-bordered']
                     ]); ?>
-                </div>
+<!--                </div>-->
                 <?php Pjax::end(); ?>
 
             </div>

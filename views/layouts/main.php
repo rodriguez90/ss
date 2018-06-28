@@ -160,15 +160,15 @@ if(!Yii::$app->user->isGuest){
                       }
                     ?>
 
-                    <?php
-                    if(Yii::$app->user->can("admin_mod") || Yii::$app->user->can("container_list")){
-                        echo "<li class='has-sub'>";
-                        echo "<a href=". Url::to(['/rd/container'])."> <i class='fa fa-cubes'></i>";
-                        echo "<span> Contenedores</span>";
-                        echo "</a>";
-                        echo "</li>";
-                    }
-                    ?>
+<!--                    --><?php
+//                    if(Yii::$app->user->can("admin_mod") || Yii::$app->user->can("container_list")){
+//                        echo "<li class='has-sub'>";
+//                        echo "<a href=". Url::to(['/rd/container'])."> <i class='fa fa-cubes'></i>";
+//                        echo "<span> Contenedores</span>";
+//                        echo "</a>";
+//                        echo "</li>";
+//                    }
+//                    ?>
 
                     <?php
                     if(Yii::$app->user->can("admin_mod") || Yii::$app->user->can("trans-company_list")){
