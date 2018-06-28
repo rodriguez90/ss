@@ -36,6 +36,12 @@ var handleBootstrapWizardsValidation = function() {
                 }
                 else if(ui.index == 2)
                 {
+                    var wizard = $(this).bwizard();
+                    console.log(wizard);
+                    wizard.nextBtnText = "Finalizar";
+
+                    $('#confirming').prop('checked', false);
+
                     var sourceTable = $('#data-table3').DataTable();
 
                     var table2 = $('#data-table2').DataTable();
@@ -60,9 +66,6 @@ var handleBootstrapWizardsValidation = function() {
                 // back navigation no check validation
                 if(ui.index > ui.nextIndex)
                 {
-                    if(ui.index == 2) // se desmarca el checkbox de confirmacion si c retrocede en el wizard
-                        $('#confirming').prop('checked', false);
-
                     return result;
                 }
 
@@ -103,7 +106,8 @@ var handleBootstrapWizardsValidation = function() {
 
                     return result;
 
-                } else if (ui.index == 1) {
+                }
+                else if (ui.index == 1) {
 
                     // step-1 validation
                     var table = $('#data-table3').DataTable();
@@ -119,7 +123,8 @@ var handleBootstrapWizardsValidation = function() {
                             }
                         });
                     return result
-                } else if (ui.index == 2) {
+                }
+                else if (ui.index == 2) {
 
                     // step-2 validation
                     // alert($("#confirming").prop('checked'));

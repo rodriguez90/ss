@@ -30,7 +30,7 @@ var handleCalendarDemo = function () {
 	// var buttonSetting = {left: 'today prev,next ', center: 'title', right: 'month,basicWeek,basicDay'};
 
 	var calendar = $('#calendar').fullCalendar({
-        // locale: 'es',
+        locale: 'es',
         height: 300,
         contentHeight:250,
         // aspectRatio:3.0,
@@ -59,10 +59,10 @@ var handleCalendarDemo = function () {
         eventOverlap: false,
         slotDuration:"00:60:00",
         slotLabelInterval:{hours:1},
-        // slotLabelFormat:'H:mm',
-        // timeFormat: 'H(:mm)',
-        // minTime:"07:00:00",
-        // maxTime:"16:00:00",
+        timeFormat: 'HH:mm',
+        slotLabelFormat: 'HH:mm',
+        // minTime:"00:00:00",
+        // maxTime:"23:0:00",
         displayEventTime:false,
         displayEventEnd:false,
         // timezone:'UTC',
@@ -80,24 +80,16 @@ var handleCalendarDemo = function () {
         },
         eventMouseover:function( event, jsEvent, view ) {
 
-            // <a id='popover' href="#" data-toggle="popover" title="Popover Header" data-content="Some content inside the popover">Toggle popover</a>
-            // console.log(popoverHtml);
             var result = makePopoverContent(event);
             $(this).popover({
                 html: true,
                 title: result.title,
                 content: result.conten,
-                // 'container': $(this).parent().parent(),
                 container: $('#page-container'),
-                // placement:'left',
                 placement:'auto',
                 selector:true
             });
-            // console.log(this);
             $(this).popover('show');
-            // console.log(this);
-            // $('#ppp'+ event.id).popover();
-            // $('#ppp' + event.id).popover("show");
         },
         eventMouseout:function( event, jsEvent, view ) {
             $(this).popover("destroy");
@@ -108,47 +100,14 @@ var handleCalendarDemo = function () {
 			{
                 alert('Mostar planificacion del dia');
             }
-
-
-            // alert('Clicked on: ' + date.format());
-            //
-            // alert('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
-            //
-            // alert('Current view: ' + view.name);
         },
         dayRender:function( date, cell ) {
-        	// alert('Day Render');
+
 		},
 		select: function(start, end, allDay) {
 
-            // $("#modalTitle").prop('text', new Date(start));
-            // if($("#modalTitle").length > 0)
-            // {
-            //     console.log($("#modalTitle"));
-            // }
-            // $("#modalTitle").prop('title', new Date(start));
-            // $("#modalTitle").get(0).title = new Date(start);
-            // $("#modalTitle").val('title', new Date(start));
-
-            // var startDate = new Date(start);// start.format();
-            // // var startDate = start.format();
-            // // var endDate = end.format();
-            // // alert(startDate + ' '+ start.format());
-            // $("#modalTitle").get(0).textContent = start.format();
-            // $("#modalTicket").get(0).textContent = 'Cupos disponibles: 3';
-            //
-            // $("#modal-select-containers").modal("show");
-            //
-            // // init table on date table
-            // handleTableInModal();
-            // fetchReceptionTransactions();
 		},
         eventClick: function(calEvent, jsEvent, view) {
-
-            // var result = findSlotEvent(calEvent.start, calEvent.end);
-            //
-            // currentCalendarEventIndex = result.index;
-            // currentCalendarEvent = result.event;
 
             if(calEvent.type === 'D')
             {
@@ -200,6 +159,8 @@ var handleCalendarDemo = function () {
                         $('#select-all')[0].checked = false;
                         $("#modalTitle").get(0).textContent = 'Cupos disponibles: ' + currentCalendarEvent.title;
                         $("#modalTicket").get(0).textContent = moment(currentCalendarEvent.start).format("dddd, MMMM YYYY H:mm");
+                        $("#aceptBtn").removeClass("btn-danger").addClass("btn-success");
+                        $("#aceptBtn").text("Aceptar");
                         $("#modal-select-containers").modal("show");
                     }
                     else {
@@ -264,24 +225,19 @@ var handleCalendarDemo = function () {
                     $('#select-all')[0].checked = false;
                     $("#modalTitle").get(0).textContent = 'Eliminar Cupos';
                     $("#modalTicket").get(0).textContent = moment(currentCalendarEvent.start).format("dddd, MMMM YYYY H:mm");
+                    $("#aceptBtn").removeClass("btn-success").addClass("btn-danger");
+                    $("#aceptBtn").text("Eliminar");
                     $("#modal-select-containers").modal("show");
                 }
             }
         },
 		eventRender: function(event, element, calEvent) {
-				// var mediaObject = (event.media) ? event.media : '';
-				// var description = (event.description) ? event.description : '';
-            // element.find(".fc-event-title").after($("<span class=\"fc-event-icons\"></span>").html(mediaObject));
             element.attr('id', 'eee' + event.id);
         },
         eventAfterRender:function( event, element, view ) {
 
 		},
 	});
-    // var view = $('#calendar').fullCalendar('getView');
-    // var startDate = new Date(view.start);
-    // var endDate = new Date(view.end);
-    // fetchCalendar(startDate.toISOString(),endDate.toISOString());
 };
 
 
@@ -294,8 +250,3 @@ var Calendar = function () {
         }
     };
 }();
-
-//
-// $(document).ready(function () {
-//     Calendar.init();
-// });

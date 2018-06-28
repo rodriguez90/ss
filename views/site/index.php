@@ -108,10 +108,10 @@ if($user)
 
             <div id="panel-body" class="panel-body">
                 <?php Pjax::begin(); ?>
-<!--                --><?php //Pjax::end(); ?>
 <!--                <table id="data-table" class="table table-striped table-bordered nowrap" width="100%">-->
+                <div class="table-responsive">
                     <?=
-                        GridView::widget([
+                    GridView::widget([
                         'dataProvider' => $dataProvider,
                         'filterModel' => $searchModel,
                         'columns' => [
@@ -139,6 +139,7 @@ if($user)
 //                                'class' => 'yii\grid\DataColumn',
                                 'attribute' => 'delivery_date',
                                 'format' => 'date',
+                                'filter' => \yii\jui\DatePicker::widget(['language' => 'ru', 'dateFormat' => 'dd-MM-yyyy','class'=>['form-control']]),
                             ],
 //                            'created_at:datetime',
 //                            [
@@ -197,26 +198,28 @@ if($user)
                                         if($role === AuthItem::ROLE_ADMIN)
                                         {
                                             $result = Html::beginTag('div', ['class'=>'row'])
-                                                          . Html::beginTag('div', ['class'=>'col col-md-12'])
-                                                          . Html::beginTag('div', ['class'=>'col col-md-6'])
-                                                             . Html::a('Ver', $url1, ['class' => 'btn btn-info btn-xs col-xs-', 'data-pjax' => 0])
-                                                          . Html::endTag('div')
-                                                         . Html::beginTag('div', ['class'=>'col col-md-6'])
-                                                            . Html::a('Turnos', $url2, ['class' => 'btn btn-xs ' . $ticketClass, 'data-pjax' => 0])
-                                                         . Html::endTag('div')
-                                                         . Html::endTag('div')
-                                                      . Html::endTag('div');
+                                                . Html::beginTag('div', ['class'=>'col col-md-12'])
+                                                . Html::beginTag('div', ['class'=>'col col-md-6'])
+                                                . Html::a('Ver', $url1, ['class' => 'btn btn-info btn-xs col-xs-', 'data-pjax' => 0])
+                                                . Html::endTag('div')
+                                                . Html::beginTag('div', ['class'=>'col col-md-6'])
+                                                . Html::a('Turnos', $url2, ['class' => 'btn btn-xs ' . $ticketClass, 'data-pjax' => 0])
+                                                . Html::endTag('div')
+                                                . Html::endTag('div')
+                                                . Html::endTag('div');
                                         }
 
                                         return $result;
                                     }
                                 ]
                             ],
-                    ],
+                        ],
 //                        'options'=>['class' => 'table table-striped table-bordered table-condensed']
                         'options'=>['class' => 'table table-striped table-bordered']
                     ]); ?>
+                </div>
 
+                <?php Pjax::end(); ?>
             </div>
         </div>
     </div>

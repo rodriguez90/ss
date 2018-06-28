@@ -21,6 +21,13 @@ var lan = {
         "sNext":     "Siguiente",
         "sPrevious": "Anterior"
     },
+    // select: {
+    //     rows: {
+    //         _: "You have selected %d rows",
+    //         0: "Click a row to select it",
+    //         1: "Only 1 row selected"
+    //     }
+    // }
     "oAria": {
         "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
         "sSortDescending": ": Activar para ordenar la columna de manera descendente"
@@ -194,6 +201,14 @@ var handleTableInModal = function () {
                         return data.type + data.tonnage;
                     },
                 },
+                {
+                    targets: [3],
+                    data:'deliveryDate',
+                    render: function ( data, type, full, meta ) {
+                        // console.log("In render: " + data);
+                        return moment(data).format("DD/MM/YYYY");
+                    },
+                },
 
             ],
             select: {
@@ -336,7 +351,15 @@ var handleTableInWizar = function() {
                     render: function ( data, type, full, meta ) {
                         return data.type + data.tonnage;
                     }
-                }
+                },
+                {
+                    targets: [2],
+                    data:'deliveryDate',
+                    render: function ( data, type, full, meta ) {
+                        // console.log("In render: " + data);
+                        return moment(data).format("DD/MM/YYYY");
+                    },
+                },
             ]
             // language: {url: 'web/plugins/DataTables/i18/Spanish.json'
         });
@@ -697,6 +720,7 @@ var handleModal = function () {
 };
 
 var fetchCalendar = function (start, end, async) {
+
     $.ajax({
         async:async,
         url: homeUrl + "/rd/calendar/getcalendar",
@@ -707,17 +731,14 @@ var fetchCalendar = function (start, end, async) {
             end: end
         },
         success: function(response) {
-            // console.log(response);
+            console.log(response);
 
             $('#calendar').fullCalendar('removeEventSources', calendarSlotEvents.id);
             calendarSlotEvents.events = [];
 
             $.each(response,function (i) {
-                // console.log(response[i].start)
                 var startDate = moment(response[i].start);
-                 // startDate = moment(startDate);
                 var endDate = moment(response[i].end);
-                 // endDate = moment(endDate);
 
                 var event = {
                     id: response[i].id,
@@ -736,7 +757,7 @@ var fetchCalendar = function (start, end, async) {
                 calendarEventMap.set(response[i].id,event);
             });
             // console.log(calendarSlotEvents);
-            console.log(calendarEventMap.values());
+            // console.log(calendarEventMap.values());
             calendarSlotEvents.events = Array.from(calendarEventMap.values());
 
             $('#calendar').fullCalendar('addEventSource', calendarSlotEvents);
@@ -778,10 +799,13 @@ var fetchReceptionTransactions = function () {
             if(firstRun)
             {
                 var count =  response['transactions'].length;
+                console.log(count);
                 if(count > 0)
                 {
-                    minDeliveryDate = moment(response['transactions'][0].delivery_date).utc();
-                    maxDeliveryDate = moment(response['transactions'][count - 1].delivery_date).utc().add(1, 'days');
+                    // minDeliveryDate = moment(response['transactions'][0].delivery_date).utc();
+                    // maxDeliveryDate = moment(response['transactions'][count - 1].delivery_date).utc().add(1, 'days');
+                    minDeliveryDate = moment(response['transactions'][0].delivery_date).hours(0).minutes(0).seconds(0);
+                    maxDeliveryDate = moment(response['transactions'][count - 1].delivery_date).hours(23).minutes(59).seconds(0);
 
                     // $('#calendar').fullCalendar({
                     //     visibleRange: {
@@ -796,8 +820,11 @@ var fetchReceptionTransactions = function () {
 
                     console.log(minDeliveryDate);
                     console.log(maxDeliveryDate);
+                    console.log(minDeliveryDate.format('YYYY-MM-DD'));
+                    console.log(maxDeliveryDate.format('YYYY-MM-DD'));
 
-                    fetchCalendar(minDeliveryDate.format('YYYY-MM-DD'), maxDeliveryDate.format('YYYY-MM-DD'), false);
+                    // fetchCalendar(minDeliveryDate.format('YYYY-MM-DD'), maxDeliveryDate.format('YYYY-MM-DD'), false);
+                    fetchCalendar('', '', false);
 
                     fetchTickets(modelId, false);
                 }
@@ -814,16 +841,17 @@ var fetchReceptionTransactions = function () {
     });
 };
 
-var fetchTickets = function (receptionId, async) {
+var fetchTickets = function (processId, async) {
     $.ajax({
         async:async,
         url: homeUrl + "/rd/ticket/by-process",
         type: "get",
         dataType:'json',
         data: {
-            receptionId: receptionId,
+            processId: processId,
         },
         success: function(response) {
+            // console.log("success");
             // console.log(response);
 
             $('#calendar').fullCalendar('removeEventSources', ticketEvents.id);
@@ -837,59 +865,66 @@ var fetchTickets = function (receptionId, async) {
                 var id = response['tickets'][i].calendar_id ;
                 var tId = response['tickets'][i].process_transaction_id;
                 var t = transactions.get(tId);
-                var container = containers.get(t.container_id);
-                var calendar = calendarEventMap.get(id);
-
-                transactionWithTicket.push(tId);
-                ticketDataMap.set(tId, {
-                    id:response['tickets'][i].id,
-                    dateTicket:calendar.start,
-                    dateEndTicket:calendar.end,
-                    calendarId:id,
-                });
-
-                // console.log(c);
-
-                if(container.tonnage === 20)
+                // console.log(t);
+                if(t)
                 {
-                    id = id + 'T20';
-                    className = ['bg-green-darker'];
-                    type = "T20";
-                }
-                else if(container.tonnage === 40)
-                {
-                    id = id + 'T40';
-                    className = ['bg-purple-darker'];
-                    type = "T40";
-                }
+                    var container = containers.get(t.container_id);
+                    var calendar = calendarEventMap.get(id);
 
-                var result = findTicketEvent(id);
-                if(result.event)
-                {
-                    result.event.count = result.event.count + count;
-                    result.event.title = result.event.count;
-                    ticketEvents[result.index]= result.event;
-                    result.event.rt.push(tId);
-                    // $('#calendar').fullCalendar( 'updateEvent', oldEvent);
-                }
-                else
-                {
-                    var event = {
-                        id: id,
-                        title: count,
-                        start: calendar.start,
-                        end:  calendar.end ,
-                        allDay:false,
-                        className : className ,
-                        editable: false,
-                        type:type,
-                        count:count,
-                        calendarId:calendar.id,
-                        rt:[tId],
-                        index: -1
-                    };
-                    ticketEvents.events.push(event);
-                    event.index = ticketEvents.events.length - 1;
+                    if(calendar)
+                    {
+                        transactionWithTicket.push(tId);
+                        ticketDataMap.set(tId, {
+                            id:response['tickets'][i].id,
+                            dateTicket:calendar.start,
+                            dateEndTicket:calendar.end,
+                            calendarId:id,
+                        });
+
+                        // console.log(c);
+
+                        if(container.tonnage === 20)
+                        {
+                            id = id + 'T20';
+                            className = ['bg-green-darker'];
+                            type = "T20";
+                        }
+                        else if(container.tonnage === 40)
+                        {
+                            id = id + 'T40';
+                            className = ['bg-purple-darker'];
+                            type = "T40";
+                        }
+
+                        var result = findTicketEvent(id);
+                        if(result.event)
+                        {
+                            result.event.count = result.event.count + count;
+                            result.event.title = result.event.count;
+                            ticketEvents[result.index]= result.event;
+                            result.event.rt.push(tId);
+                            // $('#calendar').fullCalendar( 'updateEvent', oldEvent);
+                        }
+                        else
+                        {
+                            var event = {
+                                id: id,
+                                title: count,
+                                start: calendar.start,
+                                end:  calendar.end ,
+                                allDay:false,
+                                className : className ,
+                                editable: false,
+                                type:type,
+                                count:count,
+                                calendarId:calendar.id,
+                                rt:[tId],
+                                index: -1
+                            };
+                            ticketEvents.events.push(event);
+                            event.index = ticketEvents.events.length - 1;
+                        }
+                    }
                 }
             });
             // console.log(calendarSlotEvents);

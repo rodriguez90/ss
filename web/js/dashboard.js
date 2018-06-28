@@ -51,8 +51,6 @@ var handleWidgetOptions = function() {
     }
     else if(role === 'Cia_transporte')
     {
-        // document.getElementById('import').style.display = 'inline';
-        // document.getElementById('export').style.display = 'inline';
         document.getElementById('report').style.display = 'inline';
     }
     else if(role === 'Administracion')

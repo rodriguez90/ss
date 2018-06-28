@@ -81,6 +81,12 @@ class Process extends \yii\db\ActiveRecord
         return $this->hasMany(ProcessTransaction::className(), ['process_id' => 'id']);
     }
 
+    public function getProcessTransactionsByTransCompany($transCompanyId)
+    {
+        return $this->hasMany(ProcessTransaction::className(), ['process_id' => 'id',
+            'trans_company_id'=>$transCompanyId]);
+    }
+
     public function getContainerAmount()
     {
         return $this->getProcessTransactions()->count();

@@ -4,6 +4,7 @@ namespace app\modules\rd\models;
 
 use app\modules\administracion\models\AdmUser;
 use Yii;
+use app\modules\administracion\models\AdmUser;
 
 /**
  * This is the model class for table "user_transcompany".
