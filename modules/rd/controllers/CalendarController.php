@@ -298,36 +298,42 @@ class CalendarController extends Controller
              * Where start >= $startDate and end <= $endDate
              * Order By start, ASC
              */
-            $conditon2 = null;
-            if(isset($startDate))
+            $conditon2 = '';
+
+            $query =  Calendar::find();
+
+            if(isset($startDate) && $startDate !== "")
             {
-                $conditon2= '';
-                $aux = new \DateTime($startDate);
-                $aux->setTimezone(new DateTimeZone("UTC"));
-                $datetimeFormated = $aux->format("Y-m-d G:i:s");
-                $conditon2 .= 'start_datetime >=' ."'". $datetimeFormated ."'";
+//                $conditon2= '';
+//                $aux = new \DateTime($startDate);
+//                $aux->setTimezone(new DateTimeZone("UTC"));
+//                $datetimeFormated = $aux->format("Y-m-d G:i:s");
+//                $conditon2 .= 'start_datetime >=' ."'". $datetimeFormated ."'";
+
+                $query->andWhere(['>=','start_datetime', $datetimeFormated]);
             }
-            if (isset($endDate))
+            if (isset($endDate) && $endDate !== "")
             {
-                $aux = new \DateTime($endDate);
-                $aux->setTimezone(new DateTimeZone("UTC"));
-                $datetimeFormated = $aux->format("Y-m-d G:i:s");
-                $conditon2 .= 'and end_datetime <=' . "'" .$datetimeFormated . "'";
+//                $aux = new \DateTime($endDate);
+//                $aux->setTimezone(new DateTimeZone("UTC"));
+//                $datetimeFormated = $aux->format("Y-m-d G:i:s");
+//                $conditon2 .= 'and end_datetime <=' . "'" .$datetimeFormated . "'";
+                $query->andWhere(['<=','end_datetime', $datetimeFormated]);
             }
 
-//        var_dump($conditon2); die;
+//            if($conditon2 !== '')
+//                $calendars= Calendar::find()
+//                    ->where($conditon2)
+//                    ->orderBy("start_datetime",SORT_ASC)
+//                    ->all();
+//            else
+//                $calendars= Calendar::find()
+//                    ->orderBy("start_datetime",SORT_ASC)
+//                    ->all();
 
-            if($conditon2)
-                $calendars= Calendar::find()
-                    ->where($conditon2)
-                    ->orderBy("start_datetime",SORT_ASC)
-                    ->all();
-            else
-                $calendars= Calendar::find()
-                    ->orderBy("start_datetime",SORT_ASC)
-                    ->all();
-
-
+            $calendars= $query
+                        ->orderBy("start_datetime",SORT_ASC)
+                        ->all();
 
             $result = [];
 

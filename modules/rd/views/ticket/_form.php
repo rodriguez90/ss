@@ -43,7 +43,7 @@ TableAsset::register($this);
         <div class="panel-heading-btn">
             <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
         </div>
-        <h4 class="panel-title">Asignación de cupos</h4>
+        <h4 class="panel-title">Asignación de Cupos</h4>
     </div>
     <div class="panel-body">
 
@@ -135,13 +135,13 @@ TableAsset::register($this);
                                                 <div class="col-md-2">
                                                     <h4 class="m-b-20">Leyenda</h4>
                                                     <div class="external-event bg-blue-darker ui-draggable" style="position: relative;">
-                                                        <p class="f-s-14">Disponibilidad en el calendario.</p>
+                                                        <p class="f-s-14">Cupos disponibles en el calendario.</p>
                                                     </div>
                                                     <div class="external-event bg-green-darker ui-draggable" style="position: relative;">
-                                                        <p class="f-s-14">Contenedores de 20 toneledas.</p>
+                                                        <p class="f-s-14">Cupos contenedores de 20 toneledas.</p>
                                                     </div>
                                                     <div class="external-event bg-purple-darker ui-draggable" style="position: relative;">
-                                                        <p class="f-s-14">Contenedores de 40 toneledas.</p>
+                                                        <p class="f-s-14">Cupos contenedores de 40 toneledas.</p>
                                                     </div>
                                                 </div>
                                                 <div id="calendar" class="col-md-10 p-15 calendar"></div>
@@ -164,8 +164,6 @@ TableAsset::register($this);
                                         <div class="panel-heading">
                                             <div class="panel-heading-btn">
                                                 <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
-<!--                                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fa fa-repeat"></i></a>-->
-<!--                                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>-->
                                             </div>
                                             <h4 class="panel-title">Contenedores seleccionados</h4>
                                         </div>
@@ -186,11 +184,9 @@ TableAsset::register($this);
                         <!-- begin wizard step-3 -->
                         <div class="wizard-step-3">
                             <fieldset>
-                                <!--                                                    <legend class="pull-left width-full">Confirmar y notificar </legend>-->
                                 <!-- begin row -->
                                 <div class="row">
                                     <div class="alert alert-success fade in">
-                                        <!--                                                            <span class="close" data-dismiss="alert">×</span>-->
                                         <i class="fa fa-check fa-2x pull-left"></i>
                                         <p>Los datos de los cupos que serán reservados para los contenedores seleccionados se muestran a continuación, si está de acuerdo con la
                                             confirme la información y finalice el proceso, de lo contrario regrese al punto que considere incorrecto y corrija la información.
@@ -198,15 +194,12 @@ TableAsset::register($this);
                                     </div>
                                 </div>
                                 <!-- end row -->
-
                                 <!-- begin row -->
                                 <div class="row">
                                     <div class="panel panel-default">
                                         <div class="panel-heading">
                                             <div class="panel-heading-btn">
                                                 <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
-<!--                                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fa fa-repeat"></i></a>-->
-<!--                                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>-->
                                             </div>
                                             <h4 class="panel-title">Cupos a reservar</h4>
                                         </div>
@@ -221,7 +214,6 @@ TableAsset::register($this);
                                     </div>
                                 </div>
                                 <!-- end row -->
-
                                 <div class="row">
                                     <div class="checkbox">
                                         <label>
@@ -238,7 +230,6 @@ TableAsset::register($this);
                             <div class="jumbotron m-b-0 text-center">
                                 <h1>Proceso Completado</h1>
                                 <p>Los datos han sido enviados al servidor.</p>
-                                <!--                                                    <p><a class="btn btn-success btn-lg" role="button"></a> </p>-->
                             </div>
                         </div>
                         <!-- end wizard step-4 -->
@@ -252,8 +243,7 @@ TableAsset::register($this);
 </div>
 
 
-
-<!-- #modal-alert -->
+<!-- #modal-containers -->
 <div class="modal fade" id="modal-select-containers">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
