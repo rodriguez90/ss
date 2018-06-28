@@ -139,6 +139,7 @@ if($user)
 //                                'class' => 'yii\grid\DataColumn',
                                 'attribute' => 'delivery_date',
                                 'format' => 'date',
+                                'filter' => \yii\jui\DatePicker::widget(['language' => 'ru', 'dateFormat' => 'dd-MM-yyyy','class'=>['form-control']]),
                             ],
 //                            'created_at:datetime',
 //                            [

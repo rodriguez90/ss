@@ -213,15 +213,16 @@ class TicketController extends Controller
 
         $response['success'] = false;
         $response['msg'] = 'Unknow';
+        $response['tickets'] = [];
 
-        $receptionId = Yii::$app->request->get('receptionId');
+        $processId = Yii::$app->request->get('processId');
 
 
-        if(isset($receptionId))
+        if(isset($processId))
         {
             $tickets = Ticket::find()->innerJoin('process_transaction', 'process_transaction_id=process_transaction.id')
                 ->innerJoin('calendar', 'calendar_id=calendar.id')
-                ->where(['process_transaction.process_id'=>$receptionId])
+                ->where(['process_transaction.process_id'=>$processId])
                 ->all();
             $response['tickets'] = $tickets;
             $response['success'] = true;
@@ -229,6 +230,8 @@ class TicketController extends Controller
         else{
             $response['msg'] = 'Bad request';
         }
+
+//        var_dump($response);die;
 
         return $response;
     }

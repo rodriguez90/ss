@@ -21,24 +21,21 @@ TableAsset::register($this);
 
 ?>
 <style>
-    .select2.select2-container.select2-container--default.select2-container--below
-    {
-        width: 100% !important;
-    }
     .fc-time-grid .fc-slats td
     {
-        height: 2.5em !important;
+        height: 1.5em !important;
     }
     .fc-title {
-        font-size: 16px !important;
+        font-size: 14px !important;
     }
-    .bwizard .well
-    {
-        padding: 0px 15px 0px 15px; !important;
-    }
+    /*.bwizard .well*/
+    /*{*/
+        /*padding: 0px 15px 0px 15px; !important;*/
+    /*}*/
     .detalle td, .detalle th, .detalle tr, .detalle tbody, table.detalle{
         border: 0px !important;
     }
+
 </style>
 
 <div class="panel panel-inverse p-3"">
@@ -114,46 +111,46 @@ TableAsset::register($this);
                         <div class="wizard-step-1">
                             <fieldset>
                                 <!-- begin row -->
-                                <div class="row">
+<!--                                <div class="row">-->
                                     <!-- begin panel -->
                                     <div class="panel panel-default">
                                         <div class="panel-body p-0">
-                                            <div class="vertical-box">
-                                                <div class="vertical-box-column p-15 bg-silver width-sm">
-                                                    <div id="external-events" class="calendar-event">
-                                                        <div class="external-event bg-blue-darker ui-draggable" style="position: relative;">
-                                                            <p class="f-s-14">Disponibilidad en el calendario.</p>
-                                                        </div>
-                                                        <div class="external-event bg-green-darker ui-draggable" style="position: relative;">
-                                                            <p class="f-s-14">Contenedores de 20 toneledas.</p>
-                                                        </div>
-                                                        <div class="external-event bg-purple-darker ui-draggable" style="position: relative;">
-                                                            <p class="f-s-14">Contenedores de 40 toneledas.</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div id="calendar" class="vertical-box-column p-15 calendar"></div>
-                                            </div>
-<!--                                            <div class="row">-->
-<!--                                                <div class="col-md-2">-->
-<!--                                                    <h4 class="m-b-20">Leyenda</h4>-->
-<!--                                                    <div class="external-event bg-blue-darker ui-draggable" style="position: relative;">-->
-<!--                                                        <p class="f-s-14">Disponibilidad en el calendario.</p>-->
-<!--                                                    </div>-->
-<!--                                                    <div class="external-event bg-green-darker ui-draggable" style="position: relative;">-->
-<!--                                                        <p class="f-s-14">Contenedores de 20 toneledas.</p>-->
-<!--                                                    </div>-->
-<!--                                                    <div class="external-event bg-purple-darker ui-draggable" style="position: relative;">-->
-<!--                                                        <p class="f-s-14">Contenedores de 40 toneledas.</p>-->
+<!--                                            <div class="vertical-box">-->
+<!--                                                <div class="vertical-box-column p-15 bg-silver width-sm">-->
+<!--                                                    <div id="external-events" class="calendar-event">-->
+<!--                                                        <div class="external-event bg-blue-darker ui-draggable" style="position: relative;">-->
+<!--                                                            <p class="f-s-14">Disponibilidad en el calendario.</p>-->
+<!--                                                        </div>-->
+<!--                                                        <div class="external-event bg-green-darker ui-draggable" style="position: relative;">-->
+<!--                                                            <p class="f-s-14">Contenedores de 20 toneledas.</p>-->
+<!--                                                        </div>-->
+<!--                                                        <div class="external-event bg-purple-darker ui-draggable" style="position: relative;">-->
+<!--                                                            <p class="f-s-14">Contenedores de 40 toneledas.</p>-->
+<!--                                                        </div>-->
 <!--                                                    </div>-->
 <!--                                                </div>-->
-<!--                                                <div id="calendar" class="col-md-10 p-15 calendar"></div>-->
+<!--                                                <div id="calendar" class="vertical-box-column p-15 calendar"></div>-->
 <!--                                            </div>-->
+                                            <div class="row">
+                                                <div class="col-md-2">
+                                                    <h4 class="m-b-20">Leyenda</h4>
+                                                    <div class="external-event bg-blue-darker ui-draggable" style="position: relative;">
+                                                        <p class="f-s-14">Disponibilidad en el calendario.</p>
+                                                    </div>
+                                                    <div class="external-event bg-green-darker ui-draggable" style="position: relative;">
+                                                        <p class="f-s-14">Contenedores de 20 toneledas.</p>
+                                                    </div>
+                                                    <div class="external-event bg-purple-darker ui-draggable" style="position: relative;">
+                                                        <p class="f-s-14">Contenedores de 40 toneledas.</p>
+                                                    </div>
+                                                </div>
+                                                <div id="calendar" class="col-md-10 p-15 calendar"></div>
+                                            </div>
 
                                         </div> <!-- end panel body-->
                                     </div>
                                     <!-- end panel -->
-                                </div>
+<!--                                </div>-->
                                 <!-- end row -->
                             </fieldset>
                         </div>

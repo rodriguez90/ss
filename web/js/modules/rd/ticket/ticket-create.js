@@ -821,34 +821,34 @@ var fetchReceptionTransactions = function () {
     });
 };
 
-var fetchTickets = function (receptionId, async) {
+var fetchTickets = function (processId, async) {
     $.ajax({
         async:async,
         url: homeUrl + "/rd/ticket/by-process",
         type: "get",
         dataType:'json',
         data: {
-            receptionId: receptionId,
+            processId: processId,
         },
         success: function(response) {
-            console.log("success");
-            console.log(response);
+            // console.log("success");
+            // console.log(response);
 
             $('#calendar').fullCalendar('removeEventSources', ticketEvents.id);
             ticketEvents.events = [];
 
-            for(var i = 0, count = response['tickets'].length; i < count; i++)
-            {
+            $.each(response['tickets'],function (i) {
+
                 var className = [];
                 var type = "";
                 var count = 1;
                 var id = response['tickets'][i].calendar_id ;
                 var tId = response['tickets'][i].process_transaction_id;
-                var transaction = transactions.get(tId, null);
-                console.log(transaction);
-                if(transaction)
+                var t = transactions.get(tId);
+                // console.log(t);
+                if(t)
                 {
-                    var container = containers.get(transaction.container_id);
+                    var container = containers.get(t.container_id);
                     var calendar = calendarEventMap.get(id);
 
                     transactionWithTicket.push(tId);
@@ -903,12 +903,7 @@ var fetchTickets = function (receptionId, async) {
                         event.index = ticketEvents.events.length - 1;
                     }
                 }
-            }
-
-            // $.each(response['tickets'],function (i) {
-            //
-            //
-            // });
+            });
             // console.log(calendarSlotEvents);
 
             $('#calendar').fullCalendar('addEventSource',ticketEvents);
