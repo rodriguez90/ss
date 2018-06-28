@@ -56,14 +56,13 @@ use app\modules\rd\models\Process;
             <td>Tipo de trámite</td>
             <td> <?= Process::PROCESS_LABEL[$model->type] ?></td>
             <td>Fecha de Creación</td>
-            <td> <?=substr($model->created_at , 0,19)?></td>
-
+            <td> <?= (new \yii\i18n\Formatter())->asDate($model->created_at, 'dd/M/yyyy') ?></td>
         </tr>
         <tr>
             <td><?php echo $model->type === Process::PROCESS_IMPORT ? "BL":"Booking"?></td>
             <td><?= $model->bl ?></td>
             <td>Fecha Límite</td>
-            <td> <?= $model->delivery_date ?></td>
+            <td> <?= (new \yii\i18n\Formatter())->asDate($model->delivery_date, 'dd/M/yyyy') ?></td>
             <td>Cantidad</td>
             <td>  <?= $model->getContainerAmount() ?> </td>
         </tr>

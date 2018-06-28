@@ -58,38 +58,37 @@ if(!Yii::$app->user->isGuest){
                 <!-- end mobile sidebar expand / collapse button -->
 
                 <!-- begin header navigation right -->
-                <ul class="nav navbar-nav navbar-right">
-                    <li class="dropdown navbar-user">
-                        <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
-                            <img src="/img/user-13.jpg" alt="" />
-                            <span class="hidden-xs">
+                <?php
+                    if($user)
+                    {
 
-                                <?php
-                                if($user)
-                                    echo $user->username;
-                                ?>
+                       echo '<ul class="nav navbar-nav navbar-right">';
+                            echo '<li class="dropdown navbar-user">';
+                                echo '<a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">';
+                                    echo '<img src="/img/user-13.jpg" alt="" />';
+                                    echo '<span class="hidden-xs">';
+                                        if(!Yii::$app->user->isGuest && user !== null)
+                                            echo $user->username;
 
-                            </span> <b class="caret"></b>
-                        </a>
-                        <ul class="dropdown-menu animated fadeInLeft">
-                            <li class="arrow"></li>
-                            <li><a href="javascript:;">Editar Perficl</a></li>
-                            <li><a href="javascript:;">Configuraciones</a></li>
-                            <li class="divider"></li>
+                                    echo '</span> <b class="caret"></b>';
+                                echo '</a>';
+                        echo '<ul class="dropdown-menu animated fadeInLeft">';
+                            echo '<li class="arrow"></li>';
+                            echo '<li><a href="javascript:;">Editar Perficl</a></li>';
+                            echo '<li><a href="javascript:;">Configuraciones</a></li>';
+                            echo '<li class="divider"></li>';
 
-                            <?php
-                            if(Yii::$app->user->isGuest ){
-                                echo("<li><a href='". Url::to(["/site/login"]). "'> Login</a></li>");
-                            }else{
+
+                            if(!Yii::$app->user->isGuest ){
                                 echo("<li><a href='". Url::to(["/site/logout"]). "'> Salir</a></li>");
                             }
-                            ?>
 
-                        </ul>
-                        <!-- end header navigation right -->
-                    </li>
-                </ul>
-
+                        echo '</ul>';
+                        echo '</li>';
+                        echo '</ul>';
+                    }
+                ?>
+                <!-- end header navigation right -->
 
             </div>
         </div>

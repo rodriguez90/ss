@@ -91,7 +91,7 @@ $date = $aux->format("YmdHi");
             <td class="title" >ECAS</td>
             <td class="data"  >??????</td>
             <td class="title" >F. CADUCIDAD</td>
-            <td class="data"  > <?php echo $ticket["delivery_date"] ?></td>
+            <td class="data"  > <?php echo (new \yii\i18n\Formatter())->asDate($ticket["delivery_date"], 'dd/M/yyyy') ?></td>
         </tr>
 
         <tr>
@@ -110,7 +110,7 @@ $date = $aux->format("YmdHi");
 
         <tr>
             <td class="title" >FECHA TURNO</td>
-            <td class="data"  > <?php echo substr($ticket["start_datetime"],0,16) ?></td>
+            <td class="data"  > <?php echo (new \yii\i18n\Formatter())->asDate($ticket["start_datetime"], 'dd/M/yyyy')?></td>
             <td class="title" >CANTIDAD</td>
             <td class="data"  >1</td>
         </tr>

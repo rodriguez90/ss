@@ -5,6 +5,7 @@ namespace app\modules\rd\controllers;
 use DateTime;
 use DateTimeZone;
 use app\modules\rd\models\Process;
+use yii\filters\AccessControl;
 use app\modules\rd\models\TransCompany;
 use Yii;
 use app\modules\rd\models\Ticket;
@@ -32,7 +33,17 @@ class TicketController extends Controller
      */
     public function behaviors()
     {
+
         return [
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -144,7 +155,8 @@ class TicketController extends Controller
                 if($model->delete())
                 {
                     $calendarSlot->amount++;
-                    if(!$calendarSlot->update())
+                    $result = $calendarSlot->update();
+                    if($result === false)
                     {
                         $response['success'] = false;
                         $response['msg'] = 'Ah ocurrido un error al actualizar la disponibilidad del calendario.';

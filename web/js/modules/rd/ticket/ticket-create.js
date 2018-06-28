@@ -356,8 +356,19 @@ var handleTableInWizar = function() {
                     targets: [2],
                     data:'deliveryDate',
                     render: function ( data, type, full, meta ) {
-                        // console.log("In render: " + data);
+                        console.log("In render: " + data);
+                        console.log("In render format: " + moment(data).format("DD/MM/YYYY"));
                         return moment(data).format("DD/MM/YYYY");
+                    },
+                },
+                {
+                    targets: [4],
+                    data:'dateTicket',
+                    render: function ( data, type, full, meta ) {
+                        console.log("In render: " + data);
+                        var dateFormated =  moment(data).format("DD/MM/YYYY");
+                        console.log("In render format: " + dateFormated);
+                        return dateFormated;
                     },
                 },
             ]
@@ -466,8 +477,20 @@ var handleTable3InWizar = function() {
                     targets: [2],
                     data:'deliveryDate',
                     render: function ( data, type, full, meta ) {
-                        // console.log("In render: " + data);
-                        return moment(data).format("DD/MM/YYYY");
+                        console.log("In render: " + data);
+                        var dateFormated =  moment(data).format("DD/MM/YYYY");
+                        console.log("In render format: " + dateFormated);
+                        return dateFormated;
+                    },
+                },
+                {
+                    targets: [4],
+                    data:'dateTicket',
+                    render: function ( data, type, full, meta ) {
+                        console.log("In render: " + data);
+                        var dateFormated =  moment(data).format("DD/MM/YYYY");
+                        console.log("In render format: " + dateFormated);
+                        return dateFormated;
                     },
                 },
             ]

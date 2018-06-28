@@ -68,15 +68,17 @@ $this->params['breadcrumbs'][] = $this->title;
                             'attribute' => 'type',
                             'value' =>Process::PROCESS_LABEL[$model->type]
                         ],
-
-                        [
-                            'attribute' => 'delivery_date',
-                            'label' => 'Fecha de Límite',
-
-                            'content' => function ($data) {
-                                return (new \yii\i18n\Formatter())->asDate($data);
-                            },
-                        ],
+                        'delivery_date:date',
+//                        [
+//                            'attribute' => 'delivery_date',
+//                            'label' => 'Fecha de Límite',
+////                            'value'=>function ($data) {
+////                                return (new \yii\i18n\Formatter())->asDate($data, 'd/m/Y');
+////                            },
+//                            'content' => function ($data) {
+//                                return (new \yii\i18n\Formatter())->asDate($data);
+//                            },
+//                        ],
                     ],
                     'options'=>['class' => 'table table-condensed detalle'],
                 ]) ?>
@@ -85,7 +87,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <?= DetailView::widget([
                     'model' => $model,
                     'attributes' => [
-                        'created_at:datetime',
+                        'created_at:date',
                         [
                             'label'=>'Cantidad de Contenedores',
                             'value'=>$model->getContainerAmount()

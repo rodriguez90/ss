@@ -6,7 +6,7 @@
  * Time: 07:13 AM
  */
 use yii\helpers\Url;
-
+use app\modules\rd\models\Process;
 ?>
 
 
@@ -86,7 +86,7 @@ use yii\helpers\Url;
                     <tbody>
                     <tr style="text-align: center">
                         <td>
-                            <h3 style="margin:0; padding:0; margin-bottom:5px;">Notificación de nueva recepción</h3>
+                            <h3 style="margin:0; padding:0; margin-bottom:5px;">Notificación de <?php echo Process::PROCESS_LABEL[$model->type]?></h3>
                         </td>
                     </tr>
 
@@ -104,7 +104,7 @@ use yii\helpers\Url;
 
                                     <td style="padding-right: 25px;">
 
-                                        <h5>BL </h5>
+                                        <h5><?php $model->type === Process::PROCESS_IMPORT ? "BL":"Booking"?> </h5>
                                         <p> <?= $model->bl ?></p>
                                     </td>
 
@@ -113,7 +113,7 @@ use yii\helpers\Url;
                                 <tr>
                                     <td>
                                         <h5>Fecha Límite</h5>
-                                        <p><?= $model->delivery_date ?></p>
+                                        <p><?= (new \yii\i18n\Formatter())->asDate($model->delivery_date, 'dd/M/yyyy') ?></p>
                                     </td>
 
                                     <td style="padding-right: 25px;">
@@ -161,7 +161,7 @@ use yii\helpers\Url;
                             <?php
                             echo "<ul style=\"margin-top: 10px;\">";
                             foreach ($containers1 as $container) {
-                                echo "<li>" . $container['name'] . " " . $container['code'] . " " . $container['tonnage'] . "</li>";
+                                echo "<li>" . $container['name'] . ' ' . $container['code'] . ' ' . $container['tonnage'] . "</li>";
                             }
                             echo "</ul>";
                             ?>
