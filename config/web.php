@@ -91,7 +91,7 @@ $config = [
             ],
         ],
         'formatter' => [
-            'dateFormat' => 'dd/MM/yyyy',
+            'dateFormat' => 'dd/mm/yyyy',
         ],
     ],
     'modules' => [

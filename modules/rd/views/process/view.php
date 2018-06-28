@@ -51,20 +51,11 @@ $this->params['breadcrumbs'][] = $this->title;
                             'attribute'=>'id',
                             'label'=>'No.',
                         ],
-                        'bl',
-//                        [
-//                            'class' => 'yii\grid\DataColumn',
-//                            'attribute' => 'type',
-//                            'value' =>  \app\modules\rd\models\Process::PROCESS_LABEL[$model->type]
-//                        ],
-//                        'delivery_date:datetime',
-//                        'created_at:datetime',
-//                        [
-//                            'label'=>'Cantidad de Contenedores',
-//                            'value'=>$model->getContainerAmount()
-//                        ]
+                        [
+                            'attribute'=>'bl',
+                            'label'=> $model->type === Process::PROCESS_IMPORT ? "BL":"Booking",
+                        ],
                     ],
-//                    'options'=>['class' => 'table table-striped table-bordered table-condensed detail-view'],
                     'options'=>['class' => 'table table-bordered table-condensed detail-view m-1 p-1 detalle'],
                 ]) ?>
             </div>
@@ -77,7 +68,15 @@ $this->params['breadcrumbs'][] = $this->title;
                             'attribute' => 'type',
                             'value' =>Process::PROCESS_LABEL[$model->type]
                         ],
-                        'delivery_date:datetime',
+
+                        [
+                            'attribute' => 'delivery_date',
+                            'label' => 'Fecha de Límite',
+
+                            'content' => function ($data) {
+                                return (new \yii\i18n\Formatter())->asDate($data);
+                            },
+                        ],
                     ],
                     'options'=>['class' => 'table table-condensed detalle'],
                 ]) ?>

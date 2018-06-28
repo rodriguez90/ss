@@ -60,8 +60,8 @@ $this->params['breadcrumbs'][] = $this->title;
                             [
                                 'attribute' => 'created_at',
                                 'label' => 'Fecha de Creación',
-                                'format' => 'html',// 'date',//date,datetime, time
-//                                'headerOptions' => ['width' => '120'],
+//                                'format' => 'html',// 'date',//date,datetime, time
+////                                'headerOptions' => ['width' => '120'],
 
                                 'content' => function ($data) {
                                     return (new \yii\i18n\Formatter())->asDate($data->created_at, 'dd/mm/yyyy');
@@ -78,7 +78,6 @@ $this->params['breadcrumbs'][] = $this->title;
                                     ]
                                 ])
                             ],
-
                             'item_name',
 
                             [

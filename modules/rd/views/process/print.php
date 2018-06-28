@@ -60,7 +60,7 @@ use app\modules\rd\models\Process;
 
         </tr>
         <tr>
-            <td>BL</td>
+            <td><?php echo $model->type === Process::PROCESS_IMPORT ? "BL":"Booking"?></td>
             <td><?= $model->bl ?></td>
             <td>Fecha Límite</td>
             <td> <?= $model->delivery_date ?></td>
