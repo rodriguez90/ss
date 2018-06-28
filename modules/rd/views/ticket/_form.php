@@ -7,7 +7,7 @@ use yii\widgets\DetailView;
 use yii\widgets\ListView;
 
 /* @var $this yii\web\View */
-/* @var $model app\modules\rd\models\Reception */
+/* @var $model app\modules\rd\models\Process */
 /* @var $form yii\widgets\ActiveForm */
 
 use app\assets\FormAsset;
@@ -71,7 +71,18 @@ TableAsset::register($this);
                         ],
                         [
                             'label'=>'Cantidad de Contenedores',
-                            'value'=>count($model->processTransactions)
+                            'value'=>function($model){
+                                $user = \app\modules\administracion\models\AdmUser::findOne(['id'=>Yii::$app->user->getId()]);
+                                if($user)
+                                {
+                                    $trasCompany = $user->getTransCompany();
+                                    if($trasCompany)
+                                        return count($model->getProcessTransactionsByTransCompany($trasCompany->id));
+                                    else
+                                        return 0;
+
+                                }
+                            }
                         ]
                     ],
                     'options'=>['class' => 'table table-condensed detail-view detalle'],

@@ -21,6 +21,13 @@ var lan = {
         "sNext":     "Siguiente",
         "sPrevious": "Anterior"
     },
+    // select: {
+    //     rows: {
+    //         _: "You have selected %d rows",
+    //         0: "Click a row to select it",
+    //         1: "Only 1 row selected"
+    //     }
+    // }
     "oAria": {
         "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
         "sSortDescending": ": Activar para ordenar la columna de manera descendente"
@@ -829,14 +836,16 @@ var fetchTickets = function (receptionId, async) {
             $('#calendar').fullCalendar('removeEventSources', ticketEvents.id);
             ticketEvents.events = [];
 
-            $.each(response['tickets'],function (i) {
-
+            for(var i = 0, count = response['tickets'].length; i < count; i++)
+            {
                 var className = [];
                 var type = "";
                 var count = 1;
                 var id = response['tickets'][i].calendar_id ;
                 var tId = response['tickets'][i].process_transaction_id;
-                var t = transactions.get(tId);
+                var t = transactions.get(tId, null);
+                if(t === null) return true;
+
                 var container = containers.get(t.container_id);
                 var calendar = calendarEventMap.get(id);
 
@@ -891,7 +900,12 @@ var fetchTickets = function (receptionId, async) {
                     ticketEvents.events.push(event);
                     event.index = ticketEvents.events.length - 1;
                 }
-            });
+            }
+
+            // $.each(response['tickets'],function (i) {
+            //
+            //
+            // });
             // console.log(calendarSlotEvents);
 
             $('#calendar').fullCalendar('addEventSource',ticketEvents);
