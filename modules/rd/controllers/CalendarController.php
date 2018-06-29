@@ -188,7 +188,7 @@ class CalendarController extends Controller
                 $transaction->rollBack();
             }
 
-           
+
             return $result;
 
         }

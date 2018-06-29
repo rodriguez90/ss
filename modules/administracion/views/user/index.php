@@ -15,6 +15,18 @@ use yii\widgets\Pjax;
 $this->title = 'Usuarios';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
+
+
+
+
+<style>
+
+    .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td{
+        padding: 5px 5px;
+    }
+
+
+</style>
 <div class="user-index">
     <p>
         <?= Html::a('Nuevo Usuario', ['create'], ['class' => 'btn btn-success']) ?>
@@ -31,10 +43,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="panel-heading-btn">
                     <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i
                                 class="fa fa-expand"></i></a>
-                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i
-                                class="fa fa-repeat"></i></a>
-                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning"
-                       data-click="panel-collapse"><i class="fa fa-minus"></i></a>
 
                 </div>
                 <h4 class="panel-title">Lista de usuarios</h4>
