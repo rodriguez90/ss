@@ -80,12 +80,12 @@ var handleSelectpicker = function() {
         var label = $("#label-type");
         var input = $('#selectpicker-type');
 
-        if(ini == 0){
+        if(ini === 0){
             ini_rol = $(this).val();
             ini++;
         }
 
-        if(ini_rol == $(this).val()){
+        if(ini_rol === $(this).val()){
             distint = false;
         }
 
@@ -98,9 +98,6 @@ var handleSelectpicker = function() {
                 handleJqueryAutocomplete2(1,distint);
                 break;
             case 'Administrador_depósito':
-                label.text("Depósito*");
-                handleJqueryAutocomplete2(2,distint);
-                break;
             case 'Depósito':
                 label.text("Depósito*");
                 handleJqueryAutocomplete2(2,distint);

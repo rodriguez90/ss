@@ -226,171 +226,192 @@ class UserController extends Controller
 
             $transaction = \Yii::$app->db->beginTransaction();
 
-            $model = $this->findModel($id);//comprobar si model existe...
-            $old_password = $model->password;
-            $auth =  Yii::$app->authManager;
-            $confirm = Yii::$app->request->post('AdmUser')["passwordConfirm"];
-            $rol = '';
-            $type = -1;
-            $error = '';
-            $type_actual=-1;
-            $change_rol = false;
-            $ok = true;
+            $model = $this->findModel($id);
+            if($model!=null){
 
+                $old_password = $model->password;
+                $auth =  Yii::$app->authManager;
+                $confirm = Yii::$app->request->post('AdmUser')["passwordConfirm"];
+                $rol = '';
+                $type = -1;
+                $error = '';
+                $type_actual=-1;
+                $change_rol = false;
+                $ok = true;
 
-            $actual = AuthAssignment::find()
-                ->innerJoin("adm_user","auth_assignment.user_id = adm_user.id")
-                ->where(['adm_user.id'=>$model->id])
-                ->one();
+                $rol_actual = $auth->getRole($model->getRole());
 
-            $rol_actual = $auth->getRole($actual->item_name);
+               // var_dump($rol_actual);
 
-            $modelAux=null;
-            switch($rol_actual->name){
-                case 'Importador':
-                case 'Exportador':
-                case 'Agencia':
-                    $error  = "Seleccione una agencia.";
-                    $modelAux = UserAgency::findOne(['user_id'=>$model->id]);
-                    if($modelAux)
-                        $type_actual = $modelAux->agency_id;
-                    break;
-                case 'Administrador_depósito':
-                case 'Depósito':
-                    $error  ="Seleccione un depósito." ;
-                    $modelAux = UserWarehouse::findOne(['user_id'=>$model->id]);
-                    if($modelAux)
-                        $type_actual = $modelAux->warehouse_id;
-                    break;
-                case 'Cia_transporte':
-                    $error  ="Seleccione una compañía de transporte.";
-                    $modelAux = UserTranscompany::findOne(['user_id'=>$model->id]);
-                    if($modelAux)
-                        $type_actual = $modelAux->transcompany_id;
-                    break;
-                default :
-                    break;
-            }
-
-            if ($model->load(Yii::$app->request->post()) ) {
-
-                $rol = Yii::$app->request->post("rol");
-                $type = Yii::$app->request->post("type");
-
-                if( $rol==null ||  $auth->getRole($rol) ==null){
-                    $model->addError('error', "Seleccione un rol válido." );
-
+                $modelAux=null;
+                switch($rol_actual->name){
+                    case 'Importador':
+                    case 'Exportador':
+                    case 'Agencia':
+                        $error  = "Seleccione una agencia.";
+                        $modelAux = UserAgency::findOne(['user_id'=>$model->id]);
+                        if($modelAux)
+                            $type_actual = $modelAux->agency_id;
+                        break;
+                    case 'Administrador_depósito':
+                    case 'Depósito':
+                        $error  ="Seleccione un depósito." ;
+                        $modelAux = UserWarehouse::findOne(['user_id'=>$model->id]);
+                        if($modelAux)
+                            $type_actual = $modelAux->warehouse_id;
+                        break;
+                    case 'Cia_transporte':
+                        $error  ="Seleccione una compañía de transporte.";
+                        $modelAux = UserTranscompany::findOne(['user_id'=>$model->id]);
+                        if($modelAux)
+                            $type_actual = $modelAux->transcompany_id;
+                        break;
+                    default :
+                        break;
                 }
 
-                if($type =="" && $rol_actual->name!="Administracion" && $rol!="Administracion" ){
-                    $model->addError('error', $error );
+                //var_dump($error);
+                //var_dump($type_actual);
 
-                }
 
-                if (!$model->hasErrors())
-                {
-                    if($model->password!=""){
-                        $model->setPassword($model->password);
-                    }else
-                        $model->password = $old_password;
+                if ($model->load(Yii::$app->request->post()) ) {
 
-                    $model->updated_at = time();
+                    $rol = Yii::$app->request->post("rol");
+                    $type = Yii::$app->request->post("type");
 
-                    if ($model->save())
-                    {
-                        $new_rol = $auth->createRole($rol);
 
-                        if(  $new_rol->name != $rol_actual->name ){
-                            $ok = $ok && $auth->revoke($rol_actual,$model->id);
-                            if($ok)
-                            $ok = $ok && $auth->assign($new_rol,$model->id);
-                            $change_rol= true;
-                        }
 
-                        if($type_actual!= $type) {
-                            switch($rol){
-                                case 'Importador':
-                                case 'Exportador':
-                                case 'Agencia':
-                                    if($change_rol){
-                                        $userAgency = new UserAgency();
-                                        $userAgency->agency_id = $type;
-                                        $userAgency->user_id = $model->id;
-                                        $ok = $ok && $userAgency->save();
-                                        if($modelAux!=null)
-                                            $modelAux->delete();
-                                    }else{
-                                        $userAgency = UserAgency::findOne(['user_id'=>$model->id]);
-                                        $userAgency->agency_id = $type;
-                                        $ok = $ok && $userAgency->update();
-                                    }
-                                    break;
-                                case 'Administrador_depósito':
-                                    if($change_rol){
-                                        $userWarehouse = new UserWarehouse();
-                                        $userWarehouse->warehouse_id = $type;
-                                        $userWarehouse->user_id =$model->id;
-                                        $ok = $ok && $userWarehouse->save();
-                                        if($modelAux!=null)
-                                            $modelAux->delete();
-                                    }else{
-                                        $userWarehouse = UserWarehouse::findOne(['user_id'=>$model->id]);
-                                        $userWarehouse->warehouse_id = $type;
-                                        $ok = $ok && $userWarehouse->update();
-                                        }
-                                        break;
 
-                                case 'Depósito':
-                                    if($change_rol){
-                                        $userWarehouse = new UserWarehouse();
-                                        $userWarehouse->warehouse_id = $type;
-                                        $userWarehouse->user_id =$model->id;
-                                        $ok = $ok && $userWarehouse->save();
-                                        if($modelAux != null)
-                                            $modelAux->delete();
-                                    }else{
-                                        $userWarehouse = UserWarehouse::findOne(['user_id'=>$model->id]);
-                                        $userWarehouse->warehouse_id = $type;
-                                        $ok = $ok && $userWarehouse->update();
-                                    }
-
-                                    break;
-                                case 'Cia_transporte':
-                                    if($change_rol){
-                                        $userTrans = new UserTranscompany();
-                                        $userTrans->user_id=$model->id;
-                                        $userTrans->transcompany_id = $type;
-                                        $ok = $ok && $userTrans->save();
-                                        if($modelAux!=null)
-                                            $modelAux->delete();
-                                    }else{
-                                        $userTrans = UserTranscompany::findOne(['user_id'=>$model->id]);
-                                        $userTrans->transcompany_id = $type;
-
-                                        $ok = $ok && $userTrans->update();
-                                    }
-                                    break;
-                                default :
-                                    if($modelAux!=null)
-                                        $modelAux->delete();
-                                    break;
-                            }
-                        }
-
-                        if($ok) {
-                            $transaction->commit();
-                        }else{
-                            $transaction->rollBack();
-                        }
-
-                        return $this->redirect(['index']);
+                    if( $rol==null ||  $auth->getRole($rol) ==null){
+                        $model->addError('error', "Seleccione un rol válido." );
                     }
 
-                }else{
-                    $transaction->rollBack();
+                    if($type =="" && $rol_actual->name!="Administracion" && $rol!="Administracion" ){
+                        $model->addError('error', $error );
+
+                    }
+
+                    if (!$model->hasErrors())
+                    {
+                        if($model->password!=""){
+                            $model->setPassword($model->password);
+                        }else
+                            $model->password = $old_password;
+
+                        $model->updated_at = time();
+
+                        if ($model->save())
+                        {
+                            $new_rol = $auth->createRole($rol);
+
+                            if(  $new_rol->name != $rol_actual->name ){
+                                $ok = $ok && $auth->revoke($rol_actual,$model->id);
+                                if($ok)
+                                    $ok = $ok && $auth->assign($new_rol,$model->id);
+                                $change_rol= true;
+                            }
+
+
+
+
+/*
+
+                                var_dump($rol);
+                                echo "<br></br>";
+                                var_dump($type);
+                                echo "<br></br>";
+                                var_dump($type_actual);
+                                echo "<br></br>";
+                                var_dump($modelAux);
+                                echo "<br></br>";
+                                var_dump($change_rol);
+                                echo "<br></br>";
+                                var_dump($model->id);
+                                echo "<br></br>";
+                                var_dump($ok);
+                                echo "<br></br>";
+
+
+                                die;
+
+*/
+
+                                switch($rol){
+                                    case "Importador":
+                                    case "Exportador":
+                                    case "Agencia":
+                                        if($change_rol){
+                                            $userAgency = new UserAgency();
+                                            $userAgency->agency_id = $type;
+                                            $userAgency->user_id = $model->id;
+
+
+
+                                            $ok = $ok && $userAgency->save();
+                                            if($modelAux!=null)
+                                                $modelAux->delete();
+                                        }else{
+                                            $userAgency = UserAgency::findOne(['user_id'=>$model->id]);
+                                            $userAgency->agency_id = $type;
+                                            $ok = $ok && $userAgency->update();
+                                        }
+                                        break;
+                                    case "Administrador_depósito":
+                                    case "Depósito":
+                                        if($change_rol){
+                                            $userWarehouse = new UserWarehouse();
+                                            $userWarehouse->warehouse_id = $type;
+                                            $userWarehouse->user_id =$model->id;
+                                            $ok = $ok && $userWarehouse->save();
+                                            if($modelAux != null)
+                                                $modelAux->delete();
+                                        }else{
+                                            $userWarehouse = UserWarehouse::findOne(['user_id'=>$model->id]);
+                                            $userWarehouse->warehouse_id = $type;
+                                            $ok = $ok && $userWarehouse->update();
+                                        }
+
+                                        break;
+                                    case "Cia_transporte":
+                                        if($change_rol){
+                                            $userTrans = new UserTranscompany();
+                                            $userTrans->user_id=$model->id;
+                                            $userTrans->transcompany_id = $type;
+                                            $ok = $ok && $userTrans->save();
+                                            if($modelAux!=null)
+                                                $modelAux->delete();
+                                        }else{
+                                            $userTrans = UserTranscompany::findOne(['user_id'=>$model->id]);
+                                            $userTrans->transcompany_id = $type;
+
+                                            $ok = $ok && $userTrans->update();
+                                        }
+                                        break;
+                                    default :
+                                        if($modelAux!=null){
+                                            $modelAux->delete();
+                                        }
+                                        break;
+                                }
+
+
+                            if($ok) {
+                                $transaction->commit();
+                            }else{
+                                $transaction->rollBack();
+                            }
+
+                            return $this->redirect(['index']);
+                        }
+
+                    }else{
+                        $transaction->rollBack();
+                    }
+
                 }
 
-
+            }else{
+                $model->addError('error', "No existe el usuario" );
             }
 
             $roles  = $auth->getRoles();

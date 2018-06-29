@@ -103,6 +103,7 @@ class CalendarController extends Controller
 
             $ok = true;
 
+
             try{
 
                 $id_warehouse = Warehouse::find()
@@ -112,7 +113,7 @@ class CalendarController extends Controller
 
                 foreach ( $events as $event) {
 
-                    if((int)$event['id'] === -1){
+                    if((int)$event['id'] == -1){
 
                         $model = new Calendar();
                         $aux = new DateTime($event['start']);
@@ -140,7 +141,7 @@ class CalendarController extends Controller
 
                     }
                     else{
-                        $model = Calendar::findOne((int)$event['id']);
+                        $model = Calendar::findOne($event['id']);
 
 
                         $aux = new \DateTime($event['start']);
