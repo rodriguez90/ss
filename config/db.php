@@ -15,6 +15,7 @@ $password = "xedrux";
 //        'sybase' => \websightnl\yii2\sybase\Schema::className(),
 //   ],
 //    'dsn' => 'odbc:sgt_xedrux',
+////    'dsn' => 'odbc:xedrux',
 //   'username' => $user,
 //   'password' => $password,
 //];
@@ -31,7 +32,8 @@ $password = "xedrux";
 //    //'dsn' => 'odbc:DRIVER={Adaptive Server Anywhere 7.0};SERVER=190.63.174.169;PORT=7100;DATABASE=sgt;UID=xedrux;PWD=xedrux',
 //    //'dsn' => 'odbc:Driver=Adaptive Server Anywhere 7.0;ENG=190.63.174.169.sgt;UID=xedrux;PWD=xedrux;DBN=sgt;LINKS=TCPIP(HOST=190.63.174.169:7100);',
 //    //'dsn' => 'odbc:Driver={Adaptive Server Enterprise};app=sgt;server=190.63.174.169;port=7100;db=sgt;uid=xedrux;pwd=xedrux;',
-//    'dsn' => 'odbc:Driver={SYBASE ASE ODBC Driver};NA=190.63.174.169,7100;Uid=xedrux;Pwd=xedrux;',
+//    'dsn' => 'odbc:Driver={Adaptive Server Enterprise};NA=190.63.174.169,7100;Uid=xedrux;Pwd=xedrux;',
+////    'dsn' => 'odbc:Driver={SYBASE ASE ODBC Driver};NA=190.63.174.169,7100;Uid=xedrux;Pwd=xedrux;',
 //    //'dsn' => 'odbc:Driver={SQL Anywhere 12};Server=189902;CommLinks=tcpip(Host=1.2.3.4);',
 //    //'dsn' => 'odbc:host=190.63.174.169;port=7100;dbname=sgt',
 //    'username' => 'xedrux',

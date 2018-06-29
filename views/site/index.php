@@ -1,7 +1,7 @@
 <?php
 
 /* @var $this yii\web\View */
-/* @var $searchModel app\modules\rd\models\ReceptionSearch */
+/* @var $searchModel app\modules\rd\models\ProcessSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider
  */
 
@@ -108,7 +108,6 @@ if($user)
 
             <div id="panel-body" class="panel-body">
                 <?php Pjax::begin(); ?>
-<!--                <table id="data-table" class="table table-striped table-bordered nowrap" width="100%">-->
                 <div class="table-responsive">
                     <?=
                     GridView::widget([
@@ -125,11 +124,6 @@ if($user)
                                 'attribute' => 'bl',
                                 'label' => 'BL o Booking'
                             ],
-//                            [
-//                                'class' => 'yii\grid\DataColumn',
-//                                'attribute' => 'trans_company_id',
-//                                'value' => 'transCompany.name',
-//                            ],
                             [
                                 'class' => 'yii\grid\DataColumn',
                                 'attribute' => 'agency_id',
@@ -139,32 +133,25 @@ if($user)
 //                                'class' => 'yii\grid\DataColumn',
                                 'attribute' => 'delivery_date',
                                 'format' => 'date',
-                                'filter' => \yii\jui\DatePicker::widget(['language' => 'ru', 'dateFormat' => 'dd-MM-yyyy','class'=>['form-control']]),
+//                                'filter' => \yii\jui\DatePicker::widget(['language' => 'es', 'dateFormat' => 'dd-MM-yyyy','class'=>['form-control']]),
+                                'filter' => \yii\jui\DatePicker::widget([
+                                    'options' => ['class' => 'form-control'],
+                                    'model' => $searchModel,
+                                    'attribute' => 'delivery_date',
+                                    'language' => 'es',
+//                                    'dateFormat' => 'php:d/m/Y',
+                                    'dateFormat' => 'dd-MM-yyyy',
+                                    'clientOptions' => [
+                                        'prevText' => '<i style="cursor: pointer" class="fa fa-chevron-left"></i>',
+                                        'nextText' => '<i style="cursor: pointer" class="fa fa-chevron-right"></i>',
+                                    ]
+                                ]),
                             ],
-//                            'created_at:datetime',
-//                            [
-//                                'class' => 'yii\grid\DataColumn',
-//                                'attribute' => 'agency_id',
-//                                'value' => 'agency.name'
-//                            ],
                             [
                                 'class' => 'yii\grid\DataColumn',
                                 'label' => "Contenedores",
                                 'attribute' => 'containerAmount'
                             ],
-//                            [
-//                                'class' => 'yii\grid\DataColumn', // can be omitted, as it is the default
-//                                'label' => Yii::t('app', "Activo"),
-//                                'attribute' => 'active',
-//                                'value' => function ($data) {
-//                                    $value = Yii::t('app', "No");
-//                                    if($data->active)
-//                                        $value = Yii::t('app', "Si");
-//
-//                                    return $value; // $data['name'] for array data, e.g. using SqlDataProvider.
-//                                },
-//                                'filter' => ['1' =>'Si' , '0'=>'No',],
-//                            ],
                             [
                                 'class' => 'yii\grid\DataColumn', // can be omitted, as it is the default
                                 'attribute' => 'type',
