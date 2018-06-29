@@ -101,7 +101,7 @@ if(!Yii::$app->user->isGuest){
                 <ul class="nav" style="font-size: 14px">
 
                     <?php
-                    if(Yii::$app->user->can("admin_mod") || Yii::$app->user->can("reception_create")){
+                    if(Yii::$app->user->can("admin_mod") || Yii::$app->user->can("process_create")){
                         echo "<li class='has-sub'>";
                         echo "<a href=".Url::to(['/rd/process/create','type'=>Process::PROCESS_IMPORT])."> <i class='fa fa-rotate-90 fa-sign-in'></i>";
                         echo  "<span> Importación</span>";
@@ -111,7 +111,7 @@ if(!Yii::$app->user->isGuest){
                     ?>
 
                     <?php
-                    if(Yii::$app->user->can("admin_mod") || Yii::$app->user->can("reception_create")){
+                    if(Yii::$app->user->can("admin_mod") || Yii::$app->user->can("process_create")){
                         echo "<li class='has-sub'>";
                         echo "<a href=".Url::to(['/rd/process/create','type'=>Process::PROCESS_EXPORT])."> <i class='fa fa-rotate-90 fa-sign-in'></i>";
                         echo  "<span> Exportación</span>";
@@ -120,7 +120,7 @@ if(!Yii::$app->user->isGuest){
                     }
                     ?>
                     <?php
-                    if(Yii::$app->user->can("admin_mod") || Yii::$app->user->can("reception_create")){
+                    if(Yii::$app->user->can("admin_mod") || Yii::$app->user->can("process_create")){
                         echo "<li class='has-sub'>";
                         echo "<a href=".Url::to(['/site/report'])."> <i class='fa fa-file-pdf-o'></i>";
                         echo  "<span> Reporte</span>";
