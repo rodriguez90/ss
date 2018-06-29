@@ -66,7 +66,8 @@ class ProcessSearch extends Process
      */
     public function search($params)
     {
-        $query = Process::find()->innerJoin('agency', 'agency.id = process.agency_id');
+        $query = Process::find()->innerJoin('agency', 'agency.id = process.agency_id')
+            ->innerJoin("process_transaction","process_transaction.process_id = process.id");
 
         // add conditions that should always apply here
 

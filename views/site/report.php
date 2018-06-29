@@ -36,19 +36,31 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="panel-heading">
                 <div class="panel-heading-btn">
                     <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
-                    <a id="print-process" href="<?= Url::to(['/site/print']) ?>" style="color: white;font-size: 14px;" title="Exportar PDF" > <i class="fa fa-file-pdf-o"></i></a>
+                    <a id="print-process" href="<?= Url::to(['/site/printreport?bl='.$search_bl."&agency_id=".$search_agency_id."&trans_company_id=".$search_trans_company]) ?>" style="color: white;font-size: 14px;" title="Exportar PDF" > <i class="fa fa-file-pdf-o"></i></a>
+
                 </div>
                 <h4 class="panel-title">Solicitudes realizadas</h4>
             </div>
 
-            <div id="panel-body" class="panel-body">
+            <div class="panel-body">
+
                 <?php Pjax::begin(); ?>
                 <?php  echo $this->render('_search', ['model' => $searchModel,
                     'trans_company'=>$trans_company,
                     'agency'=>$agency,
-                    'process'=>$process
-                    ]); ?>
+                    'process'=>$process,
+                    'search_bl'=>$search_bl,
+                    'search_agency_id'=>$search_agency_id,
+                    'search_trans_company'=>$search_trans_company,
+
+                    ]);
+                ?>
+
+
+                <div class="col-md-12 col-sm-12">
                 <?=
+
+
                 GridView::widget([
                     'dataProvider' => $dataProvider,
 //                    'filterModel' => $searchModel,
@@ -89,6 +101,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'options'=>['class' => 'table table-striped table-bordered']
                 ]); ?>
 
+            </div>
             </div>
         </div>
     </div>

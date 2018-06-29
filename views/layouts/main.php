@@ -123,7 +123,7 @@ if(!Yii::$app->user->isGuest){
                     if(Yii::$app->user->can("admin_mod") || Yii::$app->user->can("process_create")){
                         echo "<li class='has-sub'>";
                         echo "<a href=".Url::to(['/site/report'])."> <i class='fa fa-file-pdf-o'></i>";
-                        echo  "<span> Reporte</span>";
+                        echo  "<span> Reporte </span>";
                         echo "</a>";
                         echo "</li>";
                     }

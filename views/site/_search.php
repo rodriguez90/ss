@@ -15,94 +15,115 @@ use yii\bootstrap\ActiveForm;
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="process-search">
-
-    <?php $form = ActiveForm::begin([
-        'action' => ['index'],
-        'method' => 'get',
-        'options' => [
-            'data-pjax' => 1,
-        ],
-    ]); ?>
-
-    <div class="row">
-        <div class="col col-md-6">
-
-            <div class="form-group">
 
 
-                <select id="trans_company" name="trans_company" class="form-control selectpicker" data-size="10"
-                        data-live-search="true">
-                    <?php
+<?php $form = ActiveForm::begin(
+    [
+        'id' => 'report-form',
+        'enableClientScript' => false,
+        'options' =>
+            [
+                'enctype' => 'multipart/form-data',
+                'class' => 'form-horizontal',
 
-                    echo "<option  value=''>Seleccione BL o Booking</option>";
-
-                    foreach ($process as $p) {
-                        echo "<option value='" . $p->bl . "'>" . $p->bl . "</option>";
-                    }
-
-                    ?>
-                </select>
-
-            </div>
+            ],
+    ]
+); ?>
 
 
-
-
-            <div class="form-group">
-
-
-                    <select id="selectpicker-agency" name="agency_id" class="form-control selectpicker" data-size="10"
-                            data-live-search="true">
-                        <?php
-
-                        echo "<option  value=''>Seleccione Agencia</option>";
-
-                        foreach ($agency as $a) {
-                            echo "<option value='" . $a->id . "'>" . $a->name . "</option>";
-                        }
-
-                        ?>
-                    </select>
-
-            </div>
-
-
-
-
-        </div>
-
-        <div class="col col-md-6">
-
-            <div class="form-group">
-
-
-                <select id="selectpicker-bl" name="bl" class="form-control selectpicker" data-size="10"
-                        data-live-search="true">
-                    <?php
-
-                    echo "<option  value=''>Seleccione Compañía de Trabsporte</option>";
-
-                    foreach ($trans_company as $t) {
-                        echo "<option value='" . $t->id . "'>" . $t->name . "</option>";
-                    }
-
-                    ?>
-                </select>
-
-            </div>
-
-
-        </div>
-    </div>
-
-    <?php // echo $form->field($model, 'type') ?>
+<div class="col-md-4 col-sm-4">
 
     <div class="form-group">
-        <?= Html::submitButton(Yii::t('app', 'Buscar'), ['class' => 'btn btn-primary']) ?>
-        <?= Html::resetButton(Yii::t('app', 'Limpiar'), ['class' => 'btn btn-default']) ?>
+        <div class="col-md-12 col-sm-12">
+            <select id="bl" name="bl" class="form-control selectpicker" data-size="10"
+                    data-live-search="true">
+                <?php
+
+                echo "<option  value=''>Seleccione BL o Booking</option>";
+
+
+                foreach ($process as $p) {
+                    $selected = $p->bl == $search_bl ? "selected=''": '';
+                    echo "<option ".$selected. " value='" . $p->bl . "'>" . $p->bl . "</option>";
+                }
+
+                ?>
+            </select>
+        </div>
     </div>
 
-    <?php ActiveForm::end(); ?>
+</div>
+
+
+<div class="col-md-4 col-sm-4">
+    <div class="form-group">
+        <div class="col-md-12 col-sm-12">
+            <select id="selectpicker-agency" name="agency_id" class="form-control selectpicker" data-size="10"
+                    data-live-search="true">
+                <?php
+
+                echo "<option  value=''>Seleccione Agencia</option>";
+
+                foreach ($agency as $a) {
+                    $selected = $a->id == $search_agency_id ? "selected=''": '';
+                    echo "<option ".$selected. " value='" . $a->id . "'>" . $a->name . "</option>";
+                }
+
+                ?>
+            </select>
+        </div>
+
+    </div>
+</div>
+
+<div class="col-md-4 col-sm-4">
+
+    <div class="form-group">
+
+        <div class="col-md-12 col-sm-12">
+            <select id="selectpicker-bl" name="trans_company" class="form-control selectpicker" data-size="10"
+                    data-live-search="true">
+                <?php
+
+                echo "<option  value=''>Seleccione Compañía de Trabsporte</option>";
+
+                foreach ($trans_company as $t) {
+                    $selected = $t->id == $search_trans_company ? "selected=''": '';
+                    echo "<option ".$selected. " value='" . $t->id . "'>" . $t->name . "</option>";
+                }
+
+                ?>
+            </select>
+        </div>
+
+    </div>
+</div>
+
+
+<div class="col-md-12 col-sm-12">
+
+    <div class="col-md-4 col-sm-4">
+
+    </div>
+    <div class="col-md-4 col-sm-4">
+
+
+    </div>
+    <div class="col-md-4 col-sm-4">
+
+        <div class="form-group" style="float: right">
+
+            <?= Html::button('Cancelar',['class'=>'btn btn-default','onclick'=>'window.history.go(-1)']) ?>
+
+            <?= Html::submitButton(Yii::t('app', 'Buscar'), ['class' => 'btn btn-primary']) ?>
+
+
+        </div>
+
+    </div>
 
 </div>
+
+<?php ActiveForm::end(); ?>
+
+

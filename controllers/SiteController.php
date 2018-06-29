@@ -4,11 +4,14 @@ namespace app\controllers;
 
 use app\modules\administracion\models\AdmUser;
 use app\modules\rd\models\Agency;
+use app\modules\rd\models\Container;
 use app\modules\rd\models\Process;
 use app\modules\rd\models\ProcessSearch;
+use app\modules\rd\models\ProcessTransaction;
 use app\modules\rd\models\Reception;
 use app\modules\rd\models\ReceptionSearch;
 use app\modules\rd\models\ReceptionTransaction;
+use app\modules\rd\models\Ticket;
 use app\modules\rd\models\TicketSearch;
 use app\modules\rd\models\TransCompany;
 use app\modules\rd\models\UserAgency;
@@ -271,32 +274,103 @@ class SiteController extends Controller
 
     public function actionReport()
     {
+
+        if(!Yii::$app->user->can("admin_mod") && Yii::$app->user->can("process_create")) {
+            throw new ForbiddenHttpException('Usted no tiene permiso para crear una recepción');
+        }
+
         $trans_company = TransCompany::findAll(["active"=>1]);
         $agency = Agency::findAll(["active"=>1]);
+        //process relacionados con el usuario
         $process = Process::findAll(["active"=>1]);
-
-
-        /*
-        $process = Process::find()
-            ->innerJoin("process_transaction","process_transaction.process_id = process.id")
-            ->innerJoin("trans_company","trans_company.id =  process_transaction.trans_company_id")
-            ->innerJoin("","user_transcompany", "user_transcompany.transcompany_id = trans_company.id")
-            ->where(["user_transcompany.user_id"=>\yii::$app->user->getId()]);*/
-
-
-
-        //$ = Agency::findAll(["active"=>1]);
 
         $params = Yii::$app->request->queryParams;
         $searchModel = new ProcessSearch();
         $dataProvider = $searchModel->search($params);
+
+        if(Yii::$app->request->isPost){
+            $search_bl = Yii::$app->request->post("bl");
+            $search_agency_id =  Yii::$app->request->post("agency_id");
+            $search_trans_company =  Yii::$app->request->post("trans_company");
+
+            if(isset($search_bl)) {
+                $dataProvider->query->andFilterWhere(['like', 'bl', $search_bl]);
+            }
+
+            if(isset($search_agency_id)) {
+                $dataProvider->query->andFilterWhere(['like', 'agency_id', $search_agency_id]);
+            }
+
+            if(isset($search_trans_company)) {
+                    $filter = ProcessTransaction::find()->select('process_id')->where(['like','trans_company_id', $search_trans_company]);
+                    $dataProvider->query->andFilterWhere(['process.id'=>$filter]);
+            }
+
+            /*
+            if(isset($search_trans_company)) {
+                $dataProvider->query->andFilterWhere(['like', 'process_transaction.process_id', $search_trans_company]);
+            }*/
+
+
+        }
 
         return $this->render('report', [
             'searchModel'=>$searchModel,
             'dataProvider'=>$dataProvider,
             'trans_company'=>$trans_company,
             'agency'=>$agency,
-             'process'=>$process
+             'process'=>$process,
+             'search_bl'=>$search_bl,
+            'search_agency_id'=>$search_agency_id,
+            'search_trans_company'=>$search_trans_company,
+
         ]);
+    }
+
+    public function actionPrintreport($bl,$agency_id,$trans_company_id){
+
+        $process = Process::find()->innerJoin('agency', 'agency.id = process.agency_id')
+            ->innerJoin("process_transaction","process_transaction.process_id = process.id")
+            ->where(['like', 'bl', $bl])
+            ->andWhere(['like', 'agency_id', $agency_id])
+            ->andWhere( ['like','process_transaction.trans_company_id',$trans_company_id])
+            ->all();
+
+        $result = [];
+
+        foreach ($process as $p){
+
+            $row = [];
+            $row["process"] = $p;
+            $containers = Container::find()
+                ->innerJoin("process_transaction","process_transaction.container_id = container.id")
+                ->innerJoin("process","process_transaction.process_id = process.id")
+                ->where(["process.id"=>$p->id])
+                ->all();
+            $row["containers"] = $containers;
+            $tikets = Ticket::find()
+                ->innerJoin("calendar","calendar.id = ticket.calendar_id")
+                ->innerJoin("process_transaction","process_transaction.id = ticket.process_transaction_id")
+                ->innerJoin("process","process_transaction.process_id = process.id")
+                ->where(["process.id"=>$p->id])
+                ->all();
+            $row["tyckets"] = $tikets;
+            $result [] = $row;
+        }
+
+        var_dump($result);die;
+
+       return $this->render('print_report',['process'=>$process]);
+        /*
+
+        $body = $this->renderPartial('print_report', [
+
+        ]);
+
+        $pdf =  new mPDF(['mode'=>'utf-8' , 'format'=>'A4-L']);
+        $pdf->SetTitle("Solicitudes Realizadas");
+        $pdf->WriteHTML($body);
+        $path= $pdf->Output("Solicitudes Realizadas.pdf","D");
+        */
     }
 }

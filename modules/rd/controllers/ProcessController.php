@@ -86,7 +86,7 @@ class ProcessController extends Controller
      */
     public function actionView($id)
     {
-        if(!Yii::$app->user->can("reception_view")) // FIXME: change permission to process_view
+        if(!Yii::$app->user->can("process_view")) // FIXME: change permission to process_view
             throw new ForbiddenHttpException('Usted no tiene acceso a esta recepción');
 
         $model = $this->findModel($id);
@@ -141,8 +141,8 @@ class ProcessController extends Controller
         if((int)$type !== Process::PROCESS_IMPORT && (int)$type  !== Process::PROCESS_EXPORT)
             throw new ForbiddenHttpException('Error en el tipo de solicitud.');
 
-//        if(!Yii::$app->user->can("reception_create"))
-//            throw new ForbiddenHttpException('Usted no tiene permiso para crear un proceso');
+        if(!Yii::$app->user->can("process_create"))
+           throw new ForbiddenHttpException('Usted no tiene permiso para crear un proceso');
 
         $model = new Process();
         $user = AdmUser::findOne(['id'=>Yii::$app->user->getId()]);
@@ -174,7 +174,7 @@ class ProcessController extends Controller
      */
     public function actionUpdate($id)
     {
-        if(!Yii::$app->user->can("reception_update"))
+        if(!Yii::$app->user->can("process_update"))
             throw new ForbiddenHttpException('Usted no tiene permiso para crear una recepción');
 
         $model = $this->findModel($id);
@@ -197,7 +197,7 @@ class ProcessController extends Controller
      */
     public function actionDelete($id)
     {
-        if(!Yii::$app->user->can("reception_delete"))
+        if(!Yii::$app->user->can("process_delete"))
             throw new ForbiddenHttpException('Usted no tiene permiso para eliminar esta recepción');
 
 
@@ -224,7 +224,7 @@ class ProcessController extends Controller
 
     public function actionContainers()
     {
-        if(!Yii::$app->user->can("reception_list"))
+        if(!Yii::$app->user->can("process_list"))
             throw new ForbiddenHttpException('Usted no tiene permiso para crear una recepción');
 
         Yii::$app->response->format = Response::FORMAT_JSON;
@@ -253,7 +253,7 @@ class ProcessController extends Controller
 
     public function actionTransactions()
     {
-        if(!Yii::$app->user->can("reception_list"))
+        if(!Yii::$app->user->can("process_list"))
             throw new ForbiddenHttpException('Usted no tiene permiso para crear una recepción');
 
         Yii::$app->response->format = Response::FORMAT_JSON;
@@ -630,7 +630,7 @@ class ProcessController extends Controller
     }
 
     public function actionPrint($id){
-        if(!Yii::$app->user->can("reception_view")) // FIXME: change permission to process_view
+        if(!Yii::$app->user->can("process_view")) // FIXME: change permission to process_view
             throw new ForbiddenHttpException('Usted no tiene acceso a esta recepción');
 
         $model = $this->findModel($id);
