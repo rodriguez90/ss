@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\modules\administracion\models\AdmUser;
 use app\modules\rd\models\Agency;
+use app\modules\rd\models\Container;
 use app\modules\rd\models\Process;
 use app\modules\rd\models\ProcessSearch;
 use app\modules\rd\models\Reception;
@@ -30,6 +31,7 @@ use app\models\ContactForm;
 use yii\db\Expression;
 
 use Da\QrCode\QrCode;
+
 
 
 class SiteController extends Controller
@@ -83,9 +85,24 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
+//        $agencia = Agency::findOne(['name'=>new Expression("CONVERT(varchar, 'aaaa')")]);
+//        var_dump($agencia);//die;
 //
-//        $agencia = Agency::findOne(['id'=>new Expression("CONVERT(integer, 1)")]);
-//        $agencia = Agency::findOne(['name'=>new Expression("CONVERT(varchar, 'aaa')")]);
+//        $agency = new Agency();
+//        $agency->name = "aaaa";
+//        $agency->code_oce = "aaaa";
+//        $agency->ruc = "aaaaaaaaaaaa";
+//        $agency->active = 1;
+//        $result = $agency->save();
+//        if($result === false)
+//        {
+//            var_dump(implode(" ", $agency->getErrorSummary(false)));
+//        }
+////
+//        die;
+////
+//////        $agencia = Agency::findOne(['id'=>new Expression("CONVERT(integer, 1)")]);
+//        $agencia = Agency::findOne(['name'=>new Expression("CONVERT(varchar, 'aaaa')")]);
 //        var_dump($agencia);die;
 //        $agencia->name = 'YEESSSSS!!!!';
 //        if ($agencia->save())
