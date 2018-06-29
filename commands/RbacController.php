@@ -102,7 +102,7 @@ class RbacController extends Controller
             $user_perm = ["admin_mod" => "Acceso al modulo administrción","user_create" => "Crear Usuario", "user_update" => "Actualizar Usuarios", "user_delete" => "Eliminar Usuarios", "user_list" => "Listar Usuarios", "user_view" => "Ver Usuarios"];
             $warehouse_perm = ["warehouse_create"=>"Crear Depósito", "warehouse_update"=>"Actualizar Depósito", "warehouse_delete" => "Eliminar Depósito", "warehouse_list"=>"Listar Depósito", "warehouse_view"=>"Detalle Depósito"];
             $calendar_perm = ["calendar_create"=>"Crear calendario", "calendar_update"=>"Actualizar calendario", "calendar_delete"=>"Eliminar calendario", "calendar_list"=>"Listar calendario", "calendar_view"=>"Detalle de calendario"];
-            $reception_perm = ["reception_create"=>"Crear recepción", "reception_update"=>"Actualizar recepción", "reception_delete"=>"", "reception_list"=>"", "reception_view"=>""];
+            $process_perm = ["process_create"=>"Crear recepción", "process_update"=>"Actualizar recepción", "process_delete"=>"", "process_list"=>"", "process_view"=>""];
             $agency_perm = ["agency_create"=>"", "agency_update"=>"", "agency_delete"=>"", "agency_list"=>"", "agency_view"=>""];
             $ticket_perm = ["ticket_create"=>"", "ticket_update"=>"", "ticket_delete"=>"", "ticket_list"=>"", "ticket_view"=>""];
             $transcompany_perm = ["trans_company_create"=>"", "trans_company_update"=>"", "trans_company_delete"=>"", "trans_company_list"=>"", "trans_company_view"=>""];
@@ -112,7 +112,7 @@ class RbacController extends Controller
             $admin_perm [0] = $user_perm;
             $admin_perm [1] = $warehouse_perm;
             $admin_perm [2] = $calendar_perm;
-            $admin_perm [3] = $reception_perm;
+            $admin_perm [3] = $process_perm;
             $admin_perm [4] = $agency_perm;
             $admin_perm [5] = $ticket_perm;
             $admin_perm [6] = $transcompany_perm;
@@ -216,7 +216,7 @@ class RbacController extends Controller
         $user_perm = ["admin_mod" => "Acceso al modulo administrción","user_create" => "Crear Usuario", "user_update" => "Actualizar Usuarios", "user_delete" => "Eliminar Usuarios", "user_list" => "Listar Usuarios", "user_view" => "Ver Usuarios"];
         $warehouse_perm = ["warehouse_create"=>"Crear Depósito", "warehouse_update"=>"Actualizar Depósito", "warehouse_delete" => "Eliminar Depósito", "warehouse_list"=>"Listar Depósito", "warehouse_view"=>"Detalle Depósito"];
         $calendar_perm = ["calendar_create"=>"Crear calendario", "calendar_update"=>"Actualizar calendario", "calendar_delete"=>"Eliminar calendario", "calendar_list"=>"Listar calendario", "calendar_view"=>"Detalle de calendario"];
-        $reception_perm = ["reception_create"=>"Crear recepción", "reception_update"=>"Actualizar recepción", "reception_delete"=>"", "reception_list"=>"", "reception_view"=>""];
+        $process_perm = ["process_create"=>"Crear recepción", "process_update"=>"Actualizar recepción", "process_delete"=>"", "process_list"=>"", "process_view"=>""];
         $agency_perm = ["agency_create"=>"", "agency_update"=>"", "agency_delete"=>"", "agency_list"=>"", "agency_view"=>""];
         $ticket_perm = ["ticket_create"=>"", "ticket_update"=>"", "ticket_delete"=>"", "ticket_list"=>"", "ticket_view"=>""];
         $transcompany_perm = ["trans_company_create"=>"", "trans_company_update"=>"", "trans_company_delete"=>"", "trans_company_list"=>"", "trans_company_view"=>""];
@@ -227,7 +227,7 @@ class RbacController extends Controller
         $admin_perm [0] = $user_perm;
         $admin_perm [1] = $warehouse_perm;
         $admin_perm [2] = $calendar_perm;
-        $admin_perm [3] = $reception_perm;
+        $admin_perm [3] = $process_perm;
         $admin_perm [4] = $agency_perm;
         $admin_perm [5] = $ticket_perm;
         $admin_perm [6] = $transcompany_perm;
@@ -267,7 +267,7 @@ class RbacController extends Controller
                 $ok = $ok && $auth->add($pemiso);
         }
 
-        foreach ($reception_perm as $key => $desc) {
+        foreach ($process_perm as $key => $desc) {
             $pemiso = $auth->createPermission($key);
             $pemiso->description = $desc;
             echo "6.5";

@@ -94,12 +94,17 @@ $config = [
             'dateFormat' => 'dd/MM/yyyy',
         ],
     ],
+//    'modules' => [
+//        'rd' => 'app\modules\rd\RD',
+//        'administracion' => 'app\modules\administracion\Administracion',
+//    ],
     'modules' => [
-        'rd' => 'app\modules\rd\RD',
-        'administracion' => 'app\modules\administracion\Administracion',
-//        'administracion' => [
-//            'class' => 'app\modules\administracion\Administracion',
-//        ],
+        'rd' => [
+            'class' => 'app\modules\rd\RD',
+        ],
+        'administracion' => [
+            'class' => 'app\modules\administracion\Administracion',
+        ],
     ],
     'params' => $params,
 ];

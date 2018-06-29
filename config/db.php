@@ -7,15 +7,15 @@ $host="190.63.174.169";
 $port = "7100";
 $user = "xedrux";
 $password = "xedrux";
-
+//
 //return [
 //   'class' => 'yii\db\Connection',
 //    'driverName' => 'sybase',
 //   'schemaMap' => [
 //        'sybase' => \websightnl\yii2\sybase\Schema::className(),
 //   ],
-//    'dsn' => 'odbc:sgt_xedrux',
-////    'dsn' => 'odbc:xedrux',
+////    'dsn' => 'odbc:sgt_xedrux',
+//    'dsn' => 'odbc:xedrux_64',
 //   'username' => $user,
 //   'password' => $password,
 //];
@@ -28,14 +28,8 @@ $password = "xedrux";
 //    'schemaMap' => [
 //        'sybase' => \websightnl\yii2\sybase\Schema::className(),
 //    ],
-//    //'dsn' => 'odbc:host=190.63.174.169;port=7100;dbname=sgt',
-//    //'dsn' => 'odbc:DRIVER={Adaptive Server Anywhere 7.0};SERVER=190.63.174.169;PORT=7100;DATABASE=sgt;UID=xedrux;PWD=xedrux',
-//    //'dsn' => 'odbc:Driver=Adaptive Server Anywhere 7.0;ENG=190.63.174.169.sgt;UID=xedrux;PWD=xedrux;DBN=sgt;LINKS=TCPIP(HOST=190.63.174.169:7100);',
-//    //'dsn' => 'odbc:Driver={Adaptive Server Enterprise};app=sgt;server=190.63.174.169;port=7100;db=sgt;uid=xedrux;pwd=xedrux;',
-//    'dsn' => 'odbc:Driver={Adaptive Server Enterprise};NA=190.63.174.169,7100;Uid=xedrux;Pwd=xedrux;',
-////    'dsn' => 'odbc:Driver={SYBASE ASE ODBC Driver};NA=190.63.174.169,7100;Uid=xedrux;Pwd=xedrux;',
-//    //'dsn' => 'odbc:Driver={SQL Anywhere 12};Server=189902;CommLinks=tcpip(Host=1.2.3.4);',
-//    //'dsn' => 'odbc:host=190.63.174.169;port=7100;dbname=sgt',
+//    //'dsn' => 'odbc:Driver={SYBASE ASE ODBC Driver};NA=190.63.174.169,7100;Uid=xedrux;Pwd=xedrux;',
+//    'dsn' => 'odbc:Driver={Adaptive Server Enterprise};app=SGT;server=190.63.174.169;port=7100;db=sgt;uid=xedrux;pwd=xedrux;',
 //    'username' => 'xedrux',
 //    'password' => 'xedrux',
 //    //'charset' => 'utf8',
@@ -48,14 +42,10 @@ $password = "xedrux";
 
  return [
      'class' => 'yii\db\Connection',
-//	 'dsn'=>'odbc:Server=PEDRO-PC\SQLEXPRESS;Database=sgt',
-	// 'dsn'=>'sqlsrv:Server=PEDRO-PC\SQLEXPRESS;Database=sgt',
- //	'dsn'=>'sybase:Server=190.63.174.169:7100;Database=sgt',
+	 'dsn'=>'sqlsrv:Server=PEDRO-PC\SQLEXPRESS;Database=sgt',
  //    sqlsrv:Server=WIN-FV2H1LSOO63\SQLEXPRESS;Database=sgt
-     'dsn'=>'sqlsrv:Server=DESKTOP-JH5RE76\SQLEXPRESS;Database=sgt',
- //    'username' => $user,
+//     'dsn'=>'sqlsrv:Server=DESKTOP-JH5RE76\SQLEXPRESS;Database=sgt',
      'username' => '',
- //    'password' => $password, //Root*2018
      'password' => '', //Root*2018
      'charset' => 'utf8',
 

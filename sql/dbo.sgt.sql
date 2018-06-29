@@ -18,7 +18,7 @@ Date: 2018-06-29 06:57:25
 -- ----------------------------
 -- Table structure for [dbo].[adm_user]
 -- ----------------------------
-DROP TABLE [dbo].[adm_user]
+-- DROP TABLE [dbo].[adm_user]
 GO
 CREATE TABLE [dbo].[adm_user] (
 [id] int NOT NULL IDENTITY(1,1) ,
@@ -60,7 +60,7 @@ GO
 -- ----------------------------
 -- Table structure for [dbo].[agency]
 -- ----------------------------
-DROP TABLE [dbo].[agency]
+-- DROP TABLE [dbo].[agency]
 GO
 CREATE TABLE [dbo].[agency] (
 [id] int NOT NULL IDENTITY(1,1) ,
@@ -90,7 +90,7 @@ GO
 -- ----------------------------
 -- Table structure for [dbo].[auth_assignment]
 -- ----------------------------
-DROP TABLE [dbo].[auth_assignment]
+-- DROP TABLE [dbo].[auth_assignment]
 GO
 CREATE TABLE [dbo].[auth_assignment] (
 [item_name] varchar(64) NOT NULL ,
@@ -116,7 +116,7 @@ GO
 -- ----------------------------
 -- Table structure for [dbo].[auth_item]
 -- ----------------------------
-DROP TABLE [dbo].[auth_item]
+-- DROP TABLE [dbo].[auth_item]
 GO
 CREATE TABLE [dbo].[auth_item] (
 [name] varchar(64) NOT NULL ,
@@ -246,7 +246,7 @@ GO
 -- ----------------------------
 -- Table structure for [dbo].[auth_item_child]
 -- ----------------------------
-DROP TABLE [dbo].[auth_item_child]
+-- DROP TABLE [dbo].[auth_item_child]
 GO
 CREATE TABLE [dbo].[auth_item_child] (
 [parent] varchar(64) NOT NULL ,
@@ -423,7 +423,7 @@ GO
 -- ----------------------------
 -- Table structure for [dbo].[auth_rule]
 -- ----------------------------
-DROP TABLE [dbo].[auth_rule]
+-- DROP TABLE [dbo].[auth_rule]
 GO
 CREATE TABLE [dbo].[auth_rule] (
 [name] varchar(64) NOT NULL ,
@@ -442,7 +442,7 @@ GO
 -- ----------------------------
 -- Table structure for [dbo].[calendar]
 -- ----------------------------
-DROP TABLE [dbo].[calendar]
+-- DROP TABLE [dbo].[calendar]
 GO
 CREATE TABLE [dbo].[calendar] (
 [id] int NOT NULL IDENTITY(1,1) ,
@@ -468,7 +468,7 @@ GO
 -- ----------------------------
 -- Table structure for [dbo].[container]
 -- ----------------------------
-DROP TABLE [dbo].[container]
+-- DROP TABLE [dbo].[container]
 GO
 CREATE TABLE [dbo].[container] (
 [id] int NOT NULL IDENTITY(1,1) ,
@@ -495,7 +495,7 @@ GO
 -- ----------------------------
 -- Table structure for [dbo].[process]
 -- ----------------------------
-DROP TABLE [dbo].[process]
+-- DROP TABLE [dbo].[process]
 GO
 CREATE TABLE [dbo].[process] (
 [id] bigint NOT NULL IDENTITY(1,1) ,
@@ -523,7 +523,7 @@ GO
 -- ----------------------------
 -- Table structure for [dbo].[process_transaction]
 -- ----------------------------
-DROP TABLE [dbo].[process_transaction]
+-- DROP TABLE [dbo].[process_transaction]
 GO
 CREATE TABLE [dbo].[process_transaction] (
 [id] int NOT NULL IDENTITY(1,1) ,
@@ -553,7 +553,7 @@ GO
 -- ----------------------------
 -- Table structure for [dbo].[ticket]
 -- ----------------------------
-DROP TABLE [dbo].[ticket]
+-- DROP TABLE [dbo].[ticket]
 GO
 CREATE TABLE [dbo].[ticket] (
 [id] int NOT NULL IDENTITY(1,1) ,
@@ -580,7 +580,7 @@ GO
 -- ----------------------------
 -- Table structure for [dbo].[trans_company]
 -- ----------------------------
-DROP TABLE [dbo].[trans_company]
+-- DROP TABLE [dbo].[trans_company]
 GO
 CREATE TABLE [dbo].[trans_company] (
 [id] int NOT NULL IDENTITY(1,1) ,
@@ -618,7 +618,7 @@ GO
 -- ----------------------------
 -- Table structure for [dbo].[trans_company_phone]
 -- ----------------------------
-DROP TABLE [dbo].[trans_company_phone]
+-- DROP TABLE [dbo].[trans_company_phone]
 GO
 CREATE TABLE [dbo].[trans_company_phone] (
 [id] int NOT NULL IDENTITY(1,1) ,
@@ -640,7 +640,7 @@ GO
 -- ----------------------------
 -- Table structure for [dbo].[user_agency]
 -- ----------------------------
-DROP TABLE [dbo].[user_agency]
+-- DROP TABLE [dbo].[user_agency]
 GO
 CREATE TABLE [dbo].[user_agency] (
 [id] int NOT NULL IDENTITY(1,1) ,
@@ -668,7 +668,7 @@ GO
 -- ----------------------------
 -- Table structure for [dbo].[user_transcompany]
 -- ----------------------------
-DROP TABLE [dbo].[user_transcompany]
+-- DROP TABLE [dbo].[user_transcompany]
 GO
 CREATE TABLE [dbo].[user_transcompany] (
 [id] int NOT NULL IDENTITY(1,1) ,
@@ -694,7 +694,7 @@ GO
 -- ----------------------------
 -- Table structure for [dbo].[user_warehouse]
 -- ----------------------------
-DROP TABLE [dbo].[user_warehouse]
+-- DROP TABLE [dbo].[user_warehouse]
 GO
 CREATE TABLE [dbo].[user_warehouse] (
 [id] int NOT NULL IDENTITY(1,1) ,
@@ -718,7 +718,7 @@ GO
 -- ----------------------------
 -- Table structure for [dbo].[warehouse]
 -- ----------------------------
-DROP TABLE [dbo].[warehouse]
+-- DROP TABLE [dbo].[warehouse]
 GO
 CREATE TABLE [dbo].[warehouse] (
 [id] int NOT NULL IDENTITY(1,1) ,
@@ -794,7 +794,7 @@ GO
 -- ----------------------------
 -- Triggers structure for table [dbo].[auth_item]
 -- ----------------------------
-DROP TRIGGER [dbo].[trigger_auth_item_child]
+--DROP TRIGGER [dbo].[trigger_auth_item_child]
 GO
 CREATE TRIGGER [dbo].[trigger_auth_item_child]
 ON [dbo].[auth_item]

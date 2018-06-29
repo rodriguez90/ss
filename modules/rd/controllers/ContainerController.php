@@ -5,6 +5,7 @@ namespace app\modules\rd\controllers;
 use Yii;
 use app\modules\rd\models\Container;
 use app\modules\rd\models\ContainerSearch;
+use yii\db\Command;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\ForbiddenHttpException;
@@ -135,6 +136,36 @@ class ContainerController extends Controller
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
+    }
+
+    public function actionSP()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $response = array();
+        $response['success'] = true;
+        $response['containers'] = [];
+        $response['msg'] = '';
+        $response['msg_dev'] = '';
+
+        $bl = Yii::$app->request->get('bl');
+
+        if(!isset($bl))
+        {
+            $response['success'] = false;
+            $response['msg'] = "Debe especificar el código de búsqueda.";
+        }
+
+        if($response['success'])
+        {
+            $result = \Yii::$app->db->createCommand("exec sp_sgt_bl_cons(:bl)")
+                ->bindValue(':bl' , $bl )
+                ->execute();
+
+            var_dump($result);die;
+        }
+
+        return $response;
     }
 
     /**

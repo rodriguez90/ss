@@ -15,6 +15,7 @@ use app\modules\rd\models\TransCompany;
 use app\modules\rd\models\UserAgency;
 use app\modules\rd\models\UserTranscompany;
 
+use app\modules\rd\models\Warehouse;
 use DateTime;
 use DateTimeZone;
 
@@ -85,23 +86,39 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-//        $agencia = Agency::findOne(['name'=>new Expression("CONVERT(varchar, 'aaaa')")]);
-//        var_dump($agencia);//die;
+//        $w = Warehouse::find()->all();
+//        var_dump($w);die;
+//        $w = new Warehouse();
 //
-//        $agency = new Agency();
-//        $agency->name = "aaaa";
-//        $agency->code_oce = "aaaa";
-//        $agency->ruc = "aaaaaaaaaaaa";
-//        $agency->active = 1;
-//        $result = $agency->save();
-//        if($result === false)
+//        $w->name = 'Test';
+//        $w->code_oce = 'aaaa';
+//        $w->ruc = '1111111111111';
+//        $w->active = 1;
+//        if (!$w->save())
 //        {
-//            var_dump(implode(" ", $agency->getErrorSummary(false)));
+//            var_dump($w->getFirstErrors());
 //        }
-////
+//        else
+//        {
+//            var_dump($w->id);
+//        }
 //        die;
-////
-//////        $agencia = Agency::findOne(['id'=>new Expression("CONVERT(integer, 1)")]);
+//
+//        $agencia = new Agency();
+//        $agencia->name = 'Test';
+//        $agencia->code_oce = 'aaaa';
+//        $agencia->ruc = 'adsasdasdasdasd';
+//        $agencia->active = 1;
+//        if (!$agencia->save())
+//        {
+//            var_dump($agencia->getFirstErrors());
+//        }
+//        else
+//        {
+//            var_dump($agencia->id);
+//        }
+//
+////        $agencia = Agency::findOne(['id'=>new Expression("CONVERT(integer, 1)")]);
 //        $agencia = Agency::findOne(['name'=>new Expression("CONVERT(varchar, 'aaaa')")]);
 //        var_dump($agencia);die;
 //        $agencia->name = 'YEESSSSS!!!!';
