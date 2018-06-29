@@ -17,17 +17,6 @@ $(function (){
 
     $("#grabar").click(function () {
 
-
-        // var events2 = [];
-        // for(var i =0 , count = events.length; i < count; i++)
-        // {
-        //     var event = events[i];
-        //     event.start = moment(event.start).format('YYYY-MM-DD HH:mm:ss');
-        //     event.end = moment(event.end).format('YYYY-MM-DD HH:mm:ss');
-        //     events2.push(event);
-        //
-        // }
-
         $.ajax({
             url: homeUrl + "/rd/calendar/create",
             dataType: 'json',
@@ -36,11 +25,6 @@ $(function (){
 
             success: function (response) {
                 if(response['status']){
-                    $.gritter.add({
-                       title: "Grabar cupos",
-                       text: response['msg'],
-                       time:5000,
-                    });
 
 
                     $.each(response["events"],function (i) {
@@ -87,14 +71,15 @@ $(function (){
                   $('#calendar').fullCalendar('addEventSource',events);
                   $('#calendar').fullCalendar('refetchEvents');
 
-                }else{
-                    $.gritter.add({
-                        title: "Error",
-                        text: response['msg'],
-                        time:5000,
-                    });
                 }
-                console.log(response);
+
+                $.gritter.add({
+                    title: "Grabar cupos",
+                    text: response['msg'],
+                    time:5000,
+                });
+
+                console.log("response :",response);
 
             },
             error: function (response) {

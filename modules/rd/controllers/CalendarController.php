@@ -94,10 +94,10 @@ class CalendarController extends Controller
 
             $result = [];
             $result ['events'] = [];
+            $result ['msg'] = "";
+            $result ['msg_dev'] ="";
 
             $events = Yii::$app->request->post('events');
-
-            $text = '';
 
             $transaction = Calendar::getDb()->beginTransaction();
 
@@ -130,7 +130,7 @@ class CalendarController extends Controller
                         if($ok && !$model->save())
                         {
                             $ok = false;
-                            $result ['status']= 1;
+                            $result ['status']= 0;
                             $result['msg'] = "Error al crear a disponibilidad en el calendario.";
                             $result['msg_dev'] = implode(" ", $model->getErrors(false));
                             break;
@@ -142,8 +142,6 @@ class CalendarController extends Controller
                     }
                     else{
                         $model = Calendar::findOne($event['id']);
-
-
                         $aux = new \DateTime($event['start']);
                         $aux->setTimezone(new DateTimeZone("UTC"));
                         $model->start_datetime = $aux->format("Y-m-d G:i:s");  //date_format( new \DateTime($event['start'],new DateTimeZone("UTC")),"Y-m-d G:i:s");
@@ -159,13 +157,12 @@ class CalendarController extends Controller
 
                         if( (int)$reservados <= (int)$event['title'] ){
                             $model->amount = $event['title'];
-                            $result = $model->update();
-                            if($result === false)
+                            if($model->update() == false)
                             {
                                 $ok = false;
-                                $result ['status']= 1;
+                                $result ['status']= 0;
                                 $result['msg'] = "Error al crear a disponibilidad en el calendario.";
-                                $result['msg_dev'] = implode(" ", $model->getErrors(false));
+                                //$result['msg_dev'] = implode(" ", $model->getErrors(false));
                                 break;
                             }
                         }
@@ -179,7 +176,7 @@ class CalendarController extends Controller
                 {
                     $transaction->commit();
                     $result ['status']= 1;
-                    $result['msg'] = "Disponibilidad creada correctamente." . $text;
+                    $result['msg'] = "Disponibilidad creada correctamente.";
                 }
                 else{
                     $transaction->rollBack();
@@ -189,9 +186,9 @@ class CalendarController extends Controller
                 $result ['status']= 0;
                 $result['msg'] = "!Error: ".$ex->getMessage();
                 $transaction->rollBack();
-                var_dump($ex);die;
             }
 
+           
             return $result;
 
         }
