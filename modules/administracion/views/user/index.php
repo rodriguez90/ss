@@ -52,7 +52,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 <?php Pjax::begin(); ?>
 
-<!--                <div class="dataTables_wrapper form-inline dt-bootstrap no-footer" id="data-table_wrapper">-->
+                <div class="table-responsive">
+
 
                     <?= GridView::widget([
                         'dataProvider' => $dataProvider,
@@ -103,7 +104,10 @@ $this->params['breadcrumbs'][] = $this->title;
                         ],
                         'options'=>['class' => 'table table-striped table-responsive table-condensed table-bordered']
                     ]); ?>
-<!--                </div>-->
+
+            </div>
+
+
                 <?php Pjax::end(); ?>
 
             </div>

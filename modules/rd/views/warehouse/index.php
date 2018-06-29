@@ -26,7 +26,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <p>
                 <?= Html::a(Yii::t('app', 'Nuevo Depósito'), ['create'], ['class' => 'btn btn-success']) ?>
             </p>
-
+            <div class="table-responsive">
             <?= GridView::widget([
                 'dataProvider' => $dataProvider,
                 'filterModel' => $searchModel,
@@ -54,6 +54,8 @@ $this->params['breadcrumbs'][] = $this->title;
                     ['class' => 'yii\grid\ActionColumn'],
                 ],
             ]); ?>
+
+            </div>
             <?php Pjax::end(); ?>
         </div>
 </div>

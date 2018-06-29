@@ -40,6 +40,8 @@ $this->params['breadcrumbs'][] = $this->title;
                         <?= Html::a( $type == 1 ? 'Nuevo Rol': 'Nuevo Permiso'  , ['create','type'=>$type], ['class' => 'btn btn-success']) ?>
                     </p>
 
+                    <div class="table-responsive">
+
                     <?= GridView::widget([
                         'dataProvider' => $dataProvider,
                         'filterModel' => $searchModel,
@@ -59,6 +61,8 @@ $this->params['breadcrumbs'][] = $this->title;
                                 'template' => '{delete}']
                             ],
                     ]); ?>
+
+                    </div>
 
                 </div>
              </div>
