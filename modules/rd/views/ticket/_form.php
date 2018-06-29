@@ -151,7 +151,7 @@ TableAsset::register($this);
                                     </div>
                                     <!-- end panel -->
 <!--                                </div>-->
-                                <!-- end row --
+                                <!-- end row -->
                             </fieldset>
                         </div>
                         <!-- end wizard step-1 -->
