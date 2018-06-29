@@ -112,7 +112,7 @@ class CalendarController extends Controller
 
                 foreach ( $events as $event) {
 
-                    if($event['id'] == -1){
+                    if((int)$event['id'] === -1){
 
                         $model = new Calendar();
                         $aux = new DateTime($event['start']);
@@ -138,8 +138,10 @@ class CalendarController extends Controller
                         $event = ['update'=>false, 'id'=>$model->id, 'title'=>$model->amount,'start'=>$model->start_datetime,'end'=>$model->end_datetime  , 'url'=>Url::toRoute('/rd/calendar/delete?id='.$model->id),   'allDay'=>false, 'className'=>['event_rd'], 'editable'=>false];
                         $result ['events'] [] = $event;
 
-                    }else{
-                        $model = Calendar::findOne((int)$id);
+                    }
+                    else{
+                        $model = Calendar::findOne((int)$event['id']);
+
 
                         $aux = new \DateTime($event['start']);
                         $aux->setTimezone(new DateTimeZone("UTC"));
@@ -156,8 +158,8 @@ class CalendarController extends Controller
 
                         if( (int)$reservados <= (int)$event['title'] ){
                             $model->amount = $event['title'];
-
-                            if($ok && !$model->update())
+                            $result = $model->update();
+                            if($result === false)
                             {
                                 $ok = false;
                                 $result ['status']= 1;
@@ -184,7 +186,7 @@ class CalendarController extends Controller
 
             }catch (\yii\base\Exception $ex){
                 $result ['status']= 0;
-                $result['msg'] = "!Error. ".$ex->getMessage();
+                $result['msg'] = "!Error: ".$ex->getMessage();
                 $transaction->rollBack();
                 var_dump($ex);die;
             }
@@ -314,32 +316,19 @@ class CalendarController extends Controller
 
             if(isset($startDate) && $startDate !== "")
             {
-//                $conditon2= '';
-//                $aux = new \DateTime($startDate);
-//                $aux->setTimezone(new DateTimeZone("UTC"));
-//                $datetimeFormated = $aux->format("Y-m-d G:i:s");
-//                $conditon2 .= 'start_datetime >=' ."'". $datetimeFormated ."'";
+                $aux = new \DateTime($startDate);
+                $aux->setTimezone(new DateTimeZone("UTC"));
+                $datetimeFormated = $aux->format("Y-m-d G:i:s");
 
                 $query->andWhere(['>=','start_datetime', $datetimeFormated]);
             }
             if (isset($endDate) && $endDate !== "")
             {
-//                $aux = new \DateTime($endDate);
-//                $aux->setTimezone(new DateTimeZone("UTC"));
-//                $datetimeFormated = $aux->format("Y-m-d G:i:s");
-//                $conditon2 .= 'and end_datetime <=' . "'" .$datetimeFormated . "'";
+                $aux = new \DateTime($endDate);
+                $aux->setTimezone(new DateTimeZone("UTC"));
+                $datetimeFormated = $aux->format("Y-m-d G:i:s");
                 $query->andWhere(['<=','end_datetime', $datetimeFormated]);
             }
-
-//            if($conditon2 !== '')
-//                $calendars= Calendar::find()
-//                    ->where($conditon2)
-//                    ->orderBy("start_datetime",SORT_ASC)
-//                    ->all();
-//            else
-//                $calendars= Calendar::find()
-//                    ->orderBy("start_datetime",SORT_ASC)
-//                    ->all();
 
             $calendars= $query
                         ->orderBy("start_datetime",SORT_ASC)

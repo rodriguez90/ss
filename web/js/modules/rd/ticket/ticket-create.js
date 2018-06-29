@@ -770,10 +770,12 @@ var fetchCalendar = function (start, end, async) {
             $.each(response,function (i) {
                 var startDate = moment(response[i].start);
                 var endDate = moment(response[i].end);
+                // var startDate = response[i].start; // moment(response[i].start).toDate();
+                // var endDate = response[i].end;//moment(response[i].end).toDate();
 
                 var event = {
                     id: response[i].id,
-                    title: response[i].count,
+                    title: String(response[i].count),
                     count: response[i].count,
                     start: startDate ,
                     end:  endDate  ,
@@ -835,9 +837,10 @@ var fetchReceptionTransactions = function () {
                 {
                     // minDeliveryDate = moment(response['transactions'][0].delivery_date).utc();
                     // maxDeliveryDate = moment(response['transactions'][count - 1].delivery_date).utc().add(1, 'days');
-                    minDeliveryDate = moment(response['transactions'][0].delivery_date).hours(0).minutes(0).seconds(0);
-                    maxDeliveryDate = moment(response['transactions'][count - 1].delivery_date).hours(23).minutes(59).seconds(0);
-                    // moment().set({'year': 2013, 'month': 3});
+                    // minDeliveryDate = moment(response['transactions'][0].delivery_date).hours(0).minutes(0).seconds(0).toDate();
+                    minDeliveryDate = moment(response['transactions'][0].delivery_date).set({'hours': 0, 'minutes': 0}).toDate();
+                    maxDeliveryDate = moment(response['transactions'][count - 1].delivery_date).set({'hours': 23, 'minutes': 59, 'seconds':59}).toDate();
+                    moment().set({'year': 2013, 'month': 3});
 
                     // $('#calendar').fullCalendar({
                     //     visibleRange: {
@@ -846,17 +849,15 @@ var fetchReceptionTransactions = function () {
                     //     }
                     // });
 
-                    var view = $('#calendar').fullCalendar('getView');
-                    view.start = minDeliveryDate;
-                    view.end = maxDeliveryDate;
+                    // var view = $('#calendar').fullCalendar('getView');
+                    // view.start = minDeliveryDate;
+                    // view.end = maxDeliveryDate;
 
                     console.log(minDeliveryDate);
                     console.log(maxDeliveryDate);
-                    console.log(minDeliveryDate.format('YYYY-MM-DD'));
-                    console.log(maxDeliveryDate.format('YYYY-MM-DD'));
 
                     // fetchCalendar(minDeliveryDate.format('YYYY-MM-DD'), maxDeliveryDate.format('YYYY-MM-DD'), false);
-                    fetchCalendar('', '', false);
+                    fetchCalendar(minDeliveryDate.toISOString(), maxDeliveryDate.toISOString(), false);
 
                     fetchTickets(modelId, false);
                 }
@@ -932,7 +933,7 @@ var fetchTickets = function (processId, async) {
                         if(result.event)
                         {
                             result.event.count = result.event.count + count;
-                            result.event.title = result.event.count;
+                            result.event.title = String(result.event.count);
                             ticketEvents[result.index]= result.event;
                             result.event.rt.push(tId);
                             // $('#calendar').fullCalendar( 'updateEvent', oldEvent);
@@ -941,7 +942,7 @@ var fetchTickets = function (processId, async) {
                         {
                             var event = {
                                 id: id,
-                                title: count,
+                                title: String(count),
                                 start: calendar.start,
                                 end:  calendar.end ,
                                 allDay:false,
@@ -999,7 +1000,7 @@ var handleStopWatch = function()
 
 $(document).ready(function () {
 
-    moment.locale('es');
+    // moment.locale('es');
     // init wizar
     FormWizardValidation.init();
 

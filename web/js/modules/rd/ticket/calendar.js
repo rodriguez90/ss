@@ -30,7 +30,7 @@ var handleCalendarDemo = function () {
 	// var buttonSetting = {left: 'today prev,next ', center: 'title', right: 'month,basicWeek,basicDay'};
 
 	var calendar = $('#calendar').fullCalendar({
-        locale: 'es',
+        // locale: 'es',
         height: 300,
         contentHeight:250,
         // aspectRatio:3.0,
@@ -40,21 +40,23 @@ var handleCalendarDemo = function () {
 		selectHelper: true,
 		droppable:false,
         defaultView:'agendaWeek',
-        views: {
-            day: {
-                // titleFormat: 'MMM D, YYYY',
-                allDaySlot:false,
-                // allDayText:'',
-            },
-            month: {
-                // titleFormat: 'MMM D, YYYY'
-            },
-            agenda: {
-                // titleFormat: 'MMM D, YYYY',
-                // contentHeight:'auto',       //auto
-                allDaySlot: false, //Disable the allDay slot in agenda view
-            }
-        },
+        allDaySlot: false,
+        // views: {
+        //     day: {
+        //         // titleFormat: 'MMM D, YYYY',
+        //         allDaySlot:false,
+        //         // allDayText:'',
+        //     },
+        //     month: {
+        //         // titleFormat: 'MMM D, YYYY'
+        //     },
+        //     agenda: {
+        //         // titleFormat: 'MMM D, YYYY',
+        //         // contentHeight:'auto',       //auto
+        //         allDaySlot: false, //Disable the allDay slot in agenda view
+        //     }
+        // },
+        firstHour:0,
         slotEventOverlap:false,
         eventOverlap: false,
         slotDuration:"00:60:00",

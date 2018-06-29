@@ -21,6 +21,7 @@ class FormAsset extends AssetBundle
         'plugins/select2/dist/css/select2.min.css',
         'plugins/bootstrap-select/bootstrap-select.min.css',
         'plugins/password-indicator/css/password-indicator.css',
+        'plugins/parsley/src/parsley.css',
     ];
 
     public $js = [
@@ -28,6 +29,8 @@ class FormAsset extends AssetBundle
         'js/form-slider-switcher.js',
         'plugins/bootstrap-select/bootstrap-select.min.js',
         'plugins/select2/dist/js/select2.min.js',
+        'plugins/select2/dist/js/i18n/es.js',
+        'plugins/parsley/dist/parsley.js',
     ];
 
     public $depends = [

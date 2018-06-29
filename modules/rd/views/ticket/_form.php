@@ -23,7 +23,7 @@ TableAsset::register($this);
 <style>
     .fc-time-grid .fc-slats td
     {
-        height: 1.5em !important;
+        height: 3.5em !important;
     }
     .fc-title {
         font-size: 14px !important;
@@ -151,7 +151,7 @@ TableAsset::register($this);
                                     </div>
                                     <!-- end panel -->
 <!--                                </div>-->
-                                <!-- end row -->
+                                <!-- end row --
                             </fieldset>
                         </div>
                         <!-- end wizard step-1 -->

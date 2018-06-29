@@ -3,44 +3,10 @@
 //MS SQL Server (mediante dblib driver): dblib:host=localhost;dbname=mydatabase
 //MS SQL Server (mediante mssql driver): mssql:host=localhost;dbname=mydatabase
 
-//$host="190.63.174.169";
-//$port = "7100";
-//$user = "xedrux";
-//$password = "xedrux";
-
-//$dsn = 'odbc:dbname=sgt;host=190.63.174.169;port=7100';
-//'dsn' => 'odbc:dbname=190.63.174.169:7100/sgt',
-//$dsn = 'odbc:sgt_xedrux';
-//$dbh = new PDO("sqlsrv:Server=xx.xx.xx.xx,PORTNUMBER;Database=MYDBNAME", "MYUSERNAME", "MYPASSWORD");
-//$dbh = new PDO("odbc:Driver=SQL Server;Server=xx.xx.xx.xx;Port:PORTNUMBER;Database=MYDBNAME", "MYUSERNAME", "MYPASSWORD");
-
-
-//$con = @odbc_connect('odbc:sgt_xedrux','xedrux','xedrux',SQL_CUR_USE_ODBC) or die("<B>Error!</B> Couldn't Connect To Database. Error Code:  ".odbc_error());
-//$query = 'select * from odb.VP_myview';
-//$result = odbc_exec($con,$query);
-//$totrec = odbc_num_rows($result);
-//var_dump($totrec);// it return negative integer number
-//exit;
-
-
-//$conn = odbc_connect("sgt_xedrux",$user,$password);
-//
-//if (!$cid){
-//    exit("<strong>Ya ocurrido un error tratando de conectarse con el origen de datos.</strong>");
-//}
-//else {
-//    var_dump("Connecting.");die;
-//}
-
-
-
-//return [
-//    'class' => 'yii\db\Connection',
-//    'dsn' => $dsn,
-//    'username' => 'xedrux',
-//    'password' => 'xedrux',
-//    'charset' => 'utf8',
-//];
+$host="190.63.174.169";
+$port = "7100";
+$user = "xedrux";
+$password = "xedrux";
 
 //return [
 //   'class' => 'yii\db\Connection',
@@ -53,6 +19,30 @@
 //   'password' => $password,
 //];
 
+//return [
+//    'class' => 'yii\db\Connection',
+//    //'dsn' => 'mysql:host=localhost;dbname=yii2basic',
+//    //'dsn' => 'pgsql:host=127.0.0.1;port=5433;dbname=bolsa_rrhh',
+//    'driverName' => 'sybase',
+//    'schemaMap' => [
+//        'sybase' => \websightnl\yii2\sybase\Schema::className(),
+//    ],
+//    //'dsn' => 'odbc:host=190.63.174.169;port=7100;dbname=sgt',
+//    //'dsn' => 'odbc:DRIVER={Adaptive Server Anywhere 7.0};SERVER=190.63.174.169;PORT=7100;DATABASE=sgt;UID=xedrux;PWD=xedrux',
+//    //'dsn' => 'odbc:Driver=Adaptive Server Anywhere 7.0;ENG=190.63.174.169.sgt;UID=xedrux;PWD=xedrux;DBN=sgt;LINKS=TCPIP(HOST=190.63.174.169:7100);',
+//    //'dsn' => 'odbc:Driver={Adaptive Server Enterprise};app=sgt;server=190.63.174.169;port=7100;db=sgt;uid=xedrux;pwd=xedrux;',
+//    'dsn' => 'odbc:Driver={SYBASE ASE ODBC Driver};NA=190.63.174.169,7100;Uid=xedrux;Pwd=xedrux;',
+//    //'dsn' => 'odbc:Driver={SQL Anywhere 12};Server=189902;CommLinks=tcpip(Host=1.2.3.4);',
+//    //'dsn' => 'odbc:host=190.63.174.169;port=7100;dbname=sgt',
+//    'username' => 'xedrux',
+//    'password' => 'xedrux',
+//    //'charset' => 'utf8',
+//
+//    // Schema cache options (for production environment)
+//    //'enableSchemaCache' => true,
+//    //'schemaCacheDuration' => 60,
+//    //'schemaCache' => 'cache',
+//];
 
  return [
      'class' => 'yii\db\Connection',

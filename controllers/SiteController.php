@@ -27,6 +27,7 @@ use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
+use yii\db\Expression;
 
 use Da\QrCode\QrCode;
 
@@ -82,6 +83,21 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
+//
+//        $agencia = Agency::findOne(['id'=>new Expression("CONVERT(integer, 1)")]);
+//        $agencia = Agency::findOne(['name'=>new Expression("CONVERT(varchar, 'aaa')")]);
+//        var_dump($agencia);die;
+//        $agencia->name = 'YEESSSSS!!!!';
+//        if ($agencia->save())
+//        {
+//            die('YESSS!!!');
+//        }
+//        else
+//        {
+//            var_dump($agencia->getFirstErrors());die;
+//        }
+//        return $this->render('index');
+
         $user = AdmUser::findOne(['id'=>Yii::$app->user->getId()]);
         $params = Yii::$app->request->queryParams;
         if($user && $user->hasRol('Agencia'))
