@@ -96,15 +96,10 @@ class UserSearch extends AdmUser
             ->andFilterWhere(['like', 'nombre', $this->nombre])
             ->andFilterWhere(['like', 'apellidos', $this->apellidos]);
 
-        //$query->andFilterWhere([  'item_name'=>$filter]);
-
-        /*
-    //var_dump($this->id);die;
         if(isset($this->item_name)){
-
-            $filter = AuthAssignment::find()->select('item_name')->where(['like','user_id',$this->id]);
-            $query->andFilterWhere(['item_name'=>$filter]);
-        }*/
+            $filter = AuthAssignment::find()->select('user_id')->where(['like','item_name',$this->item_name]);
+            $query->andFilterWhere(['id'=>$filter]);
+        }
 
 
 
