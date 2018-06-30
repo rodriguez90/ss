@@ -47,6 +47,14 @@ class UserSearch extends AdmUser
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'pagination' => [
+                'pageSize' => 5,
+            ],
+            'sort' => [
+                'defaultOrder' => [
+                    'name' => SORT_ASC,
+                ]
+            ],
         ]);
 
         //var_dump($dataProvider->models);die;

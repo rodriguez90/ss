@@ -857,7 +857,7 @@ var fetchReceptionTransactions = function () {
                     console.log(maxDeliveryDate);
 
                     // fetchCalendar(minDeliveryDate.format('YYYY-MM-DD'), maxDeliveryDate.format('YYYY-MM-DD'), false);
-                    fetchCalendar(minDeliveryDate.toISOString(), maxDeliveryDate.toISOString(), false);
+                    fetchCalendar('', maxDeliveryDate.toISOString(), false);
 
                     fetchTickets(modelId, false);
                 }

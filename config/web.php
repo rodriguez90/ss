@@ -67,6 +67,18 @@ $config = [
             ],
         ],
         'db' => $db,
+        'dbSqlServer'=>[
+             'class' => 'yii\db\Connection',
+             'dsn'=>'sqlsrv:Server=190.63.174.169,7200\SQLEXPRESS;Database=atack',
+             'username' => 'xedrux',
+             'password' => 'xedrux', //Root*2018
+             'charset' => 'utf8',
+
+             // Schema cache options (for production environment)
+             //'enableSchemaCache' => true,
+             //'schemaCacheDuration' => 60,
+             //'schemaCache' => 'cache',
+         ],
         'authManager' => [
             'class' => 'yii\rbac\DbManager',
         ],
@@ -97,10 +109,15 @@ $config = [
     'modules' => [
         'rd' => 'app\modules\rd\RD',
         'administracion' => 'app\modules\administracion\Administracion',
+    ],
+//    'modules' => [
+//        'rd' => [
+//            'class' => 'app\modules\rd\RD',
+//        ],
 //        'administracion' => [
 //            'class' => 'app\modules\administracion\Administracion',
 //        ],
-    ],
+//    ],
     'params' => $params,
 ];
 

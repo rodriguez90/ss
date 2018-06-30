@@ -17,9 +17,11 @@ use app\modules\rd\models\TransCompany;
 use app\modules\rd\models\UserAgency;
 use app\modules\rd\models\UserTranscompany;
 
+use app\modules\rd\models\Warehouse;
 use DateTime;
 use DateTimeZone;
 
+use PDO;
 
 use Mpdf\Mpdf;
 use Yii;
@@ -33,6 +35,7 @@ use app\models\ContactForm;
 use yii\db\Expression;
 
 use Da\QrCode\QrCode;
+
 
 
 class SiteController extends Controller
@@ -87,8 +90,69 @@ class SiteController extends Controller
     public function actionIndex()
     {
 //
-//        $agencia = Agency::findOne(['id'=>new Expression("CONVERT(integer, 1)")]);
-//        $agencia = Agency::findOne(['name'=>new Expression("CONVERT(varchar, 'aaa')")]);
+//        $sql =  '{ CALL  disv..sp_sgt_bl_cons (@BL =:BL)}' ;
+//
+//        $command = \Yii::app()->db->createCommand($sql);
+//        $command->bindParam(":BL", 'HLCUMTR180305591', PDO::PARAM_STR);
+//        $list = $command->queryAll();
+//
+//        var_dump($list);die;
+
+
+//        $sql = "exec disv.sp_sgt_bl_cons 'HLCUMTR180305591";
+//        $params = [':BL'=>'HLCUMTR180305591'];
+
+        // sql query for calling the procedure
+//        $sql = "exec disv..sp_sgt_bl_cons HLCUMTR180305591";
+//        $sql = "exec disv..sp_sgt_companias_cons 12917504";
+//        $sql = "exec disv..sp_sgt_placa_cons 12917504";
+//        $result = Yii::$app->db->createCommand($sql)->queryAll();
+//        var_dump($result);die;
+//
+//        $result = \Yii::$app->db->createCommand($sql, $params)
+//            ->execute();
+//
+//        var_dump($result);die;
+
+//        $connection = Yii::$app->db;
+//        $command = $connection->createCommand($sql);
+//        $result = $command->execute();
+//        var_dump($result);die;
+
+//        $w = Warehouse::find()->all();
+//        var_dump($w);die;
+//        $w = new Warehouse();
+//
+//        $w->name = 'Test';
+//        $w->code_oce = 'aaaa';
+//        $w->ruc = '1111111111111';
+//        $w->active = 1;
+//        if (!$w->save())
+//        {
+//            var_dump($w->getFirstErrors());
+//        }
+//        else
+//        {
+//            var_dump($w->id);
+//        }
+//        die;
+//
+//        $agencia = new Agency();
+//        $agencia->name = 'Test';
+//        $agencia->code_oce = 'aaaa';
+//        $agencia->ruc = 'adsasdasdasdasd';
+//        $agencia->active = 1;
+//        if (!$agencia->save())
+//        {
+//            var_dump($agencia->getFirstErrors());
+//        }
+//        else
+//        {
+//            var_dump($agencia->id);
+//        }
+//
+////        $agencia = Agency::findOne(['id'=>new Expression("CONVERT(integer, 1)")]);
+//        $agencia = Agency::findOne(['name'=>new Expression("CONVERT(varchar, 'aaaa')")]);
 //        var_dump($agencia);die;
 //        $agencia->name = 'YEESSSSS!!!!';
 //        if ($agencia->save())

@@ -136,6 +136,102 @@ class TransCompanyController extends Controller
         return $this->redirect(['index']);
     }
 
+    public function actionSP()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $response = array();
+        $response['success'] = true;
+        $response['trans_companies'] = [];
+        $response['msg'] = '';
+        $response['msg_dev'] = '';
+
+        $code = Yii::$app->request->get('code');
+
+        if(!isset($code))
+        {
+            $response['success'] = false;
+            $response['msg'] = "Debe especificar el código de búsqueda.";
+        }
+
+        if($response['success'])
+        {
+            $result = \Yii::$app->db->createCommand("exec sp_sgt_companias_cons(:ruc)")
+                ->bindValue(':ruc' , $code )
+                ->execute();
+
+            var_dump($result);die;
+        }
+
+        return $response;
+    }
+
+    public function actionSPRegisterTruck()
+    {
+//        exec sp_sgt_placa_cons '0992125861001'
+
+
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $response = array();
+        $response['success'] = true;
+        $response['trucks'] = [];
+        $response['msg'] = '';
+        $response['msg_dev'] = '';
+
+        $code = Yii::$app->request->get('code');
+
+        if(!isset($code))
+        {
+            $response['success'] = false;
+            $response['msg'] = "Debe especificar el código de búsqueda.";
+        }
+
+        if($response['success'])
+        {
+            $result = \Yii::$app->db->createCommand("exec sp_sgt_placa_cons(:ruc)")
+                ->bindValue(':ruc' , $code )
+                ->execute();
+
+            var_dump($result);die;
+        }
+
+        return $response;
+    }
+
+    public function actionSPRegisterDriver()
+    {
+//        exec sp_sgt_chofer_cons '0992125861001'
+
+
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $response = array();
+        $response['success'] = true;
+        $response['drivers'] = [];
+        $response['msg'] = '';
+        $response['msg_dev'] = '';
+
+        $code = Yii::$app->request->get('code');
+
+        if(!isset($code))
+        {
+            $response['success'] = false;
+            $response['msg'] = "Debe especificar el código de búsqueda.";
+        }
+
+        if($response['success'])
+        {
+            $result = \Yii::$app->db->createCommand("exec sp_sgt_chofer_cons(:ruc)")
+                ->bindValue(':ruc' , $code )
+                ->execute();
+
+            var_dump($result);die;
+        }
+
+        return $response;
+    }
+
     /**
      * Finds the TransCompany model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

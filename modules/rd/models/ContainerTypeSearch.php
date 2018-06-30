@@ -5,12 +5,12 @@ namespace app\modules\rd\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\modules\rd\models\Warehouse;
+use app\modules\rd\models\ContainerType;
 
 /**
- * WarehouseSearch represents the model behind the search form of `app\modules\rd\models\Warehouse`.
+ * ContainerTypeSearch represents the model behind the search form of `app\modules\rd\models\ContainerType`.
  */
-class WarehouseSearch extends Warehouse
+class ContainerTypeSearch extends ContainerType
 {
     /**
      * {@inheritdoc}
@@ -19,7 +19,7 @@ class WarehouseSearch extends Warehouse
     {
         return [
             [['id'], 'integer'],
-            [['code_oce', 'active', 'name', 'ruc'], 'safe'],
+            [['code', 'name', 'tonnage', 'active'], 'safe'],
         ];
     }
 
@@ -41,7 +41,7 @@ class WarehouseSearch extends Warehouse
      */
     public function search($params)
     {
-        $query = Warehouse::find();
+        $query = ContainerType::find();
 
         // add conditions that should always apply here
 
@@ -68,8 +68,11 @@ class WarehouseSearch extends Warehouse
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            //'active' => $this->active,
+            'tonnage' => $this->tonnage,
         ]);
+
+        $query->andFilterWhere(['like', 'code', $this->code])
+            ->andFilterWhere(['like', 'name', $this->name]);
 
         if(isset($this->active) && !empty($this->active)){
 
@@ -82,10 +85,6 @@ class WarehouseSearch extends Warehouse
             }
 
         }
-
-        $query->andFilterWhere(['like', 'code_oce', $this->code_oce])
-            ->andFilterWhere(['like', 'name', $this->name])
-            ->andFilterWhere(['like', 'ruc', $this->ruc]);
 
         return $dataProvider;
     }
