@@ -45,10 +45,15 @@ FormAsset::register($this);
         </div>
     </div>
 
+
     <div class="form-group">
         <label class="col-md-3 col-sm-3 control-label">Código</label>
         <div class="col-md-9">
-            <?= $form->field($model, 'code')->textInput(['class' => 'form-control' , 'data-parsley-required'=>"true", 'data-parsley-minlength'=>"3", 'data-parsley-maxlength'=>"3",'data-parsley-type'=>"alphanum"])->label(false) ?>
+            <select class="combobox form-control" name="ContainerType[code]">
+                <option value="">Seleccione Código</option>
+                <option value="DRY" <?php echo $model->code == 'DRY' ? "selected=''": "" ?>>DRY</option>
+                <option value="RRF" <?php echo $model->code == 'RRF' ? "selected=''": "" ?>>RRF</option>
+            </select>
         </div>
     </div>
 
@@ -56,10 +61,14 @@ FormAsset::register($this);
     <div class="form-group">
         <label class="col-md-3 col-sm-3 control-label">Toneladas</label>
         <div class="col-md-9">
-            <?= $form->field($model, 'tonnage')->textInput(['class' => 'form-control' , 'data-parsley-required'=>"true", 'id'=>'default_rangeSlider'])->label(false) ?>
+            <?= $form->field($model, 'tonnage')
+                        ->textInput([
+                                    'data-parsley-required'=>"true",
+                                    'id'=>'default_rangeSlider',
+                                    'value'=>$model->isNewRecord ?20:$model->tonnage,
+                                    'name'=>"ContainerType[tonnage]"])->label(false) ?>
         </div>
     </div>
-
 
     <div class="form-group">
         <label class="col-md-3 col-sm-3 control-label">Activo</label>
@@ -81,4 +90,10 @@ FormAsset::register($this);
 </div>
 
 <?php $this->registerJsFile('@web/js/modules/rd/container/container-type-create.js', ['depends' => ['app\assets\FormAsset']]) ?>
+
+
+
+<script type="text/javascript">
+    var modelTonnage = '<?php echo $model->tonnage; ?>';
+</script>
 

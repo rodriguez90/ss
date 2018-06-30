@@ -23,7 +23,8 @@ class FormAsset extends AssetBundle
         'plugins/password-indicator/css/password-indicator.css',
         'plugins/parsley/src/parsley.css',
         'plugins/ionRangeSlider/css/ion.rangeSlider.css',
-        'plugins/ionRangeSlider/css/ion.rangeSlider.skinNice.css'
+        'plugins/ionRangeSlider/css/ion.rangeSlider.skinNice.css',
+        'plugins/bootstrap-combobox/js/bootstrap-combobox.js'
     ];
 
     public $js = [
@@ -33,7 +34,8 @@ class FormAsset extends AssetBundle
         'plugins/select2/dist/js/select2.min.js',
         'plugins/select2/dist/js/i18n/es.js',
         'plugins/parsley/dist/parsley.js',
-        'plugins/ionRangeSlider/js/ion-rangeSlider/ion.rangeSlider.min.js'
+        'plugins/ionRangeSlider/js/ion-rangeSlider/ion.rangeSlider.min.js',
+        'plugins/bootstrap-combobox/js/bootstrap-combobox.js'
     ];
 
     public $depends = [

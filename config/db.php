@@ -45,9 +45,9 @@ $password = "xedrux";
 //
  return [
      'class' => 'yii\db\Connection',
-	// 'dsn'=>'sqlsrv:Server=PEDRO-PC\SQLEXPRESS;Database=sgt',
+	 'dsn'=>'sqlsrv:Server=PEDRO-PC\SQLEXPRESS;Database=sgt',
  //    sqlsrv:Server=WIN-FV2H1LSOO63\SQLEXPRESS;Database=sgt
-     'dsn'=>'sqlsrv:Server=DESKTOP-JH5RE76\SQLEXPRESS;Database=sgt',
+//     'dsn'=>'sqlsrv:Server=DESKTOP-JH5RE76\SQLEXPRESS;Database=sgt',
      'username' => '',
      'password' => '', //Root*2018
      'charset' => 'utf8',
