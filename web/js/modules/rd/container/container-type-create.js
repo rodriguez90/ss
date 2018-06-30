@@ -47,11 +47,11 @@ var handleIonRangeSlider = function() {
         // // },
         onFinish: function (data) {
             console.log("onFinish");
-            // console.log(data);
+            console.log(data);
             // // var $this =  ;
-            // var value = $('#default_rangeSlider').prop("value", data);
+            var value = $('#default_rangeSlider').prop("value", data.fromValue);
             //
-            // console.log("Value: " + value);
+            console.log("Value: " + data.fromValue);
 
         },
         // onUpdate: function (data) {
