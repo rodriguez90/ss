@@ -56,8 +56,7 @@ FormAsset::register($this);
     <div class="form-group">
         <label class="col-md-3 col-sm-3 control-label">Toneladas</label>
         <div class="col-md-9">
-<!--            <input type="text" id="default_rangeSlider" name="default_rangeSlider" value="" />-->
-            <?= $form->field($model, 'tonnage')->textInput(['class' => 'form-control' , 'data-parsley-required'=>"true", 'id'=>'default_rangeSlider', 'name'=>'default_rangeSlider', 'value'=>20])->label(false) ?>
+            <?= $form->field($model, 'tonnage')->textInput(['class' => 'form-control' , 'data-parsley-required'=>"true", 'id'=>'default_rangeSlider'])->label(false) ?>
         </div>
     </div>
 
@@ -65,10 +64,9 @@ FormAsset::register($this);
     <div class="form-group">
         <label class="col-md-3 col-sm-3 control-label">Activo</label>
         <div class="col-md-9">
-            <?= $form->field($model, 'active')->checkbox(['data-render' => "switchery",], false)->label(false) ?>
+            <?= $form->field($model, 'active')->checkbox(['data-render' => "switchery",'checked'=>$model->isNewRecord ? 'checked=""' : ''], false)->label(false) ?>
         </div>
     </div>
-
 
     <div class="form-group">
         <label class="col-md-3 col-sm-3 control-label"></label>

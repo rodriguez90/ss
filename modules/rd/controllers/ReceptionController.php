@@ -11,7 +11,7 @@ use app\modules\rd\models\Reception;
 use app\modules\rd\models\UserAgency;
 use app\modules\rd\models\UserTranscompany;
 use Yii;
-use Yii\web\Response;
+use yii\web\Response;
 use yii\web\Controller;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;

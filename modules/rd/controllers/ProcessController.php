@@ -19,7 +19,6 @@ use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\ForbiddenHttpException;
-use Yii\web\Response;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\helpers\Html;
@@ -28,6 +27,7 @@ use kartik\mpdf\Pdf;
 use Mpdf\Mpdf;
 
 use Da\QrCode\QrCode;
+use yii\web\Response;
 
 /**
  * ProcessController implements the CRUD actions for Process model.
@@ -251,6 +251,10 @@ class ProcessController extends Controller
         return $response;
     }
 
+    /**
+     * @return array
+     * @throws ForbiddenHttpException
+     */
     public function actionTransactions()
     {
         if(!Yii::$app->user->can("process_list"))

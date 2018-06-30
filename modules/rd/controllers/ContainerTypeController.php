@@ -11,7 +11,7 @@ use yii\web\NotFoundHttpException;
 use yii\web\ForbiddenHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
-use Yii\web\Response;
+use yii\web\Response;
 
 /**
  * ContainerTypeController implements the CRUD actions for ContainerType model.

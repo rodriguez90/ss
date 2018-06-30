@@ -12,7 +12,7 @@ use yii\web\NotFoundHttpException;
 use yii\web\ForbiddenHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
-use Yii\web\Response;
+use yii\web\Response;
 
 /**
  * ContainerController implements the CRUD actions for Container model.
