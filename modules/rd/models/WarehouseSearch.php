@@ -47,6 +47,14 @@ class WarehouseSearch extends Warehouse
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'pagination' => [
+                'pageSize' => 5,
+            ],
+            'sort' => [
+                'defaultOrder' => [
+                    'name' => SORT_ASC,
+                ]
+            ],
         ]);
 
         $this->load($params);

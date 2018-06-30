@@ -159,15 +159,15 @@ if(!Yii::$app->user->isGuest){
                       }
                     ?>
 
-<!--                    --><?php
-//                    if(Yii::$app->user->can("admin_mod") || Yii::$app->user->can("container_list")){
-//                        echo "<li class='has-sub'>";
-//                        echo "<a href=". Url::to(['/rd/container'])."> <i class='fa fa-cubes'></i>";
-//                        echo "<span> Contenedores</span>";
-//                        echo "</a>";
-//                        echo "</li>";
-//                    }
-//                    ?>
+                    <?php
+                    if(Yii::$app->user->can("admin_mod") || Yii::$app->user->can("container_list")){
+                        echo "<li class='has-sub'>";
+                        echo "<a href=". Url::to(['/rd/container-type'])."> <i class='fa fa-cubes'></i>";
+                        echo "<span> Tipos Contenedores</span>";
+                        echo "</a>";
+                        echo "</li>";
+                    }
+                    ?>
 
                     <?php
                     if(Yii::$app->user->can("admin_mod") || Yii::$app->user->can("trans-company_list")){
@@ -178,18 +178,6 @@ if(!Yii::$app->user->isGuest){
                         echo "</li>";
                     }
                     ?>
-                    <!--                    <li class="has-sub">-->
-                    <!--                        <a href="javascript:;"> <i class="fa fa-rotate-90 fa-sign-out"></i>-->
-                    <!--                            <span> Despacho</span>-->
-                    <!--                        </a>-->
-                    <!--                    </li>
-
-                    <!---->
-<!--                    <li class="has-sub">-->
-<!--                        <a href="javascript:;"> <i class="fa fa-rotate-90 fa-sign-out"></i>-->
-<!--                            <span> Despacho</span>-->
-<!--                        </a>-->
-<!--                    </li>-->
 
                     <?php
                     if (Yii::$app->user->can("admin_mod") || Yii::$app->user->can("calendar_list")) {

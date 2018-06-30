@@ -19,6 +19,7 @@ use app\modules\rd\models\Warehouse;
 use DateTime;
 use DateTimeZone;
 
+use PDO;
 
 use Mpdf\Mpdf;
 use Yii;
@@ -86,6 +87,36 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
+//
+//        $sql =  '{ CALL  disv..sp_sgt_bl_cons (@BL =:BL)}' ;
+//
+//        $command = \Yii::app()->db->createCommand($sql);
+//        $command->bindParam(":BL", 'HLCUMTR180305591', PDO::PARAM_STR);
+//        $list = $command->queryAll();
+//
+//        var_dump($list);die;
+
+
+//        $sql = "exec disv.sp_sgt_bl_cons 'HLCUMTR180305591";
+//        $params = [':BL'=>'HLCUMTR180305591'];
+
+        // sql query for calling the procedure
+//        $sql = "exec disv..sp_sgt_bl_cons HLCUMTR180305591";
+//        $sql = "exec disv..sp_sgt_companias_cons 12917504";
+//        $sql = "exec disv..sp_sgt_placa_cons 12917504";
+//        $result = Yii::$app->db->createCommand($sql)->queryAll();
+//        var_dump($result);die;
+//
+//        $result = \Yii::$app->db->createCommand($sql, $params)
+//            ->execute();
+//
+//        var_dump($result);die;
+
+//        $connection = Yii::$app->db;
+//        $command = $connection->createCommand($sql);
+//        $result = $command->execute();
+//        var_dump($result);die;
+
 //        $w = Warehouse::find()->all();
 //        var_dump($w);die;
 //        $w = new Warehouse();

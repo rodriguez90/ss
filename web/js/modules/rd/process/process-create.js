@@ -41,6 +41,31 @@ var selectedContainers = [];
 var stop_watch_start = moment().hour(0).minute(29).second(59);
 var timerId = null;
 
+
+var cleanUI = function () {
+    selectedContainers = [];
+    var table = $('#data-table').DataTable();
+
+    table
+        .clear()
+        .draw();
+
+    table = $('#data-table2').DataTable();
+
+    table
+        .clear()
+        .draw();
+
+    table = $('#data-table3').DataTable();
+
+    table
+        .clear()
+        .draw();
+
+    // $("#wizard").bwizard();
+
+}
+
 var handleStopWatch = function()
 {
     var sw = $("#stop_watch");
@@ -220,14 +245,14 @@ var handleSelectTransCompany = function () {
 };
 
 var fetchContainers = function (bl) {
-
+    cleanUI();
     $.ajax({
         // async:false,
-        url: homeUrl + "/rd/process/containers/",
+        url: homeUrl + "/rd/container/containers",
         type: "get",
         dataType:'json',
         data: {
-            bl: bl,
+            'bl': bl,
         },
         success: function(response) {
             console.log(response);

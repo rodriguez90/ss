@@ -6,11 +6,13 @@ use Yii;
 use app\modules\rd\models\Container;
 use app\modules\rd\models\ContainerSearch;
 use yii\db\Command;
+use yii\db\Exception;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\ForbiddenHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+use Yii\web\Response;
 
 /**
  * ContainerController implements the CRUD actions for Container model.
@@ -36,6 +38,7 @@ class ContainerController extends Controller
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['POST'],
+                    'containers' => ['GET']
                 ],
             ],
         ];
@@ -138,7 +141,7 @@ class ContainerController extends Controller
         return $this->redirect(['index']);
     }
 
-    public function actionSP()
+    public function actionContainers()
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
 
@@ -156,14 +159,24 @@ class ContainerController extends Controller
             $response['msg'] = "Debe especificar el código de búsqueda.";
         }
 
-        if($response['success'])
-        {
-            $result = \Yii::$app->db->createCommand("exec sp_sgt_bl_cons(:bl)")
-                ->bindValue(':bl' , $bl )
-                ->execute();
-
-            var_dump($result);die;
-        }
+//        if($response['success'])
+//        {
+//            try{
+//
+//            }
+//            catch (Exception $ex)
+//            {
+//                        $sql = "exec disv..sp_sgt_bl_cons " . $bl;
+//                        $result = Yii::$app->db->createCommand($sql)->queryAll();
+////                $result = \Yii::$app->db->createCommand("exec disv..sp_sgt_bl_cons (:bl)")
+////                    ->bindValue(':bl' , $bl )
+////                    ->execute();
+//
+//                $response['containers'] = $result;
+//                //            var_dump($result);
+//            }
+//
+//        }
 
         return $response;
     }

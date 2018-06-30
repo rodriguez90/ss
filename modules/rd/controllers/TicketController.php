@@ -564,7 +564,48 @@ class TicketController extends Controller
         ]);
     }
 
-    public function actionSPTicketNotification($ticket)
+    public function actionSPTicketInsert($ticket)
+    {
+
+//        exec disv..sp_sgt_access_elimina 7316061, 'test'
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $response = array();
+        $response['success'] = true;
+        $response['drivers'] = [];
+        $response['msg'] = '';
+        $response['msg_dev'] = '';
+
+        if(!isset($ticket))
+        {
+            $response['success'] = false;
+            $response['msg'] = "Debe especificar el código de búsqueda.";
+        }
+
+        if($response['success'])
+        {
+            //5.- Crear registro de permiso para poder ingresar por garitas
+            //Este es el sp que se ejecuta cuando asignas el turno y nos notificas su creación.
+            //
+            //Recibe como parametro
+            //@tipo_mov varchar(5) -- IMPO o EXPO (depende del proceso que está haciendo)
+            //@placa varchar(10)
+            //@cedula varchar(15)
+            //@contenedor varchar(11)
+            //@fecha_turno varchar(16) --Formato -> 2018/06/19 17:05
+            //@usuario
+            //
+            //Ej: //exec sp_sgt_access_ins 'IMPO','GRY4606','0925564304','ABCD1234567','2018/06/19 17:05','desa2'
+            $result = \Yii::$app->db->createCommand("exec sp_sgt_access_elimina()")
+                ->execute();
+
+            var_dump($result);die;
+        }
+
+        return $response;
+    }
+
+    public function actionSPTicketDelete($ticket)
     {
 
 

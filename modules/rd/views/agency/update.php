@@ -24,11 +24,10 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Actualizar');
                 <h4 class="panel-title"><?= Html::encode($this->title) ?></h4>
             </div>
             <div class="panel-body">
-            <?= $this->render('_form', [
-                'model' => $model,
-            ]) ?>
-
+                <?= $this->render('_form', [
+                    'model' => $model,
+                ]) ?>
+             </div>
         </div>
     </div>
-</div>
 </div>

@@ -19,7 +19,7 @@ $password = "xedrux";
 //   'username' => $user,
 //   'password' => $password,
 //];
-
+//
 //return [
 //    'class' => 'yii\db\Connection',
 //    //'dsn' => 'mysql:host=localhost;dbname=yii2basic',
@@ -40,6 +40,7 @@ $password = "xedrux";
 //    //'schemaCache' => 'cache',
 //];
 
+//
  return [
      'class' => 'yii\db\Connection',
 	 'dsn'=>'sqlsrv:Server=PEDRO-PC\SQLEXPRESS;Database=sgt',
