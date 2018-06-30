@@ -838,9 +838,8 @@ var fetchReceptionTransactions = function () {
                     // minDeliveryDate = moment(response['transactions'][0].delivery_date).utc();
                     // maxDeliveryDate = moment(response['transactions'][count - 1].delivery_date).utc().add(1, 'days');
                     // minDeliveryDate = moment(response['transactions'][0].delivery_date).hours(0).minutes(0).seconds(0).toDate();
-                    minDeliveryDate = moment(response['transactions'][0].delivery_date).set({'hours': 0, 'minutes': 0}).toDate();
-                    maxDeliveryDate = moment(response['transactions'][count - 1].delivery_date).set({'hours': 23, 'minutes': 59, 'seconds':59}).toDate();
-                    moment().set({'year': 2013, 'month': 3});
+                    minDeliveryDate = moment().set({'hours': 0, 'minutes': 0}).utc().set({'hours': 0, 'minutes': 0, 'seconds':0}).toDate();
+                    maxDeliveryDate = moment(response['transactions'][count - 1].delivery_date).utc().set({'hours': 23, 'minutes': 59, 'seconds':59}).toDate();
 
                     // $('#calendar').fullCalendar({
                     //     visibleRange: {
@@ -857,7 +856,7 @@ var fetchReceptionTransactions = function () {
                     console.log(maxDeliveryDate);
 
                     // fetchCalendar(minDeliveryDate.format('YYYY-MM-DD'), maxDeliveryDate.format('YYYY-MM-DD'), false);
-                    fetchCalendar('', maxDeliveryDate.toISOString(), false);
+                    fetchCalendar(minDeliveryDate.toISOString(), maxDeliveryDate.toISOString(), false);
 
                     fetchTickets(modelId, false);
                 }

@@ -308,7 +308,6 @@ class CalendarController extends Controller
              * Where start >= $startDate and end <= $endDate
              * Order By start, ASC
              */
-            $conditon2 = '';
 
             $query =  Calendar::find();
 
