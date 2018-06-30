@@ -1,5 +1,7 @@
 <?php
 
+error_reporting(E_ERROR);
+use yii\helpers\Url;
 // comment out the following two lines when deployed to production
 defined('YII_DEBUG') or define('YII_DEBUG', true);
 defined('YII_ENV') or define('YII_ENV', 'dev');
@@ -9,4 +11,45 @@ require __DIR__ . '/../vendor/yiisoft/yii2/Yii.php';
 
 $config = require __DIR__ . '/../config/web.php';
 
-(new yii\web\Application($config))->run();
+
+
+class SGTApplication extends yii\web\Application
+{
+
+    public function init()
+    {
+        return parent::init();
+    }
+
+    public function beforeAction($action)
+    {
+
+        if (!parent::beforeAction($action))
+        {
+            return false;
+        }
+
+        if ($this->user->isGuest)
+        {
+            if (!in_array($this->controller->action->id, ['login', 'about']))
+            {
+                $_SESSION['redirect'] = Yii::$app->request->url;
+                return $this->controller->redirect(Url::toRoute('site/login'));
+            }
+        }
+        else
+        {
+            if (isset($_SESSION['redirect']))
+            {
+                $url = $_SESSION['redirect'];
+                $_SESSION['redirect'] = null;
+                unset( $_SESSION['redirect']);
+                return $this->controller->redirect($url);
+            }
+        }
+        return true;
+    }
+}
+
+(new SGTApplication($config))->run();
+

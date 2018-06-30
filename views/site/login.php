@@ -10,38 +10,62 @@ use yii\bootstrap\ActiveForm;
 $this->title = 'Login';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="site-login">
-    <h1><?= Html::encode($this->title) ?></h1>
 
-    <p>Please fill out the following fields to login:</p>
 
-    <?php $form = ActiveForm::begin([
-        'id' => 'login-form',
-        'layout' => 'horizontal',
-        'fieldConfig' => [
-            'template' => "{label}\n<div class=\"col-lg-3\">{input}</div>\n<div class=\"col-lg-8\">{error}</div>",
-            'labelOptions' => ['class' => 'col-lg-1 control-label'],
-        ],
-    ]); ?>
 
-        <?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
 
-        <?= $form->field($model, 'password')->passwordInput() ?>
 
-        <?= $form->field($model, 'rememberMe')->checkbox([
-            'template' => "<div class=\"col-lg-offset-1 col-lg-3\">{input} {label}</div>\n<div class=\"col-lg-8\">{error}</div>",
-        ]) ?>
 
-        <div class="form-group">
-            <div class="col-lg-offset-1 col-lg-11">
-                <?= Html::submitButton('Login', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
+
+
+<!-- begin #page-loader -->
+<div id="page-loader" class="fade in"><span class="spinner"></span></div>
+<!-- end #page-loader -->
+
+<div class="login-cover">
+    <div class="login-cover-image"><img width="100%px" height="100%px" src=<?php echo \yii\helpers\Url::to("@web/img/login-bg/tpg-2.jpeg");?> data-id="login-cover-image" alt="" /></div>
+    <div class="login-cover-bg"></div>
+</div>
+
+<!-- begin #page-container -->
+<div id="page-container" class="fade">
+    <!-- begin login -->
+    <div class="login login-v2" data-pageload-addclass="animated fadeIn">
+        <!-- begin brand -->
+        <div class="login-header" style="text-align: center">
+            <div class="brand">
+                <span class="logo"></span> SGT
+                <small>Sistema de Gestion de Turnos </small>
             </div>
         </div>
+        <!-- end brand -->
+        <div class="login-content">
 
-    <?php ActiveForm::end(); ?>
+            <?php $form = ActiveForm::begin([
+                'id' => 'login-form',
+                'layout' => 'horizontal',
+            ]); ?>
 
-    <div class="col-lg-offset-1" style="color:#999;">
-        You may login with <strong>admin/admin</strong> or <strong>demo/demo</strong>.<br>
-        To modify the username/password, please check out the code <code>app\models\User::$users</code>.
+
+                <div class="form-group m-b-20">
+                    <input type="text" class="form-control input-lg" placeholder="Nombre de Usuario" name="LoginForm[username]" />
+                </div>
+                <div class="form-group m-b-20">
+                    <input type="password" class="form-control input-lg" placeholder="Contraseña" name="LoginForm[password]" />
+                </div>
+                <div class="checkbox m-b-20">
+                    <label>
+                        <input type="checkbox" /> Recordarme
+                    </label>
+                </div>
+                <div class="login-buttons">
+                    <button type="submit" class="btn btn-success btn-block btn-lg">Entrar</button>
+                </div>
+
+            <?php ActiveForm::end(); ?>
+
+
+        </div>
     </div>
+    <!-- end login -->
 </div>
