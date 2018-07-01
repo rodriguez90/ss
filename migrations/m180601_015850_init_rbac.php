@@ -30,7 +30,7 @@ class m180601_015850_init_rbac extends Migration
         $adminUser->save();
 
         // add "createPost" permission
-        $createPost = $auth->createPermission('Admin_mod');
+        $createPost = $auth->createPermission('admin_mod');
         $createPost->description = 'Administrador del sistema';
         $auth->add($createPost);
 

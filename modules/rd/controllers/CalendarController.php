@@ -174,7 +174,7 @@ class CalendarController extends Controller
 
                 if($ok)
                 {
-                    $transaction->commit();
+//                    $transaction->commit();
                     $result ['status']= 1;
                     $result['msg'] = "Disponibilidad creada correctamente.";
                 }
@@ -183,9 +183,14 @@ class CalendarController extends Controller
                 }
 
             }catch (\yii\base\Exception $ex){
-                $result ['status']= 0;
-                $result['msg'] = "!Error: ".$ex->getMessage();
-                $transaction->rollBack();
+
+
+                if($e->getCode() !== '01000')
+                {
+                    $result ['status']= 0;
+                    $result['msg'] = "!Error: ".$ex->getMessage();
+                    $transaction->rollBack();
+                }
             }
 
 
@@ -316,7 +321,7 @@ class CalendarController extends Controller
                 $aux = new \DateTime($startDate);
                 $aux->setTimezone(new DateTimeZone("UTC"));
                 $datetimeFormated = $aux->format("Y-m-d G:i:s");
-
+//                var_dump($datetimeFormated);
                 $query->andWhere(['>=','start_datetime', $datetimeFormated]);
             }
             if (isset($endDate) && $endDate !== "")
@@ -324,6 +329,7 @@ class CalendarController extends Controller
                 $aux = new \DateTime($endDate);
                 $aux->setTimezone(new DateTimeZone("UTC"));
                 $datetimeFormated = $aux->format("Y-m-d G:i:s");
+//                var_dump($datetimeFormated);die;
                 $query->andWhere(['<=','end_datetime', $datetimeFormated]);
             }
 

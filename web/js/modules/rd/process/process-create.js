@@ -34,13 +34,13 @@ var lan = {
     }
 };
 
-
 var selectedContainers = [];
-
 
 var stop_watch_start = moment().hour(0).minute(29).second(59);
 var timerId = null;
 
+var containerTypeMap = new Map();
+var containerTypeArray = [];
 
 var cleanUI = function () {
     selectedContainers = [];
@@ -174,29 +174,35 @@ var handleSelectTransCompany = function () {
         // tags: true,
         closeOnSelect: true,
         ajax: {
-            url: homeUrl + '/rd/api-trans-company',
+            // url: homeUrl + '/rd/api-trans-company',
+            url: homeUrl + '/rd/trans-company/from-sp',
             dataType: 'json',
             // delay: 250,
             cache: true,
+            data: function (params) {
+                var query = {
+                    code: params.term,
+                };
+
+                return query;
+            },
             processResults: function (data) {
                 // console.log(data);
-                var myResults  = [];
-                $.each(data, function (index, item) {
+                var results  = [];
+                $.each(data.trans_companies, function (index, item) {
                     // console.log(item);
-                    myResults .push({
+                    results .push({
                         id: item.id,
                         text: item.name,
                         ruc: item.ruc
                     });
                 });
                 return {
-                    results: myResults
+                    results: results
                 };
             },
         },
-    });
-
-    $('#selectTransCompany').on('select2:opening', function (e) {
+    }).on('select2:opening', function (e) {
         var table = $('#data-table3').DataTable();
         var count = table.rows( { selected: true } ).count();
         var selectedValue = $("input[name='radio_default_inline']:checked").val();
@@ -208,9 +214,7 @@ var handleSelectTransCompany = function () {
             alert("Debe seleccionar los contenedores para asignar la Cia de Transporte");
             return false;
         }
-    });
-
-    $('#selectTransCompany').on('select2:select', function (e) {
+    }).on('select2:select', function (e) {
         var table = $('#data-table3').DataTable();
 
         var data = e.params.data;
@@ -288,65 +292,71 @@ var fetchContainersWS = function (bl, containers) {
         .clear()
         .draw();
 
-    for (var i = 0; i < 10; i++)
+    for (var i = 0; i < containers.length; i++)
     {
-        var type = types[Math.round(Math.random())];
-        var tonnage = tonnages[Math.round(Math.random())];
-        var randomIndex = Math.floor(Math.random() * 6);
-        var status = statusArray[randomIndex];
-        // console.log(status);
+        var dataContainer = containers[i];
+        // var typeIndex = Math.floor(Math.random() * (containerTypeMap.size - 1));
+        // var type = null;
+        // var tonnage = tonnages[Math.round(Math.random())];
+        // var statusIndex = Math.floor(Math.random() * 6);
+        // var status = statusArray[statusIndex];
+        //
+        // if(statusIndex !== 0 && statusIndex !== 1)
+        //     type = Array.from(containerTypeMap.values())[typeIndex]
+
         var container =  {
             id:-1,
             checkbox:"",
-            name:"Contenedor " + i,
-            type: type,
-            tonnage: tonnage,
-            deliveryDate:new Date(),
+            name:dataContainer.name,
+            type: dataContainer.type,
+            deliveryDate:dataContainer.deliveryDate,
             agency:agency.name,
             wharehouse:1,
             transCompany:{name:'', id:-1, ruc:""},
-            status:status,
+            status:dataContainer.status,
             selectable:true
         };
-        var select = false;
-        var statusIsDate = moment(status).isValid();
+
+        var statusIsDate = moment(dataContainer.status).isValid();
         if( container.status !== "PENDIENTE" &&
             !statusIsDate)
         {
             container.selectable = false
-            // select = true;
         }
-        // for(var j = 0, length = containers.length; j < length ; j++)
-        // {
-        //     var container2 = containers[j];
-        //     status = container2.status;
-        //     var statusIsDate = moment(status).isValid();
-        //     //FIXME: Here importan condition
-        //
-        //     if(container2.name === container.name &&
-        //         container2.status !== "PENDIENTE" &&
-        //         !statusIsDate)
-        //     {
-        //         select = true;
-        //         container.id = container2.id
-        //         break;
-        //     }
-        // }
 
         table.row.add(
             container
         ).draw();
-
-        // if(!container.selectable)
-        //     table.row.add(
-        //         container
-        //     ).draw().select();
-        // else
-        //     table.row.add(
-        //         container
-        //     ).draw();
     }
 };
+
+var fetchContainerTypes = function () {
+    $.ajax({
+        async:false,
+        url: homeUrl + '/rd/container-type/types',
+        type: "GET",
+        dataType: "json",
+        success: function (response) {
+            if(response.success)
+            {
+                $.each(response.types, function (index, item) {
+                    containerTypeMap.set(item.id, {
+                        id: item.id,
+                        text: item.name,
+                        tonnage: item.tonnage,
+                        code: item.code,
+                    });
+                });
+                containerTypeArray = Array.from(containerTypeMap.values());
+            }
+        },
+        error: function(data) {
+            console.log(data);
+            alert(data['msg']);
+            result = false;
+        }
+    });
+}
 
 $(document).ready(function () {
 
@@ -368,7 +378,7 @@ $(document).ready(function () {
     timerId = setInterval(handleStopWatch, 1000);
 
     // select all
-   handleSelectAll();
+    handleSelectAll();
 
     // search container
     $('#search-container').click( function() {
@@ -383,9 +393,7 @@ $(document).ready(function () {
 
         return false;
     });
-
     // select2 to agency
     handleSelectTransCompany();
-
-
+    fetchContainerTypes();
 });

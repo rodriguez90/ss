@@ -63,7 +63,7 @@ var handleJqueryAutocomplete2 = function(op,changeRol) {
                 },
                 error: function(data) {
                     console.log(data.responseText);
-                    alert(textStatus);
+                    alert(data.responseText);
                     result = false;
                     // return false;
                 }

@@ -7,20 +7,19 @@ use Yii;
 /**
  * This is the model class for table "container".
  *
- * @property int $id
- * @property string $name
- * @property string $code
- * @property int $tonnage
- * @property int $active
- * @property string $status
+ * @property int $id Número
+ * @property string $name Nombre
+ * @property string $code Código
+ * @property int $tonnage Toneladas
+ * @property int $active Activo
+ * @property string $status Estado
+ * @property int $type_id Tipo
  *
+ * @property ContainerType $type
  * @property ProcessTransaction[] $processTransactions
  */
 class Container extends \yii\db\ActiveRecord
 {
-    const DRY = 'DRY';
-    const RRF  = 'RRF';
-
     /**
      * {@inheritdoc}
      */
@@ -37,7 +36,8 @@ class Container extends \yii\db\ActiveRecord
         return [
             [['name', 'code', 'tonnage', 'status'], 'required'],
             [['name', 'code', 'status'], 'string'],
-            [['tonnage', 'active'], 'integer'],
+            [['tonnage', 'active', 'type_id'], 'integer'],
+            [['type_id'], 'exist', 'skipOnError' => true, 'targetClass' => ContainerType::className(), 'targetAttribute' => ['type_id' => 'id']],
         ];
     }
 
@@ -48,12 +48,21 @@ class Container extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'Número',
-            'name' => 'Contenedor',
+            'name' => 'Nombre',
             'code' => 'Código',
             'tonnage' => 'Toneladas',
             'active' => 'Activo',
             'status' => 'Estado',
+            'type_id' => 'Tipo',
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getType()
+    {
+        return $this->hasOne(ContainerType::className(), ['id' => 'type_id']);
     }
 
     /**
@@ -61,6 +70,6 @@ class Container extends \yii\db\ActiveRecord
      */
     public function getProcessTransactions()
     {
-        return $this->hasMany(ProcessTransaction::class, ['container_id' => 'id']);
+        return $this->hasMany(ProcessTransaction::className(), ['container_id' => 'id']);
     }
 }

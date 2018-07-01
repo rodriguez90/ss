@@ -367,10 +367,20 @@ class AdmUser extends ActiveRecord implements IdentityInterface
 
     public function getTransCompany()
     {
-        $transCompany = UserTranscompany::findOne(['user_id'=>$this->id]);
+        $userTransCompany = UserTranscompany::findOne(['user_id'=>$this->id]);
 
-        if($transCompany)
-            return $transCompany->transcompany;
+        if($userTransCompany)
+            return $userTransCompany->transcompany;
+
+        return null;
+    }
+
+    public function getAgency()
+    {
+        $userAgency = \app\modules\rd\models\UserAgency::findOne(['user_id'=>$this->id]);
+
+        if($userAgency)
+            return $userAgency->agency;
 
         return null;
     }

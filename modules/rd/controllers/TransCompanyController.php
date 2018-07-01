@@ -6,11 +6,14 @@ use app\modules\rd\models\TransCompanyPhone;
 use Yii;
 use app\modules\rd\models\TransCompany;
 use app\modules\rd\models\TransCompanySearch;
+use yii\base\Exception;
+use yii\helpers\Html;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\ForbiddenHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+use yii\web\Response;
 
 /**
  * TransCompanyController implements the CRUD actions for TransCompany model.
@@ -36,6 +39,7 @@ class TransCompanyController extends Controller
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['POST'],
+                    'from-sp' => ['GET'],
                 ],
             ],
         ];
@@ -176,7 +180,7 @@ class TransCompanyController extends Controller
         return $this->redirect(['index']);
     }
 
-    public function actionSP()
+    public function actionFromSp()
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
 
@@ -196,21 +200,66 @@ class TransCompanyController extends Controller
 
         if($response['success'])
         {
-            $result = \Yii::$app->db->createCommand("exec sp_sgt_companias_cons(:ruc)")
-                ->bindValue(':ruc' , $code )
-                ->execute();
+            $sql = "exec sp_sgt_companias_cons " . $code;
+            $results = Yii::$app->db2->createCommand($sql)->queryAll();
 
-            var_dump($result);die;
+            try{
+//                $trasaction = TransCompany::getDb()->beginTransaction();
+//                $doCommit = false;
+
+                foreach ($results as $result)
+                {
+                    $t = TransCompany::findOne(['ruc'=>$result['ruc_empresa']]);
+
+                    if($t === null)
+                    {
+//                        $doCommit = true;
+                        $t = new TransCompany();
+                        $str = iconv("CP1257", "UTF-8", $result['nombre_empresa']);
+                        $t->name = $str;
+                        $t->ruc = $result['ruc_empresa'];
+                        $t->address = "NO TIENE";
+                        $t->active = 1;
+
+                        if(!$t->save())
+                        {
+                            $response['success'] = false;
+                            $response['msg'] = "Ah ocurrido un error al buscar las Empresas de Transporte.";
+                            $response['msg_dev'] = implode(' ', $t->getErrors(false));
+                            break;
+                        }
+                    }
+                    else {
+                        $str = iconv("CP1257", "UTF-8",  $t->name);
+                        $t->name = $str;
+                    }
+                    $response['trans_companies'][] = $t;
+                }
+
+//                if($response['success'])
+//                {
+//                    if($doCommit)
+//                        $trasaction->commit();
+//                }
+//                else
+//                {
+//                    $trasaction->rollBack();
+//                }
+            }
+            catch (Exception $e)
+            {
+                if($e->getCode() !== '01000')
+                {
+                    $trasaction->rollBack();
+                }
+            }
         }
 
         return $response;
     }
 
-    public function actionSPRegisterTruck()
+    public function actionTrunks()
     {
-//        exec sp_sgt_placa_cons '0992125861001'
-
-
         Yii::$app->response->format = Response::FORMAT_JSON;
 
         $response = array();
@@ -229,11 +278,8 @@ class TransCompanyController extends Controller
 
         if($response['success'])
         {
-            $result = \Yii::$app->db->createCommand("exec sp_sgt_placa_cons(:ruc)")
-                ->bindValue(':ruc' , $code )
-                ->execute();
-
-            var_dump($result);die;
+            $sql = "exec sp_sgt_placa_cons " . $code;
+            $response['trucks'] = Yii::$app->db2->createCommand($sql)->queryAll();
         }
 
         return $response;
@@ -262,14 +308,11 @@ class TransCompanyController extends Controller
 
         if($response['success'])
         {
-            $result = \Yii::$app->db->createCommand("exec sp_sgt_chofer_cons(:ruc)")
-                ->bindValue(':ruc' , $code )
-                ->execute();
-
-            var_dump($result);die;
+            $sql = "exec sp_sgt_chofer_cons " . $code;
+            $response['drivers'] = Yii::$app->createCommand($sql)->execute();
         }
-
-        return $response;
+//        mb_convert_encoding($data['name'], 'UTF-8', 'UTF-8');
+        return json_encode($response);
     }
 
     /**

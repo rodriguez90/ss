@@ -81,7 +81,7 @@ class ItemController extends Controller
      */
     public function actionCreate()
     {
-        if(\Yii::$app->user->can('Admin_mod')){
+        if(\Yii::$app->user->can('admin_mod')){
             $type = Yii::$app->request->get('type');
             $auth =  Yii::$app->authManager;
             $item= null;
@@ -125,7 +125,7 @@ class ItemController extends Controller
      */
     public function actionUpdate($id)
     {
-        if(\Yii::$app->user->can('Admin_mod')){
+        if(\Yii::$app->user->can('admin_mod')){
             $model = $this->findModel($id);
 
             if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -152,7 +152,7 @@ class ItemController extends Controller
      */
     public function actionDelete($id)
     {
-        if(\Yii::$app->user->can('Admin_mod')){
+        if(\Yii::$app->user->can('admin_mod')){
             $item = $this->findModel($id);
             $type = $item->type;
             $item->delete();
@@ -198,7 +198,7 @@ class ItemController extends Controller
     }
 
     public function actionGetroles(){
-        if(\Yii::$app->user->can('Admin_mod')){
+        if(\Yii::$app->user->can('admin_mod')){
             Yii::$app->response->format = Response::FORMAT_JSON;
 
             $roles = AuthItem::find()->where(['type'=>1])

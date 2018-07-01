@@ -5,6 +5,7 @@ namespace app\modules\rd\controllers;
 use DateTime;
 use DateTimeZone;
 use app\modules\rd\models\Process;
+use yii\db\Exception;
 use yii\filters\AccessControl;
 use app\modules\rd\models\TransCompany;
 use Yii;
@@ -183,10 +184,13 @@ class TicketController extends Controller
             }
             catch (\Exception $e)
             {
-                $response['success'] = false;
-                $response['msg'] = 'Ah ocurrido un error inesperado en el servidor.';
-                $response['msg_dev'] = $e->getMessage();
-                $transaction->rollBack();
+                if($e->getCode() !== '01000')
+                {
+                    $response['success'] = false;
+                    $response['msg'] = 'Ah ocurrido un error inesperado en el servidor.';
+                    $response['msg_dev'] = $e->getMessage();
+                    $transaction->rollBack();
+                }
             }
         }
         else {
@@ -280,201 +284,211 @@ class TicketController extends Controller
             $customMsg = 'reserva';
 
         $transaction = Process::getDb()->beginTransaction();
-        $processStatus = true;
 
-        $ticketIds = [];
+        try {
+            $processStatus = true;
 
-        foreach ($tickets as $data)
-        {
-            $model = new Ticket();
-            $model->process_transaction_id = $data['process_transaction_id'];
-            $model->calendar_id = $data['calendar_id'];
-            $model->active = $data['active'];
-            $model->status = $data['status'];
+            $ticketIds = [];
 
-            if($model->validate())
+            foreach ($tickets as $data)
             {
-                try {
+                $model = new Ticket();
+                $model->process_transaction_id = $data['process_transaction_id'];
+                $model->calendar_id = $data['calendar_id'];
+                $model->active = $data['active'];
+                $model->status = $data['status'];
 
-                    if($processStatus)
-                    {
-                        $processTransaction = ProcessTransaction::findOne(['id'=>$model->process_transaction_id]);
-                        $processTransaction->register_truck = $data['registerTruck'];
-                        $processTransaction->register_driver = $data['registerDriver'];
-                        $processTransaction->name_driver = $data['nameDriver'];
-                        $resul = $processTransaction->update(true, ['register_truck', 'register_driver', 'name_driver']);
-                        if($resul === false)
-                        {
-                            $processStatus = false;
-                            $response['msg'] = 'Ah ocurrido un error al actualizar la placa del carro y la cédula del chofer: '.
-                                implode(" ", $processTransaction->getErrorSummary(false));
-                        }
-                    }
+                if($model->validate())
+                {
+                    try {
 
-                    $oldTicket = Ticket::findOne(['process_transaction_id'=>$model->process_transaction_id]);
-                    $calendarSlot = Calendar::findOne(['id'=>$model->calendar_id]);
-                    if($processStatus && $oldTicket) // existe un ticket para esta transaccion
-                    {
-                        $ticketIds []= $oldTicket->id;;
-                        if($oldTicket->active === 1) // activa
+                        if($processStatus)
                         {
-                            if($model->calendar_id !== $oldTicket->calendar_id) // cambio de calendario (fecha) del ticket
+                            $processTransaction = ProcessTransaction::findOne(['id'=>$model->process_transaction_id]);
+                            $processTransaction->register_truck = $data['registerTruck'];
+                            $processTransaction->register_driver = $data['registerDriver'];
+                            $processTransaction->name_driver = $data['nameDriver'];
+                            $resul = $processTransaction->update(true, ['register_truck', 'register_driver', 'name_driver']);
+                            if($resul === false)
                             {
-                                $oldCalendarSlot = Calendar::findOne(['id'=>$oldTicket->calendar_id]);
-                                $processStatus = $calendarSlot && $calendarSlot->amount > 0;
+                                $processStatus = false;
+                                $response['msg'] = 'Ah ocurrido un error al actualizar la placa del carro y la cédula del chofer: '.
+                                    implode(" ", $processTransaction->getErrorSummary(false));
+                            }
+                        }
 
-                                if($processStatus){ // exite el calendario y hay diponibilidad
-                                    $oldTicket->calendar_id = $model->calendar_id;
-                                    $oldTicket->status = $status;
+                        $oldTicket = Ticket::findOne(['process_transaction_id'=>$model->process_transaction_id]);
+                        $calendarSlot = Calendar::findOne(['id'=>$model->calendar_id]);
+                        if($processStatus && $oldTicket) // existe un ticket para esta transaccion
+                        {
+                            $ticketIds []= $oldTicket->id;;
+                            if($oldTicket->active === 1) // activa
+                            {
+                                if($model->calendar_id !== $oldTicket->calendar_id) // cambio de calendario (fecha) del ticket
+                                {
+                                    $oldCalendarSlot = Calendar::findOne(['id'=>$oldTicket->calendar_id]);
+                                    $processStatus = $calendarSlot && $calendarSlot->amount > 0;
 
-                                    $processStatus = $oldTicket->update();
+                                    if($processStatus){ // exite el calendario y hay diponibilidad
+                                        $oldTicket->calendar_id = $model->calendar_id;
+                                        $oldTicket->status = $status;
 
-                                    if($processStatus)
-                                    {
-                                        $oldCalendarSlot->amount++;
-                                        $calendarSlot->amount--;
+                                        $processStatus = $oldTicket->update();
 
-                                        if(!$oldCalendarSlot->update() || !$calendarSlot->update())
+                                        if($processStatus)
                                         {
+                                            $oldCalendarSlot->amount++;
+                                            $calendarSlot->amount--;
+
+                                            if(!$oldCalendarSlot->update() || !$calendarSlot->update())
+                                            {
+                                                $processStatus = false;
+                                                $response['msg'] = 'Ah ocurrido un error al actualizar la disponibilidad del calendario: '.
+                                                    implode(" ", $oldTicket->getErrorSummary(false));
+                                            }
+                                        }
+                                        else {
                                             $processStatus = false;
-                                            $response['msg'] = 'Ah ocurrido un error al actualizar la disponibilidad del calendario: '.
+                                            $response['msg'] = 'Ah ocurrido un error al realizar la ' . $customMsg . ' '.
                                                 implode(" ", $oldTicket->getErrorSummary(false));
                                         }
                                     }
                                     else {
                                         $processStatus = false;
-                                        $response['msg'] = 'Ah ocurrido un error al realizar la ' . $customMsg . ' '.
-                                            implode(" ", $oldTicket->getErrorSummary(false));
+                                        $response['msg'] = 'El calendario seleccionado no esta disponible';
                                     }
-                                }
-                                else {
-                                    $processStatus = false;
-                                    $response['msg'] = 'El calendario seleccionado no esta disponible';
                                 }
                             }
                         }
-                    }
-                    else // nuevo ticket
-                    {
-                        if($calendarSlot === null)
+                        else // nuevo ticket
                         {
-                            $processStatus = false;
-                            $response['msg'] = 'No fue posible encontrar el calendario.';
-                        }
-
-                        if($processStatus)
-                        {
-                            $processStatus = $calendarSlot->amount > 0;
-
-                            if(!$processStatus)
+                            if($calendarSlot === null)
                             {
                                 $processStatus = false;
-                                $response['msg'] = 'No hay disponibilidad en el calendario';
+                                $response['msg'] = 'No fue posible encontrar el calendario.';
                             }
 
                             if($processStatus)
                             {
-                                $model->status = $status;
-                                $processStatus = $model->save();
+                                $processStatus = $calendarSlot->amount > 0;
+
                                 if(!$processStatus)
                                 {
                                     $processStatus = false;
-                                    $response['msg'] = 'Ah ocurrido un error al crear el cupo.';
-                                    $response['msg_dev'] = 'Ah ocurrido un error al crear el cupo'.
-                                                implode(" ", $model->getErrorSummary(false));
+                                    $response['msg'] = 'No hay disponibilidad en el calendario';
                                 }
-                                else
+
+                                if($processStatus)
                                 {
-                                    $ticketIds []= $model->id;
+                                    $model->status = $status;
+                                    $processStatus = $model->save();
+                                    if(!$processStatus)
+                                    {
+                                        $processStatus = false;
+                                        $response['msg'] = 'Ah ocurrido un error al crear el cupo.';
+                                        $response['msg_dev'] = 'Ah ocurrido un error al crear el cupo'.
+                                            implode(" ", $model->getErrorSummary(false));
+                                    }
+                                    else
+                                    {
+                                        $ticketIds []= $model->id;
+                                    }
+                                    $calendarSlot->amount--;
+                                    $result = $calendarSlot->update();
+                                    if($result === false)
+                                    {
+                                        $processStatus = false;
+                                        $response['msg'] = 'Ah ocurrido un error al actualizar la disponibilidad del calendario: '.
+                                            implode(" ", $calendarSlot->getErrorSummary(false));
+                                    }
                                 }
-                                $calendarSlot->amount--;
-                                $result = $calendarSlot->update();
+                                else {
+                                    $processStatus = false;
+                                    $response['msg'] = 'Ah ocurrido un error al realizar la ' . $customMsg . ' '.
+                                        implode(" ", $model->getErrorSummary(false));
+                                }
+                            }
+                        }
+
+                        if($processStatus) // update reception status
+                        {
+                            $countTicketForReception = TicketSearch::find()->innerJoin('process_transaction', 'ticket.process_transaction_id = process_transaction.id')
+                                ->innerJoin('process', 'process.id=process_transaction.process_id')
+                                ->where(['process.id'=>$reception['id']])->count();
+
+                            $countReceptionTransaction = ProcessTransaction::find()->where(['process_id'=>$reception['id']])->count();
+
+                            $processModel = Process::findOne(['id'=>$reception['id']]);
+
+                            if($processModel !== null)
+                            {
+                                if($countTicketForReception === $countReceptionTransaction)
+                                    $processModel->active =  0;
+                                else
+                                    $processModel->active =  1;
+                                $result = $processModel->update();
                                 if($result === false)
                                 {
+//                                var_dump($processModel->getErrorSummary);die;
                                     $processStatus = false;
-                                    $response['msg'] = 'Ah ocurrido un error al actualizar la disponibilidad del calendario: '.
-                                        implode(" ", $calendarSlot->getErrorSummary(false));
+                                    $response['msg'] = 'Ah ocurrido un error al actualizar el estado de la recepción: ' .
+                                        implode(" ", $processModel->getErrorSummary(false));
+//                                var_dump($processModel->getErrorSummary(true));die("1");
                                 }
                             }
                             else {
                                 $processStatus = false;
-                                $response['msg'] = 'Ah ocurrido un error al realizar la ' . $customMsg . ' '.
-                                    implode(" ", $model->getErrorSummary(false));
+                                $response['msg'] = 'Ah ocurrido un error el proceso no es vaido';
                             }
                         }
                     }
-
-                    if($processStatus) // update reception status
+                    catch (Exception $e)
                     {
-                        $countTicketForReception = TicketSearch::find()->innerJoin('process_transaction', 'ticket.process_transaction_id = process_transaction.id')
-                                                                       ->innerJoin('process', 'process.id=process_transaction.process_id')
-                                                                       ->where(['process.id'=>$reception['id']])->count();
-
-                        $countReceptionTransaction = ProcessTransaction::find()->where(['process_id'=>$reception['id']])->count();
-
-                        $processModel = Process::findOne(['id'=>$reception['id']]);
-
-                        if($processModel !== null)
-                        {
-                            if($countTicketForReception === $countReceptionTransaction)
-                                $processModel->active =  0;
-                            else
-                                $processModel->active =  1;
-                            $result = $processModel->update();
-                            if($result === false)
-                            {
-//                                var_dump($processModel->getErrorSummary);die;
-                                $processStatus = false;
-                                $response['msg'] = 'Ah ocurrido un error al actualizar el estado de la recepción: ' .
-                                                    implode(" ", $processModel->getErrorSummary(false));
-//                                var_dump($processModel->getErrorSummary(true));die("1");
-                            }
-                        }
-                        else {
-                            $processStatus = false;
-                            $response['msg'] = 'Ah ocurrido un error el proceso no es vaido';
-                        }
+                        $processStatus = false;
+                        $response['msg'] = $e->getMessage();
                     }
                 }
-                catch (Exception $e)
-                {
+                else {
                     $processStatus = false;
-                    $response['msg'] = $e->getMessage();
+                    $response['msg'] = Yii::t("app", "No fue posible procesar los datos.");
                 }
             }
-            else {
-                $processStatus = false;
-                $response['msg'] = Yii::t("app", "No fue posible procesar los datos.");
-            }
-        }
 
-        if($processStatus) {
-            foreach ($ticketIds as $ticketId) {
-                if($this->generateServiceCardByTicket($ticketId) === false)
-                {
-                    $processStatus = false;
-                    $response['msg'] = 'Ah ocurrido un error al generar las cartas de servicio.';
-                    break;
+            if($processStatus) {
+                foreach ($ticketIds as $ticketId) {
+                    if($this->generateServiceCardByTicket($ticketId) === false)
+                    {
+                        $processStatus = false;
+                        $response['msg'] = 'Ah ocurrido un error al generar las cartas de servicio.';
+                        break;
+                    }
                 }
             }
-        }
 
-        if($processStatus)
+            if($processStatus)
+            {
+
+                $transaction->commit();
+
+                $response['success'] = true;
+                $response['msg'] = 'Reservas Realizada';
+                $response['url'] = Url::to(['/site/index']);
+
+            }
+            else
+            {
+                $response['success'] = false;
+                $transaction->rollBack();
+            }
+        }
+        catch (Exception $e)
         {
-
-            $transaction->commit();
-
-            $response['success'] = true;
-            $response['msg'] = 'Reservas Realizada';
-            $response['url'] = Url::to(['/site/index']);
-
+            if($e->getCode() !== '01000')
+            {
+                $transaction->rollBack();
+            }
         }
-        else
-        {
-            $response['success'] = false;
-            $transaction->rollBack();
-        }
-//        return json_encode($response);
+
         return $response;
     }
 
