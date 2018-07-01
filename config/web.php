@@ -2,6 +2,7 @@
 
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
+$db2 = require __DIR__ . '/db2.php';
 
 $config = [
     'id' => 'basic',
@@ -66,19 +67,8 @@ $config = [
                 ],
             ],
         ],
-        'db' => $db,
-        'dbSqlServer'=>[
-             'class' => 'yii\db\Connection',
-             'dsn'=>'sqlsrv:Server=190.63.174.169,7200\SQLEXPRESS;Database=atack',
-             'username' => 'xedrux',
-             'password' => 'xedrux', //Root*2018
-             'charset' => 'utf8',
-
-             // Schema cache options (for production environment)
-             //'enableSchemaCache' => true,
-             //'schemaCacheDuration' => 60,
-             //'schemaCache' => 'cache',
-         ],
+        'db' =>$db,
+        'db2'=>$db2,
         'authManager' => [
             'class' => 'yii\rbac\DbManager',
         ],

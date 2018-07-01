@@ -174,23 +174,31 @@ var handleSelectTransCompany = function () {
         // tags: true,
         closeOnSelect: true,
         ajax: {
-            url: homeUrl + '/rd/api-trans-company',
+            // url: homeUrl + '/rd/api-trans-company',
+            url: homeUrl + '/rd/trans-company/from-sp',
             dataType: 'json',
             // delay: 250,
             cache: true,
+            data: function (params) {
+                var query = {
+                    code: params.term,
+                };
+
+                return query;
+            },
             processResults: function (data) {
                 // console.log(data);
-                var myResults  = [];
-                $.each(data, function (index, item) {
+                var results  = [];
+                $.each(data.trans_companies, function (index, item) {
                     // console.log(item);
-                    myResults .push({
+                    results .push({
                         id: item.id,
                         text: item.name,
                         ruc: item.ruc
                     });
                 });
                 return {
-                    results: myResults
+                    results: results
                 };
             },
         },
@@ -284,31 +292,32 @@ var fetchContainersWS = function (bl, containers) {
         .clear()
         .draw();
 
-    for (var i = 0; i < 10; i++)
+    for (var i = 0; i < containers.length; i++)
     {
-        var typeIndex = Math.floor(Math.random() * (containerTypeMap.size - 1));
-        var type = null;
-        var tonnage = tonnages[Math.round(Math.random())];
-        var statusIndex = Math.floor(Math.random() * 6);
-        var status = statusArray[statusIndex];
-
-        if(statusIndex !== 0 && statusIndex !== 1)
-            type = Array.from(containerTypeMap.values())[typeIndex]
+        var dataContainer = containers[i];
+        // var typeIndex = Math.floor(Math.random() * (containerTypeMap.size - 1));
+        // var type = null;
+        // var tonnage = tonnages[Math.round(Math.random())];
+        // var statusIndex = Math.floor(Math.random() * 6);
+        // var status = statusArray[statusIndex];
+        //
+        // if(statusIndex !== 0 && statusIndex !== 1)
+        //     type = Array.from(containerTypeMap.values())[typeIndex]
 
         var container =  {
             id:-1,
             checkbox:"",
-            name:"Contenedor " + i,
-            type: type,
-            deliveryDate:new Date(),
+            name:dataContainer.name,
+            type: dataContainer.type,
+            deliveryDate:dataContainer.deliveryDate,
             agency:agency.name,
             wharehouse:1,
             transCompany:{name:'', id:-1, ruc:""},
-            status:status,
+            status:dataContainer.status,
             selectable:true
         };
 
-        var statusIsDate = moment(status).isValid();
+        var statusIsDate = moment(dataContainer.status).isValid();
         if( container.status !== "PENDIENTE" &&
             !statusIsDate)
         {

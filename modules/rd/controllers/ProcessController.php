@@ -264,6 +264,7 @@ class ProcessController extends Controller
 
         $response = array();
         $response['msg'] = '';
+        $response['success'] = true;
         $response['transactions'] = [];
         $id = Yii::$app->request->get('id');
         $transCompanyId = Yii::$app->request->get('transCompanyId');
@@ -274,8 +275,6 @@ class ProcessController extends Controller
             $process = Process::findOne(['id'=>$id]);
 
             $trans_company = TransCompany::findOne(['id'=>$transCompanyId]);
-//            var_dump($trans_company);
-//            var_dump($process);
 
             if($trans_company == null)
             {
@@ -431,7 +430,8 @@ class ProcessController extends Controller
 
                     if($tmpResult)
                     {
-                        $transaction->commit();
+//                        $transaction->
+//                        $transaction->commit();
 
                         // send email
                         $remitente = AdmUser::findOne(['id'=>\Yii::$app->user->getId()]);
@@ -493,9 +493,13 @@ class ProcessController extends Controller
             }
             catch (Exception $e)
             {
-                $response['success'] = false;
-                $response['msg'] = $e->getMessage();
-                $transaction->rollBack();
+                if($e->getCode() !== '01000')
+                {
+                    $response['success'] = false;
+                    $response['msg'] = "Ah ocurrido un error al salvar los datos en el servidor.";
+                    $response['msg_dev'] = $e->getMessage();
+                    $transaction->rollBack();
+                }
             }
         }
         else {

@@ -141,7 +141,7 @@ FormAsset::register($this);
                             <label class="control-label col-md-4 col-sm-4">Rol</label>
 
 
-                        <div class="col-md-8 col-sm-8"  <?= \Yii::$app->user->can('Admin_mod') ? "": "style='visibility: hidden'"?> >
+                        <div class="col-md-8 col-sm-8"  <?= \Yii::$app->user->can('admin_mod') ? "": "style='visibility: hidden'"?> >
                             <select id="selectpicker-rol" name="rol"  data-parsley-required="true" class="form-control selectpicker" data-size="10" data-live-search="true"  >
                                 <?php
 
@@ -162,14 +162,14 @@ FormAsset::register($this);
                         <div class="form-group" id="div-type">
                             <label class="control-label col-md-4 col-sm-4" id="label-type">---</label>
 
-                            <div class="col-md-8 col-sm-8" id="select-conten"  <?= \Yii::$app->user->can('Admin_mod') ? "": "style='visibility: hidden'"?>>
+                            <div class="col-md-8 col-sm-8" id="select-conten"  <?= \Yii::$app->user->can('admin_mod') ? "": "style='visibility: hidden'"?>>
 
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label class="control-label col-md-4 col-sm-4">Activo</label>
-                            <div class="col-md-8 col-sm-8"  <?= \Yii::$app->user->can('Admin_mod') ? "": "style='visibility: hidden'"?>>
+                            <div class="col-md-8 col-sm-8"  <?= \Yii::$app->user->can('admin_mod') ? "": "style='visibility: hidden'"?>>
 
                                 <input data-switchery="true"    id="admuser-status" name="AdmUser[status]" value="1" data-render="switchery" type="checkbox" <?= $model->isNewRecord || $model->status  ? 'checked=""' : '' ?> >
 

@@ -25,6 +25,7 @@ use PDO;
 
 use Mpdf\Mpdf;
 use Yii;
+use yii\db\Command;
 use yii\filters\AccessControl;
 use yii\helpers\Url;
 use yii\web\Controller;
@@ -104,9 +105,9 @@ class SiteController extends Controller
 
         // sql query for calling the procedure
 //        $sql = "exec disv..sp_sgt_bl_cons HLCUMTR180305591";
-//        $sql = "exec disv..sp_sgt_companias_cons 12917504";
-//        $sql = "exec disv..sp_sgt_placa_cons 12917504";
-//        $result = Yii::$app->db->createCommand($sql)->queryAll();
+//        $sql = "exec sp_sgt_companias_cons 12917504";
+//        $sql = "exec sp_sgt_placa_cons 12917504";
+//        $result = Yii::$app->db2->createCommand($sql)->queryAll();
 //        var_dump($result);die;
 //
 //        $result = \Yii::$app->db->createCommand($sql, $params)
@@ -167,23 +168,23 @@ class SiteController extends Controller
 
         $user = AdmUser::findOne(['id'=>Yii::$app->user->getId()]);
         $params = Yii::$app->request->queryParams;
-        if($user && ($user->hasRol('Importador')  ||  $user->hasRol('Exportador')))
-        {
-            $userAgency = UserAgency::findOne(['user_id'=>$user->id]);
-            $params['agency_id'] = '';
-            if($userAgency)
-            {
-                $params['agency_id'] = $userAgency->agency->name;
-            }
-        }
-        else if ($user && $user->hasRol('Cia_transporte')){
-            $userCiaTrans = UserTranscompany::findOne(['user_id'=>$user->id]);
-            $params['trans_company_id'] = '';
-            if($userCiaTrans)
-            {
-                $params['trans_company_id'] = $userCiaTrans->transcompany->id;
-            }
-        }
+//        if($user && ($user->hasRol('Importador')  ||  $user->hasRol('Exportador')))
+//        {
+//            $userAgency = UserAgency::findOne(['user_id'=>$user->id]);
+//            $params['agency_id'] = '';
+//            if($userAgency)
+//            {
+//                $params['agency_id'] = $userAgency->agency->name;
+//            }
+//        }
+//        else if ($user && $user->hasRol('Cia_transporte')){
+//            $userCiaTrans = UserTranscompany::findOne(['user_id'=>$user->id]);
+//            $params['trans_company_id'] = '';
+//            if($userCiaTrans)
+//            {
+//                $params['trans_company_id'] = $userCiaTrans->transcompany->id;
+//            }
+//        }
 
         $searchModel = new ProcessSearch();
         $dataProvider = $searchModel->search($params);

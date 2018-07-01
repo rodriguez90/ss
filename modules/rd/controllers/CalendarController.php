@@ -316,7 +316,7 @@ class CalendarController extends Controller
                 $aux = new \DateTime($startDate);
                 $aux->setTimezone(new DateTimeZone("UTC"));
                 $datetimeFormated = $aux->format("Y-m-d G:i:s");
-
+//                var_dump($datetimeFormated);
                 $query->andWhere(['>=','start_datetime', $datetimeFormated]);
             }
             if (isset($endDate) && $endDate !== "")
@@ -324,6 +324,7 @@ class CalendarController extends Controller
                 $aux = new \DateTime($endDate);
                 $aux->setTimezone(new DateTimeZone("UTC"));
                 $datetimeFormated = $aux->format("Y-m-d G:i:s");
+//                var_dump($datetimeFormated);die;
                 $query->andWhere(['<=','end_datetime', $datetimeFormated]);
             }
 

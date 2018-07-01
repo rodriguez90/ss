@@ -2,6 +2,7 @@
 
 namespace app\modules\rd\controllers;
 
+use app\modules\rd\models\ProcessTransaction;
 use Yii;
 use app\modules\rd\models\Container;
 use app\modules\rd\models\ContainerSearch;
@@ -159,25 +160,42 @@ class ContainerController extends Controller
             $response['msg'] = "Debe especificar el código de búsqueda.";
         }
 
-//        if($response['success'])
-//        {
-//            try{
-//
-//            }
-//            catch (Exception $ex)
-//            {
-//                        $sql = "exec disv..sp_sgt_bl_cons " . $bl;
-//                        $result = Yii::$app->db->createCommand($sql)->queryAll();
-////                $result = \Yii::$app->db->createCommand("exec disv..sp_sgt_bl_cons (:bl)")
-////                    ->bindValue(':bl' , $bl )
-////                    ->execute();
-//
-//                $response['containers'] = $result;
-//                //            var_dump($result);
-//            }
-//
-//        }
+        if($response['success'])
+        {
+            try{
+                $sql = "exec disv..sp_sgt_bl_cons " . $bl;
+                $results = Yii::$app->db->createCommand($sql)->queryAll();
 
+                foreach ($results as $result) {
+
+                    $data = Container::find()
+                        ->select('container.id, container.name, container.status, process_transaction.delivery_date as deliveryDate, container_type.id as typeId, container_type.code, container_type.tonnage')
+                        ->innerJoin('process_transaction', 'process_transaction.container_id=container.id')
+                        ->innerJoin('process', 'process.id=process_transaction.process_id')
+                        ->innerJoin('container_type', 'container_type.id=container.type_id')
+                        ->where(['process.bl' => $bl])
+                        ->andWhere(['container.id' => $result['contenedor']])
+                        ->asArray()
+                        ->one();
+
+                    if ($data === null) {
+                        $container = [];
+                        $container['id'] = -1;
+                        $container['name'] = $result['contenedor'];
+                        $container['type'] = null;
+                        $container['status'] = 'PENDIENTE';
+                        $container['deliveryDate'] = $result['fecha_limite'];
+                    }
+                    $response['containers'][] = $container;
+                }
+            }
+            catch (Exception $ex)
+            {
+                $response['success'] = false;
+                $response['msg'] = 'Ah occurrido un error al buscar los contenedores.';
+                $response['msg_dev'] = $ex->getMessage();
+            }
+        }
         return $response;
     }
 

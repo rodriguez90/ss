@@ -320,8 +320,8 @@ var handleTableInWizar = function() {
                 { title: "Contenedor",
                     "data":"name"
                 },
-                { title: "Tipo"
-                    // data:"type",
+                { title: "Tipo",
+                    data:"type",
                 },
                 { title: "Fecha Límite",
                     data:"deliveryDate"
@@ -347,9 +347,9 @@ var handleTableInWizar = function() {
                 {
                     targets: [1],
                     title:"Tipo",
-                    data:null,
+                    data:'type',
                     render: function ( data, type, full, meta ) {
-                        return data.type + data.tonnage;
+                        return data.name;
                     }
                 },
                 {
@@ -371,55 +371,176 @@ var handleTableInWizar = function() {
                         return dateFormated;
                     },
                 },
-            ]
-            // language: {url: 'web/plugins/DataTables/i18/Spanish.json'
-        });
+            ],
+            "createdRow": function ( row, data, index, cells ) {
+                var elementId =  String(data.name).replace(' ','');
 
-        function  myCallbackFunction(updatedCell, updatedRow, oldValue) {
-            var table = $('#data-table2').DataTable();
-            // console.log("The new value for the cell is: " + updatedCell.data());
-            // console.log(updatedCell);
-            // console.log(updatedCell.index().row);
-            if(updatedCell.index().column === 6)
-            {
-                var driverCell = table.cell(updatedCell.index().row, 7);
-                driverCell.data("Chico el cojo");
-            }
+                if($("#selectTrunk"+elementId).length === 0)
+                {
+                    var selectHtml = "<select class=\"form-control\" id=\"selectTrunk" +elementId + "\"></select>"
+                    console.log("Generate HTML: ")
+                    console.log(selectHtml);
 
+                    $('td', row).eq(5).html(selectHtml)
 
-            // var cell = table.cell()
-            // console.log("The values for each cell in that row are: " );
-            // console.log(updatedRow.data())
-            //TODO: valdiar placa y cedula x el servicio y recuperar el nombre del chofe
-        }
+                    $('td:eq(5)', row).select2(
+                    {
+                        language: "es",
+                        placeholder: 'Seleccione la Placa',
+                        // allowClear: true,
+                        width: '100%',
+                        closeOnSelect: true,
+                        minimumInputLength:5,
+                        ajax:{
+                            async:false,
+                            url: homeUrl + '/rd/trans-company/trunks',
+                            type: "GET",
+                            dataType: "json",
+                            cache: true,
+                            data: function (params) {
+                                var query = {
+                                    code: params.term,
+                                }
+                                return query;
+                            },
+                            processResults: function (data) {
+                                // console.log(data);
+                                var results  = [];
+                                $.each(data.types, function (index, item) {
+                                    // console.log(item);
+                                    // [err_code], [err_msg], [placa], [rfid]
+                                    results.push({
+                                        id: item.placa,
+                                        text: item.placa,
+                                        err_code: item.err_code,
+                                        err_msg: item.err_msg,
+                                        rfid: item.rfid,
+                                    });
+                                });
+                                return {
+                                    results: results
+                                };
+                            },
+                        },
+                    }).on('select2:select', function (e) {
+                        //FIXME VALIDAR QUE LA PLACA QUE SELECCIONE NO TENGA ERROR
+                        var trunk = e.params.data;
+                        console.log(trunk);
+                        data.registerTrunk = trunk.id;
 
-        var table = $('#data-table2').DataTable();
+                        table.row(index).data(data)
+                        // $('td:eq(2)', row).val(''); // Change the value or make some change to the internal state
+                        // $('td:eq(2)', row).trigger('change.select2'); // Notify only Select2 of changes
+                        // return true;
+                    });
+                }
+                if($("#selectDriver"+elementId).length === 0)
+                {
+                    var selectHtml = "<select class=\"form-control\" id=\"selectDriver" +elementId + "\"></select>"
+                    console.log("Generate HTML: ")
+                    console.log(selectHtml);
 
-        table.MakeCellsEditable({
-            "onUpdate": myCallbackFunction,
-            "inputCss":'form-control',
-            "columns": [5,6],
-            "allowNulls": {
-                "columns": [5, 6],
-                "errorClass": 'error'
+                    $('td', row).eq(6).html(selectHtml)
+
+                    $('td:eq(6)', row).select2(
+                        {
+                            language: "es",
+                            placeholder: 'Seleccione la Placa',
+                            // allowClear: true,
+                            width: '100%',
+                            closeOnSelect: true,
+                            minimumInputLength:5,
+                            ajax:{
+                                async:false,
+                                url: homeUrl + '/rd/trans-company/trunks',
+                                type: "GET",
+                                dataType: "json",
+                                cache: true,
+                                data: function (params) {
+                                    var query = {
+                                        code: params.term,
+                                    }
+                                    return query;
+                                },
+                                processResults: function (data) {
+                                    // console.log(data);
+                                    var results  = [];
+                                    $.each(data.types, function (index, item) {
+                                        // console.log(item);
+                                        // [err_code], [err_msg], [chofer_ruc], [chofer_nombre]
+                                        results.push({
+                                            id: item.chofer_ruc,
+                                            text: item.chofer_nombre,
+                                            err_code: item.err_code,
+                                            err_msg: item.err_msg,
+                                            chofer_ruc: item.chofer_ruc,
+                                        });
+                                    });
+                                    return {
+                                        results: results
+                                    };
+                                },
+                            },
+                        }).on('select2:select', function (e) {
+                            var driver = e.params.data;
+                            console.log(driver);
+                            data.nameDriver = driver.text
+                            // $('#mySelect2').val(type.id); // Select the option with a value of '1'
+                            // $('#mySelect2').trigger('change'); // Notify any JS components that the value changed
+                            table.row(index).data(data)
+                            // $('td:eq(2)', row).val(''); // Change the value or make some change to the internal state
+                            // $('td:eq(2)', row).trigger('change.select2'); // Notify only Select2 of changes
+                            // return true;
+                    });
+                }
             },
-            // "confirmationButton": {
-            //     "confirmCss": 'my-confirm-class',
-            //     "cancelCss": 'my-cancel-class'
-            // },
-            "inputTypes": [
-                {
-                    "column":5,
-                    "type":"text",
-                    "options":null
-                },
-                {
-                    "column":6,
-                    "type":"text",
-                    "options":null
-                },
-            ]
         });
+
+        // function  myCallbackFunction(updatedCell, updatedRow, oldValue) {
+        //     var table = $('#data-table2').DataTable();
+        //     // console.log("The new value for the cell is: " + updatedCell.data());
+        //     // console.log(updatedCell);
+        //     // console.log(updatedCell.index().row);
+        //     if(updatedCell.index().column === 6)
+        //     {
+        //         var driverCell = table.cell(updatedCell.index().row, 7);
+        //         driverCell.data("Chico el cojo");
+        //     }
+        //
+        //
+        //     // var cell = table.cell()
+        //     // console.log("The values for each cell in that row are: " );
+        //     // console.log(updatedRow.data())
+        //     //TODO: valdiar placa y cedula x el servicio y recuperar el nombre del chofe
+        // }
+        //
+        // var table = $('#data-table2').DataTable();
+        //
+        // table.MakeCellsEditable({
+        //     "onUpdate": myCallbackFunction,
+        //     "inputCss":'form-control',
+        //     "columns": [5,6],
+        //     "allowNulls": {
+        //         "columns": [5, 6],
+        //         "errorClass": 'error'
+        //     },
+        //     // "confirmationButton": {
+        //     //     "confirmCss": 'my-confirm-class',
+        //     //     "cancelCss": 'my-cancel-class'
+        //     // },
+        //     "inputTypes": [
+        //         {
+        //             "column":5,
+        //             "type":"text",
+        //             "options":null
+        //         },
+        //         {
+        //             "column":6,
+        //             "type":"text",
+        //             "options":null
+        //         },
+        //     ]
+        // });
     }
 };
 
@@ -813,7 +934,7 @@ var fetchReceptionTransactions = function () {
         type: "get",
         dataType: "json",
         data:  {
-                id:modelId,
+            id:modelId,
             transCompanyId:transCompanyId,
                 actived:1, // 1 or 0 TODO no work
         },
@@ -837,10 +958,10 @@ var fetchReceptionTransactions = function () {
                 console.log(count);
                 if(count > 0)
                 {
-                    // minDeliveryDate = moment(response['transactions'][0].delivery_date).utc();
+                    // minDeliveryDate = moment(response['transactions'][0].delivery_date).utc().toDate();
                     // maxDeliveryDate = moment(response['transactions'][count - 1].delivery_date).utc().add(1, 'days');
-                    // minDeliveryDate = moment(response['transactions'][0].delivery_date).hours(0).minutes(0).seconds(0).toDate();
-                    minDeliveryDate = moment().set({'hours': 0, 'minutes': 0}).utc().set({'hours': 0, 'minutes': 0, 'seconds':0}).toDate();
+                    minDeliveryDate = moment(response['transactions'][0].delivery_date).utc().set({'hours': 0, 'minutes': 0, 'seconds':0}).toDate();
+                    currentDate = moment().set({'hours': 0, 'minutes': 0}).utc().set({'hours': 0, 'minutes': 0, 'seconds':0}).toDate();
                     maxDeliveryDate = moment(response['transactions'][count - 1].delivery_date).utc().set({'hours': 23, 'minutes': 59, 'seconds':59}).toDate();
 
                     // $('#calendar').fullCalendar({
@@ -854,8 +975,8 @@ var fetchReceptionTransactions = function () {
                     // view.start = minDeliveryDate;
                     // view.end = maxDeliveryDate;
 
-                    console.log(minDeliveryDate);
-                    console.log(maxDeliveryDate);
+                    console.log(minDeliveryDate.toISOString());
+                    console.log(maxDeliveryDate.toISOString());
 
                     // fetchCalendar(minDeliveryDate.format('YYYY-MM-DD'), maxDeliveryDate.format('YYYY-MM-DD'), false);
                     fetchCalendar(minDeliveryDate.toISOString(), maxDeliveryDate.toISOString(), false);
