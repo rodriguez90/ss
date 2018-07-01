@@ -812,7 +812,9 @@ var fetchReceptionTransactions = function () {
         url: homeUrl + "/rd/process/transactions",
         type: "get",
         dataType: "json",
-        data:  {id:modelId,
+        data:  {
+                id:modelId,
+            transCompanyId:transCompanyId,
                 actived:1, // 1 or 0 TODO no work
         },
         success: function (response) {
@@ -999,6 +1001,8 @@ var handleStopWatch = function()
 
 $(document).ready(function () {
 
+    console.log(modelId);
+    console.log(transCompanyId);
     // moment.locale('es');
     // init wizar
     FormWizardValidation.init();

@@ -266,26 +266,24 @@ class ProcessController extends Controller
         $response['msg'] = '';
         $response['transactions'] = [];
         $id = Yii::$app->request->get('id');
+        $transCompanyId = Yii::$app->request->get('transCompanyId');
         $actived = Yii::$app->request->get('actived');
 
-        $user = AdmUser::findOne(["id"=>Yii::$app->user->getId()]);
-
-        $trans_company = TransCompany::find()
-            ->innerJoin("user_transcompany","user_transcompany.transcompany_id = trans_company.id")
-            ->innerJoin("adm_user","user_transcompany.user_id = adm_user.id")
-            ->where(["user_transcompany.user_id"=>$user->getId()])
-            ->one();
-
-        if(isset($id))
+        if(isset($id) && isset($transCompanyId))
         {
             $process = Process::findOne(['id'=>$id]);
-//            $condition = 'process_id = ' . $id;
-//            if(isset($actived))
-//            {
-//                $condition = $condition . ' and active = ' . $actived;
-//            }
 
-            if($process)
+            $trans_company = TransCompany::findOne(['id'=>$transCompanyId]);
+//            var_dump($trans_company);
+//            var_dump($process);
+
+            if($trans_company == null)
+            {
+                $response['success'] = false;
+                $response['msg'] = Yii::t("app", "Debe especificar la compañia de transporte.");
+            }
+
+            if($process && $response['success'])
             {
                 $transactions = ProcessTransaction::find()->where(['process_id'=>$id])
                                                           ->andWhere(['trans_company_id'=>$trans_company->id])
@@ -294,7 +292,6 @@ class ProcessController extends Controller
 
                 $response['success'] = true;
                 $response['msg'] = "Datos encontrados.";
-//                $transactions = $process->receptionTransactions;
                 $response['transactions'] = [];
                 $response['process'] = $process;
                 $response['angecy'] = $process->agency;
@@ -316,8 +313,6 @@ class ProcessController extends Controller
             $response['success'] = false;
             $response['msg'] = Yii::t("app", "No fue posible procesar los datos.");
         }
-//        return json_encode($response);
-//        return $response;
         return $response;
     }
 

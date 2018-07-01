@@ -19,6 +19,14 @@ WizardAsset::register($this);
 FormAsset::register($this);
 TableAsset::register($this);
 
+$user = \app\modules\administracion\models\AdmUser::findOne(['id'=>Yii::$app->user->getId()]);
+$trasCompany = null;
+
+if($user)
+{
+    $trasCompany = $user->getTransCompany();
+}
+
 ?>
 <style>
     .fc-time-grid .fc-slats td
@@ -277,6 +285,8 @@ TableAsset::register($this);
 
 <script type="text/javascript">
     var modelId = '<?php echo $model->id; ?>';
+
+    var transCompanyId = '<?php echo $trasCompany->id; ?>';
 //    var complex = <?php //echo json_encode($complex); ?>//;
 </script>
 
