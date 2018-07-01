@@ -24,71 +24,24 @@ var handleDataTable = function() {
             },
             order: [[ 1, 'asc' ]],
             responsive: true,
-            // rowCallback: function( row, data, index ) {
-            //     // console.log(data);
-            //     if ( data.selectable) {
-            //         console.log("Seletectable");
-            //         // /table.row(':eq(0)', { page: 'current' }).deselect();
-            //         // row().select();
-            //         // $('td:eq(0)', row).html( '<b>A</b>' );
-            //         if(processType === "2")
-            //         {
-            //             var elementId =  String(data.name).replace(' ','');
-            //
-            //             console.log("element length " + $('#' + elementId).length);
-            //             console.log($('#' + elementId));
-            //
-            //             if($('#' + elementId).length <= 0)
-            //             {
-            //
-            //                 console.log("Element Id: " + elementId)
-            //                 console.log($('td:eq(3)', row).html());
-            //
-            //                 var  html = '<input type=\"text\" class=\"form-control\" id=\"' + elementId +  '\" placeholder=\"Fecha Límite\"' + 'data-date-format=\"dd/mm/yyyy\"' + '/>';
-            //
-            //                 console.log(html);
-            //
-            //                 $('td', row).eq(3).html(html)
-            //                 // $('td:eq(3)', row).html(html);
-            //
-            //                 console.log($('td:eq(3)', row).html());
-            //
-            //                 $('#' + elementId).datepicker({
-            //                     title:"Seleccione la Fecha Límite",
-            //                     language: 'es',
-            //                     todayHighlight: true,
-            //                     autoclose: true,
-            //                     toggleActive:true
-            //                 });
-            //             }
-            //         }
-            //     }
-            // },
             "createdRow": function ( row, data, index, cells ) {
                 if (!data.selectable ) {
-                    // $('td', row).eq(5).addClass('bg-silver-darker');
                     $('td', row).eq(0).removeClass('select-checkbox');
                     // console.log(row);
                     $(row).addClass('bg-silver-darker');
                 }
                 else {
-                    console.log("Seletectable");
-                    // /table.row(':eq(0)', { page: 'current' }).deselect();
-                    // row().select();
-                    // $('td:eq(0)', row).html( '<b>A</b>' );
+                    var elementId =  String(data.name).replace(' ','');
                     if(processType === "2")
                     {
-                        var elementId =  String(data.name).replace(' ','');
-
-                        console.log("Element Id: " + elementId)
-                        console.log("element length " + $('#' + elementId).length);
-                        console.log($('#' + elementId));
+                        // console.log("Element Id: " + elementId)
+                        // console.log("element length " + $('#' + elementId).length);
+                        // console.log($('#' + elementId));
 
                         if($('#' + elementId).length === 0)
                         {
                             console.log($('td:eq(3)', row).html());
 
-                            // var  html = '<input type=\"text\" class=\"form-control\" id=\"' + elementId +  '\" placeholder=\"Fecha Límite\"' + ' data-provide=\"datepicker-inline\"' + '/>';
                             var  html = '<input type=\"text\" class=\"form-control\" id=\"' + elementId +  '\" placeholder=\"Seleccionar\"' + 'value=\"' + moment(data.deliveryDate).format('DD/MM/YYYY') + '\" >';
                             console.log("Generate HTML: ")
                             console.log(html);
@@ -96,7 +49,7 @@ var handleDataTable = function() {
                             $('td', row).eq(3).html(html)
                             // $('td:eq(3)', row).html(html);
 
-                            console.log($('td:eq(3)', row).html());
+                            // console.log($('td:eq(3)', row).html());
 
                             $('td:eq(3)', row).datepicker({
                                 title:"Seleccione la Fecha Límite",
@@ -116,11 +69,63 @@ var handleDataTable = function() {
                                 // console.log($(row));
                                 // console.log(data);
                                 // console.log(index);
-                                console.log(dateValue);
+                                // console.log(dateValue);
                                 data.deliveryDate = dateValue;
                                 table.row(index).data(data)
                             });
                         }
+                    }
+
+                    if($("#select"+elementId).length === 0)
+                    {
+                        var selectHtml = "<select class=\"form-control\" id=\"select" +elementId + "\"></select>"
+                        console.log("Generate HTML: ")
+                        console.log(selectHtml);
+
+                        $('td', row).eq(2).html(selectHtml)
+
+                        $('td:eq(2)', row).select2(
+                        {
+                            language: "es",
+                            placeholder: 'Seleccione Tipo de Contenedor',
+                            // allowClear: true,
+                            width: '100%',
+                            closeOnSelect: true,
+                            // data:{ results: containerTypeArray, text: 'name'},
+                            // data:containerTypeArray,
+                            ajax:{
+                                async:false,
+                                url: homeUrl + '/rd/container-type/types',
+                                type: "GET",
+                                dataType: "json",
+                                cache: true,
+                                processResults: function (data) {
+                                    // console.log(data);
+                                    var results  = [];
+                                    $.each(data.types, function (index, item) {
+                                        // console.log(item);
+                                        results.push({
+                                            id: item.id,
+                                            text: item.name,
+                                        });
+                                    });
+                                    return {
+                                        results: results
+                                    };
+                                },
+                            },
+                        }).on('select2:select', function (e) {
+                            var type = e.params.data;
+                            data.type = containerTypeMap.get(type.id);
+                            console.log(data);
+                            console.log(containerTypeMap);
+                            // $('#mySelect2').val(type.id); // Select the option with a value of '1'
+                            // $('#mySelect2').trigger('change'); // Notify any JS components that the value changed
+                            table.row(index).data(data)
+                            // $('td:eq(2)', row).val(''); // Change the value or make some change to the internal state
+                            // $('td:eq(2)', row).trigger('change.select2'); // Notify only Select2 of changes
+                            // return true;
+                        });
                     }
                 }
             },
@@ -133,7 +138,7 @@ var handleDataTable = function() {
                    "data":"name",
                 },
                 { "title": "Tipo/Tamaño",
-                    // "data":"type_formate",
+                    "data":"type",
                 },
                 { "title": "Fecha Limite",
                   "data":"deliveryDate",
@@ -148,24 +153,26 @@ var handleDataTable = function() {
                     searchable: false,
                     className: 'select-checkbox',
                     targets:   [0],
-                    // data: null,
                 },
                 {
                     targets: [2],
                     title:"Tipo",
-                    data:null,
+                    data:"type",
                     render: function ( data, type, full, meta ) {
-                        // console.log("In render: " + data);
-                        return data.type + data.tonnage;
+                        // console.log(data);
+                        if(data !== null)
+                        {
+                            return data.text;
+                        }
+
+                        return "";
+
                     },
                 },
                 {
                     targets: [3],
                     data:'deliveryDate',
                     render: function ( data, type, full, meta ) {
-                        console.log("Render Date");
-                        console.log(data);
-                        console.log(moment(data).format("DD/MM/YYYY"));
                         return moment(data).format("DD/MM/YYYY");
                     },
                 },
@@ -196,7 +203,7 @@ var handleDataTable2 = function () {
             "data":"name",
         },
         { "title": "Tipo/Tamaño",
-            // "data":"type_formate",
+            "data":"type",
         },
         { "title": "Fecha Limite",
             "data":"deliveryDate",
@@ -222,11 +229,11 @@ var handleDataTable2 = function () {
             columnDefs: [
                 {
                     targets: [1],
-                    // title:"Tipo",
-                    data:null,
+                    title:"Tipo",
+                    data:"type",
                     render: function ( data, type, full, meta ) {
-                        // console.log("In render: " + data);
-                        return data.type + data.tonnage;
+                        // console.log(data);
+                        return data.text;
                     },
                 },
                 {
@@ -277,6 +284,7 @@ var handleDataTable3 = function () {
                     "data":"name",
                 },
                 { "title": "Tipo/Tamaño",
+                    "data":"type"
                 },
                 { "title": "Fecha Límite",
                     "data":"deliveryDate",
@@ -300,9 +308,10 @@ var handleDataTable3 = function () {
                 {
                     targets: [2],
                     title:"Tipo",
-                    data:null,
+                    data:"type",
                     render: function ( data, type, full, meta ) {
-                        return data.type + data.tonnage;
+                        // console.log(data);
+                        return data.text;
                     },
                 },
                 {

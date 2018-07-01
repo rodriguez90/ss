@@ -36,9 +36,9 @@ var handleBootstrapWizardsValidation = function() {
                 }
                 else if(ui.index == 2)
                 {
-                    var wizard = $(this).bwizard();
-                    console.log(wizard);
-                    wizard.nextBtnText = "Finalizar";
+                    // var wizard = $(this).bwizard();
+                    // console.log(wizard);
+                    // wizard.nextBtnText = "Finalizar";
 
                     $('#confirming').prop('checked', false);
 
@@ -77,7 +77,7 @@ var handleBootstrapWizardsValidation = function() {
 
                     if(count <= 0)
                     {
-                        alert("Debe seleccionar al menos uno contenedor en el paso 1.");
+                        alert("Debe seleccionar al menos un contenedor en el paso 1.");
                         return false;
                     }
 
@@ -93,13 +93,23 @@ var handleBootstrapWizardsValidation = function() {
                                     var deliveryDate = value.deliveryDate;
                                     if(!moment(deliveryDate).isValid())
                                     {
-                                        table
-                                            .clear()
-                                            .draw();
+                                        // table
+                                        //     .clear()
+                                        //     .draw();
                                         result = false;
                                         alert("Debe definir la Fecha Límite para los contenedores del Booking.");
                                         return false;
                                     }
+                                }
+
+                                if(value.type == null)
+                                {
+                                    // table
+                                    //     .clear()
+                                    //     .draw();
+                                    result = false;
+                                    alert("Debe asignar un tipo para los contenedores seleccionados.");
+                                    return false;
                                 }
                             }
                         } );
@@ -179,7 +189,7 @@ var handleBootstrapWizardsValidation = function() {
                                 {
                                     alert(response['msg']);
                                 }
-                                // return true;
+                                result = false;
                             },
                             error: function(data) {
                                 // console.log(data);

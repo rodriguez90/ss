@@ -374,8 +374,9 @@ class ProcessController extends Controller
                         {
                             $containerModel = new Container();
                             $containerModel->name = $container['name'];
-                            $containerModel->code = $container['type'];
-                            $containerModel->tonnage = $container['tonnage'];
+                            $containerModel->code = $container['type']['code'];
+                            $containerModel->tonnage = $container['type']['tonnage'];
+                            $containerModel->type_id = $container['type']['id'];
                             $containerModel->status = 'Pendiente';
                             $containerModel->active = 1;
 
@@ -388,7 +389,7 @@ class ProcessController extends Controller
                                 break;
                             }
                         }
-                        $transCompany = TransCompany::findOne(['id'=>$container['transCompany']['id']]);
+                        $transCompany = TransCompany::findOne(['ruc'=>$container['transCompany']['ruc']]);
                         if($transCompany === null) // new trans company
                         {
                             $transCompany = new TransCompany();

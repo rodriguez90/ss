@@ -5,12 +5,10 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\modules\rd\models\Container */
 
-$this->title = Yii::t('app', 'Update Container: ' . $model->name, [
-    'nameAttribute' => '' . $model->name,
-]);
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Containers'), 'url' => ['index']];
+$this->title = 'Update Container: ' . $model->name;
+$this->params['breadcrumbs'][] = ['label' => 'Containers', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->name, 'url' => ['view', 'id' => $model->id]];
-$this->params['breadcrumbs'][] = Yii::t('app', 'Update');
+$this->params['breadcrumbs'][] = 'Update';
 ?>
 <div class="container-update">
 

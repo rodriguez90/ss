@@ -122,6 +122,19 @@ class ContainerTypeController extends Controller
         return $this->redirect(['index']);
     }
 
+    public function actionTypes()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $response = array();
+        $response['success'] = true;
+        $response['types'] = ContainerType::find()->orderBy('name')->all();
+        $response['msg'] = '';
+        $response['msg_dev'] = '';
+
+        return $response;
+    }
+
     /**
      * Finds the ContainerType model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
