@@ -19,7 +19,7 @@ class ContainerSearch extends Container
     {
         return [
             [['id', ], 'integer'],
-            [['active', 'tonnage', 'name', 'code', 'status'], 'safe'],
+            [['active', 'type_id', 'tonnage', 'name', 'code', 'status'], 'safe'],
         ];
     }
 
@@ -69,6 +69,7 @@ class ContainerSearch extends Container
         $query->andFilterWhere([
             'id' => $this->id,
             'tonnage' => $this->tonnage,
+            'type_id'=>$this->type_id
         ]);
 
         if(isset($this->active) && !empty($this->active)){

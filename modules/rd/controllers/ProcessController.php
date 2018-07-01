@@ -19,7 +19,6 @@ use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\ForbiddenHttpException;
-use Yii\web\Response;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\helpers\Html;
@@ -28,6 +27,7 @@ use kartik\mpdf\Pdf;
 use Mpdf\Mpdf;
 
 use Da\QrCode\QrCode;
+use yii\web\Response;
 
 /**
  * ProcessController implements the CRUD actions for Process model.
@@ -251,6 +251,10 @@ class ProcessController extends Controller
         return $response;
     }
 
+    /**
+     * @return array
+     * @throws ForbiddenHttpException
+     */
     public function actionTransactions()
     {
         if(!Yii::$app->user->can("process_list"))
@@ -260,28 +264,25 @@ class ProcessController extends Controller
 
         $response = array();
         $response['msg'] = '';
+        $response['success'] = true;
         $response['transactions'] = [];
         $id = Yii::$app->request->get('id');
+        $transCompanyId = Yii::$app->request->get('transCompanyId');
         $actived = Yii::$app->request->get('actived');
 
-        $user = AdmUser::findOne(["id"=>Yii::$app->user->getId()]);
-
-        $trans_company = TransCompany::find()
-            ->innerJoin("user_transcompany","user_transcompany.transcompany_id = trans_company.id")
-            ->innerJoin("adm_user","user_transcompany.user_id = adm_user.id")
-            ->where(["user_transcompany.user_id"=>$user->getId()])
-            ->one();
-
-        if(isset($id))
+        if(isset($id) && isset($transCompanyId))
         {
             $process = Process::findOne(['id'=>$id]);
-//            $condition = 'process_id = ' . $id;
-//            if(isset($actived))
-//            {
-//                $condition = $condition . ' and active = ' . $actived;
-//            }
 
-            if($process)
+            $trans_company = TransCompany::findOne(['id'=>$transCompanyId]);
+
+            if($trans_company == null)
+            {
+                $response['success'] = false;
+                $response['msg'] = Yii::t("app", "Debe especificar la compañia de transporte.");
+            }
+
+            if($process && $response['success'])
             {
                 $transactions = ProcessTransaction::find()->where(['process_id'=>$id])
                                                           ->andWhere(['trans_company_id'=>$trans_company->id])
@@ -290,7 +291,6 @@ class ProcessController extends Controller
 
                 $response['success'] = true;
                 $response['msg'] = "Datos encontrados.";
-//                $transactions = $process->receptionTransactions;
                 $response['transactions'] = [];
                 $response['process'] = $process;
                 $response['angecy'] = $process->agency;
@@ -312,8 +312,6 @@ class ProcessController extends Controller
             $response['success'] = false;
             $response['msg'] = Yii::t("app", "No fue posible procesar los datos.");
         }
-//        return json_encode($response);
-//        return $response;
         return $response;
     }
 
@@ -370,8 +368,9 @@ class ProcessController extends Controller
                         {
                             $containerModel = new Container();
                             $containerModel->name = $container['name'];
-                            $containerModel->code = $container['type'];
-                            $containerModel->tonnage = $container['tonnage'];
+                            $containerModel->code = $container['type']['code'];
+                            $containerModel->tonnage = $container['type']['tonnage'];
+                            $containerModel->type_id = $container['type']['id'];
                             $containerModel->status = 'Pendiente';
                             $containerModel->active = 1;
 
@@ -384,7 +383,7 @@ class ProcessController extends Controller
                                 break;
                             }
                         }
-                        $transCompany = TransCompany::findOne(['id'=>$container['transCompany']['id']]);
+                        $transCompany = TransCompany::findOne(['ruc'=>$container['transCompany']['ruc']]);
                         if($transCompany === null) // new trans company
                         {
                             $transCompany = new TransCompany();
@@ -493,9 +492,13 @@ class ProcessController extends Controller
             }
             catch (Exception $e)
             {
-                $response['success'] = false;
-                $response['msg'] = $e->getMessage();
-                $transaction->rollBack();
+                if($e->getCode() !== '01000')
+                {
+                    $response['success'] = false;
+                    $response['msg'] = "Ah ocurrido un error al salvar los datos en el servidor.";
+                    $response['msg_dev'] = $e->getMessage();
+                    $transaction->rollBack();
+                }
             }
         }
         else {

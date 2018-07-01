@@ -26,47 +26,90 @@ FormAsset::register($this);
     ]); ?>
 
 
-
-    <div class="form-group">
-        <label class="col-md-3 col-sm-3 control-label">Nombre</label>
-        <div class="col-md-9">
-    <?= $form->field($model, 'name')->textInput(['class' => 'form-control','data-parsley-required'=>"true" ])->label(false)  ?>
-        </div>
-    </div>
-
-
-    <div class="form-group">
-        <label class="col-md-3 col-sm-3 control-label">RUC</label>
-        <div class="col-md-9">
-            <?= $form->field($model, 'ruc')->textInput(['class' => 'form-control','data-parsley-required'=>"true" , 'data-parsley-type'=>"number",'data-parsley-minlength'=>"13", 'data-parsley-maxlength'=>"13"])->label(false) ?>
-        </div>
-    </div>
-
-
-    <div class="form-group">
-        <label class="col-md-3 col-sm-3 control-label">Dirección</label>
-        <div class="col-md-9">
-    <?= $form->field($model, 'address')->textarea(['rows' => 6])->label(false)  ?>
-        </div>
-    </div>
-
-
+    <div class="col-md-6 col-sm-6" >
         <div class="form-group">
-            <label class="col-md-3 col-sm-3 control-label">Activa</label>
-            <div class="col-md-9">
-    <?= $form->field($model, 'active')->checkbox(['data-render'=>"switchery"], false)->label(false)  ?>
+            <label class="col-md-3 col-sm-3 control-label">Nombre</label>
+            <div class="ccol-md-9 col-sm-9">
+                <?= $form->field($model, 'name')->textInput(['class' => 'form-control','data-parsley-required'=>"true" ])->label(false)  ?>
             </div>
         </div>
 
 
-    <div class="form-group">
-        <label class="col-md-3 col-sm-3 control-label"></label>
-        <div class="col-md-9">
-            <?= Html::button('Cancelar', ['class' => 'btn btn-default', 'onclick' => 'window.history.go(-1)']) ?>
-            <?= Html::submitButton('Guardar', ['class' => 'btn btn-success']) ?>
+        <div class="form-group">
+            <label class="col-md-3 col-sm-3 control-label">Dirección</label>
+            <div class="col-md-9 col-sm-9">
+                <?= $form->field($model, 'address')->textarea(['rows' => 3])->label(false)  ?>
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <label class="col-md-3 col-sm-3 control-label">Activa</label>
+            <div class="col-md-9 col-sm-9">
+                <?= $form->field($model, 'active')->checkbox(['data-render'=>"switchery", "data-theme"=>"blue"], false)->label(false)  ?>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-md-6 col-sm-6" id="colum2">
+
+        <div class="form-group">
+            <label class="col-md-3 col-sm-3 control-label">RUC</label>
+            <div class="col-md-9 col-sm-9">
+                <?= $form->field($model, 'ruc')->textInput(['class' => 'form-control','data-parsley-required'=>"true" , 'data-parsley-type'=>"number",'data-parsley-minlength'=>"13", 'data-parsley-maxlength'=>"13"])->label(false) ?>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-md-3 col-sm-3 control-label">Teléfono</label>
+            <div class="col-md-7 col-sm-7">
+                <input name="telefono-0"   type="text" value="<?= $number1->phone_number ?>"  class="form-control" data-parsley-required="true"/>
+            </div>
+            <div class="col-md-2 col-sm-2">
+                <a id="add-phone" class="btn btn-primary"  title="Adicionar Teléfono" > <i class="fa fa-plus"></i></a>
+            </div>
+        </div>
+
+        <?php
+            $nphone = 1;
+            foreach ( $phones as $p){
+               echo "<div id='group-" . $nphone . "' class='form-group phone' >";
+               echo "<label class='col-md-3 col-sm-3 control-label'>Teléfono</label>";
+               echo "<div class='col-md-7 col-sm-7'>";
+               echo "<input name='telefono-".$nphone."' type='text' value='".$p->phone_number."'  class='form-control' data-parsley-required='true'/>";
+               echo " </div> ";
+               echo "<div class='col-md-2 col-sm-2'>";
+               echo " <a id='btn-".$nphone."' class='btn btn-danger'  title='Eliminar Teléfono' > ";
+               echo "<i class='fa fa-minus'></i></a> ";
+               echo "</div> </div>";
+                $nphone++;
+            }
+        ?>
+
+
+    </div>
+
+    <div class="col-md-12 col-sm-12">
+        <div class="col-md-3 col-sm-3">
+        </div>
+        <div class="col-md-6 col-sm-6">
+            <div class="form-group">
+                <label class="col-md-3 col-sm-3 control-label"></label>
+                <div class="col-md-9">
+                    <?= Html::button('Cancelar', ['class' => 'btn btn-default', 'onclick' => 'window.history.go(-1)']) ?>
+                    <?= Html::submitButton('Guardar', ['class' => 'btn btn-success']) ?>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-3">
         </div>
     </div>
 
     <?php ActiveForm::end(); ?>
 
 </div>
+
+
+
+<?php $this->registerJsFile('@web/js/modules/rd/transcompany/addphone.js',['depends' => ['app\assets\FormAsset']]);?>
+

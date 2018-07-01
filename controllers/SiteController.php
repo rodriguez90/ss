@@ -25,6 +25,7 @@ use PDO;
 
 use Mpdf\Mpdf;
 use Yii;
+use yii\db\Command;
 use yii\filters\AccessControl;
 use yii\helpers\Url;
 use yii\web\Controller;
@@ -104,9 +105,9 @@ class SiteController extends Controller
 
         // sql query for calling the procedure
 //        $sql = "exec disv..sp_sgt_bl_cons HLCUMTR180305591";
-//        $sql = "exec disv..sp_sgt_companias_cons 12917504";
-//        $sql = "exec disv..sp_sgt_placa_cons 12917504";
-//        $result = Yii::$app->db->createCommand($sql)->queryAll();
+//        $sql = "exec sp_sgt_companias_cons 12917504";
+//        $sql = "exec sp_sgt_placa_cons 12917504";
+//        $result = Yii::$app->db2->createCommand($sql)->queryAll();
 //        var_dump($result);die;
 //
 //        $result = \Yii::$app->db->createCommand($sql, $params)
@@ -167,23 +168,23 @@ class SiteController extends Controller
 
         $user = AdmUser::findOne(['id'=>Yii::$app->user->getId()]);
         $params = Yii::$app->request->queryParams;
-        if($user && $user->hasRol('Agencia'))
-        {
-            $userAgency = UserAgency::findOne(['user_id'=>$user->id]);
-            $params['agency_id'] = '';
+//        if($user && ($user->hasRol('Importador')  ||  $user->hasRol('Exportador')))
+//        {
+//            $userAgency = UserAgency::findOne(['user_id'=>$user->id]);
+//            $params['agency_id'] = '';
 //            if($userAgency)
 //            {
 //                $params['agency_id'] = $userAgency->agency->name;
 //            }
-        }
-        else if ($user && $user->hasRol('Cia_transporte')){
-            $userCiaTrans = UserTranscompany::findOne(['user_id'=>$user->id]);
-            $params['trans_company_id'] = '';
-            if($userCiaTrans)
-            {
-                $params['trans_company_id'] = $userCiaTrans->transcompany->name;
-            }
-        }
+//        }
+//        else if ($user && $user->hasRol('Cia_transporte')){
+//            $userCiaTrans = UserTranscompany::findOne(['user_id'=>$user->id]);
+//            $params['trans_company_id'] = '';
+//            if($userCiaTrans)
+//            {
+//                $params['trans_company_id'] = $userCiaTrans->transcompany->id;
+//            }
+//        }
 
         $searchModel = new ProcessSearch();
         $dataProvider = $searchModel->search($params);
@@ -345,14 +346,18 @@ class SiteController extends Controller
 
         $trans_company = TransCompany::findAll(["active"=>1]);
         $agency = Agency::findAll(["active"=>1]);
-        //process relacionados con el usuario
-        $process = Process::findAll(["active"=>1]);
+        $process = Process::find()
+            ->all();
 
-        $params = Yii::$app->request->queryParams;
-        $searchModel = new ProcessSearch();
-        $dataProvider = $searchModel->search($params);
+        $searchModel = null;
+        $dataProvider = null;
 
         if(Yii::$app->request->isPost){
+
+            $params = Yii::$app->request->queryParams;
+            $searchModel = new ProcessSearch();
+            $dataProvider = $searchModel->search($params);
+
             $search_bl = Yii::$app->request->post("bl");
             $search_agency_id =  Yii::$app->request->post("agency_id");
             $search_trans_company =  Yii::$app->request->post("trans_company");
@@ -370,13 +375,10 @@ class SiteController extends Controller
                     $dataProvider->query->andFilterWhere(['process.id'=>$filter]);
             }
 
-            /*
-            if(isset($search_trans_company)) {
-                $dataProvider->query->andFilterWhere(['like', 'process_transaction.process_id', $search_trans_company]);
-            }*/
-
 
         }
+
+
 
         return $this->render('report', [
             'searchModel'=>$searchModel,
@@ -407,34 +409,30 @@ class SiteController extends Controller
             $row = [];
             $row["process"] = $p;
             $containers = Container::find()
+                ->select('container.id,container.name,container.tonnage,calendar.start_datetime')
                 ->innerJoin("process_transaction","process_transaction.container_id = container.id")
+                ->innerJoin("ticket","ticket.process_transaction_id = process_transaction.id")
+                ->innerJoin("calendar","calendar.id = ticket.calendar_id")
                 ->innerJoin("process","process_transaction.process_id = process.id")
                 ->where(["process.id"=>$p->id])
+                ->asArray()
                 ->all();
             $row["containers"] = $containers;
-            $tikets = Ticket::find()
-                ->innerJoin("calendar","calendar.id = ticket.calendar_id")
-                ->innerJoin("process_transaction","process_transaction.id = ticket.process_transaction_id")
-                ->innerJoin("process","process_transaction.process_id = process.id")
-                ->where(["process.id"=>$p->id])
-                ->all();
-            $row["tyckets"] = $tikets;
+
+
             $result [] = $row;
         }
 
-        var_dump($result);die;
+        //return $this->render('print_report',['result'=>$result]);
 
-       return $this->render('print_report',['process'=>$process]);
-        /*
 
-        $body = $this->renderPartial('print_report', [
-
-        ]);
+        $body = $this->renderPartial('print_report',
+            ['result'=>$result]);
 
         $pdf =  new mPDF(['mode'=>'utf-8' , 'format'=>'A4-L']);
         $pdf->SetTitle("Solicitudes Realizadas");
         $pdf->WriteHTML($body);
         $path= $pdf->Output("Solicitudes Realizadas.pdf","D");
-        */
+
     }
 }

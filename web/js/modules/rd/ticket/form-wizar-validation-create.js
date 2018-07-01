@@ -60,6 +60,7 @@ var handleBootstrapWizardsValidation = function() {
                     //clone to table 2
 
                     $.each(selectedTransactions, function (i) {
+
                         var tId = selectedTransactions[i];
                         var t = transactions.get(tId);
                         var c = containers.get(t.container_id);

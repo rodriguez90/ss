@@ -11,7 +11,7 @@ use yii\web\NotFoundHttpException;
 use yii\web\ForbiddenHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
-use Yii\web\Response;
+use yii\web\Response;
 
 /**
  * ContainerTypeController implements the CRUD actions for ContainerType model.
@@ -120,6 +120,19 @@ class ContainerTypeController extends Controller
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
+    }
+
+    public function actionTypes()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $response = array();
+        $response['success'] = true;
+        $response['types'] = ContainerType::find()->orderBy('name')->all();
+        $response['msg'] = '';
+        $response['msg_dev'] = '';
+
+        return $response;
     }
 
     /**

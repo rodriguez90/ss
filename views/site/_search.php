@@ -9,6 +9,7 @@
 use yii\helpers\Html;
 //use yii\widgets\ActiveForm;
 use yii\bootstrap\ActiveForm;
+use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $model app\modules\rd\models\ProcessSearch */
@@ -113,10 +114,9 @@ use yii\bootstrap\ActiveForm;
 
         <div class="form-group" style="float: right">
 
-            <?= Html::button('Cancelar',['class'=>'btn btn-default','onclick'=>'window.history.go(-1)']) ?>
-
             <?= Html::submitButton(Yii::t('app', 'Buscar'), ['class' => 'btn btn-primary']) ?>
 
+            <a id="print-process" class="<?= $dataProvider !=null ?  'btn btn-inverse' : 'btn btn-inverse disabled' ?>"  href="<?= Url::to(['/site/printreport?bl='.$search_bl."&agency_id=".$search_agency_id."&trans_company_id=".$search_trans_company]) ?>" style="color: white;font-size: 14px;" title="Exportar PDF" > <i class="fa fa-file-pdf-o"></i></a>
 
         </div>
 

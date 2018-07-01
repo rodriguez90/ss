@@ -52,7 +52,7 @@ class UserSearch extends AdmUser
             ],
             'sort' => [
                 'defaultOrder' => [
-                    'name' => SORT_ASC,
+                    'nombre' => SORT_ASC,
                 ]
             ],
         ]);

@@ -8,6 +8,7 @@ use app\modules\administracion\models\AuthItemChild;
 use app\modules\administracion\models\AuthItemChildSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\web\ForbiddenHttpException;
 use yii\filters\VerbFilter;
 use yii\web\Response;
 
@@ -85,7 +86,7 @@ class AuthitemchildController extends Controller
      */
     public function actionCreate()
     {
-        if(\Yii::$app->user->can('Admin_mod')){
+        if(\Yii::$app->user->can('admin_mod')){
 
             $model = new AuthItemChild();
             $parent = Yii::$app->request->get('parent');
@@ -150,7 +151,7 @@ class AuthitemchildController extends Controller
      */
     public function actionUpdate($parent, $child)
     {
-        if(\Yii::$app->user->can('Admin_mod')){
+        if(\Yii::$app->user->can('admin_mod')){
 
             $model = $this->findModel($parent, $child);
 
@@ -179,7 +180,7 @@ class AuthitemchildController extends Controller
      */
     public function actionDelete($parent, $child)
     {
-        if(\Yii::$app->user->can('Admin_mod')){
+        if(\Yii::$app->user->can('admin_mod')){
 
         }else{
             throw new ForbiddenHttpException('Acceso denegado');

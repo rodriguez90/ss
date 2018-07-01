@@ -91,10 +91,10 @@ class ProcessSearch extends Process
             $this->agency_id = $params['agency_id'];
         }
 
-//        if(isset($params['trans_company_id']))
-//        {
-//            $this->trans_company_id = $params['trans_company_id'];
-//        }
+        if(isset($params['trans_company_id']))
+        {
+            $query->andWhere(['process_transaction.trans_company_id'=>$params['trans_company_id']]) ;
+        }
 
         if (!$this->validate()) {
             return $dataProvider;

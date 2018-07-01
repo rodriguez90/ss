@@ -5,58 +5,34 @@ var handleIonRangeSlider = function() {
 
     var $range = $("#default_rangeSlider");
 
-    // $range.ionRangeSlider({
-    //     type: "single",
-    //     min: 20,
-    //     max: 40,
-    //     from: 20,
-    //     step: 20,
-    //     prettify: false,
-    //     // hasGrid: true,
-    //     // onStart: function (data) {
-    //     //     console.log("onStart");
-    //     // },
-    //     // // onChange: function (data) {
-    //     // //     console.log("onChange");
-    //     // // },
-    //     // onFinish: function (data) {
-    //     //     console.log("onFinish");
-    //     //     // console.log(data);
-    //     //     // // var $this =  ;
-    //     //     // var value = $('#default_rangeSlider').prop("value", data);
-    //     //     //
-    //     //     // console.log("Value: " + value);
-    //     //
-    //     // },
-    //     // onUpdate: function (data) {
-    //     //     console.log("onUpdate");
-    //     // }
-    // });
-
     $range.ionRangeSlider({
         type: "single",
         values:[20,40],
-        from: 20,
-        // prettify: false,
-        // hasGrid: true,
-        // onStart: function (data) {
-        //     console.log("onStart");
-        // },
-        // // onChange: function (data) {
-        // //     console.log("onChange");
-        // // },
+        prettify: false,
+        hasGrid: false,
+        onStart: function (data) {
+            console.log("onStart");
+        },
+        onChange: function (data) {
+            console.log("onChange");
+            console.log(data);
+            // // var $this =  ;
+            var value = $('#default_rangeSlider').prop("value", data.fromValue);
+            //
+            console.log("Value: " + data.fromValue);
+        },
         onFinish: function (data) {
             console.log("onFinish");
-            // console.log(data);
+            console.log(data);
             // // var $this =  ;
-            // var value = $('#default_rangeSlider').prop("value", data);
+            var value = $('#default_rangeSlider').prop("value", data.fromValue);
             //
-            // console.log("Value: " + value);
+            console.log("Value: " + data.fromValue);
 
         },
-        // onUpdate: function (data) {
-        //     console.log("onUpdate");
-        // }
+        onUpdate: function (data) {
+            console.log("onUpdate");
+        }
     });
 
     $range.on("change", function () {
@@ -65,18 +41,15 @@ var handleIonRangeSlider = function() {
 
         console.log("Value: " + value);
     });
+
+    $('#default_rangeSlider').prop("value", modelTonnage);
 };
 
-var FormPlugins = function () {
-    "use strict";
-    return {
-        //main function
-        init: function () {
-            handleIonRangeSlider();
-        }
-    };
-}();
+var handleBootstrapCombobox = function() {
+    $('.combobox').combobox();
+};
 
 $(document).ready(function() {
-    FormPlugins.init();
+    handleIonRangeSlider();
+    handleBootstrapCombobox();
 });

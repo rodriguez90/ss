@@ -1,5 +1,6 @@
 <?php
 
+use app\modules\rd\models\TransCompanyPhone;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 
@@ -43,6 +44,25 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'active',
                 'value' => ($model->active == 1)   ? 'Activa' : 'Inactiva',
+            ],
+            [
+                'attribute' => 'phones',
+                value => function($data){
+                    $result = "";
+                    $phones = TransCompanyPhone::findAll(['trans_company_id'=>$data['id']]);
+                    $n = count($phones);
+                    $i = 1;
+                    foreach ($phones as $p){
+                        if($i<$n)
+                        $result .=  $p->phone_number." , ";
+                        else
+                            $result .=  $p->phone_number;
+                        $i++;
+                    }
+
+                    return $result;
+                },
+
             ]
         ],
         'options'=>['class' => 'table table-striped table-bordered table-condensed detail-view'],
