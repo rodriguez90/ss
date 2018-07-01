@@ -183,9 +183,14 @@ class CalendarController extends Controller
                 }
 
             }catch (\yii\base\Exception $ex){
-                $result ['status']= 0;
-                $result['msg'] = "!Error: ".$ex->getMessage();
-                $transaction->rollBack();
+
+
+                if($e->getCode() !== '01000')
+                {
+                    $result ['status']= 0;
+                    $result['msg'] = "!Error: ".$ex->getMessage();
+                    $transaction->rollBack();
+                }
             }
 
 

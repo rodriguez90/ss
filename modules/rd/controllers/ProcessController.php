@@ -430,8 +430,7 @@ class ProcessController extends Controller
 
                     if($tmpResult)
                     {
-//                        $transaction->
-//                        $transaction->commit();
+                        $transaction->commit();
 
                         // send email
                         $remitente = AdmUser::findOne(['id'=>\Yii::$app->user->getId()]);

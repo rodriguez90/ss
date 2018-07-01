@@ -5,6 +5,7 @@ namespace app\modules\rd\controllers;
 use Yii;
 use app\modules\rd\models\TransCompany;
 use app\modules\rd\models\TransCompanySearch;
+use yii\base\Exception;
 use yii\helpers\Html;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -162,41 +163,51 @@ class TransCompanyController extends Controller
             $sql = "exec sp_sgt_companias_cons " . $code;
             $results = Yii::$app->db2->createCommand($sql)->queryAll();
 
-            $trasaction = TransCompany::getDb()->beginTransaction();
+            try{
+                $trasaction = TransCompany::getDb()->beginTransaction();
 
-            foreach ($results as $result)
-            {
-                $t = TransCompany::findOne(['ruc'=>$result['ruc_empresa']]);
-
-                if($t === null)
+                foreach ($results as $result)
                 {
-                    $t = new TransCompany();
-                    $str = iconv("CP1257", "UTF-8", $result['nombre_empresa']);
-                    $t->name = Html::encode($str);
-                    $t->ruc = $result['ruc_empresa'];
-                    $t->address = "NO TIENE";
-                    $t->active = 1;
-                    if(!$t->save())
+                    $t = TransCompany::findOne(['ruc'=>$result['ruc_empresa']]);
+
+                    if($t === null)
                     {
-                        $response['success'] = false;
-                        $response['msg'] = "Ah ocurrido un error al buscar las Empresas de Transporte.";
-                        $response['msg_dev'] = implode(' ', $t->getErrors(false));
-                        break;
+                        $t = new TransCompany();
+                        $str = iconv("CP1257", "UTF-8", $result['nombre_empresa']);
+                        $t->name = Html::encode($str);
+                        $t->ruc = $result['ruc_empresa'];
+                        $t->address = "NO TIENE";
+                        $t->active = 1;
+                        if(!$t->save())
+                        {
+                            $response['success'] = false;
+                            $response['msg'] = "Ah ocurrido un error al buscar las Empresas de Transporte.";
+                            $response['msg_dev'] = implode(' ', $t->getErrors(false));
+                            break;
+                        }
                     }
+                    else {
+                        $str = iconv("CP1257", "UTF-8",  $t->name);
+                        $t->name =$str;
+                    }
+                    $response['trans_companies'][] = $t;
                 }
-                else {
-                    $str = iconv("CP1257", "UTF-8",  $t->name);
-                    $t->name =$str;
+
+                if($response['success'])
+                {
+                    $trasaction->commit();
                 }
-                $response['trans_companies'][] = $t;
+                else
+                {
+                    $trasaction->rollBack();
+                }
             }
-            if($response['success'])
+            catch (Exception $e)
             {
-//                $trasaction->commit();
-            }
-            else
-            {
-                $trasaction->rollBack();
+                if($e->getCode() !== '01000')
+                {
+                    $trasaction->rollBack();
+                }
             }
         }
 
