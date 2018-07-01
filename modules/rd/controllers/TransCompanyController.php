@@ -164,7 +164,8 @@ class TransCompanyController extends Controller
             $results = Yii::$app->db2->createCommand($sql)->queryAll();
 
             try{
-                $trasaction = TransCompany::getDb()->beginTransaction();
+//                $trasaction = TransCompany::getDb()->beginTransaction();
+//                $doCommit = false;
 
                 foreach ($results as $result)
                 {
@@ -172,12 +173,14 @@ class TransCompanyController extends Controller
 
                     if($t === null)
                     {
+//                        $doCommit = true;
                         $t = new TransCompany();
                         $str = iconv("CP1257", "UTF-8", $result['nombre_empresa']);
-                        $t->name = Html::encode($str);
+                        $t->name = $str;
                         $t->ruc = $result['ruc_empresa'];
                         $t->address = "NO TIENE";
                         $t->active = 1;
+
                         if(!$t->save())
                         {
                             $response['success'] = false;
@@ -188,19 +191,20 @@ class TransCompanyController extends Controller
                     }
                     else {
                         $str = iconv("CP1257", "UTF-8",  $t->name);
-                        $t->name =$str;
+                        $t->name = $str;
                     }
                     $response['trans_companies'][] = $t;
                 }
 
-                if($response['success'])
-                {
-                    $trasaction->commit();
-                }
-                else
-                {
-                    $trasaction->rollBack();
-                }
+//                if($response['success'])
+//                {
+//                    if($doCommit)
+//                        $trasaction->commit();
+//                }
+//                else
+//                {
+//                    $trasaction->rollBack();
+//                }
             }
             catch (Exception $e)
             {

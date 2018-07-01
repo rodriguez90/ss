@@ -1,6 +1,12 @@
 <?php
 
 error_reporting(E_ERROR);
+// SET THE INTERNAL ENCODING
+//$charset = 'iso-8859-1';
+//$charset = 'latin1';
+//mb_internal_encoding($charset);
+//mb_http_output($charset);
+
 use yii\helpers\Url;
 // comment out the following two lines when deployed to production
 defined('YII_DEBUG') or define('YII_DEBUG', true);

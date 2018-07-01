@@ -174,7 +174,7 @@ class CalendarController extends Controller
 
                 if($ok)
                 {
-                    $transaction->commit();
+//                    $transaction->commit();
                     $result ['status']= 1;
                     $result['msg'] = "Disponibilidad creada correctamente.";
                 }

@@ -31,11 +31,11 @@ return [
         'sybase' => \websightnl\yii2\sybase\Schema::className(),
     ],
     //'dsn' => 'odbc:Driver={SYBASE ASE ODBC Driver};NA=190.63.174.169,7100;Uid=xedrux;Pwd=xedrux;',
-//    'dsn' => 'odbc:Driver={Adaptive Server Enterprise};app=SGT;server=190.63.174.169;port=7100;db=sgt;uid=xedrux;pwd=xedrux;AUTOCOMMIT=FALSE;',
-    'dsn' => 'odbc:Driver={Adaptive Server Enterprise};app=SGT;server=190.63.174.169;port=7100;db=sgt;uid=xedrux;pwd=xedrux;AUTOCOMMIT=TRUE;',
+//    'dsn' => 'odbc:Driver={Adaptive Server Enterprise};app=SGT;server=190.63.174.169;port=7100;db=sgt;uid=xedrux;pwd=xedrux;AUTOCOMMIT=TRUE;',
+    'dsn' => 'odbc:Driver={Adaptive Server Enterprise};app=SGT;server=190.63.174.169;port=7100;db=sgt;uid=xedrux;pwd=xedrux;',
     'username' => 'xedrux',
     'password' => 'xedrux',
-    'charset' => 'utf8',
+    'charset' => 'latin1',
 //    'attributes' => [
 //    PDO::ATTR_PERSISTENT => TRUE,
 //    PDO::ATTR_AUTOCOMMIT => FALSE

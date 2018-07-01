@@ -368,19 +368,14 @@ class UserController extends Controller
                                         }
                                         break;
                                 }
-
-                                if($ok) {
-                                    $transaction->commit();
-                                }else{
-                                    $transaction->rollBack();
-                                }
-                                return $this->redirect(['index']);
                             }
-
+                        }
+                        if($ok) {
+                            $transaction->commit();
+                            return $this->redirect(['index']);
                         }else{
                             $transaction->rollBack();
                         }
-
                     }
 
                 }else{
@@ -472,14 +467,23 @@ class UserController extends Controller
     public function actionGetagenciastrans(){
 
         Yii::$app->response->format = Response::FORMAT_JSON;
+        Yii::$app->response->charset = 'CP1257';
 
-        $result = TransCompany::find()
+        $results = TransCompany::find()
             ->all();
+        $transactions = [];
 
-        if($result!=null)
-            return $result;
+        if($results != null)
+        {
+             foreach ($results as $result)
+             {
+                 $str = iconv("CP1257", "UTF-8", $result->name);
+                 $result->name = $str;
+                 $transactions[]=$result;
+             }
+        }
 
-        return false;
+        return $transactions;
 
     }
 }
