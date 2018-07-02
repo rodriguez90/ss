@@ -16,40 +16,6 @@ var handleBootstrapWizardsValidation = function() {
 
                 if(ui.index == 1)
                 {
-                    return true
-                }
-                else if(ui.index==2)
-                {
-
-                }
-                else
-                {
-
-                }
-            },
-            validating: function (e, ui) {
-
-                var result = false;
-
-                // back navigation no check validation
-                if(ui.index > ui.nextIndex)
-                {
-                    if(ui.index == 2)
-                        $('#confirming').prop('checked', false);
-
-                    return true;
-                }
-
-                if (ui.index == 0) { // paso 1 reserva de cupos
-                    // check selected transaction > 0
-                    //make clone copy to table2
-
-                    if(selectedTransactions.length <= 0)
-                    {
-                        alert("Debe reservar cupos para los contenedores en el paso 1.");
-                        return false
-                    }
-
                     // hace prereservas
                     var table2 = $('#data-table2').DataTable();
 
@@ -85,9 +51,77 @@ var handleBootstrapWizardsValidation = function() {
                             ).draw();
                         }
                     });
+                }
+                else if(ui.index==2)
+                {
+                    var table = $('#data-table2').DataTable();
+                    var table3 = $('#data-table3').DataTable();
+                    var error = false;
+
+                    table3
+                        .clear()
+                        .draw();
+
+                    table
+                        .rows( )
+                        .data()
+                        .each( function ( value, index ) {
+
+                            var tId = value.transactionId;
+                            var t = transactions.get(tId);
+                            var c = containers.get(t.container_id);
+                            var ticketData = ticketDataMap.get(tId);
+
+                            var registerTrunk = "#selectTrunk" + value.name;
+                            var nameDriver = "#selectDriver" + value.name;
+
+                            var trunkData = $(registerTrunk).select2('data');
+                            var driverData = $(registerTrunk).select2('data');
+
+                            if(ticketData)
+                            {
+                                var data = {
+                                    name: c.name,
+                                    type: c.code,
+                                    tonnage: c.tonnage,
+                                    deliveryDate: t.delivery_date,
+                                    agency: agency.name,
+                                    dateTicket:ticketData.dateTicket,
+                                    registerTrunk: trunkData[0].id,
+                                    registerDriver: value.registerDriver,
+                                    nameDriver: driverData[0].text,
+                                    transactionId:tId
+                                };
+
+                                table3.row.add(
+                                    data
+                                ).draw();
+                            }
+                        });
+                }
+            },
+            validating: function (e, ui) {
+
+                var result = false;
+
+                // back navigation no check validation
+                if(ui.index > ui.nextIndex)
+                {
+                    if(ui.index == 2)
+                        $('#confirming').prop('checked', false);
+
+                    return true;
+                }
+
+                if (ui.index == 0) { // paso 1 reserva de cupos
+
+                    if(selectedTransactions.length <= 0)
+                    {
+                        alert("Debe reservar cupos para los contenedores en el paso 1.");
+                        return false
+                    }
 
                    return true;
-
                 }
                 else if (ui.index == 1) { // paso 2: cedula, nombre del chofer, placa del carro
 
@@ -106,8 +140,13 @@ var handleBootstrapWizardsValidation = function() {
                         .each( function ( value, index ) {
 
                             if(error) return false;
+                            var registerTrunk = "#selectTrunk" + value.name;
+                            var nameDriver = "#selectDriver" + value.name;
 
-                            if(value.registerTrunk.length === 0 || value.registerDriver.length === 0 || value.nameDriver.length === 0)
+                            var trunkData = $(registerTrunk).select2('data');
+                            var driverData = $(registerTrunk).select2('data');
+
+                            if(trunkData.length == 0 || driverData.length == 0 || value.registerDriver.length === 0)
                             {
                                 table3
                                     .clear()
@@ -116,35 +155,9 @@ var handleBootstrapWizardsValidation = function() {
                                 alert("Debe introducir la placa del carro y la cédual y nombre chofer para todo los contenedores.");
                                 return false;
                             }
+                        });
 
-                            var tId = value.transactionId;
-                            var t = transactions.get(tId);
-                            var c = containers.get(t.container_id);
-                            var ticketData = ticketDataMap.get(tId);
-
-                            if(ticketData)
-                            {
-                                var data = {
-                                    name: c.name,
-                                    type: c.code,
-                                    tonnage: c.tonnage,
-                                    deliveryDate: t.delivery_date,
-                                    agency: agency.name,
-                                    dateTicket:ticketData.dateTicket,
-                                    registerTrunk: value.registerTrunk,
-                                    registerDriver: value.registerDriver,
-                                    nameDriver: value.nameDriver,
-                                    transactionId:tId
-                                };
-
-                                table3.row.add(
-                                    data
-                                ).draw();
-                            }
-                        } );
-                        // console.log('Paso 1 error: ' + error);
-
-                        return !error;
+                    return !error;
                 }
                 else if (ui.index == 2) {
 

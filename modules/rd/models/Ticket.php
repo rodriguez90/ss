@@ -13,6 +13,7 @@ use Yii;
  * @property int $status
  * @property string $created_at
  * @property int $active
+ * @property int $acc_id
  *
  * @property ReceptionTransaction $receptionTransaction
  */
@@ -37,7 +38,7 @@ class Ticket extends \yii\db\ActiveRecord
     {
         return [
             [['process_transaction_id', 'calendar_id', 'status', 'active'], 'required'],
-            [['process_transaction_id', 'calendar_id', 'status', 'active'], 'integer'],
+            [['process_transaction_id', 'calendar_id', 'status', 'active', 'acc_id'], 'integer'],
             [['created_at'], 'safe'],
             [['process_transaction_id'], 'exist', 'skipOnError' => true, 'targetClass' => ProcessTransaction::className(), 'targetAttribute' => ['process_transaction_id' => 'id']],
             [['calendar_id'], 'exist', 'skipOnError' => true, 'targetClass' => Calendar::className(), 'targetAttribute' => ['calendar_id' => 'id']],
@@ -56,6 +57,7 @@ class Ticket extends \yii\db\ActiveRecord
             'status' => Yii::t('app', 'Estado'),
             'created_at' => Yii::t('app', 'Fecha de Creación'),
             'active' => Yii::t('app', 'Activo'),
+            'acc_id' => Yii::t('app', 'Acceso'),
         ];
     }
 

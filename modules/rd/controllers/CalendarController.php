@@ -118,12 +118,14 @@ class CalendarController extends Controller
                         $model = new Calendar();
                         $aux = new DateTime($event['start']);
                         $aux->setTimezone(new DateTimeZone("UTC"));
-                        $model->start_datetime = $aux->format("Y-m-d G:i:s");  //date_format( new \DateTime($event['start'],new DateTimeZone("UTC")),"Y-m-d G:i:s");
+                        $model->start_datetime = $aux->format("Y-m-d H:i:s");  //date_format( new \DateTime($event['start'],new DateTimeZone("UTC")),"Y-m-d G:i:s");
+                        var_dump($model->start_datetime);
 
                         $aux1 = new DateTime($event['end']);
                         $aux1->setTimezone(new DateTimeZone("UTC"));
-                        $model->end_datetime = $aux1->format("Y-m-d G:i:s");// date_format(new \DateTime($event['end'],new DateTimeZone("UTC")),"Y-m-d G:i:s");
-
+                        $model->end_datetime = $aux1->format("Y-m-d H:i:s");// date_format(new \DateTime($event['end'],new DateTimeZone("UTC")),"Y-m-d G:i:s");
+                        var_dump($model->end_datetime);
+//                        die;
                         $model->amount = $event['title'];
                         $model->id_warehouse =  1;
 
@@ -144,11 +146,15 @@ class CalendarController extends Controller
                         $model = Calendar::findOne($event['id']);
                         $aux = new \DateTime($event['start']);
                         $aux->setTimezone(new DateTimeZone("UTC"));
-                        $model->start_datetime = $aux->format("Y-m-d G:i:s");  //date_format( new \DateTime($event['start'],new DateTimeZone("UTC")),"Y-m-d G:i:s");
+                        $model->start_datetime = $aux->format("Y-m-d H:i:s");  //date_format( new \DateTime($event['start'],new DateTimeZone("UTC")),"Y-m-d G:i:s");
+                        var_dump($model->start_datetime);
 
                         $aux1 = new \DateTime($event['end']);
                         $aux1->setTimezone(new DateTimeZone("UTC"));
-                        $model->end_datetime = $aux1->format("Y-m-d G:i:s");// date_format(new \DateTime($event['end'],new DateTimeZone("UTC")),"Y-m-d G:i:s");
+                        $model->end_datetime = $aux1->format("Y-m-d H:i:s");// date_format(new \DateTime($event['end'],new DateTimeZone("UTC")),"Y-m-d G:i:s");
+                        var_dump($model->end_datetime);
+
+                        die;
 
                         $reservados = Calendar::find()
                             ->innerJoin("ticket","calendar.id = ticket.calendar_id")
@@ -174,7 +180,7 @@ class CalendarController extends Controller
 
                 if($ok)
                 {
-//                    $transaction->commit();
+                    $transaction->commit();
                     $result ['status']= 1;
                     $result['msg'] = "Disponibilidad creada correctamente.";
                 }
@@ -182,10 +188,10 @@ class CalendarController extends Controller
                     $transaction->rollBack();
                 }
 
-            }catch (\yii\base\Exception $ex){
+            }catch (\PDOException $ex){
 
 
-                if($e->getCode() !== '01000')
+                if($ex->getCode() !== '01000')
                 {
                     $result ['status']= 0;
                     $result['msg'] = "!Error: ".$ex->getMessage();
@@ -300,7 +306,7 @@ class CalendarController extends Controller
 
     public function actionGetcalendar(){
 
-        if ( \Yii::$app->user->can('calendar_list')) {
+//        if ( \Yii::$app->user->can('calendar_list')) {
 
             Yii::$app->response->format = Response::FORMAT_JSON;
 
@@ -356,8 +362,8 @@ class CalendarController extends Controller
             return $result;
 
 
-        } else{
-            throw new ForbiddenHttpException('Acceso denegado');
-        }
+//        } else{
+//            throw new ForbiddenHttpException('Acceso denegado');
+//        }
     }
 }

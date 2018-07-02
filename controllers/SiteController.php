@@ -168,23 +168,23 @@ class SiteController extends Controller
 
         $user = AdmUser::findOne(['id'=>Yii::$app->user->getId()]);
         $params = Yii::$app->request->queryParams;
-//        if($user && ($user->hasRol('Importador')  ||  $user->hasRol('Exportador')))
-//        {
-//            $userAgency = UserAgency::findOne(['user_id'=>$user->id]);
-//            $params['agency_id'] = '';
-//            if($userAgency)
-//            {
-//                $params['agency_id'] = $userAgency->agency->name;
-//            }
-//        }
-//        else if ($user && $user->hasRol('Cia_transporte')){
-//            $userCiaTrans = UserTranscompany::findOne(['user_id'=>$user->id]);
-//            $params['trans_company_id'] = '';
-//            if($userCiaTrans)
-//            {
-//                $params['trans_company_id'] = $userCiaTrans->transcompany->id;
-//            }
-//        }
+        if($user && ($user->hasRol('Importador')  ||  $user->hasRol('Exportador')))
+        {
+            $userAgency = UserAgency::findOne(['user_id'=>$user->id]);
+            $params['agency_id'] = '';
+            if($userAgency)
+            {
+                $params['agency_id'] = $userAgency->agency->name;
+            }
+        }
+        else if ($user && $user->hasRol('Cia_transporte')){
+            $userCiaTrans = UserTranscompany::findOne(['user_id'=>$user->id]);
+            $params['trans_company_id'] = '';
+            if($userCiaTrans)
+            {
+                $params['trans_company_id'] = $userCiaTrans->transcompany->id;
+            }
+        }
 
         $searchModel = new ProcessSearch();
         $dataProvider = $searchModel->search($params);
@@ -340,9 +340,9 @@ class SiteController extends Controller
     public function actionReport()
     {
 
-        if(!Yii::$app->user->can("admin_mod") && Yii::$app->user->can("process_create")) {
-            throw new ForbiddenHttpException('Usted no tiene permiso para crear una recepción');
-        }
+//        if(!Yii::$app->user->can("admin_mod") && Yii::$app->user->can("process_create")) {
+//            throw new ForbiddenHttpException('Usted no tiene permiso para crear una recepción');
+//        }
 
         $trans_company = TransCompany::findAll(["active"=>1]);
         $agency = Agency::findAll(["active"=>1]);

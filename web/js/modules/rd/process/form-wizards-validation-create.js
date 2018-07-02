@@ -93,9 +93,6 @@ var handleBootstrapWizardsValidation = function() {
                                     var deliveryDate = value.deliveryDate;
                                     if(!moment(deliveryDate).isValid())
                                     {
-                                        // table
-                                        //     .clear()
-                                        //     .draw();
                                         result = false;
                                         alert("Debe definir la Fecha Límite para los contenedores del Booking.");
                                         return false;
@@ -104,9 +101,6 @@ var handleBootstrapWizardsValidation = function() {
 
                                 if(value.type == null)
                                 {
-                                    // table
-                                    //     .clear()
-                                    //     .draw();
                                     result = false;
                                     alert("Debe asignar un tipo para los contenedores seleccionados.");
                                     return false;
