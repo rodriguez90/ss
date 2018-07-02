@@ -142,6 +142,7 @@ class TicketController extends Controller
         Yii::$app->response->format = Response::FORMAT_JSON;
 
         $model = Ticket::findOne(['id'=>$id, 'active'=>1]);
+        $user = AdmUser::findOne(['id'=>Yii::$app->user->getId()]);
 
         $response['success'] = true;
         $response['msg'] = 'Ticket Eliminado';
@@ -153,6 +154,8 @@ class TicketController extends Controller
                 $transaction = Ticket::getDb()->beginTransaction();
                 $calendarSlot = Calendar::findOne(['id'=>$model->calendar_id]);
 
+                $result = $this->spTicketDelete($model->acc_id, $user->nombre);
+
                 if($model->delete())
                 {
                     $calendarSlot->amount++;
@@ -163,7 +166,6 @@ class TicketController extends Controller
                         $response['msg'] = 'Ah ocurrido un error al actualizar la disponibilidad del calendario.';
                         $response['msg_dev'] = 'Ah ocurrido un error al actualizar la disponibilidad del calendario: '.
                             implode(" ", $calendarSlot->getErrorSummary(false));
-
                     }
                 }
                 else
@@ -347,7 +349,7 @@ class TicketController extends Controller
                     if($processStatus) // nuevo ticket
                     {
 
-                        $result = $this->actionSPTicketInsert($processType,
+                        $result = $this->spTicketInsert($processType,
                             $processTransaction->register_truck,
                             $processTransaction->register_driver,
                             $processTransaction->container->name,
@@ -548,7 +550,7 @@ class TicketController extends Controller
         ]);
     }
 
-    protected function actionSPTicketInsert($processType, $registerTrunk, $registerDriver, $container, $dateTicket, $user)
+    protected function spTicketInsert($processType, $registerTrunk, $registerDriver, $container, $dateTicket, $user)
     {
         $result = null;
         try
@@ -565,7 +567,7 @@ class TicketController extends Controller
         return $result;
     }
 
-    protected function actionSPTicketDelete($accId, $user)
+    protected function spTicketDelete($accId, $user)
     {
 
         $result = null;
