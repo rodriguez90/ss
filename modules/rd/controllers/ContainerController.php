@@ -5,6 +5,7 @@ namespace app\modules\rd\controllers;
 use app\modules\rd\models\ProcessTransaction;
 use Yii;
 use app\modules\rd\models\Container;
+use app\modules\rd\models\ContainerType;
 use app\modules\rd\models\ContainerSearch;
 use yii\db\Command;
 use yii\db\Exception;
@@ -169,14 +170,23 @@ class ContainerController extends Controller
                 foreach ($results as $result) {
 
                     $data = Container::find()
-                        ->select('container.id, container.name, container.status, process_transaction.delivery_date as deliveryDate, container_type.id as typeId, container_type.code, container_type.tonnage')
+                        ->select('container.id, 
+                                           container.name, 
+                                           container.status, 
+                                           process_transaction.delivery_date as deliveryDate, 
+                                           container_type.id as typeId, 
+                                           container_type.name as typeName, 
+                                           container_type.code as typeCode, 
+                                           container_type.tonnage as typeTonnage')
                         ->innerJoin('process_transaction', 'process_transaction.container_id=container.id')
                         ->innerJoin('process', 'process.id=process_transaction.process_id')
                         ->innerJoin('container_type', 'container_type.id=container.type_id')
                         ->where(['process.bl' => $bl])
-                        ->andWhere(['container.id' => $result['contenedor']])
+                        ->andWhere(['container.name' => $result['contenedor']])
                         ->asArray()
                         ->one();
+
+                    $container = null;
 
                     if ($data === null) {
                         $container = [];
@@ -185,6 +195,21 @@ class ContainerController extends Controller
                         $container['type'] = null;
                         $container['status'] = 'PENDIENTE';
                         $container['deliveryDate'] = $result['fecha_limite'];
+                    }
+                    else
+                    {
+                        $container = [];
+                        $container['id'] = $data['id'];
+                        $container['name'] = $data['name'];
+
+                        $container['type'] = new  ContainerType();
+                        $container['type']->id = $data['typeId'];
+                        $container['type']->name = $data['typeName'];
+                        $container['type']->code = $data['typeCode'];
+                        $container['type']->tonnage = $data['typeTonnage'];
+
+                        $container['status'] = $data['status'];
+                        $container['deliveryDate'] = $data['deliveryDate'];
                     }
                     $response['containers'][] = $container;
                 }

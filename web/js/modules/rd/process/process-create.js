@@ -274,35 +274,43 @@ var fetchContainers = function (bl) {
 };
 
 var fetchContainersWS = function (bl, containers) {
-    var data = [];
-    var types = ["DRY", "RRF"];
-    var tonnages = [20, 40];
-    var statusArray = [
-                'PENDIENTE',
-                 moment().format(),
-                'PONCHADO',
-                'TRASLADO',
-                'EN PATIO',
-                'EMBARCADO',
-                'DESPACHADO'];
-
-    var table = $('#data-table').DataTable();
+    // var types = ["DRY", "RRF"];
+    // var tonnages = [20, 40];
+    // var statusArray = [
+    //             'PENDIENTE',
+    //              moment().format(),
+    //             'PONCHADO',
+    //             'TRASLADO',
+    //             'EN PATIO',
+    //             'EMBARCADO',
+    //             'DESPACHADO'];
+    //
+    // var table = $('#data-table').DataTable();
 
     table
         .clear()
         .draw();
 
     for (var i = 0; i < containers.length; i++)
+    // for (var i = 0; i < 10; i++)
     {
         var dataContainer = containers[i];
+
         // var typeIndex = Math.floor(Math.random() * (containerTypeMap.size - 1));
-        // var type = null;
+        // var v = null;
         // var tonnage = tonnages[Math.round(Math.random())];
         // var statusIndex = Math.floor(Math.random() * 6);
         // var status = statusArray[statusIndex];
         //
-        // if(statusIndex !== 0 && statusIndex !== 1)
+        // // if(statusIndex !== 0 && statusIndex !== 1)
         //     type = Array.from(containerTypeMap.values())[typeIndex]
+        //
+        // var dataContainer = {
+        //     name:"ContainerName"+i,
+        //     type: type,
+        //     deliveryDate: Date(),
+        //     status: status,
+        // };
 
         var container =  {
             id:-1,
@@ -314,14 +322,16 @@ var fetchContainersWS = function (bl, containers) {
             wharehouse:1,
             transCompany:{name:'', id:-1, ruc:""},
             status:dataContainer.status,
-            selectable:true
+            selectable:false
         };
-
+        console.log(container);
+        console.log(moment(dataContainer.status));
         var statusIsDate = moment(dataContainer.status).isValid();
-        if( container.status !== "PENDIENTE" &&
-            !statusIsDate)
+        console.log("Status Date Valid: " + statusIsDate);
+        if( container.status == "PENDIENTE" ||
+            statusIsDate == true)
         {
-            container.selectable = false
+            container.selectable = true;
         }
 
         table.row.add(
@@ -339,15 +349,21 @@ var fetchContainerTypes = function () {
         success: function (response) {
             if(response.success)
             {
+                containerTypeArray.push({id:-1, text:""});
+
                 $.each(response.types, function (index, item) {
                     containerTypeMap.set(item.id, {
-                        id: item.id,
-                        text: item.name,
+                        id: String(item.id),
+                        name: item.name,
                         tonnage: item.tonnage,
                         code: item.code,
                     });
+                    containerTypeArray.push({
+                        id: String(item.id),
+                        text: item.name
+                    });
                 });
-                containerTypeArray = Array.from(containerTypeMap.values());
+                // containerTypeArray = Array.from(containerTypeMap.values());
             }
         },
         error: function(data) {

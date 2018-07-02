@@ -355,14 +355,7 @@ class AdmUser extends ActiveRecord implements IdentityInterface
             return null;
         }
 
-
         return array_shift($roles)->name;
-
-//        reset($roles);
-//        /* @var $role \yii\rbac\Role */
-//        $role = current($roles);
-//
-//        return $role->name;
     }
 
     public function getTransCompany()

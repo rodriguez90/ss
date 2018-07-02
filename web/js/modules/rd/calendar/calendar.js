@@ -17,6 +17,7 @@ $(function (){
 
     $("#grabar").click(function () {
 
+        console.log(events);
         $.ajax({
             url: homeUrl + "/rd/calendar/create",
             dataType: 'json',

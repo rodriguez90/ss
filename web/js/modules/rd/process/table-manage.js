@@ -78,53 +78,76 @@ var handleDataTable = function() {
 
                     if($("#select"+elementId).length === 0)
                     {
-                        var selectHtml = "<select class=\"form-control\" id=\"select" +elementId + "\"></select>"
+                        var selectHtml = "<select class=\"form-control\" id=\"select" +elementId + "\"></select>";
+
+                        // for(var i = 0, count = containerTypeArray.length; i< count; i++)
+                        // {
+                        //     selectHtml +=  "<option value=\"" + containerTypeArray[i].id+ "\">" + containerTypeArray[i].name + "</option>"
+                        // }
+                        //     selectHtml += "</select>"
+
                         console.log("Generate HTML: ")
                         console.log(selectHtml);
+                        console.log(row);
+                        $('td', row).eq(2).html(selectHtml);
+                        // console.log($('td:eq(2)', row));
 
-                        $('td', row).eq(2).html(selectHtml)
-
-                        $('td:eq(2)', row).select2(
+                        // $('td:eq(2)', row).select2(
+                        // $('select', row).select2
+                        // row.child('td').eq(2).find('select')
+                        // $('select', row).eq(2).select2(
+                        console.log($('td', row).eq(2));
+                        console.log(row);
+                        $('select', row).select2(
                         {
                             language: "es",
                             placeholder: 'Seleccione Tipo de Contenedor',
                             // allowClear: true,
                             width: '100%',
                             closeOnSelect: true,
-                            // data:{ results: containerTypeArray, text: 'name'},
-                            // data:containerTypeArray,
-                            ajax:{
-                                async:false,
-                                url: homeUrl + '/rd/container-type/types',
-                                type: "GET",
-                                dataType: "json",
-                                cache: true,
-                                processResults: function (data) {
-                                    // console.log(data);
-                                    var results  = [];
-                                    $.each(data.types, function (index, item) {
-                                        // console.log(item);
-                                        results.push({
-                                            id: item.id,
-                                            text: item.name,
-                                        });
-                                    });
-                                    return {
-                                        results: results
-                                    };
-                                },
-                            },
+                            // data:{ results: containerTypeArray, text: "name"},
+                            data:containerTypeArray,
+                            // ajax:{
+                            //     async:false,
+                            //     url: homeUrl + '/rd/container-type/types',
+                            //     type: "GET",
+                            //     dataType: "json",
+                            //     cache: true,
+                            //     processResults: function (data) {
+                            //         // console.log(data);
+                            //         var results  = [];
+                            //         $.each(data.types, function (index, item) {
+                            //             // console.log(item);
+                            //             results.push({
+                            //                 id: item.id,
+                            //                 text: item.name,
+                            //             });
+                            //         });
+                            //         return {
+                            //             results: results
+                            //         };
+                            //     },
+                            // },
                         }).on('select2:select', function (e) {
-                            var type = e.params.data;
-                            data.type = containerTypeMap.get(type.id);
-                            console.log(data);
-                            console.log(containerTypeMap);
+                            // console.log(containerTypeMap);
+                            var selectedType = e.params.data;
+                            // console.log(selectedType);
+                            // console.log(selectedType.id);
+                            // var type = containerTypeMap.get(selectedType.id, null);
+                            var type = {
+                                id:selectedType.id,
+                                name:selectedType.text,
+                            };
+                            // console.log(type);
+                            data.type = type;
+
+                            // console.log(data);
                             // $('#mySelect2').val(type.id); // Select the option with a value of '1'
                             // $('#mySelect2').trigger('change'); // Notify any JS components that the value changed
-                            table.row(index).data(data)
+                            table.row(index).data(data);
                             // $('td:eq(2)', row).val(''); // Change the value or make some change to the internal state
                             // $('td:eq(2)', row).trigger('change.select2'); // Notify only Select2 of changes
-                            // return true;
+                            return true;
                         });
                     }
                 }
@@ -159,14 +182,22 @@ var handleDataTable = function() {
                     title:"Tipo",
                     data:"type",
                     render: function ( data, type, full, meta ) {
+                        //
+                        // console.log("TYPE COLUMN RENDER:")
+                        // console.log("TYPE: " + type);
+                        // console.log(full);
+                        // console.log(meta);
                         // console.log(data);
+                        var row = meta.row;
+                        var col = meta.col;
+                        var selector = "td:eq("+col+")";
+                        var cell = $(this).cell();
+                        // console.log($('td:eq()', row).eq(2).html);
                         if(data !== null)
                         {
-                            return data.text;
+                            return data.name;
                         }
-
                         return "";
-
                     },
                 },
                 {
@@ -184,10 +215,11 @@ var handleDataTable = function() {
             var index = cell.index();
             // console.log(index);
             // console.log(dt.row(index.row, index.column).data());
-            var id = dt.row(index.row, index.column).data().id;
-            var name = dt.row(index.row, index.column).data().name;
-            var status = dt.row(index.row, index.column).data().status;
-            if(status !== 'PENDIENTE' && !moment(status).isValid())
+            // var id = dt.row(index.row, index.column).data().id;
+            // var name = dt.row(index.row, index.column).data().name;
+            // var status = dt.row(index.row, index.column).data().status;
+            // if(status !== 'PENDIENTE' && !moment(status).isValid())
+            if(dt.row(index.row, index.column).data().selectable == false)
             {
                 alert('Este contenedor no puede ser seleccionado su estado es: ' + status);
                 e.preventDefault();
@@ -232,24 +264,20 @@ var handleDataTable2 = function () {
                     title:"Tipo",
                     data:"type",
                     render: function ( data, type, full, meta ) {
-                        // console.log(data);
-                        return data.text;
+                        return data.name;
                     },
                 },
                 {
                     targets: [2],
                     data:'deliveryDate',
                     render: function ( data, type, full, meta ) {
-                        // console.log("In render: " + data);
                         return moment(data).format("DD/MM/YYYY");
                     },
                 },
                 {
                     targets: [4],
-                    // title:"Tipo",
                     data:null,
                     render: function ( data, type, full, meta ) {
-                        // console.log("In render: " + data);
                         return data.transCompany.name
                     },
                 },
@@ -310,21 +338,20 @@ var handleDataTable3 = function () {
                     title:"Tipo",
                     data:"type",
                     render: function ( data, type, full, meta ) {
-                        // console.log(data);
-                        return data.text;
+                        console.log("RENDER TYPE TABLE 3");
+                        console.log(data);
+                        return data.name;
                     },
                 },
                 {
                     targets: [3],
                     data:'deliveryDate',
                     render: function ( data, type, full, meta ) {
-                        // console.log("In render: " + data);
                         return moment(data).format("DD/MM/YYYY");
                     },
                 },
                 {
                     targets: [5],
-                    // data:null,
                     render: function ( data, type, full, meta ) {
                         return data.name
                     },
