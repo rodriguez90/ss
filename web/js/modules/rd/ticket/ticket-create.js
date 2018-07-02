@@ -166,7 +166,6 @@ var handleTableInModal = function () {
                 },
                 { "title": "Tipo",
                     // "data":"type",
-                    // "data":null,
                 },
                 { "title": "Fecha Limite",
                     "data":"deliveryDate",
@@ -181,31 +180,25 @@ var handleTableInModal = function () {
             "language": lan,
             // select: true,
             responsive: true,
-            // language: {url: '@web/plugins/DataTables/i18/Spanish.json'},
-            //
-            // },
             columnDefs: [
                 {
                     orderable: false,
                     searchable: false,
                     className: 'select-checkbox',
                     targets:   [0],
-                    // data: 'checkbox',
                 },
                 {
                     targets: [2],
                     title:"Tipo",
                     data:null,
                     render: function ( data, type, full, meta ) {
-                        // console.log("In render: " + data);
-                        return data.type + data.tonnage;
+                        return data.type+ data.tonnage;
                     },
                 },
                 {
                     targets: [3],
                     data:'deliveryDate',
                     render: function ( data, type, full, meta ) {
-                        // console.log("In render: " + data);
                         return moment(data).format("DD/MM/YYYY");
                     },
                 },
@@ -307,7 +300,7 @@ var handleTableInWizar = function() {
     if ($('#data-table2').length !== 0) {
 
 
-        $('#data-table2').DataTable({
+    var  table = $('#data-table2').DataTable({
             dom: '<"top"iflp<"clear">>rt',
             pagingType: "full_numbers",
             responsive: true,
@@ -321,7 +314,7 @@ var handleTableInWizar = function() {
                     "data":"name"
                 },
                 { title: "Tipo",
-                    data:"type",
+                    // data:"type",
                 },
                 { title: "Fecha Límite",
                     data:"deliveryDate"
@@ -335,29 +328,29 @@ var handleTableInWizar = function() {
                 { title: "Placa del Carro",
                     "data":"registerTrunk",
                 },
+                { title: "Nombre del Chofer",
+                    "data":"nameDriver"
+                },
                 { title: "Cédula del Chofer",
                     "data":"registerDriver",
                 },
-                { title: "Nombre del Chofer",
-                    "data":"nameDriver"
-                }
             ],
             "language": lan,
             columnDefs: [
                 {
                     targets: [1],
                     title:"Tipo",
-                    data:'type',
+                    data:null,
                     render: function ( data, type, full, meta ) {
-                        return data.name;
+                        return data.type+ data.tonnage;
                     }
                 },
                 {
                     targets: [2],
                     data:'deliveryDate',
                     render: function ( data, type, full, meta ) {
-                        console.log("In render: " + data);
-                        console.log("In render format: " + moment(data).format("DD/MM/YYYY"));
+                        // console.log("In render: " + data);
+                        // console.log("In render format: " + moment(data).format("DD/MM/YYYY"));
                         return moment(data).format("DD/MM/YYYY");
                     },
                 },
@@ -365,60 +358,154 @@ var handleTableInWizar = function() {
                     targets: [4],
                     data:'dateTicket',
                     render: function ( data, type, full, meta ) {
-                        console.log("In render: " + data);
+                        // console.log("In render: " + data);
                         var dateFormated =  moment(data).format("DD/MM/YYYY");
-                        console.log("In render format: " + dateFormated);
+                        // console.log("In render format: " + dateFormated);
                         return dateFormated;
+                    },
+                },
+                {
+                    targets: [5],
+                    data:'registerTrunk',
+                    render: function ( data, type, full, meta ) {
+                        var elementId =  String(full.name).trim();
+                        if(type == 'display')
+                        {
+                            var api =  new $.fn.dataTable.Api(meta.settings);
+                            var select2_aux = "";
+
+                            if($("#selectTrunk"+elementId).length === 0)
+                            {
+                                var selectHtml = "<select class=\"form-control\" id=\"selectTrunk" +elementId + "\"></select>";
+                                setTimeout(
+                                    function(){
+                                        var select2_aux = $("#selectTrunk" +elementId).select2(
+                                            {
+                                                language: "es",
+                                                placeholder: 'Seleccione la Placa',
+                                                // allowClear: true,
+                                                width: '100%',
+                                                closeOnSelect: true,
+                                                // minimumInputLength:5,
+                                                minimumResultsForSearch:-1,
+                                                ajax:{
+                                                    async:false,
+                                                    url: homeUrl + '/rd/trans-company/trunks',
+                                                    type: "GET",
+                                                    dataType: "json",
+                                                    cache: true,
+                                                    data: function (params) {
+                                                        var query = {
+                                                            // code: params.term,
+                                                            code: transCompanyRuc,
+                                                        }
+                                                        return query;
+                                                    },
+                                                    processResults: function (response) {
+                                                        console.log(response);
+                                                        var results  = [];
+                                                        $.each(response.trunks, function (index, item) {
+                                                            // console.log(item);
+                                                            // [err_code], [err_msg], [placa], [rfid]
+                                                            results.push({
+                                                                id: item.placa,
+                                                                text: item.placa,
+                                                                err_code: item.err_code,
+                                                                err_msg: item.err_msg,
+                                                                rfid: item.rfid,
+                                                            });
+                                                        });
+                                                        return {
+                                                            results: results
+                                                        };
+                                                    },
+                                                },
+                                            }).on('select2:select', function (e) {
+                                                // alert(e.params.data);
+                                                // var trunk = e.params.data;
+                                                // api.cell({row: meta.row, column: 5}).data(trunk.id);
+                                                // table.row(index).data(data)
+                                        });
+                                }, 300);
+                                return selectHtml;
+                            }
+                            return select2_aux;
+                        }
+                        return full.registerTrunk;
+                    },
+                },
+                {
+                    targets: [6],
+                    data:'nameDriver',
+                    render: function ( data, type, full, meta ) {
+                        var elementId =  String(full.name).trim();
+                        if(type == 'display')
+                        {
+                            var api =  new $.fn.dataTable.Api(meta.settings);
+                            var select2_aux = "";
+
+                            if($("#selectTrunk"+elementId).length === 0)
+                            {
+                                var selectHtml = "<select class=\"form-control\" id=\"selectDriver" +elementId + "\"></select>";
+                                setTimeout(
+                                    function(){
+                                        var select2_aux = $("#selectDriver" +elementId).select2(
+                                            {
+                                                language: "es",
+                                                placeholder: 'Seleccione el Chofer',
+                                                // allowClear: true,
+                                                width: '100%',
+                                                closeOnSelect: true,
+                                                // minimumInputLength:5,
+                                                minimumResultsForSearch:-1,
+                                                ajax:{
+                                                    async:false,
+                                                    url: homeUrl + '/rd/trans-company/drivers',
+                                                    type: "GET",
+                                                    dataType: "json",
+                                                    cache: true,
+                                                    data: function (params) {
+                                                        var query = {
+                                                            // code: params.term,
+                                                            code: transCompanyRuc,
+                                                        }
+                                                        return query;
+                                                    },
+                                                    processResults: function (response) {
+                                                        console.log(response);
+                                                        var results  = [];
+                                                        $.each(response.drivers, function (index, item) {
+                                                            // console.log(item);
+                                                            // [err_code], [err_msg], [placa], [rfid]
+                                                            results.push({
+                                                                id: item.chofer_ruc,
+                                                                text: item.chofer_nombre,
+                                                                err_code: item.err_code,
+                                                                err_msg: item.err_msg,
+                                                                chofer_ruc: item.chofer_ruc,
+                                                            });
+                                                        });
+                                                        return {
+                                                            results: results
+                                                        };
+                                                    },
+                                                },
+                                            }).on('select2:select', function (e) {
+                                                var driver = e.params.data;
+                                                // api.cell({row: meta.row, column: 6}).data(driver.id);
+                                                api.cell({row: meta.row, column: 7}).data(driver.id);
+
+                                        });
+                                    }, 300);
+                                return selectHtml;
+                            }
+                            return select2_aux;
+                        }
+                        return full.nameDriver;
                     },
                 },
             ],
         });
-
-        // function  myCallbackFunction(updatedCell, updatedRow, oldValue) {
-        //     var table = $('#data-table2').DataTable();
-        //     // console.log("The new value for the cell is: " + updatedCell.data());
-        //     // console.log(updatedCell);
-        //     // console.log(updatedCell.index().row);
-        //     if(updatedCell.index().column === 6)
-        //     {
-        //         var driverCell = table.cell(updatedCell.index().row, 7);
-        //         driverCell.data("Chico el cojo");
-        //     }
-        //
-        //
-        //     // var cell = table.cell()
-        //     // console.log("The values for each cell in that row are: " );
-        //     // console.log(updatedRow.data())
-        //     //TODO: valdiar placa y cedula x el servicio y recuperar el nombre del chofe
-        // }
-        //
-        // var table = $('#data-table2').DataTable();
-        //
-        // table.MakeCellsEditable({
-        //     "onUpdate": myCallbackFunction,
-        //     "inputCss":'form-control',
-        //     "columns": [5,6],
-        //     "allowNulls": {
-        //         "columns": [5, 6],
-        //         "errorClass": 'error'
-        //     },
-        //     // "confirmationButton": {
-        //     //     "confirmCss": 'my-confirm-class',
-        //     //     "cancelCss": 'my-cancel-class'
-        //     // },
-        //     "inputTypes": [
-        //         {
-        //             "column":5,
-        //             "type":"text",
-        //             "options":null
-        //         },
-        //         {
-        //             "column":6,
-        //             "type":"text",
-        //             "options":null
-        //         },
-        //     ]
-        // });
     }
 };
 
@@ -433,7 +520,7 @@ var handleTable3InWizar = function() {
             pagingType: "full_numbers",
             responsive: true,
             info: true,
-            processing:true,
+            // processing:true,
             lengthMenu: [5, 10, 15],
             pageLength: 5,
             order: [[1, "asc"]],
@@ -493,128 +580,6 @@ var handleTable3InWizar = function() {
                     },
                 },
             ],
-            "createdRow": function ( row, data, index, cells ) {
-                var elementId =  String(data.name).replace(' ','');
-
-                if($("#selectTrunk"+elementId).length === 0)
-                {
-                    var selectHtml = "<select class=\"form-control\" id=\"selectTrunk" +elementId + "\"></select>"
-                    console.log("Generate HTML: ")
-                    console.log(selectHtml);
-
-                    $('td', row).eq(5).html(selectHtml)
-
-                    $('td:eq(5)', row).select2(
-                        {
-                            language: "es",
-                            placeholder: 'Seleccione la Placa',
-                            // allowClear: true,
-                            width: '100%',
-                            closeOnSelect: true,
-                            minimumInputLength:5,
-                            ajax:{
-                                async:false,
-                                url: homeUrl + '/rd/trans-company/trunks',
-                                type: "GET",
-                                dataType: "json",
-                                cache: true,
-                                data: function (params) {
-                                    var query = {
-                                        code: params.term,
-                                    }
-                                    return query;
-                                },
-                                processResults: function (data) {
-                                    // console.log(data);
-                                    var results  = [];
-                                    $.each(data.types, function (index, item) {
-                                        // console.log(item);
-                                        // [err_code], [err_msg], [placa], [rfid]
-                                        results.push({
-                                            id: item.placa,
-                                            text: item.placa,
-                                            err_code: item.err_code,
-                                            err_msg: item.err_msg,
-                                            rfid: item.rfid,
-                                        });
-                                    });
-                                    return {
-                                        results: results
-                                    };
-                                },
-                            },
-                        }).on('select2:select', function (e) {
-                        //FIXME VALIDAR QUE LA PLACA QUE SELECCIONE NO TENGA ERROR
-                        var trunk = e.params.data;
-                        console.log(trunk);
-                        data.registerTrunk = trunk.id;
-
-                        table.row(index).data(data)
-                        // $('td:eq(2)', row).val(''); // Change the value or make some change to the internal state
-                        // $('td:eq(2)', row).trigger('change.select2'); // Notify only Select2 of changes
-                        // return true;
-                    });
-                }
-                if($("#selectDriver"+elementId).length === 0)
-                {
-                    var selectHtml = "<select class=\"form-control\" id=\"selectDriver" +elementId + "\"></select>"
-                    console.log("Generate HTML: ")
-                    console.log(selectHtml);
-
-                    $('td', row).eq(6).html(selectHtml)
-
-                    $('td:eq(6)', row).select2(
-                        {
-                            language: "es",
-                            placeholder: 'Seleccione la Placa',
-                            // allowClear: true,
-                            width: '100%',
-                            closeOnSelect: true,
-                            minimumInputLength:5,
-                            ajax:{
-                                async:false,
-                                url: homeUrl + '/rd/trans-company/trunks',
-                                type: "GET",
-                                dataType: "json",
-                                cache: true,
-                                data: function (params) {
-                                    var query = {
-                                        code: params.term,
-                                    }
-                                    return query;
-                                },
-                                processResults: function (data) {
-                                    // console.log(data);
-                                    var results  = [];
-                                    $.each(data.types, function (index, item) {
-                                        // console.log(item);
-                                        // [err_code], [err_msg], [chofer_ruc], [chofer_nombre]
-                                        results.push({
-                                            id: item.chofer_ruc,
-                                            text: item.chofer_nombre,
-                                            err_code: item.err_code,
-                                            err_msg: item.err_msg,
-                                            chofer_ruc: item.chofer_ruc,
-                                        });
-                                    });
-                                    return {
-                                        results: results
-                                    };
-                                },
-                            },
-                        }).on('select2:select', function (e) {
-                        var driver = e.params.data;
-                        console.log(driver);
-                        data.nameDriver = driver.text
-                        // $('#mySelect2').val(type.id); // Select the option with a value of '1'
-                        // $('#mySelect2').trigger('change'); // Notify any JS components that the value changed
-                        table.row(index).data(data)
-                        // $('td:eq(2)', row).val(''); // Change the value or make some change to the internal state
-                        // $('td:eq(2)', row).trigger('change.select2'); // Notify only Select2 of changes
-                        // return true;
-                    });
-                }
-            },
         });
     }
 };
@@ -691,13 +656,13 @@ var handleModal = function () {
                     var className = ['bg-blue-darker'];
                     var type = "";
                     var id = currentCalendarEvent.id;
-                    if(value.tonnage === 20)
+                    if(String(value.tonnage) === "20")
                     {
                         id = currentCalendarEvent.id + "T20";
                         className = ['bg-green-darker'];
                         type = "T20";
                     }
-                    else if(value.tonnage === 40)
+                    else if(String(value.tonnage) === "40")
                     {
                         id = currentCalendarEvent.id + "T40";
                         className = ['bg-purple-darker'];
@@ -766,11 +731,11 @@ var handleModal = function () {
                     if(ticket.id === -1)
                     {
                         var id = currentCalendarEvent.id;
-                        if(value.tonnage === 20)
+                        if(String(value.tonnage) === "20")
                         {
                             id = currentCalendarEvent.id + 'T20';
                         }
-                        else if(value.tonnage === 40)
+                        else if(String(value.tonnage) === "40")
                         {
                             id = currentCalendarEvent.id + 'T40';
                         }
@@ -916,6 +881,7 @@ var fetchCalendar = function (start, end, async) {
 
             $('#calendar').fullCalendar('addEventSource', calendarSlotEvents);
             $('#calendar').fullCalendar('refetchEventSources');
+            $('#calendar').fullCalendar('gotoDate', moment(minDeliveryDate) );
         },
         error: function(response) {
             console.log(response);
@@ -1038,13 +1004,13 @@ var fetchTickets = function (processId, async) {
 
                         // console.log(c);
 
-                        if(container.tonnage === 20)
+                        if(String(container.tonnage) === "20")
                         {
                             id = id + 'T20';
                             className = ['bg-green-darker'];
                             type = "T20";
                         }
-                        else if(container.tonnage === 40)
+                        else if(String(container.tonnage) === "40")
                         {
                             id = id + 'T40';
                             className = ['bg-purple-darker'];
@@ -1124,6 +1090,8 @@ $(document).ready(function () {
 
     console.log(modelId);
     console.log(transCompanyId);
+    console.log(transCompanyRuc);
+    // transCompanyRuc = '0992125861001';
     // moment.locale('es');
     // init wizar
     FormWizardValidation.init();

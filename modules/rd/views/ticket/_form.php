@@ -287,6 +287,7 @@ if($user)
     var modelId = '<?php echo $model->id; ?>';
 
     var transCompanyId = '<?php echo $trasCompany->id; ?>';
+    var transCompanyRuc = '<?php echo $trasCompany->ruc; ?>';
 //    var complex = <?php //echo json_encode($complex); ?>//;
 </script>
 

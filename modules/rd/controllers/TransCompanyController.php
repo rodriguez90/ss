@@ -40,6 +40,8 @@ class TransCompanyController extends Controller
                 'actions' => [
                     'delete' => ['POST'],
                     'from-sp' => ['GET'],
+                    'trunks' => ['GET'],
+                    'drivers' => ['GET'],
                 ],
             ],
         ];
@@ -256,7 +258,6 @@ class TransCompanyController extends Controller
                 }
             }
         }
-//                mb_convert_encoding($data['name'], 'UTF-8', 'UTF-8');
         return $response;
     }
 
@@ -266,7 +267,7 @@ class TransCompanyController extends Controller
 
         $response = array();
         $response['success'] = true;
-        $response['trucks'] = [];
+        $response['trunks'] = [];
         $response['msg'] = '';
         $response['msg_dev'] = '';
 
@@ -280,14 +281,16 @@ class TransCompanyController extends Controller
 
         if($response['success'])
         {
-            $sql = "exec sp_sgt_placa_cons " . $code;
-            $response['trucks'] = Yii::$app->db2->createCommand($sql)->queryAll();
+//            $sql = "exec sp_sgt_placa_cons " . $code;
+            $sql = "exec sp_sgt_placa_cons '" .$code ."'";
+            $response['trunks'] = Yii::$app->db2->createCommand($sql)->queryAll();
+
         }
 
         return $response;
     }
 
-    public function actionSPRegisterDriver()
+    public function actionDrivers()
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
 
@@ -307,8 +310,8 @@ class TransCompanyController extends Controller
 
         if($response['success'])
         {
-            $sql = "exec sp_sgt_chofer_cons " . $code;
-            $response['drivers'] = Yii::$app->createCommand($sql)->execute();
+            $sql = "exec sp_sgt_chofer_cons '" .$code ."'";
+            $response['drivers'] = Yii::$app->db2->createCommand($sql)->queryAll();
         }
         return $response;
     }
