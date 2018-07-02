@@ -9,7 +9,8 @@ $user = "xedrux";
 $password = "xedrux";
 
 */
-//
+
+// Sybase Data Base Connection !!! NO WORK - Testing
 //return [
 //   'class' => 'yii\db\Connection',
 //    'driverName' => 'sybase',
@@ -21,7 +22,9 @@ $password = "xedrux";
 //   'username' => $user,
 //   'password' => $password,
 //];
-//
+
+
+// Sybase Data Base Connection !!! WORK
 return [
     'class' => 'yii\db\Connection',
     //'dsn' => 'mysql:host=localhost;dbname=yii2basic',
@@ -37,8 +40,8 @@ return [
     'password' => 'xedrux',
     'charset' => 'latin1',
 //    'attributes' => [
-//    PDO::ATTR_PERSISTENT => TRUE,
-//    PDO::ATTR_AUTOCOMMIT => FALSE
+//        PDO::ATTR_PERSISTENT => TRUE,
+////        PDO::ATTR_AUTOCOMMIT => FALSE
 //    ]
 
     // Schema cache options (for production environment)
@@ -47,7 +50,7 @@ return [
     //'schemaCache' => 'cache',
 ];
 
-//
+// Localhost Sql Serve Data Base Connection
 // return [
 //     'class' => 'yii\db\Connection',
 //	 'dsn'=>'sqlsrv:Server=PEDRO-PC\SQLEXPRESS;Database=sgt',

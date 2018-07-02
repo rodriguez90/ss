@@ -372,128 +372,6 @@ var handleTableInWizar = function() {
                     },
                 },
             ],
-            "createdRow": function ( row, data, index, cells ) {
-                var elementId =  String(data.name).replace(' ','');
-
-                if($("#selectTrunk"+elementId).length === 0)
-                {
-                    var selectHtml = "<select class=\"form-control\" id=\"selectTrunk" +elementId + "\"></select>"
-                    console.log("Generate HTML: ")
-                    console.log(selectHtml);
-
-                    $('td', row).eq(5).html(selectHtml)
-
-                    $('td:eq(5)', row).select2(
-                    {
-                        language: "es",
-                        placeholder: 'Seleccione la Placa',
-                        // allowClear: true,
-                        width: '100%',
-                        closeOnSelect: true,
-                        minimumInputLength:5,
-                        ajax:{
-                            async:false,
-                            url: homeUrl + '/rd/trans-company/trunks',
-                            type: "GET",
-                            dataType: "json",
-                            cache: true,
-                            data: function (params) {
-                                var query = {
-                                    code: params.term,
-                                }
-                                return query;
-                            },
-                            processResults: function (data) {
-                                // console.log(data);
-                                var results  = [];
-                                $.each(data.types, function (index, item) {
-                                    // console.log(item);
-                                    // [err_code], [err_msg], [placa], [rfid]
-                                    results.push({
-                                        id: item.placa,
-                                        text: item.placa,
-                                        err_code: item.err_code,
-                                        err_msg: item.err_msg,
-                                        rfid: item.rfid,
-                                    });
-                                });
-                                return {
-                                    results: results
-                                };
-                            },
-                        },
-                    }).on('select2:select', function (e) {
-                        //FIXME VALIDAR QUE LA PLACA QUE SELECCIONE NO TENGA ERROR
-                        var trunk = e.params.data;
-                        console.log(trunk);
-                        data.registerTrunk = trunk.id;
-
-                        table.row(index).data(data)
-                        // $('td:eq(2)', row).val(''); // Change the value or make some change to the internal state
-                        // $('td:eq(2)', row).trigger('change.select2'); // Notify only Select2 of changes
-                        // return true;
-                    });
-                }
-                if($("#selectDriver"+elementId).length === 0)
-                {
-                    var selectHtml = "<select class=\"form-control\" id=\"selectDriver" +elementId + "\"></select>"
-                    console.log("Generate HTML: ")
-                    console.log(selectHtml);
-
-                    $('td', row).eq(6).html(selectHtml)
-
-                    $('td:eq(6)', row).select2(
-                        {
-                            language: "es",
-                            placeholder: 'Seleccione la Placa',
-                            // allowClear: true,
-                            width: '100%',
-                            closeOnSelect: true,
-                            minimumInputLength:5,
-                            ajax:{
-                                async:false,
-                                url: homeUrl + '/rd/trans-company/trunks',
-                                type: "GET",
-                                dataType: "json",
-                                cache: true,
-                                data: function (params) {
-                                    var query = {
-                                        code: params.term,
-                                    }
-                                    return query;
-                                },
-                                processResults: function (data) {
-                                    // console.log(data);
-                                    var results  = [];
-                                    $.each(data.types, function (index, item) {
-                                        // console.log(item);
-                                        // [err_code], [err_msg], [chofer_ruc], [chofer_nombre]
-                                        results.push({
-                                            id: item.chofer_ruc,
-                                            text: item.chofer_nombre,
-                                            err_code: item.err_code,
-                                            err_msg: item.err_msg,
-                                            chofer_ruc: item.chofer_ruc,
-                                        });
-                                    });
-                                    return {
-                                        results: results
-                                    };
-                                },
-                            },
-                        }).on('select2:select', function (e) {
-                            var driver = e.params.data;
-                            console.log(driver);
-                            data.nameDriver = driver.text
-                            // $('#mySelect2').val(type.id); // Select the option with a value of '1'
-                            // $('#mySelect2').trigger('change'); // Notify any JS components that the value changed
-                            table.row(index).data(data)
-                            // $('td:eq(2)', row).val(''); // Change the value or make some change to the internal state
-                            // $('td:eq(2)', row).trigger('change.select2'); // Notify only Select2 of changes
-                            // return true;
-                    });
-                }
-            },
         });
 
         // function  myCallbackFunction(updatedCell, updatedRow, oldValue) {
@@ -614,7 +492,129 @@ var handleTable3InWizar = function() {
                         return dateFormated;
                     },
                 },
-            ]
+            ],
+            "createdRow": function ( row, data, index, cells ) {
+                var elementId =  String(data.name).replace(' ','');
+
+                if($("#selectTrunk"+elementId).length === 0)
+                {
+                    var selectHtml = "<select class=\"form-control\" id=\"selectTrunk" +elementId + "\"></select>"
+                    console.log("Generate HTML: ")
+                    console.log(selectHtml);
+
+                    $('td', row).eq(5).html(selectHtml)
+
+                    $('td:eq(5)', row).select2(
+                        {
+                            language: "es",
+                            placeholder: 'Seleccione la Placa',
+                            // allowClear: true,
+                            width: '100%',
+                            closeOnSelect: true,
+                            minimumInputLength:5,
+                            ajax:{
+                                async:false,
+                                url: homeUrl + '/rd/trans-company/trunks',
+                                type: "GET",
+                                dataType: "json",
+                                cache: true,
+                                data: function (params) {
+                                    var query = {
+                                        code: params.term,
+                                    }
+                                    return query;
+                                },
+                                processResults: function (data) {
+                                    // console.log(data);
+                                    var results  = [];
+                                    $.each(data.types, function (index, item) {
+                                        // console.log(item);
+                                        // [err_code], [err_msg], [placa], [rfid]
+                                        results.push({
+                                            id: item.placa,
+                                            text: item.placa,
+                                            err_code: item.err_code,
+                                            err_msg: item.err_msg,
+                                            rfid: item.rfid,
+                                        });
+                                    });
+                                    return {
+                                        results: results
+                                    };
+                                },
+                            },
+                        }).on('select2:select', function (e) {
+                        //FIXME VALIDAR QUE LA PLACA QUE SELECCIONE NO TENGA ERROR
+                        var trunk = e.params.data;
+                        console.log(trunk);
+                        data.registerTrunk = trunk.id;
+
+                        table.row(index).data(data)
+                        // $('td:eq(2)', row).val(''); // Change the value or make some change to the internal state
+                        // $('td:eq(2)', row).trigger('change.select2'); // Notify only Select2 of changes
+                        // return true;
+                    });
+                }
+                if($("#selectDriver"+elementId).length === 0)
+                {
+                    var selectHtml = "<select class=\"form-control\" id=\"selectDriver" +elementId + "\"></select>"
+                    console.log("Generate HTML: ")
+                    console.log(selectHtml);
+
+                    $('td', row).eq(6).html(selectHtml)
+
+                    $('td:eq(6)', row).select2(
+                        {
+                            language: "es",
+                            placeholder: 'Seleccione la Placa',
+                            // allowClear: true,
+                            width: '100%',
+                            closeOnSelect: true,
+                            minimumInputLength:5,
+                            ajax:{
+                                async:false,
+                                url: homeUrl + '/rd/trans-company/trunks',
+                                type: "GET",
+                                dataType: "json",
+                                cache: true,
+                                data: function (params) {
+                                    var query = {
+                                        code: params.term,
+                                    }
+                                    return query;
+                                },
+                                processResults: function (data) {
+                                    // console.log(data);
+                                    var results  = [];
+                                    $.each(data.types, function (index, item) {
+                                        // console.log(item);
+                                        // [err_code], [err_msg], [chofer_ruc], [chofer_nombre]
+                                        results.push({
+                                            id: item.chofer_ruc,
+                                            text: item.chofer_nombre,
+                                            err_code: item.err_code,
+                                            err_msg: item.err_msg,
+                                            chofer_ruc: item.chofer_ruc,
+                                        });
+                                    });
+                                    return {
+                                        results: results
+                                    };
+                                },
+                            },
+                        }).on('select2:select', function (e) {
+                        var driver = e.params.data;
+                        console.log(driver);
+                        data.nameDriver = driver.text
+                        // $('#mySelect2').val(type.id); // Select the option with a value of '1'
+                        // $('#mySelect2').trigger('change'); // Notify any JS components that the value changed
+                        table.row(index).data(data)
+                        // $('td:eq(2)', row).val(''); // Change the value or make some change to the internal state
+                        // $('td:eq(2)', row).trigger('change.select2'); // Notify only Select2 of changes
+                        // return true;
+                    });
+                }
+            },
         });
     }
 };

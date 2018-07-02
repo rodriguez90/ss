@@ -204,8 +204,8 @@ class TransCompanyController extends Controller
             $results = Yii::$app->db2->createCommand($sql)->queryAll();
 
             try{
-//                $trasaction = TransCompany::getDb()->beginTransaction();
-//                $doCommit = false;
+                $trasaction = TransCompany::getDb()->beginTransaction();
+                $doCommit = false;
 
                 foreach ($results as $result)
                 {
@@ -213,9 +213,9 @@ class TransCompanyController extends Controller
 
                     if($t === null)
                     {
-//                        $doCommit = true;
+                        $doCommit = true;
                         $t = new TransCompany();
-                        $str = iconv("CP1257", "UTF-8", $result['nombre_empresa']);
+                        $str = utf8_decode($result['nombre_empresa']);
                         $t->name = $str;
                         $t->ruc = $result['ruc_empresa'];
                         $t->address = "NO TIENE";
@@ -230,31 +230,33 @@ class TransCompanyController extends Controller
                         }
                     }
                     else {
-                        $str = iconv("CP1257", "UTF-8",  $t->name);
+                        $str = utf8_encode($t->name);
                         $t->name = $str;
                     }
                     $response['trans_companies'][] = $t;
                 }
 
-//                if($response['success'])
-//                {
-//                    if($doCommit)
-//                        $trasaction->commit();
-//                }
-//                else
-//                {
-//                    $trasaction->rollBack();
-//                }
-            }
-            catch (Exception $e)
-            {
-                if($e->getCode() !== '01000')
+                if($response['success'])
+                {
+                    if($doCommit)
+                        $trasaction->commit();
+                }
+                else
                 {
                     $trasaction->rollBack();
                 }
             }
+            catch ( \PDOException $e)
+            {
+                if($e->getCode() !== '01000')
+                {
+                    $response['success'] = false;
+                    $response['msg'] = "Ah ocurrido un error al buscar las Empresas de Transporte.";
+                    $response['msg_dev'] = $e->getMessage();
+                }
+            }
         }
-
+//                mb_convert_encoding($data['name'], 'UTF-8', 'UTF-8');
         return $response;
     }
 
@@ -287,9 +289,6 @@ class TransCompanyController extends Controller
 
     public function actionSPRegisterDriver()
     {
-//        exec sp_sgt_chofer_cons '0992125861001'
-
-
         Yii::$app->response->format = Response::FORMAT_JSON;
 
         $response = array();
@@ -311,8 +310,7 @@ class TransCompanyController extends Controller
             $sql = "exec sp_sgt_chofer_cons " . $code;
             $response['drivers'] = Yii::$app->createCommand($sql)->execute();
         }
-//        mb_convert_encoding($data['name'], 'UTF-8', 'UTF-8');
-        return json_encode($response);
+        return $response;
     }
 
     /**

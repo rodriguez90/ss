@@ -175,7 +175,7 @@ class ProcessController extends Controller
     public function actionUpdate($id)
     {
         if(!Yii::$app->user->can("process_update"))
-            throw new ForbiddenHttpException('Usted no tiene permiso para crear una recepción');
+            throw new ForbiddenHttpException('Usted no tiene permiso para actualizar un proceso');
 
         $model = $this->findModel($id);
 
@@ -224,8 +224,8 @@ class ProcessController extends Controller
 
     public function actionContainers()
     {
-        if(!Yii::$app->user->can("process_list"))
-            throw new ForbiddenHttpException('Usted no tiene permiso para crear una recepción');
+//        if(!Yii::$app->user->can("process_list"))
+//            throw new ForbiddenHttpException('Usted no tiene permiso para acceder a los procesos');
 
         Yii::$app->response->format = Response::FORMAT_JSON;
 
@@ -257,8 +257,8 @@ class ProcessController extends Controller
      */
     public function actionTransactions()
     {
-        if(!Yii::$app->user->can("process_list"))
-            throw new ForbiddenHttpException('Usted no tiene permiso para crear una recepción');
+//        if(!Yii::$app->user->can("process_list"))
+//            throw new ForbiddenHttpException('Usted no tiene permiso para acceder a los processos');
 
         Yii::$app->response->format = Response::FORMAT_JSON;
 
@@ -360,7 +360,6 @@ class ProcessController extends Controller
                                 $tmpResult = false;
                                 $response['msg'] = "Ah ocurrido un error al actualizar el estado del contenedor.";
                                 $response['msg_dev'] = implode(", ", $containerModel->getErrorSummary(false));
-                                $transaction->rollBack();
                                 break;
                             }
                         }
@@ -371,7 +370,7 @@ class ProcessController extends Controller
                             $containerModel->code = $container['type']['code'];
                             $containerModel->tonnage = $container['type']['tonnage'];
                             $containerModel->type_id = $container['type']['id'];
-                            $containerModel->status = 'Pendiente';
+                            $containerModel->status = 'PENDIENTE';
                             $containerModel->active = 1;
 
                             if(!$containerModel->save())
@@ -379,7 +378,6 @@ class ProcessController extends Controller
                                 $tmpResult = false;
                                 $response['msg'] = "Ah ocurrido un error al guardar los datos de los contenedores.";
                                 $response['msg_dev'] = implode(", ", $containerModel->getErrorSummary(false));
-                                $transaction->rollBack();
                                 break;
                             }
                         }
@@ -397,7 +395,6 @@ class ProcessController extends Controller
                                 $tmpResult = false;
                                 $response['msg'] = "Ah ocurrido un error al salvar los datos de las nuevas Cia de Transporte.";
                                 $response['msg_dev'] = implode(" ", $transCompany->getErrorSummary(false));
-                                $transaction->rollBack();
                                 break;
                             }
                         }
@@ -428,62 +425,77 @@ class ProcessController extends Controller
                         }
                     }
 
-                    if($tmpResult)
-                    {
-                        $transaction->commit();
+                   try
+                   {
+                       if($tmpResult)
+                       {
+                           // send email
+                           $remitente = AdmUser::findOne(['id'=>\Yii::$app->user->getId()]);
 
-                        // send email
-                        $remitente = AdmUser::findOne(['id'=>\Yii::$app->user->getId()]);
+                           foreach($containersByTransCompany as $t=>$c) {
 
-                        foreach($containersByTransCompany as $t=>$c) {
+                               $destinatario = AdmUser::find()
+                                   ->innerJoin("user_transcompany","user_transcompany.user_id = adm_user.id ")
+                                   ->where(["user_transcompany.transcompany_id"=>$t])
+                                   ->one();
 
-                            $destinatario = AdmUser::find()
-                                ->innerJoin("user_transcompany","user_transcompany.user_id = adm_user.id ")
-                                ->where(["user_transcompany.transcompany_id"=>$t])
-                                ->one();
+                               if($destinatario)
+                               {
 
-                            if($destinatario)
-                            {
+                                   $containers1 = [];
+                                   $containers2 = [];
+                                   $i=1;
 
-                                $containers1 = [];
-                                $containers2 = [];
-                                $i=1;
+                                   foreach ($c as $c2) {
+                                       if ($i % 2 !== 0) {
+                                           $containers1 []= $c2;
+                                       } else {
+                                           $containers2 []= $c2;
+                                       }
+                                       $i++;
+                                   }
 
-                                foreach ($c as $c2) {
-                                    if ($i % 2 !== 0) {
-                                        $containers1 []= $c2;
-                                    } else {
-                                        $containers2 []= $c2;
-                                    }
-                                    $i++;
-                                }
+                                   //pdf create
+                                   $pdf =  new mPDF( ['format'=>"A4-L"]);
+                                   $pdf->SetTitle("Prueba d generaciÃ³n de PDF.");
+                                   $pdf->WriteHTML($this->renderPartial('@app/mail/layouts/html3.php', ['model' => $model,
+                                       'containers1'=>$containers1,
+                                       'containers2'=>$containers2]));
+                                   $path= $pdf->Output("","S");
 
-                                //pdf create
-                                $pdf =  new mPDF( ['format'=>"A4-L"]);
-                                $pdf->SetTitle("Prueba d generaciÃ³n de PDF.");
-                                $pdf->WriteHTML($this->renderPartial('@app/mail/layouts/html3.php', ['model' => $model,
-                                    'containers1'=>$containers1,
-                                    'containers2'=>$containers2]));
-                                $path= $pdf->Output("","S");
+                                   $body = Yii::$app->view->renderFile('@app/mail/layouts/html3.php', ['model' => $model,
+                                       'containers1'=>$containers1,
+                                       'containers2'=>$containers2]);
 
-                                $body = Yii::$app->view->renderFile('@app/mail/layouts/html3.php', ['model' => $model,
-                                    'containers1'=>$containers1,
-                                    'containers2'=>$containers2]);
+                                   // TODO: send email user too from the admin system
+                                   Yii::$app->mailer->compose()
+                                       ->setFrom($remitente->email)
+                                       ->setTo($destinatario->email)
+                                       ->setSubject("Nueva Solicitud de Recepción")
+                                       ->setHtmlBody($body)
+                                       ->attachContent($path,[ 'fileName'=> "Nueva Solicitud de RecepciÃ³n.pdf",'contentType'=>'application/pdf'])
+                                       ->send();
+                               }
+                           }
+                           $response['success'] = true;
+                           $response['msg'] = Yii::t("app", "Recepción creada correctamente.");
+                           $response['url'] = Url::to(['/site/index']);
 
-                                // TODO: send email user too from the admin system
-                                Yii::$app->mailer->compose()
-                                    ->setFrom($remitente->email)
-                                    ->setTo($destinatario->email)
-                                    ->setSubject("Nueva Solicitud de Recepción")
-                                    ->setHtmlBody($body)
-                                    ->attachContent($path,[ 'fileName'=> "Nueva Solicitud de RecepciÃ³n.pdf",'contentType'=>'application/pdf'])
-                                    ->send();
-                            }
-                        }
-                        $response['success'] = true;
-                        $response['msg'] = Yii::t("app", "Recepción creada correctamente.");
-                        $response['url'] = Url::to(['/site/index']);
-                    }
+                           $transaction->commit();
+                       }
+                       else {
+                           $transaction->rollBack();
+                       }
+                   }
+                   catch (\PDOException $ePDO)
+                   {
+                       if($ePDO->getCode() !== '01000')
+                       {
+                           $response['success'] = false;
+                           $response['msg'] = "Ah ocurrido un error al salvar los datos en el servidor.";
+                           $response['msg_dev'] = $e->getMessage();
+                       }
+                   }
                 }
                 else {
                     $response['success'] = false;

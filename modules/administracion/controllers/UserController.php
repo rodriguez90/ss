@@ -28,6 +28,7 @@ use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\web\Response;
+use PDOException;
 
 /**
  * UserController implements the CRUD actions for User model.
@@ -233,7 +234,7 @@ class UserController extends Controller
 
         if ( \Yii::$app->user->can('user_update') || \Yii::$app->user->getId() == $id  ) {
 
-            $transaction = \Yii::$app->db->beginTransaction();
+            $transaction = Yii::$app->db->beginTransaction();
 
             try{
                 $model = $this->findModel($id);
@@ -357,9 +358,13 @@ class UserController extends Controller
                                                 $modelAux->delete();
                                         }else{
                                             $userTrans = UserTranscompany::findOne(['user_id'=>$model->id]);
-                                            $userTrans->transcompany_id = $type;
+                                            if($userTrans)
+                                            {
+                                                $userTrans->transcompany_id = $type;
 
-                                            $ok = $ok && $userTrans->update();
+                                                $ok = $ok && $userTrans->update();
+                                            }
+
                                         }
                                         break;
                                     default :
@@ -370,14 +375,26 @@ class UserController extends Controller
                                 }
                             }
                         }
-                        if($ok) {
-                            $transaction->commit();
-                            return $this->redirect(['index']);
-                        }else{
-                            $transaction->rollBack();
+
+
+                        try
+                        {
+                            if($ok) {
+                                $transaction->commit();
+                                return $this->redirect(['index']);
+                            }else{
+                                $transaction->rollBack();
+                            }
+                        }
+                        catch (PDOException $exception)
+                        {
+
+                            if($exception->getCode() == '01000')
+                            {
+                                return $this->redirect(['index']);
+                            }
                         }
                     }
-
                 }else{
                     $model->addError('error', "No existe el usuario" );
                 }
@@ -386,7 +403,20 @@ class UserController extends Controller
             {
                 if($e->getCode() !== '01000')
                 {
-                    $transaction->rollBack();
+
+                    try
+                    {
+                        $transaction->rollBack();
+                    }
+
+                    catch (PDOException $exception)
+                    {
+
+                        if($exception->getCode() == '01000')
+                        {
+                            return $this->redirect(['index']);
+                        }
+                    }
                 }
             }
 
