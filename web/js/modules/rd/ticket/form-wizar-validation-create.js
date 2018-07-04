@@ -22,6 +22,7 @@ var handleBootstrapWizardsValidation = function() {
                     table2
                         .clear()
                         .draw();
+                    transactionDataMap.clear();
 
                     //clone to table 2
 

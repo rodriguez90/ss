@@ -168,23 +168,23 @@ class SiteController extends Controller
 
         $user = AdmUser::findOne(['id'=>Yii::$app->user->getId()]);
         $params = Yii::$app->request->queryParams;
-//        if($user && ($user->hasRol('Importador')  ||  $user->hasRol('Exportador')))
-//        {
-//            $userAgency = UserAgency::findOne(['user_id'=>$user->id]);
-//            $params['agency_id'] = '';
-//            if($userAgency)
-//            {
-//                $params['agency_id'] = $userAgency->agency->name;
-//            }
-//        }
-//        else if ($user && $user->hasRol('Cia_transporte')){
-//            $userCiaTrans = UserTranscompany::findOne(['user_id'=>$user->id]);
-//            $params['trans_company_id'] = '';
-//            if($userCiaTrans)
-//            {
-//                $params['trans_company_id'] = $userCiaTrans->transcompany->id;
-//            }
-//        }
+        if($user && ($user->hasRol('Importador')  ||  $user->hasRol('Exportador')))
+        {
+            $agency = $user->getAgency();
+            $params['agency_id'] = '';
+            if($agency)
+            {
+                $params['agency_id'] = $agency->name;
+            }
+        }
+        else if ($user && $user->hasRol('Cia_transporte')){
+            $transcompany = $user->getTransCompany();
+            $params['trans_company_id'] = '';
+            if($transcompany)
+            {
+                $params['trans_company_id'] = $transcompany->name;
+            }
+        }
 
         $searchModel = new ProcessSearch();
         $dataProvider = $searchModel->search($params);
