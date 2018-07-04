@@ -4,6 +4,7 @@ namespace app\modules\rd\controllers;
 
 
 use app\modules\rd\models\Agency;
+use app\modules\rd\models\ContainerType;
 use app\modules\rd\models\TransCompany;
 use DateTime;
 use DateTimeZone;
@@ -350,10 +351,13 @@ class ProcessController extends Controller
                     foreach ($containers as $container)
                     {
                         $containerModel = Container::findOne(['name'=>$container['name']]);
-
+                        $type = ContainerType::findOne(['id'=>$container['type']['id']]);
                         if($containerModel !== null)
                         {
-                            $containerModel->status = 'Pendiente';
+                            $containerModel->code = $type->code;
+                            $containerModel->tonnage = $type->tonnage;
+                            $containerModel->type_id = $type->id;
+                            $containerModel->status = 'PENDIENTE';
                             $result = $containerModel->update();
                             if($result === false)
                             {
@@ -367,9 +371,9 @@ class ProcessController extends Controller
                         {
                             $containerModel = new Container();
                             $containerModel->name = $container['name'];
-                            $containerModel->code = $container['type']['code'];
-                            $containerModel->tonnage = $container['type']['tonnage'];
-                            $containerModel->type_id = $container['type']['id'];
+                            $containerModel->code = $type->code;
+                            $containerModel->tonnage = $type->tonnage;
+                            $containerModel->type_id = $type->id;
                             $containerModel->status = 'PENDIENTE';
                             $containerModel->active = 1;
 
@@ -398,6 +402,7 @@ class ProcessController extends Controller
                                 break;
                             }
                         }
+
                         $processTransModel = new ProcessTransaction();
                         $processTransModel->process_id = $model->id;
                         $processTransModel->container_id = $containerModel->id;
@@ -407,6 +412,14 @@ class ProcessController extends Controller
                         $aux->setTimezone(new DateTimeZone("UTC"));
                         $processTransModel->delivery_date = $aux->format("Y-m-d H:i:s");
 
+                        if(!$processTransModel->save()) {
+                            $tmpResult = false;
+                            $response['msg'] = "Ah ocurrido un error al salvar los datos de los contenedores.";
+                            $response['msg_dev'] = implode(" ", $processTransModel->getErrorSummary(false));
+                            $transaction->rollBack();
+                            break;
+                        }
+
                         if(isset($containersByTransCompany[$transCompany->id]))
                         {
                             array_push($containersByTransCompany[$transCompany->id], $containerModel);
@@ -414,14 +427,6 @@ class ProcessController extends Controller
                         else {
                             $containersByTransCompany[$transCompany->id]=[];
                             array_push($containersByTransCompany[ $transCompany->id], $containerModel);
-                        }
-
-                        if(!$processTransModel->save()) {
-                            $tmpResult = false;
-                            $response['msg'] = "Ah ocurrido un error al salvar los datos de los contenedores.";
-                            $response['msg_dev'] = implode(" ", $processTransModel->getErrorSummary(false));
-                            $transaction->rollBack();
-                            break;
                         }
                     }
 
@@ -468,15 +473,25 @@ class ProcessController extends Controller
                                        'containers2'=>$containers2]);
 
                                    // TODO: send email user too from the admin system
-                                   Yii::$app->mailer->compose()
-                                       ->setFrom($remitente->email)
-                                       ->setTo($destinatario->email)
-                                       ->setSubject("Nueva Solicitud de Recepción")
-                                       ->setHtmlBody($body)
-                                       ->attachContent($path,[ 'fileName'=> "Nueva Solicitud de RecepciÃ³n.pdf",'contentType'=>'application/pdf'])
-                                       ->send();
+                                   $result = Yii::$app->mailer->compose()
+                                                   ->setFrom($remitente->email)
+                                                   ->setTo($destinatario->email)
+                                                   ->setSubject("Nueva Solicitud de Recepción")
+                                                   ->setHtmlBody($body)
+                                                   ->attachContent($path,[ 'fileName'=> "Nueva Solicitud de RecepciÃ³n.pdf",'contentType'=>'application/pdf'])
+                                                   ->send();
+
+                                   if($result === false)
+                                   {
+                                       $tmpResult = false;
+                                       $response['msg'] ="Ah ocurrido un error al enviar la notificación vía email a la empresa de transporte.";
+                                   }
                                }
                            }
+                       }
+
+                       if($tmpResult)
+                       {
                            $response['success'] = true;
                            $response['msg'] = Yii::t("app", "Recepción creada correctamente.");
                            $response['url'] = Url::to(['/site/index']);
@@ -493,7 +508,7 @@ class ProcessController extends Controller
                        {
                            $response['success'] = false;
                            $response['msg'] = "Ah ocurrido un error al salvar los datos en el servidor.";
-                           $response['msg_dev'] = $e->getMessage();
+                           $response['msg_dev'] = $ePDO->getMessage();
                        }
                    }
                 }
@@ -667,5 +682,10 @@ class ProcessController extends Controller
         $pdf->SetTitle("Carta de Servicio");
         $pdf->WriteHTML($body);
         $path= $pdf->Output("Detalles del Proceso.pdf","D");
+    }
+
+    protected function notifyEmail($process)
+    {
+
     }
 }

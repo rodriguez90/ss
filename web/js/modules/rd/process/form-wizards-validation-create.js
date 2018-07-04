@@ -28,6 +28,8 @@ var handleBootstrapWizardsValidation = function() {
 
                             if(value.selectable)
                             {
+                                value.type = containertDataMap.get(value.name);
+
                                 table.row.add(
                                     value
                                 ).draw();
@@ -98,8 +100,9 @@ var handleBootstrapWizardsValidation = function() {
                                         return false;
                                     }
                                 }
+                                var type =  value.type = containertDataMap.get(value.name, null);
 
-                                if(value.type == null)
+                                if(!type)
                                 {
                                     result = false;
                                     alert("Debe asignar un tipo para los contenedores seleccionados.");
@@ -152,7 +155,7 @@ var handleBootstrapWizardsValidation = function() {
                         // set label text
 
                         var process = {
-                            "Process[agency_id]": 2, //agency.id, // FIXME THIS DEFINE BY USER WITH ROLE AGENCY OR IMPORTER/EXPORTER
+                            "Process[agency_id]": agency.id, // FIXME THIS DEFINE BY USER WITH ROLE AGENCY OR IMPORTER/EXPORTER
                             "Process[bl]":blCode,
                             "Process[active]":1,
                             "Process[delivery_date]":moment().format("YYYY/MM/DD"),
@@ -164,7 +167,7 @@ var handleBootstrapWizardsValidation = function() {
                         console.log(process);
 
                         $.ajax({
-                            async:false,
+                            // async:false,
                             url: homeUrl + "/rd/process/create?type="+processType,
                             type: "POST",
                             dataType: "json",

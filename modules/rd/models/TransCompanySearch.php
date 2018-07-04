@@ -47,9 +47,10 @@ class TransCompanySearch extends TransCompany
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'pagination' => [
-                'pageSize' => 5,
-            ],
+            'pagination'=>false,
+//            'pagination' => [
+//                'pageSize' => 5,
+//            ],
             'sort' => [
                 'defaultOrder' => [
                     'name' => SORT_ASC,

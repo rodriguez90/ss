@@ -147,14 +147,13 @@ class CalendarController extends Controller
                         $aux = new \DateTime($event['start']);
                         $aux->setTimezone(new DateTimeZone("UTC"));
                         $model->start_datetime = $aux->format("Y-m-d H:i:s");  //date_format( new \DateTime($event['start'],new DateTimeZone("UTC")),"Y-m-d G:i:s");
-                        var_dump($model->start_datetime);
+//                        var_dump($model->start_datetime);
 
                         $aux1 = new \DateTime($event['end']);
                         $aux1->setTimezone(new DateTimeZone("UTC"));
                         $model->end_datetime = $aux1->format("Y-m-d H:i:s");// date_format(new \DateTime($event['end'],new DateTimeZone("UTC")),"Y-m-d G:i:s");
-                        var_dump($model->end_datetime);
+//                        var_dump($model->end_datetime);
 
-                        die;
 
                         $reservados = Calendar::find()
                             ->innerJoin("ticket","calendar.id = ticket.calendar_id")

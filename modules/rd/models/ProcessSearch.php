@@ -69,13 +69,16 @@ class ProcessSearch extends Process
         $query = Process::find()->innerJoin('agency', 'agency.id = process.agency_id')
             ->innerJoin("process_transaction","process_transaction.process_id = process.id");
 
+//        $query = Process::find();
+
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'pagination' => [
-                'pageSize' => 5,
-            ],
+            'pagination' => false,
+//            'pagination' => [
+//                'pageSize' => 5,
+//            ],
             'sort' => [
                 'defaultOrder' => [
                     'created_at' => SORT_ASC,
@@ -104,7 +107,7 @@ class ProcessSearch extends Process
         // grid filtering conditions
         $query->andFilterWhere([
             'process.id' => $this->id,
-            'process.agency_id' => $this->agency_id,
+//            'process.agency_id' => $this->agency_id,
             'process.active' => $this->active,
             'process.type' => $this->type,
             'process.created_at' => $this->created_at,
