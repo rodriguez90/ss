@@ -31,7 +31,7 @@ if($user)
 <style>
     .fc-time-grid .fc-slats td
     {
-        height: 3.5em !important;
+        height: 2.5em !important;
     }
     .fc-title {
         font-size: 14px !important;
@@ -285,7 +285,6 @@ if($user)
 
 <script type="text/javascript">
     var modelId = '<?php echo $model->id; ?>';
-
     var transCompanyId = '<?php echo $trasCompany->id; ?>';
     var transCompanyRuc = '<?php echo $trasCompany->ruc; ?>';
 //    var complex = <?php //echo json_encode($complex); ?>//;

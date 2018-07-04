@@ -49,9 +49,10 @@ class ReceptionSearch extends Reception
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'pagination' => [
-                'pageSize' => 5,
-            ],
+            'pagination'=>false,
+//            'pagination' => [
+//                'pageSize' => 5,
+//            ],
             'sort' => [
                 'defaultOrder' => [
                     'created_at' => SORT_ASC,
