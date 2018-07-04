@@ -107,7 +107,7 @@ class ProcessSearch extends Process
         // grid filtering conditions
         $query->andFilterWhere([
             'process.id' => $this->id,
-            'process.agency_id' => $this->agency_id,
+//            'process.agency_id' => $this->agency_id,
             'process.active' => $this->active,
             'process.type' => $this->type,
             'process.created_at' => $this->created_at,
