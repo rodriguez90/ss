@@ -566,7 +566,6 @@ class ProcessController extends Controller
                 $bl = Yii::$app->request->post("bl");
                 if ($bl !== null) {
 
-
                     try {
                         $tickes = ProcessTransaction::find()
                             ->select("process_transaction.register_truck,process_transaction.register_driver,process_transaction.name_driver,process.type,process.bl,process.delivery_date,container.code,container.tonnage,trans_company.name,trans_company.ruc,ticket.id,ticket.status,calendar.start_datetime,calendar.end_datetime,warehouse.name as w_name, agency.name as a_name")
