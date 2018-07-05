@@ -174,6 +174,7 @@ class ContainerController extends Controller
                                            container.name, 
                                            container.status, 
                                            process_transaction.delivery_date as deliveryDate, 
+                                           process_transaction.id as ptId, 
                                            container_type.id as typeId, 
                                            container_type.name as typeName, 
                                            container_type.code as typeCode, 
@@ -192,7 +193,8 @@ class ContainerController extends Controller
                         $container = [];
                         $container['id'] = -1;
                         $container['name'] = $result['contenedor'];
-                        $container['type'] = null;
+                        $container['ptId'] = -1;
+                        $container['type'] = ["id"=>-1,"name"=>""];
                         $container['status'] = 'PENDIENTE';
                         $container['deliveryDate'] = $result['fecha_limite'];
                     }
@@ -201,7 +203,7 @@ class ContainerController extends Controller
                         $container = [];
                         $container['id'] = $data['id'];
                         $container['name'] = $data['name'];
-
+                        $container['ptId'] =  $data['ptId'];
                         $container['type'] = new  ContainerType();
                         $container['type']->id = $data['typeId'];
                         $container['type']->name = $data['typeName'];

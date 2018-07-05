@@ -22,6 +22,7 @@ var handleBootstrapWizardsValidation = function() {
                     table2
                         .clear()
                         .draw();
+                    transactionDataMap.clear();
 
                     //clone to table 2
 
@@ -46,6 +47,12 @@ var handleBootstrapWizardsValidation = function() {
                                 nameDriver: '',
                                 transactionId:tId
                             };
+                            transactionDataMap.set(c.name, {
+                                registerTrunk: '',
+                                registerDriver: '',
+                                nameDriver: '',
+                            });
+
                             table2.row.add(
                                 data
                             ).draw();
@@ -72,11 +79,7 @@ var handleBootstrapWizardsValidation = function() {
                             var c = containers.get(t.container_id);
                             var ticketData = ticketDataMap.get(tId);
 
-                            var registerTrunk = "#selectTrunk" + value.name;
-                            var nameDriver = "#selectDriver" + value.name;
-
-                            var trunkData = $(registerTrunk).select2('data');
-                            var driverData = $(registerTrunk).select2('data');
+                            var transactionData = transactionDataMap.get(value.name);
 
                             if(ticketData)
                             {
@@ -87,9 +90,9 @@ var handleBootstrapWizardsValidation = function() {
                                     deliveryDate: t.delivery_date,
                                     agency: agency.name,
                                     dateTicket:ticketData.dateTicket,
-                                    registerTrunk: trunkData[0].id,
-                                    registerDriver: value.registerDriver,
-                                    nameDriver: driverData[0].text,
+                                    registerTrunk: transactionData.registerTrunk,
+                                    registerDriver: transactionData.registerDriver,
+                                    nameDriver: transactionData.nameDriver,
                                     transactionId:tId
                                 };
 
@@ -102,7 +105,7 @@ var handleBootstrapWizardsValidation = function() {
             },
             validating: function (e, ui) {
 
-                var result = false;
+                var valid = true;
 
                 // back navigation no check validation
                 if(ui.index > ui.nextIndex)
@@ -128,8 +131,6 @@ var handleBootstrapWizardsValidation = function() {
 
                     var table = $('#data-table2').DataTable();
                     var table3 = $('#data-table3').DataTable();
-                    var error = false;
-
                     table3
                         .clear()
                         .draw();
@@ -139,25 +140,30 @@ var handleBootstrapWizardsValidation = function() {
                         .data()
                         .each( function ( value, index ) {
 
-                            if(error) return false;
+                            if(!valid) return false;
                             var registerTrunk = "#selectTrunk" + value.name;
                             var nameDriver = "#selectDriver" + value.name;
 
                             var trunkData = $(registerTrunk).select2('data');
                             var driverData = $(registerTrunk).select2('data');
 
-                            if(trunkData.length == 0 || driverData.length == 0 || value.registerDriver.length === 0)
+                            var transactionData = transactionDataMap.get(value.name);
+
+                            if(!transactionData ||
+                                (transactionData.registerTrunk.length === 0 ||
+                                transactionData.registerTrunk.length === 0 ||
+                                transactionData.registerTrunk.length === 0))
                             {
                                 table3
                                     .clear()
                                     .draw();
-                                error = true;
-                                alert("Debe introducir la placa del carro y la cédual y nombre chofer para todo los contenedores.");
+                                valid = false;
+                                alert("Debe introducir la \"Placa del Carro\", \"Cédula\" y \"Nombre del Chofer\" para todo los contenedores.");
                                 return false;
                             }
                         });
 
-                    return !error;
+                    return valid;
                 }
                 else if (ui.index == 2) {
 
@@ -166,23 +172,10 @@ var handleBootstrapWizardsValidation = function() {
                         var table = $('#data-table3').DataTable();
 
                         var tickets = [];
-                        error = false;
                         table
                             .rows( )
                             .data()
                             .each( function ( value, index ) {
-                                // console.log(value);
-
-                                if(error) return false;
-
-                                if(value.registerTrunk.length == 0 || value.registerDriver.length == 0 || value.nameDriver.length === 0)
-                                {
-                                    tickets = [];
-                                    error = true;
-                                    alert("Debe introducir la placa del carro y la cédula del chofer para todo los contenedores.");
-                                    return false;
-                                }
-
 
                                 var tId = value.transactionId;
                                 var t = transactions.get(tId);
@@ -200,18 +193,14 @@ var handleBootstrapWizardsValidation = function() {
                                         "registerDriver":value.registerDriver,
                                         "nameDriver":value.nameDriver,
                                     };
-                                    console.log(data);
                                     tickets.push(data);
                                 }
                             } );
-
-                        if(error) return false;
 
                         console.log("Ticket to reserve: ");
                         console.log(tickets);
 
                         $.ajax({
-                            async:false,
                             url: homeUrl + "/rd/ticket/reserve",
                             type: "POST",
                             dataType: "json",
@@ -227,24 +216,25 @@ var handleBootstrapWizardsValidation = function() {
 
                                 if(response.success)
                                 {
-                                    result = true;
+                                    valid = true;
                                     window.location.href = response.url;
                                 }
                                 else
                                 {
+                                    valid  = false;
                                     alert(response.msg);
                                 }
-                                // return true;
+                                return valid;
                             },
                             error: function(data) {
                                 console.log(data);
                                 alert(data['msg']);
-                                result = false;
-                                // return false;
+                                valid = false;
+                                return valid;
                             }
                         });
 
-                        return result;
+                        return valid;
                     }
 
                     alert("Debe confirmar que la información es valida.");

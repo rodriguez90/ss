@@ -42,6 +42,8 @@ var timerId = null;
 var containerTypeMap = new Map();
 var containerTypeArray = [];
 
+var containertDataMap = new  Map();
+
 var cleanUI = function () {
     selectedContainers = [];
     var table = $('#data-table').DataTable();
@@ -190,6 +192,7 @@ var handleSelectTransCompany = function () {
                 // console.log(data);
                 var results  = [];
                 $.each(data.trans_companies, function (index, item) {
+                // $.each(data, function (index, item) {
                     // console.log(item);
                     results .push({
                         id: item.id,
@@ -251,7 +254,6 @@ var handleSelectTransCompany = function () {
 var fetchContainers = function (bl) {
     cleanUI();
     $.ajax({
-        // async:false,
         url: homeUrl + "/rd/container/containers",
         type: "get",
         dataType:'json',
@@ -279,13 +281,13 @@ var fetchContainersWS = function (bl, containers) {
     // var statusArray = [
     //             'PENDIENTE',
     //              moment().format(),
-    //             'PONCHADO',
-    //             'TRASLADO',
-    //             'EN PATIO',
+    //             'PENDIENTE',
+    //             'PENDIENTE',
+    //             'PENDIENTE',
     //             'EMBARCADO',
     //             'DESPACHADO'];
-    //
-    // var table = $('#data-table').DataTable();
+
+    var table = $('#data-table').DataTable();
 
     table
         .clear()
@@ -306,14 +308,17 @@ var fetchContainersWS = function (bl, containers) {
         //     type = Array.from(containerTypeMap.values())[typeIndex]
         //
         // var dataContainer = {
+        //     id:-1,
         //     name:"ContainerName"+i,
+        //     ptId:-1,
         //     type: type,
-        //     deliveryDate: Date(),
+        //     deliveryDate: moment().utc().format("DD/MM/YYYY"),
         //     status: status,
         // };
 
         var container =  {
-            id:-1,
+            id:dataContainer.id,
+            ptId:dataContainer.ptId,
             checkbox:"",
             name:dataContainer.name,
             type: dataContainer.type,
@@ -324,8 +329,7 @@ var fetchContainersWS = function (bl, containers) {
             status:dataContainer.status,
             selectable:false
         };
-        console.log(container);
-        console.log(moment(dataContainer.status));
+
         var statusIsDate = moment(dataContainer.status).isValid();
         console.log("Status Date Valid: " + statusIsDate);
         if( container.status == "PENDIENTE" ||
@@ -333,6 +337,7 @@ var fetchContainersWS = function (bl, containers) {
         {
             container.selectable = true;
         }
+        console.log(container);
 
         table.row.add(
             container
@@ -365,6 +370,9 @@ var fetchContainerTypes = function () {
                 });
                 // containerTypeArray = Array.from(containerTypeMap.values());
             }
+            else {
+                alert(response.msg);
+            }
         },
         error: function(data) {
             console.log(data);
@@ -376,7 +384,7 @@ var fetchContainerTypes = function () {
 
 $(document).ready(function () {
 
-    // console.log(agency);
+    console.log(agency);
     console.log(processType);
     // init wizar
     FormWizardValidation.init();

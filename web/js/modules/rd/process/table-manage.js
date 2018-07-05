@@ -24,135 +24,72 @@ var handleDataTable = function() {
             },
             order: [[ 1, 'asc' ]],
             responsive: true,
-            "createdRow": function ( row, data, index, cells ) {
+            deferRender: false,
+            rowCallback: function( row, data, index ) {
+                    console.log("rowCallback to: " + data.name);
+            },
+            createdRow: function( row, data, dataIndex ) {
+                console.log('init select2: ' + data.name);
                 if (!data.selectable ) {
                     $('td', row).eq(0).removeClass('select-checkbox');
-                    // console.log(row);
                     $(row).addClass('bg-silver-darker');
                 }
                 else {
                     var elementId =  String(data.name).replace(' ','');
                     if(processType === "2")
                     {
-                        // console.log("Element Id: " + elementId)
-                        // console.log("element length " + $('#' + elementId).length);
-                        // console.log($('#' + elementId));
+                        var  html = '<input type=\"text\" class=\"form-control\" id=\"' + elementId +  '\" placeholder=\"Seleccionar\"' + 'value=\"' + moment(data.deliveryDate).format('DD/MM/YYYY') + '\" >';
 
-                        if($('#' + elementId).length === 0)
-                        {
-                            console.log($('td:eq(3)', row).html());
+                        $('td', row).eq(3).html(html)
 
-                            var  html = '<input type=\"text\" class=\"form-control\" id=\"' + elementId +  '\" placeholder=\"Seleccionar\"' + 'value=\"' + moment(data.deliveryDate).format('DD/MM/YYYY') + '\" >';
-                            console.log("Generate HTML: ")
-                            console.log(html);
-
-                            $('td', row).eq(3).html(html)
-                            // $('td:eq(3)', row).html(html);
-
-                            // console.log($('td:eq(3)', row).html());
-
-                            $('td:eq(3)', row).datepicker({
-                                title:"Seleccione la Fecha Límite",
-                                language: 'es',
-                                // format: 'dd/mm/yyyy',
-                                // todayHighlight: true,
-                                autoclose: true,
-                                immediateUpdates:true,
-                                // startDate: '-3d',
-                                // zIndexOffset:20
-                                // container:"#data-table"
-                                // toggleActive:true
-                            }).on('changeDate', function(event){
-                                // var dateValue = moment(event.date).format('DD/MM/YYYY');
-                                var dateValue = moment(event.date).format('YYYY/MM/DD');
-                                // console.log(row);
-                                // console.log($(row));
-                                // console.log(data);
-                                // console.log(index);
-                                // console.log(dateValue);
-                                data.deliveryDate = dateValue;
-                                table.row(index).data(data)
-                            });
-                        }
-                    }
-
-                    if($("#select"+elementId).length === 0)
-                    {
-                        var selectHtml = "<select class=\"form-control\" id=\"select" +elementId + "\"></select>";
-
-                        // for(var i = 0, count = containerTypeArray.length; i< count; i++)
-                        // {
-                        //     selectHtml +=  "<option value=\"" + containerTypeArray[i].id+ "\">" + containerTypeArray[i].name + "</option>"
-                        // }
-                        //     selectHtml += "</select>"
-
-                        console.log("Generate HTML: ")
-                        console.log(selectHtml);
-                        console.log(row);
-                        $('td', row).eq(2).html(selectHtml);
-                        // console.log($('td:eq(2)', row));
-
-                        // $('td:eq(2)', row).select2(
-                        // $('select', row).select2
-                        // row.child('td').eq(2).find('select')
-                        // $('select', row).eq(2).select2(
-                        console.log($('td', row).eq(2));
-                        console.log(row);
-                        $('select', row).select2(
-                        {
-                            language: "es",
-                            placeholder: 'Seleccione Tipo de Contenedor',
-                            // allowClear: true,
-                            width: '100%',
-                            closeOnSelect: true,
-                            // data:{ results: containerTypeArray, text: "name"},
-                            data:containerTypeArray,
-                            // ajax:{
-                            //     async:false,
-                            //     url: homeUrl + '/rd/container-type/types',
-                            //     type: "GET",
-                            //     dataType: "json",
-                            //     cache: true,
-                            //     processResults: function (data) {
-                            //         // console.log(data);
-                            //         var results  = [];
-                            //         $.each(data.types, function (index, item) {
-                            //             // console.log(item);
-                            //             results.push({
-                            //                 id: item.id,
-                            //                 text: item.name,
-                            //             });
-                            //         });
-                            //         return {
-                            //             results: results
-                            //         };
-                            //     },
-                            // },
-                        }).on('select2:select', function (e) {
-                            // console.log(containerTypeMap);
-                            var selectedType = e.params.data;
-                            // console.log(selectedType);
-                            // console.log(selectedType.id);
-                            // var type = containerTypeMap.get(selectedType.id, null);
-                            var type = {
-                                id:selectedType.id,
-                                name:selectedType.text,
-                            };
-                            // console.log(type);
-                            data.type = type;
-
+                        $('td:eq(3)', row).datepicker({
+                            title:"Seleccione la Fecha Límite",
+                            language: 'es',
+                            // format: 'dd/mm/yyyy',
+                            // todayHighlight: true,
+                            autoclose: true,
+                            immediateUpdates:true,
+                            // startDate: '-3d',
+                            // zIndexOffset:20
+                            // container:"#data-table"
+                            // toggleActive:true
+                        }).on('changeDate', function(event){
+                            // var dateValue = moment(event.date).format('DD/MM/YYYY');
+                            var dateValue = moment(event.date).format('YYYY/MM/DD');
+                            // console.log(row);
+                            // console.log($(row));
                             // console.log(data);
-                            // $('#mySelect2').val(type.id); // Select the option with a value of '1'
-                            // $('#mySelect2').trigger('change'); // Notify any JS components that the value changed
-                            table.row(index).data(data);
-                            // $('td:eq(2)', row).val(''); // Change the value or make some change to the internal state
-                            // $('td:eq(2)', row).trigger('change.select2'); // Notify only Select2 of changes
-                            return true;
+                            // console.log(index);
+                            // console.log(dateValue);
+                            data.deliveryDate = dateValue;
+                            table.row(index).data(data)
                         });
                     }
+                    // $('td:eq(2)', row).select2(
+                    // $('td', row).eq(2).select2(
+                    $('select', row).select2(
+                    {
+                        language: "es",
+                        placeholder: 'Seleccione Tipo de Contenedor',
+                        width: '100%',
+                        closeOnSelect: true,
+                        data:containerTypeArray,
+                        }).on('select2:select', function (e) {
+                            var type = e.params.data;
+                            var containerType = {
+                                id:type.id,
+                                name:type.text
+                            };
+                            containertDataMap.set(data.name,containerType);
+
+                            // $('#mySelect2').val(type.id); // Select the option with a value of '1'
+                            // $('#mySelect2').trigger('change:select2'); // Notify any JS components that the value changed
+                            // table.row(dataIndex).data(data); -- esto prococa que la fila se repinte de nuevo y x tango perdemos la inicializacion del select
+                            // return true;
+                    });
                 }
             },
-            "columns": [
+            columns: [
                 {
                     // "title": "Selecionar",
                    "data":'checkbox', // FIXME CHECK THIS
@@ -179,25 +116,43 @@ var handleDataTable = function() {
                 },
                 {
                     targets: [2],
-                    title:"Tipo",
-                    data:"type",
+                    data:'type',
                     render: function ( data, type, full, meta ) {
-                        //
-                        // console.log("TYPE COLUMN RENDER:")
-                        // console.log("TYPE: " + type);
-                        // console.log(full);
-                        // console.log(meta);
-                        // console.log(data);
-                        var row = meta.row;
-                        var col = meta.col;
-                        var selector = "td:eq("+col+")";
-                        var cell = $(this).cell();
-                        // console.log($('td:eq()', row).eq(2).html);
-                        if(data !== null)
+                        var elementId =  String(full.name).trim();
+                        console.log("render: " + elementId + " " + type);
+                        if(type == 'display' && full.selectable)
                         {
-                            return data.name;
+                            // var api =  new $.fn.dataTable.Api(meta.settings);
+                             // api.cell({row: meta.row, column:2}).data(trunk.id);
+                             // var row = api.row({row:meta.row});
+                             var selectHtml = "<select class=\"form-control\" id=\"selectType" +elementId + "\"></select>";
+                            // setTimeout(function() {
+                            //     $('select', row).select2(
+                            //         // $('td', row).eq(2).select2(
+                            //         {
+                            //             language: "es",
+                            //             placeholder: 'Seleccione Tipo de Contenedor',
+                            //             width: '100%',
+                            //             closeOnSelect: true,
+                            //             data:containerTypeArray,
+                            //         }).on('select2:select', function (e) {
+                            //             var type = e.params.data;
+                            //             data.type = {
+                            //                 id:type.id,
+                            //                 name:type.text
+                            //             };
+                            //
+                            //
+                            //             //table.row(index).data(data); // esto prococa que la fila se repinte de nuevo y x tango perdemos la inicializacion del select
+                            //             api.cell({row: meta.row, column:2}).data(data);
+                            //             return true;
+                            //         });
+                            //     $('select', row).val(data.id); // Select the option with a value of '1'
+                            //     $('select', row).trigger('change:select2'); // Notify any JS components that the value changed
+                            // }, 200);
+                            return selectHtml;
                         }
-                        return "";
+                        return data.name;
                     },
                 },
                 {
