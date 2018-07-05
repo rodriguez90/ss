@@ -128,9 +128,17 @@ class ContainerTypeController extends Controller
 
         $response = array();
         $response['success'] = true;
-        $response['types'] = ContainerType::find()->orderBy('name')->all();
         $response['msg'] = '';
         $response['msg_dev'] = '';
+
+        try{
+            $response['types'] = ContainerType::find()->orderBy('name')->all();
+        }
+        catch (Exception $e)
+        {
+            $response['msg'] = 'Ah ocurrido un error al buscar los tipos de contenedores/';
+            $response['msg_dev'] = $e->getMessage();
+        }
 
         return $response;
     }

@@ -249,13 +249,14 @@ else if ($intVal === Process::PROCESS_EXPORT)
     </div>
 </div>
 
+<script type="text/javascript">
+    var agency = <?php echo json_encode(['name'=>$agency->name,
+        'id'=>$agency->id  ]); ?>;
+    var processType = '<?php echo $type;?>';
+</script>
+
 <?php $this->registerJsFile('@web/js/modules/rd/process/form-wizards-validation-create.js', ['depends' => ['app\assets\WizardAsset']]) ?>
 <?php $this->registerJsFile('@web/js/modules/rd/process/table-manage.js', ['depends' => ['app\assets\SystemAsset']]) ?>
 <?php $this->registerJsFile('@web/js/modules/rd/process/process-create.js', ['depends' => ['app\assets\SystemAsset', 'app\assets\FormAsset']]) ?>
 
 
-<script type="text/javascript">
-        var agency = <?php echo json_encode(['name'=>$agency->name,
-                                            'id'=>$agency->id  ]); ?>;
-        var processType = '<?php echo $type;?>';
-</script>

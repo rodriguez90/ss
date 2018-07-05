@@ -67,15 +67,19 @@ class ProcessSearch extends Process
     public function search($params)
     {
         $query = Process::find()->innerJoin('agency', 'agency.id = process.agency_id')
-            ->innerJoin("process_transaction","process_transaction.process_id = process.id");
+            ->innerJoin("process_transaction","process_transaction.process_id = process.id")
+            ->innerJoin("trans_company","process_transaction.trans_company_id = trans_company.id");
+
+//        $query = Process::find();
 
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'pagination' => [
-                'pageSize' => 5,
-            ],
+            'pagination' => false,
+//            'pagination' => [
+//                'pageSize' => 5,
+//            ],
             'sort' => [
                 'defaultOrder' => [
                     'created_at' => SORT_ASC,
@@ -86,16 +90,6 @@ class ProcessSearch extends Process
 
         $this->load($params);
 
-        if(isset($params['agency_id']))
-        {
-            $this->agency_id = $params['agency_id'];
-        }
-
-        if(isset($params['trans_company_id']))
-        {
-            $query->andWhere(['process_transaction.trans_company_id'=>$params['trans_company_id']]) ;
-        }
-
         if (!$this->validate()) {
             return $dataProvider;
         }
@@ -104,7 +98,7 @@ class ProcessSearch extends Process
         // grid filtering conditions
         $query->andFilterWhere([
             'process.id' => $this->id,
-            'process.agency_id' => $this->agency_id,
+//            'process.agency_id' => $this->agency_id,
             'process.active' => $this->active,
             'process.type' => $this->type,
             'process.created_at' => $this->created_at,
@@ -112,14 +106,21 @@ class ProcessSearch extends Process
 
         $query->andFilterWhere(['like', 'bl', $this->bl]);
 
-        if(isset($this->agency_id))
+//        if(isset($this->agency_id))
+//        {
+//
+//            $query->andFilterWhere(['like', 'agency.name', $this->agency_id]);
+//        }
+
+        if(isset($params['agency_id']))
         {
-
-            $query->andFilterWhere(['like', 'agency.name', $this->agency_id]);
+            $query->andFilterWhere(['agency.name'=>$params['agency_id']]);
         }
-//        var_dump($this->delivery_date);die;
 
-//        'process.delivery_date' => $this->delivery_date,
+        if(isset($params['trans_company_id']))
+        {
+            $query->andWhere(['trans_company.name'=>$params['trans_company_id']]) ;
+        }
 
         return $dataProvider;
     }

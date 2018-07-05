@@ -170,25 +170,25 @@ class SiteController extends Controller
         $params = Yii::$app->request->queryParams;
         if($user && ($user->hasRol('Importador')  ||  $user->hasRol('Exportador')))
         {
-            $userAgency = UserAgency::findOne(['user_id'=>$user->id]);
+            $agency = $user->getAgency();
             $params['agency_id'] = '';
-            if($userAgency)
+            if($agency)
             {
-                $params['agency_id'] = $userAgency->agency->name;
+                $params['agency_id'] = $agency->name;
             }
         }
         else if ($user && $user->hasRol('Cia_transporte')){
-            $userCiaTrans = UserTranscompany::findOne(['user_id'=>$user->id]);
+            $transcompany = $user->getTransCompany();
             $params['trans_company_id'] = '';
-            if($userCiaTrans)
+            if($transcompany)
             {
-                $params['trans_company_id'] = $userCiaTrans->transcompany->id;
+                $params['trans_company_id'] = $transcompany->name;
             }
         }
 
         $searchModel = new ProcessSearch();
         $dataProvider = $searchModel->search($params);
-        $importCount = Process::find()->where(['type'=>Process::PROCESS_IMPORT])->count();;
+        $importCount = Process::find()->where(['type'=>Process::PROCESS_IMPORT])->count();
         $exportCount = Process::find()->where(['type'=>Process::PROCESS_EXPORT])->count();
         $ticketCount = TicketSearch::find()->count();
         $myparams = array();
@@ -234,8 +234,6 @@ class SiteController extends Controller
         }else{
             return $this->render('login', ['model' => $model]);
         }
-
-
     }
 
     /**
@@ -268,11 +266,7 @@ class SiteController extends Controller
         ]);
     }
 
-    /**
-     * Displays about page.
-     *
-     * @return string
-     */
+    /**                */
     public function actionAbout()
     {
         return $this->render('about');
@@ -314,7 +308,7 @@ class SiteController extends Controller
             ->innerJoin('process_transaction','process_transaction.process_id = process.id')
             ->innerJoin('container','process_transaction.container_id = container.id')
             ->where(['process.type'=>Process::PROCESS_EXPORT])
-            ->andWhere(['process.active'=>1])
+
             ->all();
 
         $processImp = Process::find()
@@ -322,7 +316,7 @@ class SiteController extends Controller
             ->innerJoin('process_transaction','process_transaction.process_id = process.id')
             ->innerJoin('container','process_transaction.container_id = container.id')
             ->where(['process.type'=>Process::PROCESS_IMPORT])
-            ->andWhere(['process.active'=>1])
+
             ->all();
 
         $body = $this->renderPartial('print', [
@@ -374,11 +368,7 @@ class SiteController extends Controller
                     $filter = ProcessTransaction::find()->select('process_id')->where(['like','trans_company_id', $search_trans_company]);
                     $dataProvider->query->andFilterWhere(['process.id'=>$filter]);
             }
-
-
         }
-
-
 
         return $this->render('report', [
             'searchModel'=>$searchModel,
@@ -409,7 +399,7 @@ class SiteController extends Controller
             $row = [];
             $row["process"] = $p;
             $containers = Container::find()
-                ->select('container.id,container.name,container.tonnage,calendar.start_datetime')
+                ->select('container.id,container.status,container.name,container.tonnage,calendar.start_datetime')
                 ->innerJoin("process_transaction","process_transaction.container_id = container.id")
                 ->innerJoin("ticket","ticket.process_transaction_id = process_transaction.id")
                 ->innerJoin("calendar","calendar.id = ticket.calendar_id")

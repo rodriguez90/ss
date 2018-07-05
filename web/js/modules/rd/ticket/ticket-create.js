@@ -42,7 +42,8 @@ var transactions = new Map();
 var containers = new Map();
 var ticketDataMap =  new Map(); // transaction id - key
 var calendarEventMap = new Map(); // calendar id - key
-var ticketEventMap = new Map();
+
+var transactionDataMap = new Map();
 
 var calendarSlotEvents = {
     id:'calendarSlotEvents',
@@ -336,6 +337,136 @@ var handleTableInWizar = function() {
                 },
             ],
             "language": lan,
+            "createdRow": function( row, data, dataIndex ) {
+                console.log('init select2: ' + data.name);
+
+                $('td select', row).eq(0).select2(
+                {
+                    language: "es",
+                    placeholder: 'Seleccione la Placa',
+                    // allowClear: true,
+                    width: '100%',
+                    closeOnSelect: true,
+                    // minimumInputLength:5,
+                    minimumResultsForSearch:-1,
+                    ajax:{
+                        url: homeUrl + '/rd/trans-company/trunks',
+                        type: "GET",
+                        dataType: "json",
+                        cache: true,
+                        data: function (params) {
+                            var query = {
+                                // code: params.term,
+                                code: transCompanyRuc,
+                            }
+                            return query;
+                        },
+                        processResults: function (response) {
+                            console.log(response);
+                            var results  = [];
+                            $.each(response.trunks, function (index, item) {
+                                // console.log(item);
+                                // [err_code], [err_msg], [placa], [rfid]
+                                results.push({
+                                    id: item.placa,
+                                    text: item.placa,
+                                    err_code: item.err_code,
+                                    err_msg: item.err_msg,
+                                    rfid: item.rfid,
+                                });
+                            });
+                            return {
+                                results: results
+                            };
+                        },
+                    },
+                }).on('select2:select', function (e) {
+                    // alert(e.params.data);
+                    var trunk = e.params.data;
+                    var transactionData = transactionDataMap.get(data.name);
+                    if(trunk.err_code !== "0")
+                    {
+                        transactionData.registerTrunk = "";
+                        e.preventDefault();
+                        alert("Este Chofer no puede ser seleccionado: " + driver.err_msg);
+                        $("#selectTrunk" +elementId).val("").trigger("change.select2");
+
+                    }
+                    else
+                    {
+                        transactionData.registerTrunk = trunk.id;
+                    }
+
+                    transactionDataMap.set(data.name,transactionData);
+
+                    // api.cell({row: meta.row, column: 5}).data(trunk.id);
+                    // table.row(index).data(data)
+                });
+
+                $('td select', row).eq(1).select2(
+                    {
+                        language: "es",
+                        placeholder: 'Seleccione el Chofer',
+                        // allowClear: true,
+                        width: '100%',
+                        closeOnSelect: true,
+                        // minimumInputLength:5,
+                        minimumResultsForSearch:-1,
+                        ajax:{
+                            url: homeUrl + '/rd/trans-company/drivers',
+                            type: "GET",
+                            dataType: "json",
+                            cache: true,
+                            data: function (params) {
+                                var query = {
+                                    // code: params.term,
+                                    code: transCompanyRuc,
+                                }
+                                return query;
+                            },
+                            processResults: function (response) {
+                                console.log(response);
+                                var results  = [];
+                                $.each(response.drivers, function (index, item) {
+                                    // console.log(item);
+                                    // [err_code], [err_msg], [placa], [rfid]
+                                    results.push({
+                                        id: item.chofer_ruc,
+                                        text: item.chofer_nombre,
+                                        err_code: item.err_code,
+                                        err_msg: item.err_msg,
+                                        chofer_ruc: item.chofer_ruc,
+                                    });
+                                });
+                                return {
+                                    results: results
+                                };
+                            },
+                        },
+                    }).on('select2:select', function (e) {
+                    var driver = e.params.data;
+                    var transactionData = transactionDataMap.get(data.name);
+                    if(driver.err_code !== "0")
+                    {
+                        transactionData.registerDriver = "";
+                        transactionData.nameDriver = "";
+                        e.preventDefault();
+                        alert("Este Chofer no puede ser seleccionado: " + driver.err_msg);
+
+                    }
+                    else
+                    {
+                        transactionData.registerDriver = driver.id;
+                        transactionData.nameDriver = driver.text;
+                        // api.cell({row: meta.row, column: 6}).data(driver.id);
+                        table.cell({row: dataIndex, column: 7}).data(driver.id);
+                    }
+
+                    transactionDataMap.set(data.name,transactionData);
+
+
+                });
+            },
             columnDefs: [
                 {
                     targets: [1],
@@ -371,67 +502,15 @@ var handleTableInWizar = function() {
                         var elementId =  String(full.name).trim();
                         if(type == 'display')
                         {
-                            var api =  new $.fn.dataTable.Api(meta.settings);
-                            var select2_aux = "";
+                            var selectHtml = "";
 
                             if($("#selectTrunk"+elementId).length === 0)
                             {
-                                var selectHtml = "<select class=\"form-control\" id=\"selectTrunk" +elementId + "\"></select>";
-                                setTimeout(
-                                    function(){
-                                        var select2_aux = $("#selectTrunk" +elementId).select2(
-                                            {
-                                                language: "es",
-                                                placeholder: 'Seleccione la Placa',
-                                                // allowClear: true,
-                                                width: '100%',
-                                                closeOnSelect: true,
-                                                // minimumInputLength:5,
-                                                minimumResultsForSearch:-1,
-                                                ajax:{
-                                                    async:false,
-                                                    url: homeUrl + '/rd/trans-company/trunks',
-                                                    type: "GET",
-                                                    dataType: "json",
-                                                    cache: true,
-                                                    data: function (params) {
-                                                        var query = {
-                                                            // code: params.term,
-                                                            code: transCompanyRuc,
-                                                        }
-                                                        return query;
-                                                    },
-                                                    processResults: function (response) {
-                                                        console.log(response);
-                                                        var results  = [];
-                                                        $.each(response.trunks, function (index, item) {
-                                                            // console.log(item);
-                                                            // [err_code], [err_msg], [placa], [rfid]
-                                                            results.push({
-                                                                id: item.placa,
-                                                                text: item.placa,
-                                                                err_code: item.err_code,
-                                                                err_msg: item.err_msg,
-                                                                rfid: item.rfid,
-                                                            });
-                                                        });
-                                                        return {
-                                                            results: results
-                                                        };
-                                                    },
-                                                },
-                                            }).on('select2:select', function (e) {
-                                                // alert(e.params.data);
-                                                // var trunk = e.params.data;
-                                                // api.cell({row: meta.row, column: 5}).data(trunk.id);
-                                                // table.row(index).data(data)
-                                        });
-                                }, 300);
-                                return selectHtml;
+                                selectHtml = "<select class=\"form-control\" id=\"selectTrunk" +elementId + "\"></select>";
                             }
-                            return select2_aux;
+                            return selectHtml;
                         }
-                        return full.registerTrunk;
+                        return data;
                     },
                 },
                 {
@@ -441,67 +520,11 @@ var handleTableInWizar = function() {
                         var elementId =  String(full.name).trim();
                         if(type == 'display')
                         {
-                            var api =  new $.fn.dataTable.Api(meta.settings);
-                            var select2_aux = "";
+                            var selectHtml = "<select class=\"form-control\" id=\"selectDriver" +elementId + "\"></select>";
 
-                            if($("#selectTrunk"+elementId).length === 0)
-                            {
-                                var selectHtml = "<select class=\"form-control\" id=\"selectDriver" +elementId + "\"></select>";
-                                setTimeout(
-                                    function(){
-                                        var select2_aux = $("#selectDriver" +elementId).select2(
-                                            {
-                                                language: "es",
-                                                placeholder: 'Seleccione el Chofer',
-                                                // allowClear: true,
-                                                width: '100%',
-                                                closeOnSelect: true,
-                                                // minimumInputLength:5,
-                                                minimumResultsForSearch:-1,
-                                                ajax:{
-                                                    async:false,
-                                                    url: homeUrl + '/rd/trans-company/drivers',
-                                                    type: "GET",
-                                                    dataType: "json",
-                                                    cache: true,
-                                                    data: function (params) {
-                                                        var query = {
-                                                            // code: params.term,
-                                                            code: transCompanyRuc,
-                                                        }
-                                                        return query;
-                                                    },
-                                                    processResults: function (response) {
-                                                        console.log(response);
-                                                        var results  = [];
-                                                        $.each(response.drivers, function (index, item) {
-                                                            // console.log(item);
-                                                            // [err_code], [err_msg], [placa], [rfid]
-                                                            results.push({
-                                                                id: item.chofer_ruc,
-                                                                text: item.chofer_nombre,
-                                                                err_code: item.err_code,
-                                                                err_msg: item.err_msg,
-                                                                chofer_ruc: item.chofer_ruc,
-                                                            });
-                                                        });
-                                                        return {
-                                                            results: results
-                                                        };
-                                                    },
-                                                },
-                                            }).on('select2:select', function (e) {
-                                                var driver = e.params.data;
-                                                // api.cell({row: meta.row, column: 6}).data(driver.id);
-                                                api.cell({row: meta.row, column: 7}).data(driver.id);
-
-                                        });
-                                    }, 300);
-                                return selectHtml;
-                            }
-                            return select2_aux;
+                            return selectHtml;
                         }
-                        return full.nameDriver;
+                        return data;
                     },
                 },
             ],
@@ -777,11 +800,11 @@ var handleModal = function () {
 
                                 var id = calendarEvent.id;
 
-                                if(value.tonnage === 20)
+                                if(String(value.tonnage) === "20")
                                 {
                                     id = calendarEvent.id + "T20";
                                 }
-                                else if(value.tonnage === 40)
+                                else if(String(value.tonnage) === "40")
                                 {
                                     id = calendarEvent.id + "T40";
                                 }
@@ -926,9 +949,9 @@ var fetchReceptionTransactions = function () {
                 {
                     // minDeliveryDate = moment(response['transactions'][0].delivery_date).utc().toDate();
                     // maxDeliveryDate = moment(response['transactions'][count - 1].delivery_date).utc().add(1, 'days');
-                    minDeliveryDate = moment(response['transactions'][0].delivery_date).utc().set({'hours': 0, 'minutes': 0, 'seconds':0}).toDate();
-                    currentDate = moment().set({'hours': 0, 'minutes': 0}).utc().set({'hours': 0, 'minutes': 0, 'seconds':0}).toDate();
-                    maxDeliveryDate = moment(response['transactions'][count - 1].delivery_date).utc().set({'hours': 23, 'minutes': 59, 'seconds':59}).toDate();
+                    minDeliveryDate = moment(response['transactions'][0].delivery_date).utc().set({'hours': 0, 'minutes': 0, 'seconds':0});
+                    currentDate = moment().set({'hours': 0, 'minutes': 0}).utc().set({'hours': 0, 'minutes': 0, 'seconds':0});
+                    maxDeliveryDate = moment(response['transactions'][count - 1].delivery_date).utc().set({'hours': 23, 'minutes': 59, 'seconds':59});
 
                     // $('#calendar').fullCalendar({
                     //     visibleRange: {
@@ -943,9 +966,11 @@ var fetchReceptionTransactions = function () {
 
                     console.log(minDeliveryDate.toISOString());
                     console.log(maxDeliveryDate.toISOString());
+                    console.log(minDeliveryDate.format('YYYY-MM-DD'));
+                    console.log(maxDeliveryDate.format('YYYY-MM-DD'));
 
-                    // fetchCalendar(minDeliveryDate.format('YYYY-MM-DD'), maxDeliveryDate.format('YYYY-MM-DD'), false);
-                    fetchCalendar(minDeliveryDate.toISOString(), maxDeliveryDate.toISOString(), false);
+                    fetchCalendar(minDeliveryDate.format('YYYY-MM-DD HH:mm:ss'), maxDeliveryDate.format('YYYY-MM-DD HH:mm:ss'), false);
+                    // fetchCalendar(minDeliveryDate.toISOString(), maxDeliveryDate.toISOString(), false);
 
                     fetchTickets(modelId, false);
                 }
