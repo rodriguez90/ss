@@ -596,7 +596,8 @@ class ProcessController extends Controller
                                 $info .= "TICKET NO: TI-" . $date . "-" . $ticket["id"] . '-';
                                 $info .= "OPERACION: " . $ticket["type"] == Process::PROCESS_IMPORT ? "IMPORT" : "EXPOT" . '-';
                                 $info .= "DEPOSITO: " . $ticket["w_name"] . '-';
-                                $info .= "F. CADUCIDAD: " . $ticket["delivery_date"] . '-';
+                                $info .= "ECAS: " . $ticket["delivery_date"] . '-';
+                                $info .= "FECHA LIMITE: " . $ticket["delivery_date"] . '-';
                                 $info .= "CLIENTE: " . $ticket["a_name"] . '-';
                                 $info .= "RUC/CI: " . $ticket["ruc"] . "/" . $ticket["register_driver"] . '-';
                                 $info .= "CHOFER: " . $ticket["name_driver"] . '-';
@@ -605,7 +606,7 @@ class ProcessController extends Controller
                                 $info .= "CANTIDAD: 1" . '-';
                                 $info .= "BOOKING: " . $ticket["bl"] . '-';
                                 $info .= "TIPO CONT: " . $ticket["tonnage"] . $ticket["code"] . '-';
-                                $info .= "IMPRESO: " . $dateImp . '-';
+                                $info .= "GENERADO: " . $dateImp . '-';
                                 $info .= "ESTADO: " . $ticket["status"] == 1 ? "EMITIDO" : "---";
                                 $qrCode = new QrCode($info);
                                 //$qrpath =  Yii::getAlias("@webroot"). "/qrcodes/".$ticket["id"]."-".date('YmdHis').".png";
