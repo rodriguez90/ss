@@ -131,7 +131,13 @@ class AgencyController extends Controller
         if(!Yii::$app->user->can("agency_delete"))
             throw new ForbiddenHttpException('Usted no tiene permiso ver esta vista');
 
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+
+        if($model)
+        {
+            $model->active = false;
+            $model->save();
+        }
 
         return $this->redirect(['index']);
     }

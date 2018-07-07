@@ -435,7 +435,7 @@ class ProcessController extends Controller
                    {
                        if($tmpResult)
                        {
-                           // send email
+                           $response['success'] = true;
                            $remitente = AdmUser::findOne(['id'=>\Yii::$app->user->getId()]);
 
                            foreach($containersByTransCompany as $t=>$c) {
@@ -475,25 +475,21 @@ class ProcessController extends Controller
 
                                    // TODO: send email user too from the admin system
                                    $result = Yii::$app->mailer->compose()
-                                                   ->setFrom($remitente->email)
-                                                   ->setTo($destinatario->email)
-                                                   ->setSubject("Nueva Solicitud de Recepción")
-                                                   ->setHtmlBody($body)
-                                                   ->attachContent($path,[ 'fileName'=> "Nueva Solicitud de RecepciÃ³n.pdf",'contentType'=>'application/pdf'])
-                                                   ->send();
+                                       ->setFrom($remitente->email)
+                                       ->setTo($destinatario->email)
+                                       ->setSubject("Nueva Solicitud de Recepción")
+                                       ->setHtmlBody($body)
+                                       ->attachContent($path,[ 'fileName'=> "Nueva Solicitud de RecepciÃ³n.pdf",'contentType'=>'application/pdf'])
+                                       ->send();
 
                                    if($result === false)
                                    {
-                                       $tmpResult = false;
+                                       $response['success'] = false;
                                        $response['msg'] ="Ah ocurrido un error al enviar la notificación vía email a la empresa de transporte.";
                                    }
                                }
                            }
-                       }
 
-                       if($tmpResult)
-                       {
-                           $response['success'] = true;
                            $response['msg'] = Yii::t("app", "Recepción creada correctamente.");
                            $response['url'] = Url::to(['/site/index']);
 
