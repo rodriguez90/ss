@@ -563,21 +563,18 @@ class TicketController extends Controller
                 }
             }
 
-            if($processStatus) {
+            if($processStatus)
+            {
+
                 foreach ($ticketIds as $ticketId) {
                     if($this->generateServiceCardByTicket($ticketId) === false)
                     {
-                        $processStatus = false;
-                        $response['msg'] = 'Ah ocurrido un error al generar las cartas de servicio.';
-                        break;
+                        $response['warning'] = 'Error al enviar las cartas de servicio.';
                     }
                 }
-            }
-
-            if($processStatus)
-            {
-                $transaction->commit();
                 $response['success'] = true;
+                $transaction->commit();
+
                 $response['msg'] = 'Reservas Realizada';
                 $response['url'] = Url::to(['/site/index']);
             }
@@ -602,14 +599,6 @@ class TicketController extends Controller
             //        $sqlChainded = 'SET CHAINED ON';
             //        \Yii::$app->db->createCommand($sqlChainded)->execute();
             $response = $this->notifyNewTickets($processType, $userName, $newTickets);
-//            if($response['success'] == false)
-//            {
-//                $result = $this->notifyDeletedTickets($response['tickets'], $userName);
-//                foreach ($tickets as $ticket)
-//                {
-//                    $this->delete($ticket->id);
-//                }
-//            }
         }
 
         return $response;

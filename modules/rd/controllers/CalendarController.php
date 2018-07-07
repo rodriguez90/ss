@@ -258,24 +258,35 @@ class CalendarController extends Controller
             $model = $this->findModel($id);
             $amount = $model->amount;
 
-
             $reservados = Calendar::find()
                 ->innerJoin("ticket","calendar.id = ticket.calendar_id")
                 ->where(["calendar.id"=>$model->id])
                 ->count();
 
             if($reservados == 0){
-                //var_dump($reservados);
-                if($this->findModel($id)->delete()>0){
+                $model = $this->findModel($id);
+                $result = 0;
+
+                if($model)
+                {
+                    $model->active = false;
+                    $result = $model->update();
+                }
+                {
+                    $result ['status']= 0;
+                    $result['msg'] = "El calendario no existe.";
+                }
+
+                if($result > 0){
                     $result ['status']= 1;
-                    $result['msg'] = "Cupos eliminados: ".$amount;
+                    $result['msg'] = "Disponibilidad eliminadas: ".$amount;
                 }else{
                     $result ['status']= 0;
-                    $result['msg'] = "No se pudieron eliminar los cupos.";
+                    $result['msg'] = "No se pudieron eliminar la disponibilidad.";
                 }
             }else{
                 $result ['status']= 0;
-                $result['msg'] = "No se pueden eliminar cupos reservados.";
+                $result['msg'] = "No se pueden eliminar el calendario porque hay turnos reservados.";
             }
 
             return $result;

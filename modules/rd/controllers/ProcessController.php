@@ -435,7 +435,7 @@ class ProcessController extends Controller
                    {
                        if($tmpResult)
                        {
-                           // send email
+                           $response['success'] = true;
                            $remitente = AdmUser::findOne(['id'=>\Yii::$app->user->getId()]);
 
                            foreach($containersByTransCompany as $t=>$c) {
@@ -479,11 +479,7 @@ class ProcessController extends Controller
                                    }
                                }
                            }
-                       }
 
-                       if($tmpResult)
-                       {
-                           $response['success'] = true;
                            $response['msg'] = Yii::t("app", "Recepción creada correctamente.");
                            $response['url'] = Url::to(['/site/index']);
 
