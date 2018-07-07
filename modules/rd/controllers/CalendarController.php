@@ -258,7 +258,6 @@ class CalendarController extends Controller
             $model = $this->findModel($id);
             $amount = $model->amount;
 
-
             $reservados = Calendar::find()
                 ->innerJoin("ticket","calendar.id = ticket.calendar_id")
                 ->where(["calendar.id"=>$model->id])
