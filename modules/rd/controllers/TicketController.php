@@ -654,7 +654,7 @@ class TicketController extends Controller
 
                 var_dump($sql_complete);
 
-                $result = \Yii::$app->db3->createCommand($sql_complete)->queryAll();
+                $result = \Yii::$app->db->createCommand($sql_complete)->queryAll();
 
 
                 if($result['err_code'] == "1")

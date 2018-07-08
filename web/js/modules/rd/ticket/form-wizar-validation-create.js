@@ -130,10 +130,6 @@ var handleBootstrapWizardsValidation = function() {
 
 
                     var table = $('#data-table2').DataTable();
-                    var table3 = $('#data-table3').DataTable();
-                    table3
-                        .clear()
-                        .draw();
 
                     table
                         .rows( )
@@ -146,12 +142,9 @@ var handleBootstrapWizardsValidation = function() {
 
                             if(!transactionData ||
                                 (transactionData.registerTrunk.length === 0 ||
-                                transactionData.registerTrunk.length === 0 ||
-                                transactionData.registerTrunk.length === 0))
+                                transactionData.registerDriver.length === 0 ||
+                                transactionData.nameDriver.length === 0))
                             {
-                                table3
-                                    .clear()
-                                    .draw();
                                 valid = false;
                                 alert("Debe introducir la \"Placa del Carro\", \"Cédula\" y \"Nombre del Chofer\" para todo los contenedores.");
                                 return false;
