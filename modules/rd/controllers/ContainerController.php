@@ -8,6 +8,9 @@ use Yii;
 use app\modules\rd\models\Container;
 use app\modules\rd\models\ContainerType;
 use app\modules\rd\models\ContainerSearch;
+use app\modules\rd\models\ProcessTransaction;
+
+use Yii;
 use yii\db\Command;
 use yii\db\Exception;
 use yii\web\Controller;
