@@ -52,7 +52,7 @@ class SiteController extends Controller
                 'only' => ['logout'],
                 'rules' => [
                     [
-                        'actions' => ['logout', 'contact', 'about', 'index'],
+                        'actions' => ['logout', 'contact', 'about', 'index','register'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -235,6 +235,76 @@ class SiteController extends Controller
             return $this->render('login', ['model' => $model]);
         }
     }
+
+
+    public function actionRegister()
+    {
+        $this->layout = '@app/views/layouts/login';
+        $confirm = Yii::$app->request->post('AdmUser')["passwordConfirm"];
+        $usertype =  Yii::$app->request->post('usertype');
+        $usertypeid =  Yii::$app->request->post('usertypeid');
+
+        $model = new AdmUser();
+        $modelLogin = new LoginForm();
+
+        $agencias = Agency::findAll(['active'=>1]);
+        $trans_comp = TransCompany::findAll(['active'=>1]);
+
+
+        if ($model->load(Yii::$app->request->post() )  ) {
+
+            if( $model->password==''){
+                $model->addError('error', 'La Contraseña no pueden ser vacía');
+            }
+
+            if( $confirm!=null && $model->password != $confirm){
+                $model->addError('error', 'Las contraseñas no son iguales.');
+            }
+            if(AdmUser::findOne(['username'=>$model->username])!=null){
+                $model->addError('error', "Ya existe el nombre de usuario." );
+            }
+
+            if (AdmUser::findOne(['cedula' => $model->cedula]) != null)
+            {
+                $model->addError('error', "La cédula {$model->cedula} ya fue registrada en el sistema" );
+            }
+
+            if (!$model->hasErrors()) {
+                $model->setPassword($model->password);
+                $model->created_at = time();
+                $model->updated_at = time();
+                $model->creado_por = Yii::$app->user->identity->username;
+                $model->status =0;
+
+                if ($model->save() && $usertype!=null && $usertypeid!=null) {
+
+                    switch ($usertype){
+                        case "1":
+                             $user_agency = new UserAgency();
+                             $user_agency->user_id = $model->id;
+                             $user_agency->agency_id = $usertypeid;
+                             $user_agency->save();
+                            break;
+                        case "2":
+                            $user_trans = new UserTranscompany();
+                            $user_trans->user_id = $model->id;
+                            $user_trans->agency_id = $usertypeid;
+                            $user_trans->save();
+                            break;
+                        default:
+                            break;
+                    }
+
+                    return $this->render("login", ['model'=>$modelLogin]);
+                }
+            }
+        }
+
+
+        return $this->render('register', ['model'=>$model,'agencias'=>$agencias,'trans_comp'=>$trans_comp]);
+    }
+
+
 
     /**
      * Logout action.
@@ -444,4 +514,46 @@ class SiteController extends Controller
         $path= $pdf->Output("Solicitudes Realizadas.pdf","D");
 
     }
+
+
+
+
+    public function actionGetagenciastrans(){
+
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        Yii::$app->response->charset = 'CP1257';
+
+        $results = TransCompany::find()
+            ->all();
+        $transactions = [];
+
+        if($results != null)
+        {
+            foreach ($results as $result)
+            {
+                $str = iconv("CP1257", "UTF-8", $result->name);
+                $result->name = $str;
+                $transactions[]=$result;
+            }
+        }
+
+        return $transactions;
+
+    }
+
+    public function actionGetagencias(){
+
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $result = Agency::find()
+            ->all();
+
+        if($result!=null)
+            return $result;
+
+        return false;
+
+    }
+
+
 }

@@ -36,10 +36,12 @@ class UserSearch extends AdmUser
     {
 
 
-        $query = AdmUser::find()
+        $query = AdmUser::find();
+
+            /*
             ->innerJoin("auth_assignment","auth_assignment.user_id = adm_user.id")
             ->select( 'id,username,adm_user.created_at,nombre,apellidos,email,status,auth_assignment.item_name as item_name ,auth_assignment.user_id');
-
+*/
         //var_dump($query);die;
 
 
@@ -105,11 +107,12 @@ class UserSearch extends AdmUser
             ->andFilterWhere(['like', 'nombre', $this->nombre])
             ->andFilterWhere(['like', 'apellidos', $this->apellidos]);
 
+        /*
         if(isset($this->item_name)){
             $filter = AuthAssignment::find()->select('user_id')->where(['like','item_name',$this->item_name]);
             $query->andFilterWhere(['id'=>$filter]);
         }
-
+*/
 
 
 
