@@ -41,7 +41,7 @@ class TransCompanySearch extends TransCompany
      */
     public function search($params)
     {
-        $query = TransCompany::find();
+        $query = TransCompany::find()->where(['active'=>1]);
 
         // add conditions that should always apply here
 

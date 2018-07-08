@@ -14,7 +14,7 @@ $this->params['breadcrumbs'][] = 'Actualizar Usuario';
 
 
     <?= $this->render('_form', [
-        'model' => $model,'rol_actual'=>$rol_actual,'roles'=>$roles,'type'=>$type
+        'model' => $model,'rol_actual'=>$rol_actual,'roles'=>$roles,'type'=>$type, 'modelAux'=>$modelAux
     ]) ?>
 
 </div>

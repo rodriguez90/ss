@@ -37,8 +37,10 @@ class UserSearch extends AdmUser
 
 
         $query = AdmUser::find()
+            ->select( 'id,username,adm_user.created_at,nombre,apellidos,email,status,auth_assignment.item_name as item_name ,auth_assignment.user_id')
             ->innerJoin("auth_assignment","auth_assignment.user_id = adm_user.id")
-            ->select( 'id,username,adm_user.created_at,nombre,apellidos,email,status,auth_assignment.item_name as item_name ,auth_assignment.user_id');
+            ->where(['status' => 1]);
+
 
         //var_dump($query);die;
 

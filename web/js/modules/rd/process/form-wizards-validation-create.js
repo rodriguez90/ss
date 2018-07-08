@@ -158,7 +158,7 @@ var handleBootstrapWizardsValidation = function() {
                             "Process[agency_id]": agency.id, // FIXME THIS DEFINE BY USER WITH ROLE AGENCY OR IMPORTER/EXPORTER
                             "Process[bl]":blCode,
                             "Process[active]":1,
-                            "Process[delivery_date]":moment().format("YYYY/MM/DD"),
+                            "Process[delivery_date]":moment().format("YYYY/MM/DD"), // FIXME COMO DEFINO ESTO PARA LA EXPORTACION
                             // "Process[delivery_date]":moment().format("DD/MM/YYYY HH:mm"),
                             "Process[type]":processType,
                             "containers":containers

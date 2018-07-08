@@ -2,6 +2,8 @@
  * Created by yopt on 12/05/18.
  */
 
+var currentOption = "" ;
+var currentActionUrl = ""
 
 var handleFormPasswordIndicator = function() {
     "use strict";
@@ -14,60 +16,89 @@ var handleJqueryAutocomplete2 = function(op,changeRol) {
 
     var action = '';
     var option0 = '';
+    var min = -1;
     switch (op){
         case 1:
             action = "/administracion/user/getagencias";
-            option0 = "<option value='' selected=''>Seleccione agencia</option>";
+            option0 = "Seleccione agencia";
             break;
         case 2:
             action = "/administracion/user/getdeposito";
-            option0 = "<option value='' selected=''>Seleccione depósito</option>";
+            option0 = "Seleccione depósito";
             break;
         case 3:
             action = "/administracion/user/getagenciastrans";
-            option0 = "<option value='' selected=''>Seleccione agencia de transporte</option>";
+            option0 = "Seleccione agencia de transporte";
+            min = 5;
             break;
     }
-            $.ajax({
-                url: homeUrl+ action,
-                type: 'get',
-                dataType: "json",
-                data:{},
 
-                success:function(data){
-                    /*
-                    response($.map(data,function(item){
-                        return item.name
-                    }));
-                    */
-                    var div = $('#select-conten');
-                    div.empty();
-                    var aux = $('#aux').val();
+    currentActionUrl = action;
+    currentOption = option0;
 
-                    var conten = "<select id='selectpicker-type' name='type' class='form-control'  data-parsley-required='true'  data-size='10' data-live-search='true'>";
-                    conten += option0;
-                    var selected = '';
+    var div = $('#select-conten');
+    div.empty();
+    var aux = $('#aux').val();
 
-                    $.each(data,function(i){
+    var div = $('#select-conten');
+    div.empty();
+    var aux = $('#aux').val();
 
-                        if(!changeRol){
-                            selected = aux ==  data[i].id ? "selected=''": '';
-                        }
+    var conten = "<select id='selectpicker-type' name='type' class='form-control'  data-parsley-required='true'  data-size='10' data-live-search='true'></select>";
+    div.append(conten);
 
-                    conten += "<option value='"+ data[i].id+"' "+ selected + ">"+data[i].name +"</option>";
-                    })
-                    conten+="</select>"
-                    div.append(conten);
-                    $("#selectpicker-type").selectpicker('render');
+    console.log(currentActionUrl);
 
-                },
-                error: function(data) {
-                    console.log(data.responseText);
-                    alert(data.responseText);
-                    result = false;
-                    // return false;
+    var select2 = $("#selectpicker-type").select2(
+    {
+        language: "es",
+
+        placeholder: currentOption,
+        width: '100%',
+        minimumInputLength:min,
+        // allowClear: true,
+        // tags: true,
+        closeOnSelect: true,
+        ajax: {
+            url: homeUrl + currentActionUrl,
+            dataType: 'json',
+            // delay: 250,
+            // cache: true,
+            data: function (params) {
+                var query = ''
+                if(op == 3)
+                {
+                    query = {
+                        code: params.term,
+                    };
                 }
-            });
+                return query;
+            },
+            processResults: function (response) {
+                console.log(response);
+                var results  = [];
+                $.each(response, function (index, item) {
+                    results .push({
+                        id: item.id,
+                        text: item.name,
+                    });
+                });
+                return {
+                    results: results
+                };
+            },
+        },
+    }).on('select2:select', function (e) {
+
+            var data = e.params.data;
+            console.log(data);
+    });
+
+    if(modelAux.name !== null)
+    {
+        var newOption = new Option(modelAux.name, modelAux.id, true, true);
+        select2.append(newOption).trigger('change');
+    }
 };
 
 var handleSelectpicker = function() {
@@ -112,14 +143,12 @@ var handleSelectpicker = function() {
                 div.empty();
                 break;
         }
-
     });
-
-
 };
 
-
 $(function () {
+    console.log(modelAux);
+
     $('.selectpicker').selectpicker('render');
 
     //handleFormPasswordIndicator();

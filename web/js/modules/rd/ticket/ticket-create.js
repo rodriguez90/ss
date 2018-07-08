@@ -386,10 +386,11 @@ var handleTableInWizar = function() {
                     var transactionData = transactionDataMap.get(data.name);
                     if(trunk.err_code !== "0")
                     {
-                        transactionData.registerTrunk = "";
                         e.preventDefault();
+                        transactionData.registerTrunk = "";
                         alert("Este Chofer no puede ser seleccionado: " + driver.err_msg);
                         $("#selectTrunk" +elementId).val("").trigger("change.select2");
+
 
                     }
                     else
@@ -444,27 +445,25 @@ var handleTableInWizar = function() {
                             },
                         },
                     }).on('select2:select', function (e) {
-                    var driver = e.params.data;
-                    var transactionData = transactionDataMap.get(data.name);
-                    if(driver.err_code !== "0")
-                    {
-                        transactionData.registerDriver = "";
-                        transactionData.nameDriver = "";
-                        e.preventDefault();
-                        alert("Este Chofer no puede ser seleccionado: " + driver.err_msg);
+                        var driver = e.params.data;
+                        var transactionData = transactionDataMap.get(data.name);
+                        if(driver.err_code !== "0")
+                        {
+                            e.preventDefault();
+                            alert("Este Chofer no puede ser seleccionado: " + driver.err_msg);
+                            transactionData.registerDriver = "";
+                            transactionData.nameDriver = "";
+                            table.cell({row: dataIndex, column: 7}).data("");
 
-                    }
-                    else
-                    {
-                        transactionData.registerDriver = driver.id;
-                        transactionData.nameDriver = driver.text;
-                        // api.cell({row: meta.row, column: 6}).data(driver.id);
-                        table.cell({row: dataIndex, column: 7}).data(driver.id);
-                    }
-
-                    transactionDataMap.set(data.name,transactionData);
-
-
+                        }
+                        else
+                        {
+                            transactionData.registerDriver = driver.id;
+                            transactionData.nameDriver = driver.text;
+                            // api.cell({row: meta.row, column: 6}).data(driver.id);
+                            table.cell({row: dataIndex, column: 7}).data(driver.id);
+                        }
+                        transactionDataMap.set(data.name,transactionData);
                 });
             },
             columnDefs: [

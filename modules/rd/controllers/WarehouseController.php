@@ -130,7 +130,13 @@ class WarehouseController extends Controller
         if(!Yii::$app->user->can("warehouse_delete"))
             throw new ForbiddenHttpException('Usted no tiene permiso ver esta vista');
 
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+
+        if($model)
+        {
+            $model->active = 0;
+            $model->save();
+        }
 
         return $this->redirect(['index']);
     }
@@ -144,10 +150,10 @@ class WarehouseController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = Warehouse::findOne($id)) !== null) {
+        if (($model = Warehouse::findOne(['id'=>$id, 'active'=>1])) !== null) {
             return $model;
         }
 
-        throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
+        throw new NotFoundHttpException(Yii::t('app', 'La págian solicitada no existe.'));
     }
 }

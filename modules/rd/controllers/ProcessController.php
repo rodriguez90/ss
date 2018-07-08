@@ -202,8 +202,13 @@ class ProcessController extends Controller
         if(!Yii::$app->user->can("process_delete"))
             throw new ForbiddenHttpException('Usted no tiene permiso para eliminar esta recepción');
 
+        $model = $this->findModel($id);
 
-        $this->findModel($id)->delete();
+        if($model)
+        {
+            $model->active = 0;
+            $model->save();
+        }
 
         return $this->redirect(['index']);
     }
@@ -217,7 +222,7 @@ class ProcessController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = Process::findOne($id)) !== null) {
+        if (($model = Process::findOne(['id'=>$id, 'active'=>1])) !== null) {
             return $model;
         }
 
@@ -447,11 +452,11 @@ class ProcessController extends Controller
 
                                if($destinatario)
                                {
-
-                                   $containers = [];
-                                   foreach ($c as $c2) {
-                                       $containers[]= $c2;
-                                   }
+//
+//                                   $containers = [];
+//                                   foreach ($c as $c2) {
+//                                       $containers[]= $c2;
+//                                   }
                                     /*
                                    //pdf create
                                    $pdf =  new mPDF( ['format'=>"A4-L"]);
@@ -461,9 +466,9 @@ class ProcessController extends Controller
                                    $path= $pdf->Output("","S");*/
 
                                    $body = Yii::$app->view->renderFile('notification.php', ['model' => $model,
-                                       'containers'=>$containers]);
+                                       'containers'=>$c]);
 
-                                   // TODO: send email user too from the admin system
+                                   // TODO: send email user
                                    $result = Yii::$app->mailer->compose()
                                                    ->setFrom($remitente->email)
                                                    ->setTo($destinatario->email)
@@ -474,8 +479,8 @@ class ProcessController extends Controller
 
                                    if($result === false)
                                    {
-                                       $tmpResult = false;
-                                       $response['msg'] ="Ah ocurrido un error al enviar la notificación vía email a la empresa de transporte.";
+                                       $response['success'] = true ;
+                                       $response['warning'] ="Ah ocurrido un error al enviar la notificación vía email a la empresa de transporte.";
                                    }
                                }
                            }

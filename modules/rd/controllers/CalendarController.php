@@ -119,12 +119,12 @@ class CalendarController extends Controller
                         $aux = new DateTime($event['start']);
                         $aux->setTimezone(new DateTimeZone("UTC"));
                         $model->start_datetime = $aux->format("Y-m-d H:i:s");  //date_format( new \DateTime($event['start'],new DateTimeZone("UTC")),"Y-m-d G:i:s");
-                        var_dump($model->start_datetime);
+//                        var_dump($model->start_datetime);
 
                         $aux1 = new DateTime($event['end']);
                         $aux1->setTimezone(new DateTimeZone("UTC"));
                         $model->end_datetime = $aux1->format("Y-m-d H:i:s");// date_format(new \DateTime($event['end'],new DateTimeZone("UTC")),"Y-m-d G:i:s");
-                        var_dump($model->end_datetime);
+//                        var_dump($model->end_datetime);
 //                        die;
                         $model->amount = $event['title'];
                         $model->id_warehouse =  1;
@@ -269,7 +269,7 @@ class CalendarController extends Controller
 
                 if($model)
                 {
-                    $model->active = false;
+                    $model->active = 0;
                     $result = $model->update();
                 }
                 {
@@ -307,7 +307,7 @@ class CalendarController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = Calendar::findOne($id)) !== null) {
+        if (($model = Calendar::findOne(['id'=>$id, 'active'=>1])) !== null) {
             return $model;
         }
 

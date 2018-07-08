@@ -141,11 +141,6 @@ var handleBootstrapWizardsValidation = function() {
                         .each( function ( value, index ) {
 
                             if(!valid) return false;
-                            var registerTrunk = "#selectTrunk" + value.name;
-                            var nameDriver = "#selectDriver" + value.name;
-
-                            var trunkData = $(registerTrunk).select2('data');
-                            var driverData = $(registerTrunk).select2('data');
 
                             var transactionData = transactionDataMap.get(value.name);
 

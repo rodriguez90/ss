@@ -170,7 +170,7 @@ var handleSelectTransCompany = function () {
         language: "es",
 
         placeholder: 'Seleccione la compañia de transporte',
-        width: 'auto',
+        width: '100%',
         minimumInputLength:5,
         // allowClear: true,
         // tags: true,

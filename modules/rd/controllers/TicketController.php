@@ -329,7 +329,7 @@ class TicketController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = Ticket::findOne($id)) !== null) {
+        if (($model = Ticket::findOne(['id'=>$id, 'active'=>1])) !== null) {
             return $model;
         }
 
@@ -487,7 +487,6 @@ class TicketController extends Controller
 
                 if($model->validate()) // validate model
                 {
-
                     if ($processStatus) {
                         $model->status = $status;
                         $processStatus = $model->save();
@@ -559,13 +558,12 @@ class TicketController extends Controller
                 }
                 else {
                     $processStatus = false;
-                    $response['msg'] = 'Ah ocurrido un error el proceso no es vaido';
+                    $response['msg'] = 'Ah ocurrido un error el proceso no es valido';
                 }
             }
 
             if($processStatus)
             {
-
                 foreach ($ticketIds as $ticketId) {
                     if($this->generateServiceCardByTicket($ticketId) === false)
                     {
@@ -598,9 +596,9 @@ class TicketController extends Controller
         {
             //        $sqlChainded = 'SET CHAINED ON';
             //        \Yii::$app->db->createCommand($sqlChainded)->execute();
-            $response = $this->notifyNewTickets($processType, $userName, $newTickets);
+//            var_dump("notifyNewTickets");
+            $result = $this->notifyNewTickets($processType, $userName, $newTickets);
         }
-
         return $response;
     }
 
@@ -610,7 +608,7 @@ class TicketController extends Controller
     {
         $response = [];
         $response['success'] = true;
-        $response['tickets'] = [];
+//        $response['tickets'] = [];
 
         try
         {
@@ -646,7 +644,7 @@ class TicketController extends Controller
                 $registerTrunk = $processTransaction->register_truck;
                 $registerDriver = $processTransaction->register_driver;
                 $containerName = $container->name;
-
+//                exec  disv..sp_sgt_access_ins 'EXPO','MCH0992','1203270564','ContainerName9','2018/04/05 22:00','Yander'"
                 $sql_complete = $sql . $processType . "','".
                                 $registerTrunk . "','" .
                                 $registerDriver . "','" .
@@ -654,9 +652,12 @@ class TicketController extends Controller
                                 $dateTicket . "','" .
                                 $user . "'";
 
+                var_dump($sql_complete);
+
                 $result = \Yii::$app->db3->createCommand($sql_complete)->queryAll();
 
-                if($result['err_code'] == 1)
+
+                if($result['err_code'] == "1")
                 {
                     $response['success'] = false;
                     $response['msg'] = "Ah ocurrido un error al notificar los nuevos turnos.";
@@ -664,8 +665,14 @@ class TicketController extends Controller
                     break;
                 }
                 else {
-                    $ticket->acc_id = $result['acc_id'];
-                    if(!$ticket->save())
+
+                    var_dump($result[0]);
+                    var_dump($result[0]['acc_id']);
+
+                    $ticket->acc_id = $result[0]['acc_id'];
+//                    $processTransaction->update(true, ['register_truck', 'register_driver', 'name_driver']
+//                    var_dump($ticket);
+                    if($ticket->update(true, ['acc_id']) == false)
                     {
                         $response['success'] = false;
                         $response['msg'] = "Ah ocurrido un error al actualizar el acceso del turno al TPG.";
@@ -673,7 +680,7 @@ class TicketController extends Controller
                     }
                 }
 
-                $response['tickets'][] = $ticket;
+//                $response['tickets'][] = $ticket;
             }
         }
         catch (Exception $exception)
@@ -682,6 +689,8 @@ class TicketController extends Controller
             $response['msg'] = "Ah ocurrido un error al notificar los nuevos turnos al TPG";
             $response['msg_dev'] = $exception->getMessage();
         }
+
+        var_dump($response);
 
         return $response;
     }

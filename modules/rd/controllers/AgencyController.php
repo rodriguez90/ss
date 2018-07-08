@@ -135,7 +135,7 @@ class AgencyController extends Controller
 
         if($model)
         {
-            $model->active = false;
+            $model->active = 0;
             $model->save();
         }
 
@@ -151,7 +151,7 @@ class AgencyController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = Agency::findOne($id)) !== null) {
+        if (($model = Agency::findOne(['id'=>$id, 'active'=>1])) !== null) {
             return $model;
         }
 
