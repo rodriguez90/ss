@@ -304,6 +304,7 @@ class ProcessController extends Controller
                 $response['containers'] = [];
                 foreach ( $transactions as $t)
                 {
+                    $t->name_driver = utf8_encode($t->name_driver);
                     array_push($response['transactions'], $t);
                     array_push($response['containers'], $t->container);
                 }

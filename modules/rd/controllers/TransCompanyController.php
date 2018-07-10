@@ -318,7 +318,19 @@ class TransCompanyController extends Controller
         {
             $sql = "exec sp_sgt_chofer_cons '" .$code ."'";
             $response['drivers'] = Yii::$app->db2->createCommand($sql)->queryAll();
+
+            $response['drivers'] = array_map(function ($index) {;
+                var_dump($index);
+                var_dump($index['chofer_nombre']);
+                $index['chofer_nombre'] = utf8_encode($index['chofer_nombre']);
+                var_dump($index['chofer_nombre']);
+
+                return $index;
+            }, $response['drivers']);
+
+
         }
+        var_dump($response);die;
         return $response;
     }
 

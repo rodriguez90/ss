@@ -78,21 +78,21 @@ var findSlotEvent = function (start, end) {
     $.each(calendarSlotEvents.events,function (i)
     {
         var event = calendarSlotEvents.events[i];
-        if(i== 0)
-        {
-            console.log(event);
-            console.log('UTC');
-            console.log(start.utc() );
-            console.log(event.start.utc());
-            console.log('FORMAT');
-            console.log(start.format("YYYY-MM-DD HH:mm") );
-            console.log(event.start.format("YYYY-MM-DD HH:mm") );
-            console.log('valueOf');
-            console.log(start.valueOf());
-            console.log(event.start.valueOf());
-            console.log('COMPARE');
-            console.log(startFormated === event.start.format("YYYY-MM-DD HH:mm"));
-        }
+        // if(i== 0)
+        // {
+        //     console.log(event);
+        //     console.log('UTC');
+        //     console.log(start.utc() );
+        //     console.log(event.start.utc());
+        //     console.log('FORMAT');
+        //     console.log(start.format("YYYY-MM-DD HH:mm") );
+        //     console.log(event.start.format("YYYY-MM-DD HH:mm") );
+        //     console.log('valueOf');
+        //     console.log(start.valueOf());
+        //     console.log(event.start.valueOf());
+        //     console.log('COMPARE');
+        //     console.log(startFormated === event.start.format("YYYY-MM-DD HH:mm"));
+        // }
 
         if(event.type === "D" && startFormated === moment(event.start).format("YYYY-MM-DD HH:mm") &&
             endFormated === moment(event.end).format("YYYY-MM-DD HH:mm"))
@@ -795,46 +795,50 @@ var handleModal = function () {
                             success: function(response) {
                                 console.log(response);
 
-                                var calendarEvent = calendarEventMap.get(response['ticket'].calendar_id);
-
-                                var id = calendarEvent.id;
-
-                                if(String(value.tonnage) === "20")
+                                if(response.success)
                                 {
-                                    id = calendarEvent.id + "T20";
-                                }
-                                else if(String(value.tonnage) === "40")
-                                {
-                                    id = calendarEvent.id + "T40";
-                                }
+                                    var calendarEvent = calendarEventMap.get(response['ticket'].calendar_id);
 
-                                var result = findTicketEvent(id);
-                                console.log(result);
-                                if(result.event) // always
-                                {
-                                    result.event.count = result.event.count - 1;
-                                    result.event.title = result.event.count;
-                                    var indexRT = result.event.rt.indexOf(value.transactionId)
-                                    result.event.rt.splice(indexRT, 1);
+                                    var id = calendarEvent.id;
 
-                                    if(result.event.count == 0)
+                                    if(String(value.tonnage) === "20")
                                     {
-                                        ticketEvents.events.splice(result.index, 1);
+                                        id = calendarEvent.id + "T20";
                                     }
-                                    else {
-                                        ticketEvents[result.index] = result.event;
-                                        // ticketEvents.events[result.index] = result.event; //TODO check this
+                                    else if(String(value.tonnage) === "40")
+                                    {
+                                        id = calendarEvent.id + "T40";
                                     }
-                                    var indexTWT = transactionWithTicket.indexOf(value.transactionId);
-                                    transactionWithTicket.splice(indexTWT, 1);
-                                    ticketDataMap.delete(value.transactionId);
-                                    calendarEvent.count = calendarEvent.count + 1;
-                                }
 
+                                    var result = findTicketEvent(id);
+                                    console.log(result);
+                                    if(result.event) // always
+                                    {
+                                        result.event.count = result.event.count - 1;
+                                        result.event.title = result.event.count;
+                                        var indexRT = result.event.rt.indexOf(value.transactionId)
+                                        result.event.rt.splice(indexRT, 1);
+
+                                        if(result.event.count == 0)
+                                        {
+                                            ticketEvents.events.splice(result.index, 1);
+                                        }
+                                        else {
+                                            ticketEvents[result.index] = result.event;
+                                            // ticketEvents.events[result.index] = result.event; //TODO check this
+                                        }
+                                        var indexTWT = transactionWithTicket.indexOf(value.transactionId);
+                                        transactionWithTicket.splice(indexTWT, 1);
+                                        ticketDataMap.delete(value.transactionId);
+                                        calendarEvent.count = calendarEvent.count + 1;
+                                    }
+                                }
+                                else {
+                                    alert(response.msg);
+                                }
                             },
                             error: function(response) {
                                 console.log(response);
-                                console.log(response['msg']);
                                 result = false;
                             }
                         });
