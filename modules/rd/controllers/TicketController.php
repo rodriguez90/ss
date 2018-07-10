@@ -373,10 +373,10 @@ class TicketController extends Controller
                                 $processTransaction->register_truck = '';
                                 $processTransaction->name_driver = '';
 
-                                if($processTransaction->save())
+                                if(!$processTransaction->save())
                                 {
                                     $response['success'] = false;
-                                    $response['msg'] = 'Ah ocurrido un error al eliminar el ticket.';
+                                    $response['msg'] = 'Ah ocurrido un error al actualizar los datos de transportación.';
                                     $response['msg_dev'] = implode(" ", $model->getErrorSummary(false));
                                 }
                             }
@@ -385,7 +385,7 @@ class TicketController extends Controller
                     else
                     {
                         $response['success'] = false;
-                        $response['msg'] = 'Ah ocurrido un error al eliminar el ticket.';
+                        $response['msg'] = 'Ah ocurrido un error al eliminar el cupo.';
                         $response['msg_dev'] = implode(" ", $model->getErrorSummary(false));
                     }
                 }
@@ -457,7 +457,7 @@ class TicketController extends Controller
             $userName = $user->nombre;
         }
 
-        $transaction = Process::getDb()->beginTransaction();
+//        $transaction = Process::getDb()->beginTransaction();
 
         $newTickets = [];
 
@@ -551,8 +551,8 @@ class TicketController extends Controller
                 }
             }
 
-         try
-         {
+        try
+        {
              if($processStatus)
              {
                  $transaction->commit(); // save ticket
@@ -562,9 +562,9 @@ class TicketController extends Controller
                  $response['success'] = false;
                  $transaction->rollBack();
              }
-         }
-         catch (\PDOException $e)
-         {
+        }
+        catch (\PDOException $e)
+        {
              if ($e->getCode() !== '01000') {
                  $processStatus = false;
                  $response['success'] = false;
@@ -572,28 +572,23 @@ class TicketController extends Controller
              }
          }
 
-
         try
         {
             if($processStatus)
             {
+                $transaction = Process::getDb()->beginTransaction();
 
-                if($processStatus)
-                {
-                    $transaction = Process::getDb()->beginTransaction();
+                foreach ($calendarToSave as $c) {
+                    $c->save();
 
-                    foreach ($calendarToSave as $c) {
-                        $c->save();
-
-                        if ($c === false) {
-                            $processStatus = false;
-                            $response['msg'] = 'Ah ocurrido un error al actualizar la disponibilidad del calendario: ' .
-                                implode(" ", $calendarSlot->getErrorSummary(false));
-                            break;
-                        }
+                    if ($c === false) {
+                        $processStatus = false;
+                        $response['msg'] = 'Ah ocurrido un error al actualizar la disponibilidad del calendario: ' .
+                            implode(" ", $calendarSlot->getErrorSummary(false));
+                        break;
                     }
-                    $transaction->commit(); // save calendar
                 }
+                $transaction->commit(); // save calendar
             }
         }
         catch (\PDOException $e)

@@ -814,8 +814,8 @@ var handleModal = function () {
                                     console.log(result);
                                     if(result.event) // always
                                     {
-                                        result.event.count = result.event.count - 1;
-                                        result.event.title = result.event.count;
+                                        result.event.count = parseInt(result.event.count) - 1;
+                                        result.event.title = String(result.event.count);
                                         var indexRT = result.event.rt.indexOf(value.transactionId)
                                         result.event.rt.splice(indexRT, 1);
 
@@ -830,7 +830,7 @@ var handleModal = function () {
                                         var indexTWT = transactionWithTicket.indexOf(value.transactionId);
                                         transactionWithTicket.splice(indexTWT, 1);
                                         ticketDataMap.delete(value.transactionId);
-                                        calendarEvent.count = calendarEvent.count + 1;
+                                        calendarEvent.count = parseInt(calendarEvent.count) + 1;
                                     }
                                 }
                                 else {
