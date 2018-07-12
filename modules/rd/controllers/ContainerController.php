@@ -2,6 +2,7 @@
 
 namespace app\modules\rd\controllers;
 
+use app\modules\rd\models\Line;
 use app\modules\rd\models\ProcessTransaction;
 use Yii;
 use app\modules\rd\models\Container;
@@ -158,6 +159,7 @@ class ContainerController extends Controller
         $response['containers'] = [];
         $response['msg'] = '';
         $response['msg_dev'] = '';
+        $response['line'] = null;
 
         $bl = Yii::$app->request->get('bl');
 
@@ -179,7 +181,13 @@ class ContainerController extends Controller
 
                     if($line === null)
                     {
-                        
+                        $line = Line::findOne(['code'=>$result['cod_linea'],
+                                              'oce'=>$result['linea'],
+                                             'name'=>$result['nombre_linea']]);
+                        if($line === null)
+                        {
+
+                        }
                     }
 
                     $data = Container::find()
