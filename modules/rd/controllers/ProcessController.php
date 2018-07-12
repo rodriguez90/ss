@@ -415,6 +415,7 @@ class ProcessController extends Controller
 
                         if($processTransModelOld !== null)
                         {
+                            // FIXME softdelete of asociated ticket
 //                            $ticket = Ticket::findOne(['process_transaction_id'=>$processTransModelOld->id]);
 //                            if($ticket)
 //                            {

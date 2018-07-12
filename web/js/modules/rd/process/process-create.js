@@ -44,8 +44,16 @@ var containerTypeArray = [];
 
 var containertDataMap = new  Map();
 
+var lineNav = null;
+
 var cleanUI = function () {
     selectedContainers = [];
+    containertDataMap.clear();
+
+    document.getElementById('oce').innerHTML = "OCE: -" ;
+    document.getElementById('line').innerHTML = "LINEA: -";
+
+
     var table = $('#data-table').DataTable();
 
     table
@@ -97,29 +105,18 @@ var handleSelectAll = function () {
             .rows()
             .data()
             .each( function ( value, index ) {
-                // console.log(index);
-                // console.log(value);
-
                 if(!value.selectable)
                 {
                     return false;
                 }
                 else
                 {
-                    // var index = selectedContainers.indexOf(value.name);
-                    // alert('Voy a trabajar la seleccion: ' + checked);
                     if(checked)
                     {
-                        // dt.row(index.row, index.column)
                         table.row(index).select();
-                        // if(index === -1) // seleccionando
-                        //     selectedContainers.push(value.name);
-
                     }
                     else {
                         table.row(index).deselect();
-                        // if(index !== -1) // seleccionando
-                        //     selectedContainers.splice(value.name, 1);
                     }
                 }
             } );
@@ -129,9 +126,6 @@ var handleSelectAll = function () {
 var handleSelectTransCompany = function () {
 
     $('#yesRadio').on('click', function() {
-
-        // var table = $('#data-table').DataTable();
-
         var table = $('#data-table3').DataTable();
 
         table.rows().deselect();
@@ -173,8 +167,8 @@ var handleSelectTransCompany = function () {
         // tags: true,
         closeOnSelect: true,
         ajax: {
-            // url: homeUrl + '/rd/api-trans-company',
-            url: homeUrl + '/rd/trans-company/from-sp',
+            url: homeUrl + '/rd/api-trans-company',
+            // url: homeUrl + '/rd/trans-company/from-sp',
             dataType: 'json',
             // delay: 250,
             cache: true,
@@ -188,8 +182,8 @@ var handleSelectTransCompany = function () {
             processResults: function (data) {
                 // console.log(data);
                 var results  = [];
-                $.each(data.trans_companies, function (index, item) {
-                // $.each(data, function (index, item) {
+                // $.each(data.trans_companies, function (index, item) {
+                $.each(data, function (index, item) {
                     // console.log(item);
                     results .push({
                         id: item.id,
@@ -262,7 +256,25 @@ var fetchContainers = function (bl) {
             if(response.success)
             {
                 if(response['containers'].length)
-                    fetchContainersWS(bl, response['containers']);
+                {
+                    var table = $('#data-table').DataTable();
+
+                    table
+                        .clear()
+                        .draw();
+
+                    for (var i = 0; i < containers.length; i++)
+                    {
+
+                        if(i == 0)
+                        {
+                            document.getElementById('oce').innerHTML = "OCE: " + dataContainer.line;;
+                            document.getElementById('line').innerHTML = "LINEA: " + dataContainer.nameLine;
+                        }
+
+                        addContainer(table, containers[i])
+                    }
+                }
                 else {
                     alert("No hay contenedores asociado al BL especificado.");
                 }
@@ -279,17 +291,70 @@ var fetchContainers = function (bl) {
     });
 };
 
+var fetchContainersOffLine = function (bl) {
+
+    var types = ["DRY", "RRF"];
+    var tonnages = [20, 40];
+    var statusArray = [
+        'PENDIENTE',
+        moment().format(),
+        'PENDIENTE',
+        'PENDIENTE',
+        'PENDIENTE',
+        'EMBARCADO',
+        'DESPACHADO'];
+
+    var table = $('#data-table').DataTable();
+
+    table
+        .clear()
+        .draw();
+
+    for (var i = 0; i < 10; i++)
+    {
+
+        var typeIndex = Math.floor(Math.random() * (containerTypeMap.size - 1));
+        var v = null;
+        var tonnage = tonnages[Math.round(Math.random())];
+        var statusIndex = Math.floor(Math.random() * 6);
+        var status = statusArray[statusIndex];
+
+        // if(statusIndex !== 0 && statusIndex !== 1)
+        type = Array.from(containerTypeMap.values())[typeIndex]
+
+        var dataContainer = {
+            id:-1,
+            name:"ContainerName"+i,
+            ptId:-1,
+            type: type,
+            deliveryDate: moment().utc().format("DD/MM/YYYY"),
+            status: status,
+            line:"9999",
+            nameLine:"HHHHHH SSDDDDdSSD SDSD",
+            errCode:Math.round(Math.random())
+        };
+
+        if(i == 0)
+        {
+            document.getElementById('oce').innerHTML = "OCE: " + dataContainer.line;;
+            document.getElementById('line').innerHTML = "LINEA: " + dataContainer.nameLine;
+        }
+
+        addContainer(table, dataContainer);
+    }
+};
+
 var fetchContainersWS = function (bl, containers) {
-    // var types = ["DRY", "RRF"];
-    // var tonnages = [20, 40];
-    // var statusArray = [
-    //             'PENDIENTE',
-    //              moment().format(),
-    //             'PENDIENTE',
-    //             'PENDIENTE',
-    //             'PENDIENTE',
-    //             'EMBARCADO',
-    //             'DESPACHADO'];
+    var types = ["DRY", "RRF"];
+    var tonnages = [20, 40];
+    var statusArray = [
+                'PENDIENTE',
+                 moment().format(),
+                'PENDIENTE',
+                'PENDIENTE',
+                'PENDIENTE',
+                'EMBARCADO',
+                'DESPACHADO'];
 
     var table = $('#data-table').DataTable();
 
@@ -318,6 +383,8 @@ var fetchContainersWS = function (bl, containers) {
         //     type: type,
         //     deliveryDate: moment().utc().format("DD/MM/YYYY"),
         //     status: status,
+        //     line:"9999",
+        //     nameLine:"HHHHHH SSDDDDdSSD SDSD"
         // };
 
         var container =  {
@@ -327,7 +394,6 @@ var fetchContainersWS = function (bl, containers) {
             name:dataContainer.name,
             type: dataContainer.type,
             deliveryDate:dataContainer.deliveryDate,
-            agency:agency.name,
             wharehouse:1,
             transCompany:{name:'', id:-1, ruc:""},
             status:dataContainer.status,
@@ -386,6 +452,47 @@ var fetchContainerTypes = function () {
     });
 }
 
+var addContainer = function (table, dataContainer) {
+
+    var statusIsDate = moment(dataContainer.status).isValid();
+    // console.log("Status Date Valid: " + statusIsDate);
+    var errCode = parseInt(dataContainer.errCode);
+
+    var container =  {
+        id:dataContainer.id,
+        ptId:dataContainer.ptId,
+        name:dataContainer.name,
+        type: dataContainer.type,
+        deliveryDate:dataContainer.deliveryDate,
+        transCompany:{name:'', id:-1, ruc:""},
+        line:dataContainer.line,
+        lineName:dataContainer.nameLine,
+        status:dataContainer.status,
+        errCode:errCode,
+        checkbox:"",
+        statusIsDate:statusIsDate,
+        selectable:false,
+    };
+
+    if(statusIsDate)
+    {
+        container.status = moment(dataContainer.status).format("DD/MM/YYYY");
+    }
+
+    if( (container.status == "PENDIENTE" ||
+        statusIsDate == true )&&
+        errCode == 0)
+    {
+        container.selectable = true;
+    }
+    // console.log(container);
+
+    table.row.add(
+        container
+    ).draw();
+
+};
+
 $(document).ready(function () {
 
     console.log(agency);
@@ -414,7 +521,8 @@ $(document).ready(function () {
         // $('#blCode').prop('disabled', true);
         var bl = $('#blCode').val();
         cleanUI();
-        fetchContainers(bl);
+        // fetchContainers(bl);
+        fetchContainersOffLine();
         return false;
     });
 

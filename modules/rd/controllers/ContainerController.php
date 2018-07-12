@@ -173,7 +173,14 @@ class ContainerController extends Controller
                 $sql = "exec disv..sp_sgt_bl_cons " . $bl;
                 $results = Yii::$app->db->createCommand($sql)->queryAll();
 
+                $line = null;
+
                 foreach ($results as $result) {
+
+                    if($line === null)
+                    {
+                        
+                    }
 
                     $data = Container::find()
                         ->select('container.id, 
@@ -203,7 +210,6 @@ class ContainerController extends Controller
                         $container['ptId'] = -1;
                         $container['type'] = ["id"=>-1,"name"=>""];
                         $container['status'] = 'PENDIENTE';
-                        $container['deliveryDate'] = $result['fecha_limite'];
                     }
                     else
                     {
@@ -219,6 +225,10 @@ class ContainerController extends Controller
                         $container['status'] = $data['status'];
                         $container['deliveryDate'] = $data['deliveryDate'];
                     }
+                    $container['deliveryDate'] = $result['fecha_limite'];
+                    $container['line'] = $result['linea'];
+                    $container['lineName'] = $result['nombre_linea'];
+                    $container['errCode'] = $result['err_code'];
                     $response['containers'][] = $container;
                 }
             }
