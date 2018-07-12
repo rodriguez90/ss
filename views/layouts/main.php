@@ -130,6 +130,17 @@ if(!Yii::$app->user->isGuest){
                     ?>
 
                     <?php
+                    if(Yii::$app->user->can("ticket_create"))
+                    {
+                        echo "<li class='has-sub'>";
+                        echo "<a href=".Url::to(['/site/index'])."> <i class='fa fa-file-pdf-o'></i>";
+                        echo  "<span> Solicitar Turnos </span>";
+                        echo "</a>";
+                        echo "</li>";
+                    }
+                    ?>
+
+                    <?php
                     if(Yii::$app->user->can("ticket_create")){
                         echo "<li class='has-sub'>";
                         echo "<a href=".Url::to(['/rd/ticket/my-calendar'])."> <i class='fa fa-calendar'></i>";

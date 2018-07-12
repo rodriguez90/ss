@@ -17,18 +17,20 @@ var handleJqueryAutocomplete2 = function(op,changeRol) {
     var action = '';
     var option0 = '';
     var min = -1;
+    var validator = "data-parsley-type=\"digits\" data-parsley-length=\"[13, 13]\"";
     switch (op){
         case 1:
             action = "/administracion/user/getagencias";
-            option0 = "Seleccione agencia";
+            option0 = "Seleccione la epmpresa";
+            validator = ""
             break;
         case 2:
             action = "/administracion/user/getdeposito";
-            option0 = "Seleccione depósito";
+            option0 = "Seleccione el depósito";
             break;
         case 3:
             action = "/administracion/user/getagenciastrans";
-            option0 = "Seleccione agencia de transporte";
+            option0 = "Seleccione la empresa de transporte";
             min = 5;
             break;
     }
@@ -44,7 +46,7 @@ var handleJqueryAutocomplete2 = function(op,changeRol) {
     div.empty();
     var aux = $('#aux').val();
 
-    var conten = "<select id='selectpicker-type' name='type' class='form-control'  data-parsley-required='true'  data-size='10' data-live-search='true'></select>";
+    var conten = "<select id='selectpicker-type' name='type' class='form-control'  data-parsley-required='true'  data-size='10' data-live-search='true' " + validator + "></select>";
     div.append(conten);
 
     console.log(currentActionUrl);
@@ -125,7 +127,7 @@ var handleSelectpicker = function() {
             case 'Importador':
             case 'Exportador':
             case 'Agencia':
-                label.text("Agencia*");
+                label.text("Empresa*");
                 handleJqueryAutocomplete2(1,distint);
                 break;
             case 'Administrador_depósito':
@@ -134,7 +136,7 @@ var handleSelectpicker = function() {
                 handleJqueryAutocomplete2(2,distint);
                 break;
             case 'Cia_transporte':
-                label.text("Compañía de Transporte*");
+                label.text("Empresa de Transporte*");
                 handleJqueryAutocomplete2(3,distint);
                 break;
 

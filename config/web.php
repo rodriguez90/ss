@@ -44,19 +44,14 @@ $config = [
         'mailer' => [
             'class' => 'yii\swiftmailer\Mailer',
             'viewPath' => '@app/mail',
-//            'viewPath' => '@app\mail\layouts',
-//            'viewPath' => '@app/mail/layouts',
             'transport' => [
                 'class' => 'Swift_SmtpTransport',
-                'host' => '127.0.0.1',
-//                'host' => 'smtp.gmail.com',
-//                'username' => 'rodriguez90@gmail.com',
-//                'password' => 'fidenciolilopo90/*',
-//                'port' => '587'
-                //                'encryption' => 'tls
-//                'username' => 'Administrator',
-//                'password' => 'Root*2018',
-//                'port' => '25', // Port 25 is a very common port too
+				//'host' => '127.0.0.1',
+				'host' => 'smtp.gmail.com',
+                'username' => 'sgg.2020@gmail.com',
+                'password' => 'sgonzalezg2017',
+                'port' => '587',
+                'encryption' => 'tls',               
             ],
         ],
         'log' => [

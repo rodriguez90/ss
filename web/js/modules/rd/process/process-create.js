@@ -63,9 +63,6 @@ var cleanUI = function () {
     table
         .clear()
         .draw();
-
-    // $("#wizard").bwizard();
-
 }
 
 var handleStopWatch = function()
@@ -263,14 +260,22 @@ var fetchContainers = function (bl) {
         success: function(response) {
             console.log(response);
 
-            fetchContainersWS(bl, response['containers']);
-
+            if(response.success)
+            {
+                if(response['containers'].length)
+                    fetchContainersWS(bl, response['containers']);
+                else {
+                    alert("No hay contenedores asociado al BL especificado.");
+                }
+            }
+            else {
+                alert(response.msg);
+            }
         },
         error: function(response) {
             console.log(response);
             console.log(response.responseText);
             result = false;
-            // return false;
         }
     });
 };
@@ -386,6 +391,7 @@ $(document).ready(function () {
 
     console.log(agency);
     console.log(processType);
+
     // init wizar
     FormWizardValidation.init();
 
@@ -406,18 +412,15 @@ $(document).ready(function () {
 
     // search container
     $('#search-container').click( function() {
-        // ajax resquest service for container
-        // alert("// ajax resquest service for container");
-
-        console.log("BL CODE: "  + $('#blCode').val());
-
-        $('#blCode').prop('disabled', true);
+        // $('#blCode').prop('disabled', true);
         var bl = $('#blCode').val();
         fetchContainers(bl);
-
         return false;
     });
+
     // select2 to agency
     handleSelectTransCompany();
+
+    // get container types
     fetchContainerTypes();
 });
