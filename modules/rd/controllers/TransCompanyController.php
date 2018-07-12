@@ -177,7 +177,13 @@ class TransCompanyController extends Controller
         if(!Yii::$app->user->can("trans_company_delete"))
             throw new ForbiddenHttpException('Usted no tiene permiso ver esta vista');
 
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+
+        if($model)
+        {
+            $model->active = 0;
+            $model->save();
+        }
 
         return $this->redirect(['index']);
     }
@@ -325,7 +331,7 @@ class TransCompanyController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = TransCompany::findOne($id)) !== null) {
+        if (($model = TransCompany::findOne(['id'=>$id, 'active'=>1])) !== null) {
             return $model;
         }
 

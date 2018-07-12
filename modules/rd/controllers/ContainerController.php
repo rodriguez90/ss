@@ -2,6 +2,7 @@
 
 namespace app\modules\rd\controllers;
 
+use app\modules\rd\models\Line;
 use app\modules\rd\models\ProcessTransaction;
 use Yii;
 use app\modules\rd\models\Container;
@@ -138,7 +139,13 @@ class ContainerController extends Controller
         if(!Yii::$app->user->can("container_delete"))
             throw new ForbiddenHttpException('Usted no tiene permiso ver esta vista');
 
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+
+        if($model)
+        {
+            $model->active = 0;
+            $model->save();
+        }
 
         return $this->redirect(['index']);
     }
@@ -152,6 +159,7 @@ class ContainerController extends Controller
         $response['containers'] = [];
         $response['msg'] = '';
         $response['msg_dev'] = '';
+        $response['line'] = null;
 
         $bl = Yii::$app->request->get('bl');
 
@@ -167,7 +175,20 @@ class ContainerController extends Controller
                 $sql = "exec disv..sp_sgt_bl_cons " . $bl;
                 $results = Yii::$app->db->createCommand($sql)->queryAll();
 
+                $line = null;
+
                 foreach ($results as $result) {
+
+                    if($line === null)
+                    {
+                        $line = Line::findOne(['code'=>$result['cod_linea'],
+                                              'oce'=>$result['linea'],
+                                             'name'=>$result['nombre_linea']]);
+                        if($line === null)
+                        {
+
+                        }
+                    }
 
                     $data = Container::find()
                         ->select('container.id, 
@@ -182,8 +203,9 @@ class ContainerController extends Controller
                         ->innerJoin('process_transaction', 'process_transaction.container_id=container.id')
                         ->innerJoin('process', 'process.id=process_transaction.process_id')
                         ->innerJoin('container_type', 'container_type.id=container.type_id')
-                        ->where(['process.bl' => $bl])
+                        ->where(['process.bl' => $bl, 'process_transaction.active'=>1])
                         ->andWhere(['container.name' => $result['contenedor']])
+                        ->andWhere(['container.active' => 1])
                         ->asArray()
                         ->one();
 
@@ -196,7 +218,6 @@ class ContainerController extends Controller
                         $container['ptId'] = -1;
                         $container['type'] = ["id"=>-1,"name"=>""];
                         $container['status'] = 'PENDIENTE';
-                        $container['deliveryDate'] = $result['fecha_limite'];
                     }
                     else
                     {
@@ -209,10 +230,13 @@ class ContainerController extends Controller
                         $container['type']->name = $data['typeName'];
                         $container['type']->code = $data['typeCode'];
                         $container['type']->tonnage = $data['typeTonnage'];
-
                         $container['status'] = $data['status'];
                         $container['deliveryDate'] = $data['deliveryDate'];
                     }
+                    $container['deliveryDate'] = $result['fecha_limite'];
+                    $container['line'] = $result['linea'];
+                    $container['lineName'] = $result['nombre_linea'];
+                    $container['errCode'] = $result['err_code'];
                     $response['containers'][] = $container;
                 }
             }
@@ -235,7 +259,7 @@ class ContainerController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = Container::findOne($id)) !== null) {
+        if (($model = Container::findOne(['id'=>$id, 'active'=>1])) !== null) {
             return $model;
         }
 

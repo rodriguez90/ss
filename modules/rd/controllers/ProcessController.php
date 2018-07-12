@@ -5,6 +5,7 @@ namespace app\modules\rd\controllers;
 
 use app\modules\rd\models\Agency;
 use app\modules\rd\models\ContainerType;
+use app\modules\rd\models\Ticket;
 use app\modules\rd\models\TransCompany;
 use DateTime;
 use DateTimeZone;
@@ -202,8 +203,13 @@ class ProcessController extends Controller
         if(!Yii::$app->user->can("process_delete"))
             throw new ForbiddenHttpException('Usted no tiene permiso para eliminar esta recepción');
 
+        $model = $this->findModel($id);
 
-        $this->findModel($id)->delete();
+        if($model)
+        {
+            $model->active = 0;
+            $model->save();
+        }
 
         return $this->redirect(['index']);
     }
@@ -217,7 +223,7 @@ class ProcessController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = Process::findOne($id)) !== null) {
+        if (($model = Process::findOne(['id'=>$id, 'active'=>1])) !== null) {
             return $model;
         }
 
@@ -299,6 +305,7 @@ class ProcessController extends Controller
                 $response['containers'] = [];
                 foreach ( $transactions as $t)
                 {
+                    $t->name_driver = utf8_encode($t->name_driver);
                     array_push($response['transactions'], $t);
                     array_push($response['containers'], $t->container);
                 }
@@ -404,6 +411,27 @@ class ProcessController extends Controller
                             }
                         }
 
+                        $processTransModelOld = ProcessTransaction::findOne(['id'=>$container['ptId']]);
+
+                        if($processTransModelOld !== null)
+                        {
+                            // FIXME softdelete of asociated ticket
+//                            $ticket = Ticket::findOne(['process_transaction_id'=>$processTransModelOld->id]);
+//                            if($ticket)
+//                            {
+//                                $ticket->active = 0;
+//                            }
+
+                            $processTransModelOld->active = 0;
+                            if(!$processTransModelOld->save())
+                            {
+                                $tmpResult = false;
+                                $response['msg'] = "Ah ocurrido un error al actualizar los datos del proceso.";
+                                $response['msg_dev'] = implode(" ", $processTransModelOld->getErrorSummary(false));
+                                break;
+                            }
+                        }
+
                         $processTransModel = new ProcessTransaction();
                         $processTransModel->process_id = $model->id;
                         $processTransModel->container_id = $containerModel->id;
@@ -435,7 +463,7 @@ class ProcessController extends Controller
                    {
                        if($tmpResult)
                        {
-                           // send email
+                           $response['success'] = true;
                            $remitente = AdmUser::findOne(['id'=>\Yii::$app->user->getId()]);
 
                            foreach($containersByTransCompany as $t=>$c) {
@@ -447,11 +475,11 @@ class ProcessController extends Controller
 
                                if($destinatario)
                                {
-
-                                   $containers = [];
-                                   foreach ($c as $c2) {
-                                       $containers[]= $c2;
-                                   }
+//
+//                                   $containers = [];
+//                                   foreach ($c as $c2) {
+//                                       $containers[]= $c2;
+//                                   }
                                     /*
                                    //pdf create
                                    $pdf =  new mPDF( ['format'=>"A4-L"]);
@@ -461,9 +489,9 @@ class ProcessController extends Controller
                                    $path= $pdf->Output("","S");*/
 
                                    $body = Yii::$app->view->renderFile('notification.php', ['model' => $model,
-                                       'containers'=>$containers]);
+                                       'containers'=>$c]);
 
-                                   // TODO: send email user too from the admin system
+                                   // TODO: send email user
                                    $result = Yii::$app->mailer->compose()
                                                    ->setFrom($remitente->email)
                                                    ->setTo($destinatario->email)
@@ -474,16 +502,12 @@ class ProcessController extends Controller
 
                                    if($result === false)
                                    {
-                                       $tmpResult = false;
-                                       $response['msg'] ="Ah ocurrido un error al enviar la notificación vía email a la empresa de transporte.";
+                                       $response['success'] = true ;
+                                       $response['warning'] ="Ah ocurrido un error al enviar la notificación vía email a la empresa de transporte.";
                                    }
                                }
                            }
-                       }
 
-                       if($tmpResult)
-                       {
-                           $response['success'] = true;
                            $response['msg'] = Yii::t("app", "Recepción creada correctamente.");
                            $response['url'] = Url::to(['/site/index']);
 

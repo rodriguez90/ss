@@ -12,6 +12,7 @@ use Yii;
  * @property string $start_datetime
  * @property string $end_datetime
  * @property int $amount
+ * @property int $active
  *
  * @property Warehouse $warehouse
  * @property Ticket[] $tickets
@@ -33,7 +34,7 @@ class Calendar extends \yii\db\ActiveRecord
     {
         return [
             [['id_warehouse', 'start_datetime', 'end_datetime', 'amount'], 'required'],
-            [['id_warehouse', 'amount'], 'integer'],
+            [['id_warehouse', 'active', 'amount'], 'integer'],
             [['start_datetime', 'end_datetime'], 'safe'],
             [['id_warehouse'], 'exist', 'skipOnError' => true, 'targetClass' => Warehouse::className(), 'targetAttribute' => ['id_warehouse' => 'id']],
         ];
@@ -50,6 +51,7 @@ class Calendar extends \yii\db\ActiveRecord
             'start_datetime' => Yii::t('app', 'Fecha Inicio'),
             'end_datetime' => Yii::t('app', 'Fecha Fin'),
             'amount' => Yii::t('app', 'Cantidad'),
+            'active' => 'Activo',
         ];
     }
 
@@ -58,7 +60,7 @@ class Calendar extends \yii\db\ActiveRecord
      */
     public function getWarehouse()
     {
-        return $this->hasOne(Warehouse::className(), ['id' => 'id_warehouse']);
+        return $this->hasOne(Warehouse::className(), ['id' => 'id_warehouse', 'active'=>1]);
     }
 
     /**
@@ -66,6 +68,6 @@ class Calendar extends \yii\db\ActiveRecord
      */
     public function getTickets()
     {
-        return $this->hasMany(Ticket::className(), ['calendar_id' => 'id']);
+        return $this->hasMany(Ticket::className(), ['calendar_id' => 'id', 'active'=>1]);
     }
 }
