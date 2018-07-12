@@ -41,7 +41,7 @@ class ContainerSearch extends Container
      */
     public function search($params)
     {
-        $query = Container::find();
+        $query = Container::find()->where(['active'=>1]);
 
         // add conditions that should always apply here
 

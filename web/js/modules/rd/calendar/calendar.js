@@ -14,15 +14,27 @@ var fullcalendatInit = false;
 
 $(function (){
 
+	
 
     $("#grabar").click(function () {
+		
+		var events2 = [];
+		for(var i=0; i < events.length; i++)
+		{
+			var event = events[i];
+			console.log(event.start);
+			console.log(moment(event.start).format('YYYY-MM-DD HH:mm:ss Z'));
+			event.start = moment(event.start).format('YYYY-MM-DD HH:mm:ss Z');
+			event.end = moment(event.end).format('YYYY-MM-DD HH:mm:ss Z');
+			events2.push(event);
+		}
 
-        console.log(events);
+        console.log(events2);
         $.ajax({
             url: homeUrl + "/rd/calendar/create",
             dataType: 'json',
             type: "POST",
-            data: {'events':events},
+            data: {'events':events2},
 
             success: function (response) {
                 if(response['status']){

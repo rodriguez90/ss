@@ -34,7 +34,7 @@ use app\modules\rd\models\Process;
 
         #head td {
             padding: 10px 10px 10px 10px;
-            width: 16.66666666666667%;
+            width: 33.333333333333%;
 
         }
 
@@ -112,19 +112,13 @@ use app\modules\rd\models\Process;
         $type = $row['process']->type;
         echo "<tr>";
         echo "<td  class='title' >" . ( $type === Process::PROCESS_IMPORT ? 'BL':'Booking' ) ."</td>";
-        echo "<td class='title' >No.</td>";
         echo "<td  class='title' >Tipo de trámite</td>";
-        echo "<td  class='title'>Fecha de Creación</td>";
         echo "<td class='title' >Fecha Límite</td>";
         echo "</tr>";
 
         echo "<tr>";
         echo "<td>". $row['process']->bl ."</td>";
-        echo "<td>".$row['process']->id."</td>";
-
         echo "<td>".Process::PROCESS_LABEL[$type]."</td>";
-        $create_at = $row['process']->created_at;
-        echo "<td>".(new \yii\i18n\Formatter())->asDate($create_at , 'dd/M/yyyy')."</td>";
         echo "<td>".(new \yii\i18n\Formatter())->asDate($row['process']->delivery_date, 'dd/M/yyyy')."</td>";
         echo "</tr>";
 
@@ -140,8 +134,9 @@ use app\modules\rd\models\Process;
         echo "<td></td>";
         echo "<td style='border: solid 1px #DDD;font-weight: bold;'>Contenedor</td>";
         echo "<td style='border: solid 1px #DDD;font-weight: bold;'>Tipo/Tamaño</td>";
-        echo "<td style='border: solid 1px #DDD;font-weight: bold;'>Fecha del Turno</td>";
         echo "<td style='border: solid 1px #DDD;font-weight: bold;'>Estado</td>";
+        echo "<td style='border: solid 1px #DDD;font-weight: bold;'>Fecha del Turno</td>";
+
         echo "<td></td>";
         echo "</tr>";
         echo "</thead>";
@@ -153,8 +148,8 @@ use app\modules\rd\models\Process;
             echo "<td></td>";
             echo "<td style='border: solid 1px #DDD;'>" . $container['name'] . "</td>";
             echo "<td style='border: solid 1px #DDD;'>" . $container['code'] . $container['tonnage'] . "</td>";
-            echo "<td style='border: solid 1px #DDD;'>" . (new \yii\i18n\Formatter())->asDate($container['start_datetime'], 'dd/M/yyyy H:i') . "</td>";
             echo "<td style='border: solid 1px #DDD;'>" . $container['status'] . "</td>";
+            echo "<td style='border: solid 1px #DDD;'>" . ( $container['start_datetime'] == "" ? "" : (new \yii\i18n\Formatter())->asDate($container['start_datetime'], 'dd/M/yyyy H:i') ) . "</td>";
             echo "<td></td>";
             echo "</tr>";
         }

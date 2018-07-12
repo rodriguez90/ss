@@ -74,6 +74,7 @@ class Ticket extends \yii\db\ActiveRecord
      */
     public function getCalendar()
     {
+//        return $this->hasOne(Calendar::className(), ['id' => 'calendar_id', 'active'=>1]);
         return $this->hasOne(Calendar::className(), ['id' => 'calendar_id']);
     }
 }

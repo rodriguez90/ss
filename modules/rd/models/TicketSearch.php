@@ -41,7 +41,7 @@ class TicketSearch extends Ticket
      */
     public function search($params)
     {
-        $query = Ticket::find();
+        $query = Ticket::find()->where(['active'=>1]);
 
         // add conditions that should always apply here
 

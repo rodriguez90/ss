@@ -8,6 +8,7 @@ use yii\widgets\ActiveForm;
 /* @var $model app\modules\administracion\models\User */
 /* @var $form yii\widgets\ActiveForm */
 /* @var $roles */
+/* @var $modelAux */
 
 use app\assets\FormAsset;
 FormAsset::register($this);
@@ -180,8 +181,6 @@ FormAsset::register($this);
 
                     <div class="col-md-12 col-sm-12" style="margin-bottom: 25px;">
 
-
-
                     <div class="col-md-4 col-sm-3">
                         <input style="visibility: hidden" name="aux" value="<?= $type ?>" id="aux" />
 
@@ -193,28 +192,12 @@ FormAsset::register($this);
                                 <?= Html::button('Cancelar',['class'=>'btn btn-default','onclick'=>'window.history.go(-1)']) ?>
 
                                 <?= Html::submitButton('Guardar', ['class' => 'btn btn-primary']) ?>
-
                     </div>
 
                     <div class="col-md-4 col-sm-3">
-
                     </div>
-
                     </div>
-
-
-
-
-
-
-
-
-
-
-
                     <?php ActiveForm::end(); ?>
-
-
                 </div>
             </div>
         </div>
@@ -223,15 +206,15 @@ FormAsset::register($this);
 
 </div>
 
-
+<script type="text/javascript">
+    var modelAux = <?php echo json_encode(['name'=>$modelAux['name'],
+                                        'id'=>$modelAux['id']]);
+                    ?>;
+</script>
 
 <?php
-
-
-
 $this->registerJsFile('@web/js/modules/utiles.js',              ['depends' => ['app\assets\FormAsset']]);
 $this->registerJsFile('@web/js/modules/administracion/user.js', ['depends' => ['app\assets\FormAsset']]);
-
 ?>
 
 

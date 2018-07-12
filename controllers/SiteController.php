@@ -269,7 +269,11 @@ class SiteController extends Controller
     /**                */
     public function actionAbout()
     {
-        return $this->render('about');
+        $containers = Container::find()
+            ->all();
+
+
+        return $this->render('about',['containers'=>$containers]);
     }
 
     public function actionQr(){
@@ -399,21 +403,36 @@ class SiteController extends Controller
             $row = [];
             $row["process"] = $p;
             $containers = Container::find()
-                ->select('container.id,container.status,container.name,container.tonnage,calendar.start_datetime')
+                ->select('container.id,container.status,container.name,container.tonnage,process_transaction.id as process_trans_id')
                 ->innerJoin("process_transaction","process_transaction.container_id = container.id")
-                ->innerJoin("ticket","ticket.process_transaction_id = process_transaction.id")
-                ->innerJoin("calendar","calendar.id = ticket.calendar_id")
                 ->innerJoin("process","process_transaction.process_id = process.id")
                 ->where(["process.id"=>$p->id])
                 ->asArray()
                 ->all();
-            $row["containers"] = $containers;
 
 
+
+            $contickes = [];
+            foreach ($containers as $container){
+               $start_datetime  = ProcessTransaction::find()
+                    ->select('calendar.start_datetime')
+                    ->innerJoin("ticket","ticket.process_transaction_id = process_transaction.id")
+                    ->innerJoin("calendar","calendar.id = ticket.calendar_id")
+                    ->where(["process_transaction.id"=> $container['process_trans_id']])
+                    ->asArray()
+                    ->one();
+
+
+               if($start_datetime['start_datetime']!=''){
+                   $contickes [] = array_merge($container,$start_datetime);
+               }else{
+                   $contickes [] =  array_merge($container,['start_datetime'=>'']);
+               }
+            }
+
+            $row["containers"] = $contickes;
             $result [] = $row;
         }
-
-        //return $this->render('print_report',['result'=>$result]);
 
 
         $body = $this->renderPartial('print_report',

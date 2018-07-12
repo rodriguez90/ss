@@ -15,11 +15,7 @@ use app\modules\rd\models\Process;
 
 SystemAsset::register($this);
 
-$user = null;
-//$userName = "Invitado";
-if(!Yii::$app->user->isGuest){
-    $user = AdmUser::findOne(['id'=>Yii::$app->user->getId()]);
-}
+$user = Yii::$app->user->identity;
 
 ?>
 <?php $this->beginPage() ?>
@@ -99,6 +95,16 @@ if(!Yii::$app->user->isGuest){
             <div data-scrollbar="true" data-height="100%">
                 <!-- begin sidebar nav -->
                 <ul class="nav" style="font-size: 14px">
+                    <?php
+                    if(Yii::$app->user->can("ticket_create"))
+                    {
+                        echo "<li class='has-sub'>";
+                        echo "<a href=".Url::to(['/site/index'])."> <i class='fa fa-ticket'></i>";
+                        echo  "<span> Solicitar Turnos </span>";
+                        echo "</a>";
+                        echo "</li>";
+                    }
+                    ?>
 
                     <?php
                     if(Yii::$app->user->can("admin_mod") || Yii::$app->user->can("process_create")){

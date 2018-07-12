@@ -138,7 +138,13 @@ class ContainerController extends Controller
         if(!Yii::$app->user->can("container_delete"))
             throw new ForbiddenHttpException('Usted no tiene permiso ver esta vista');
 
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+
+        if($model)
+        {
+            $model->active = 0;
+            $model->save();
+        }
 
         return $this->redirect(['index']);
     }
@@ -182,8 +188,9 @@ class ContainerController extends Controller
                         ->innerJoin('process_transaction', 'process_transaction.container_id=container.id')
                         ->innerJoin('process', 'process.id=process_transaction.process_id')
                         ->innerJoin('container_type', 'container_type.id=container.type_id')
-                        ->where(['process.bl' => $bl])
+                        ->where(['process.bl' => $bl, 'process_transaction.active'=>1])
                         ->andWhere(['container.name' => $result['contenedor']])
+                        ->andWhere(['container.active' => 1])
                         ->asArray()
                         ->one();
 
@@ -209,7 +216,6 @@ class ContainerController extends Controller
                         $container['type']->name = $data['typeName'];
                         $container['type']->code = $data['typeCode'];
                         $container['type']->tonnage = $data['typeTonnage'];
-
                         $container['status'] = $data['status'];
                         $container['deliveryDate'] = $data['deliveryDate'];
                     }
@@ -235,7 +241,7 @@ class ContainerController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = Container::findOne($id)) !== null) {
+        if (($model = Container::findOne(['id'=>$id, 'active'=>1])) !== null) {
             return $model;
         }
 
