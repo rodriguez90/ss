@@ -680,12 +680,13 @@ class TicketController extends Controller
             //        $sqlChainded = 'SET CHAINED ON';
             //        \Yii::$app->db->createCommand($sqlChainded)->execute();
 //            var_dump("notifyNewTickets");
-           $result = $this->notifyNewTickets($processType, $userName, $newTickets);
+           $result = $this->notifyNewTickets($processType, $processModel->bl, $userName, $newTickets);
         }
         return $response;
     }
 	
 	protected function notifyNewTickets($processType,
+                                        $bl,
                                         $user,
                                         $tickets)
     {
@@ -733,7 +734,8 @@ class TicketController extends Controller
                                 $registerDriver . "','" .
                                 $containerName . "','" .
                                 $dateTicket . "','" .
-                                $user . "'";
+                                $user . "','";
+                                $bl . "'";
 
                 // var_dump($sql_complete);
 
