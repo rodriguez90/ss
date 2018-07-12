@@ -485,7 +485,7 @@ class UserController extends Controller
 
         $response = array();
         $response['success'] = true;
-        $response['trans_companies'] = [];
+        $response['companies'] = [];
         $response['msg'] = '';
         $response['msg_dev'] = '';
 
@@ -514,13 +514,13 @@ class UserController extends Controller
                     {
                         $doCommit = true;
                         $agency = new Agency();
-                        $str = utf8_decode($result['nombre_empresa']);
+                        $str = utf8_decode($result['nombre']);
                         $agency->name = $str;
-                        $agency->ruc = $result['ruc_empresa'];
+                        $agency->ruc = $result['rutempresa'];
                         $agency->code_oce = '';
                         $agency->active = 1;
 
-                        if(!$agency->save())
+                        if(!$agency->save(false))
                         {
                             $response['success'] = false;
                             $response['msg'] = "Ah ocurrido un error al buscar las Empresas.";
@@ -532,7 +532,7 @@ class UserController extends Controller
                         $str = utf8_encode($agency->name);
                         $agency->name = $str;
                     }
-                    $response['trans_companies'][] = $agency;
+                    $response['companies'][] = $agency;
                 }
 
                 if($response['success'])
@@ -557,7 +557,7 @@ class UserController extends Controller
                 }
             }
         }
-        return $response['trans_companies'];
+        return $response['companies'];
     }
 
     public function actionGetdeposito(){
