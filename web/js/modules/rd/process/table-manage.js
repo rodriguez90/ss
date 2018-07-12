@@ -26,13 +26,13 @@ var handleDataTable = function() {
             responsive: true,
             deferRender: false,
             rowCallback: function( row, data, index ) {
-                    console.log("rowCallback to: " + data.name);
+                    // console.log("rowCallback to: " + data.name);
             },
             createdRow: function( row, data, dataIndex ) {
-                console.log('init select2: ' + data.name);
+                // console.log('init select2: ' + data.name);
                 if (!data.selectable ) {
                     $('td', row).eq(0).removeClass('select-checkbox');
-                    $(row).addClass('bg-silver-darker');
+                    $(row).addClass('text-danger');
                 }
                 else {
                     var elementId =  String(data.name).replace(' ','');
@@ -103,8 +103,8 @@ var handleDataTable = function() {
                 { "title": "Fecha Limite",
                   "data":"deliveryDate",
                 },
-                { "title": "Cliente",
-                    "data":"agency"
+                { "title": "Estado",
+                    "data":"status"
                 },
             ],
             columnDefs: [
@@ -119,37 +119,10 @@ var handleDataTable = function() {
                     data:'type',
                     render: function ( data, type, full, meta ) {
                         var elementId =  String(full.name).trim();
-                        console.log("render: " + elementId + " " + type);
+                        // console.log("render: " + elementId + " " + type);
                         if(type == 'display' && full.selectable)
                         {
-                            // var api =  new $.fn.dataTable.Api(meta.settings);
-                             // api.cell({row: meta.row, column:2}).data(trunk.id);
-                             // var row = api.row({row:meta.row});
-                             var selectHtml = "<select class=\"form-control\" id=\"selectType" +elementId + "\"></select>";
-                            // setTimeout(function() {
-                            //     $('select', row).select2(
-                            //         // $('td', row).eq(2).select2(
-                            //         {
-                            //             language: "es",
-                            //             placeholder: 'Seleccione Tipo de Contenedor',
-                            //             width: '100%',
-                            //             closeOnSelect: true,
-                            //             data:containerTypeArray,
-                            //         }).on('select2:select', function (e) {
-                            //             var type = e.params.data;
-                            //             data.type = {
-                            //                 id:type.id,
-                            //                 name:type.text
-                            //             };
-                            //
-                            //
-                            //             //table.row(index).data(data); // esto prococa que la fila se repinte de nuevo y x tango perdemos la inicializacion del select
-                            //             api.cell({row: meta.row, column:2}).data(data);
-                            //             return true;
-                            //         });
-                            //     $('select', row).val(data.id); // Select the option with a value of '1'
-                            //     $('select', row).trigger('change:select2'); // Notify any JS components that the value changed
-                            // }, 200);
+                            var selectHtml = "<select class=\"form-control\" id=\"selectType" +elementId + "\"></select>";
                             return selectHtml;
                         }
                         return data.name;
@@ -172,11 +145,21 @@ var handleDataTable = function() {
             // console.log(dt.row(index.row, index.column).data());
             // var id = dt.row(index.row, index.column).data().id;
             // var name = dt.row(index.row, index.column).data().name;
-            // var status = dt.row(index.row, index.column).data().status;
+            var status = dt.row(index.row, index.column).data().status;
+            var errCode = dt.row(index.row, index.column).data().errCode;
             // if(status !== 'PENDIENTE' && !moment(status).isValid())
+            var msg = '';
+            if(errCode == 0)
+            {
+                msg = 'Este contenedor no puede ser seleccionado su estado es: ' + status
+            }
+            else {
+                msg = 'Este contenedor no puede ser seleccionado pendiente de facturación o crédito';
+            }
+
             if(dt.row(index.row, index.column).data().selectable == false)
             {
-                alert('Este contenedor no puede ser seleccionado su estado es: ' + status);
+                alert(msg);
                 e.preventDefault();
                 return false;
             }
@@ -195,8 +178,8 @@ var handleDataTable2 = function () {
         { "title": "Fecha Limite",
             "data":"deliveryDate",
         },
-        { "title": "Cliente",
-            "data":"agency"
+        { "title": "Estado",
+            "data":"status"
         },
         { "title": "Empresa de Transporte",
             // "data":"transCompany"
@@ -272,8 +255,8 @@ var handleDataTable3 = function () {
                 { "title": "Fecha Límite",
                     "data":"deliveryDate",
                 },
-                { "title": "Cliente",
-                    "data":"agency"
+                { "title": "Estado",
+                    "data":"status"
                 },
                 { "title": "Empresa de Transporte",
                     "data":"transCompany"
@@ -293,8 +276,8 @@ var handleDataTable3 = function () {
                     title:"Tipo",
                     data:"type",
                     render: function ( data, type, full, meta ) {
-                        console.log("RENDER TYPE TABLE 3");
-                        console.log(data);
+                        // console.log("RENDER TYPE TABLE 3");
+                        // console.log(data);
                         return data.name;
                     },
                 },

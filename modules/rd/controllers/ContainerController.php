@@ -2,6 +2,7 @@
 
 namespace app\modules\rd\controllers;
 
+use app\modules\rd\models\Line;
 use app\modules\rd\models\ProcessTransaction;
 use Yii;
 use app\modules\rd\models\Container;
@@ -158,6 +159,7 @@ class ContainerController extends Controller
         $response['containers'] = [];
         $response['msg'] = '';
         $response['msg_dev'] = '';
+        $response['line'] = null;
 
         $bl = Yii::$app->request->get('bl');
 
@@ -173,7 +175,20 @@ class ContainerController extends Controller
                 $sql = "exec disv..sp_sgt_bl_cons " . $bl;
                 $results = Yii::$app->db->createCommand($sql)->queryAll();
 
+                $line = null;
+
                 foreach ($results as $result) {
+
+                    if($line === null)
+                    {
+                        $line = Line::findOne(['code'=>$result['cod_linea'],
+                                              'oce'=>$result['linea'],
+                                             'name'=>$result['nombre_linea']]);
+                        if($line === null)
+                        {
+
+                        }
+                    }
 
                     $data = Container::find()
                         ->select('container.id, 
@@ -203,7 +218,6 @@ class ContainerController extends Controller
                         $container['ptId'] = -1;
                         $container['type'] = ["id"=>-1,"name"=>""];
                         $container['status'] = 'PENDIENTE';
-                        $container['deliveryDate'] = $result['fecha_limite'];
                     }
                     else
                     {
@@ -219,6 +233,10 @@ class ContainerController extends Controller
                         $container['status'] = $data['status'];
                         $container['deliveryDate'] = $data['deliveryDate'];
                     }
+                    $container['deliveryDate'] = $result['fecha_limite'];
+                    $container['line'] = $result['linea'];
+                    $container['lineName'] = $result['nombre_linea'];
+                    $container['errCode'] = $result['err_code'];
                     $response['containers'][] = $container;
                 }
             }

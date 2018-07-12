@@ -243,6 +243,8 @@ class UserController extends Controller
                     $old_password = $model->password;
                     $auth =  Yii::$app->authManager;
                     $confirm = Yii::$app->request->post('AdmUser')["passwordConfirm"];
+                    $status = Yii::$app->request->post('status');
+
                     $rol = '';
                     $type = -1;
                     $error = '';
@@ -315,11 +317,18 @@ class UserController extends Controller
 
                             $model->updated_at = time();
 
+                            if($status==null)
+                            $model->status = 0 ;
+                            else
+                                $model->status = 1 ;
+
                             if ($model->save())
                             {
                                 $new_rol = $auth->createRole($rol);
 
-                                if(  $new_rol->name != $rol_actual->name ){
+                                if($rol_actual == null){
+                                    $ok = $ok && $auth->assign($new_rol,$model->id);
+                                }else if(  $new_rol->name != $rol_actual->name ){
                                     $ok = $ok && $auth->revoke($rol_actual,$model->id);
                                     if($ok)
                                         $ok = $ok && $auth->assign($new_rol,$model->id);
