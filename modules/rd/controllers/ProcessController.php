@@ -5,6 +5,7 @@ namespace app\modules\rd\controllers;
 
 use app\modules\rd\models\Agency;
 use app\modules\rd\models\ContainerType;
+use app\modules\rd\models\Ticket;
 use app\modules\rd\models\TransCompany;
 use DateTime;
 use DateTimeZone;
@@ -406,6 +407,26 @@ class ProcessController extends Controller
                                 $tmpResult = false;
                                 $response['msg'] = "Ah ocurrido un error al salvar los datos de las nuevas Cia de Transporte.";
                                 $response['msg_dev'] = implode(" ", $transCompany->getErrorSummary(false));
+                                break;
+                            }
+                        }
+
+                        $processTransModelOld = ProcessTransaction::findOne(['id'=>$container['ptId']]);
+
+                        if($processTransModelOld !== null)
+                        {
+//                            $ticket = Ticket::findOne(['process_transaction_id'=>$processTransModelOld->id]);
+//                            if($ticket)
+//                            {
+//                                $ticket->active = 0;
+//                            }
+
+                            $processTransModelOld->active = 0;
+                            if(!$processTransModelOld->save())
+                            {
+                                $tmpResult = false;
+                                $response['msg'] = "Ah ocurrido un error al actualizar los datos del proceso.";
+                                $response['msg_dev'] = implode(" ", $processTransModelOld->getErrorSummary(false));
                                 break;
                             }
                         }

@@ -249,7 +249,6 @@ var handleSelectTransCompany = function () {
 };
 
 var fetchContainers = function (bl) {
-    cleanUI();
     $.ajax({
         url: homeUrl + "/rd/container/containers",
         type: "get",
@@ -414,6 +413,7 @@ $(document).ready(function () {
     $('#search-container').click( function() {
         // $('#blCode').prop('disabled', true);
         var bl = $('#blCode').val();
+        cleanUI();
         fetchContainers(bl);
         return false;
     });
