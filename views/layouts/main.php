@@ -63,7 +63,7 @@ $user = Yii::$app->user->identity;
                                 echo '<a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">';
                                     echo '<img src="/img/user-13.jpg" alt="" />';
                                     echo '<span class="hidden-xs">';
-                                        if(!Yii::$app->user->isGuest && user !== null)
+                                        if(!Yii::$app->user->isGuest && $user !== null)
                                             echo $user->username;
 
                                     echo '</span> <b class="caret"></b>';
