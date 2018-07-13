@@ -183,8 +183,8 @@ var handleSelectTransCompany = function () {
             processResults: function (data) {
                 // console.log(data);
                 var results  = [];
-                // $.each(data.trans_companies, function (index, item) {
-                $.each(data, function (index, item) {
+                $.each(data.trans_companies, function (index, item) {
+                // $.each(data, function (index, item) {
                     // console.log(item);
                     results .push({
                         id: item.id,
