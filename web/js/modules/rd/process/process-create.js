@@ -45,6 +45,7 @@ var containerTypeArray = [];
 var containertDataMap = new  Map();
 
 var lineNav = null;
+var processDeliveryDate = null;
 
 var cleanUI = function () {
     selectedContainers = [];
@@ -167,8 +168,8 @@ var handleSelectTransCompany = function () {
         // tags: true,
         closeOnSelect: true,
         ajax: {
-            url: homeUrl + '/rd/api-trans-company',
-            // url: homeUrl + '/rd/trans-company/from-sp',
+            // url: homeUrl + '/rd/api-trans-company',
+            url: homeUrl + '/rd/trans-company/from-sp',
             dataType: 'json',
             // delay: 250,
             cache: true,
@@ -244,7 +245,7 @@ var handleSelectTransCompany = function () {
 
 var fetchContainers = function (bl) {
     $.ajax({
-        url: homeUrl + "/rd/container/containers",
+        url: homeUrl + "/rd/process/sgtblcons",
         type: "get",
         dataType:'json',
         data: {
@@ -258,20 +259,17 @@ var fetchContainers = function (bl) {
                 if(response['containers'].length)
                 {
                     var table = $('#data-table').DataTable();
-
                     table
                         .clear()
                         .draw();
 
                     for (var i = 0; i < containers.length; i++)
                     {
-
                         if(i == 0)
                         {
                             document.getElementById('oce').innerHTML = "OCE: " + dataContainer.line;;
                             document.getElementById('line').innerHTML = "LINEA: " + dataContainer.nameLine;
                         }
-
                         addContainer(table, containers[i])
                     }
                 }
@@ -310,6 +308,18 @@ var fetchContainersOffLine = function (bl) {
         .clear()
         .draw();
 
+    lineNav = {
+        id: 1,
+        name:"TTT DDD",
+        oce:"1111",
+        code:"TTT",
+    };
+
+    processDeliveryDate = moment().utc().format("DD-MM-YYYY");
+
+    document.getElementById('oce').innerHTML = "OCE: " + lineNav.oce;
+    document.getElementById('line').innerHTML = "NOMBRE: " + lineNav.name;
+
     for (var i = 0; i < 10; i++)
     {
 
@@ -318,100 +328,19 @@ var fetchContainersOffLine = function (bl) {
         var tonnage = tonnages[Math.round(Math.random())];
         var statusIndex = Math.floor(Math.random() * 6);
         var status = statusArray[statusIndex];
-
-        // if(statusIndex !== 0 && statusIndex !== 1)
-        type = Array.from(containerTypeMap.values())[typeIndex]
+        type = Array.from(containerTypeMap.values())[typeIndex];
 
         var dataContainer = {
             id:-1,
             name:"ContainerName"+i,
             ptId:-1,
             type: type,
-            deliveryDate: moment().utc().format("DD/MM/YYYY"),
+            deliveryDate: processDeliveryDate,
             status: status,
-            line:"9999",
-            nameLine:"HHHHHH SSDDDDdSSD SDSD",
+
             errCode:Math.round(Math.random())
         };
-
-        if(i == 0)
-        {
-            document.getElementById('oce').innerHTML = "OCE: " + dataContainer.line;;
-            document.getElementById('line').innerHTML = "LINEA: " + dataContainer.nameLine;
-        }
-
         addContainer(table, dataContainer);
-    }
-};
-
-var fetchContainersWS = function (bl, containers) {
-    var types = ["DRY", "RRF"];
-    var tonnages = [20, 40];
-    var statusArray = [
-                'PENDIENTE',
-                 moment().format(),
-                'PENDIENTE',
-                'PENDIENTE',
-                'PENDIENTE',
-                'EMBARCADO',
-                'DESPACHADO'];
-
-    var table = $('#data-table').DataTable();
-
-    table
-        .clear()
-        .draw();
-
-    for (var i = 0; i < containers.length; i++)
-    // for (var i = 0; i < 10; i++)
-    {
-        var dataContainer = containers[i];
-
-        // var typeIndex = Math.floor(Math.random() * (containerTypeMap.size - 1));
-        // var v = null;
-        // var tonnage = tonnages[Math.round(Math.random())];
-        // var statusIndex = Math.floor(Math.random() * 6);
-        // var status = statusArray[statusIndex];
-        //
-        // // if(statusIndex !== 0 && statusIndex !== 1)
-        //     type = Array.from(containerTypeMap.values())[typeIndex]
-        //
-        // var dataContainer = {
-        //     id:-1,
-        //     name:"ContainerName"+i,
-        //     ptId:-1,
-        //     type: type,
-        //     deliveryDate: moment().utc().format("DD/MM/YYYY"),
-        //     status: status,
-        //     line:"9999",
-        //     nameLine:"HHHHHH SSDDDDdSSD SDSD"
-        // };
-
-        var container =  {
-            id:dataContainer.id,
-            ptId:dataContainer.ptId,
-            checkbox:"",
-            name:dataContainer.name,
-            type: dataContainer.type,
-            deliveryDate:dataContainer.deliveryDate,
-            wharehouse:1,
-            transCompany:{name:'', id:-1, ruc:""},
-            status:dataContainer.status,
-            selectable:false
-        };
-
-        var statusIsDate = moment(dataContainer.status).isValid();
-        console.log("Status Date Valid: " + statusIsDate);
-        if( container.status == "PENDIENTE" ||
-            statusIsDate == true)
-        {
-            container.selectable = true;
-        }
-        console.log(container);
-
-        table.row.add(
-            container
-        ).draw();
     }
 };
 
@@ -438,7 +367,6 @@ var fetchContainerTypes = function () {
                         text: item.name
                     });
                 });
-                // containerTypeArray = Array.from(containerTypeMap.values());
             }
             else {
                 alert(response.msg);
@@ -521,8 +449,8 @@ $(document).ready(function () {
         // $('#blCode').prop('disabled', true);
         var bl = $('#blCode').val();
         cleanUI();
-        // fetchContainers(bl);
-        fetchContainersOffLine();
+        fetchContainers(bl);
+        // fetchContainersOffLine();
         return false;
     });
 

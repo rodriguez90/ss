@@ -5,6 +5,7 @@ namespace app\modules\rd\controllers;
 
 use app\modules\rd\models\Agency;
 use app\modules\rd\models\ContainerType;
+use app\modules\rd\models\Line;
 use app\modules\rd\models\Ticket;
 use app\modules\rd\models\TransCompany;
 use DateTime;
@@ -57,7 +58,8 @@ class ProcessController extends Controller
                 'actions' => [
                     'delete' => ['POST'],
                     'transactions' => ['GET'],
-                    'containers' => ['GET']
+                    'containers' => ['GET'],
+                    'Sgtblcons' => ['GET']
                 ],
             ],
         ];
@@ -488,8 +490,11 @@ class ProcessController extends Controller
                                        'containers'=>$containers]));
                                    $path= $pdf->Output("","S");*/
 
-                                   $body = Yii::$app->view->renderFile('notification.php', ['model' => $model,
+                                   $body = Yii::$app->controller->renderPartial('notification.php', ['model' => $model,
                                        'containers'=>$c]);
+
+//                                   $body = Yii::$app->view->renderFile('notification.php', ['model' => $model,
+//                                       'containers'=>$c]);
 
                                    // TODO: send email user
                                    $result = Yii::$app->mailer->compose()
@@ -529,7 +534,7 @@ class ProcessController extends Controller
                 }
                 else {
                     $response['success'] = false;
-                    $response['msg'] =  "No fue posible crear la solicitud. " .$error ;
+                    $response['msg'] =  "No fue posible crear la solicitud" ;
                 }
             }
             catch (Exception $e)
@@ -711,5 +716,123 @@ class ProcessController extends Controller
     protected function notifyEmail($process)
     {
 
+    }
+
+    public function actionSgtblcons()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $response = array();
+        $response['success'] = true;
+        $response['containers'] = [];
+        $response['msg'] = '';
+        $response['msg_dev'] = '';
+        $response['line'] = null;
+        $response['deliveryDate'] = null;
+
+        $bl = Yii::$app->request->get('bl');
+
+        if(!isset($bl))
+        {
+            $response['success'] = false;
+            $response['msg'] = "Debe especificar el código de búsqueda.";
+        }
+
+        if($response['success'])
+        {
+            try
+            {
+                $sql = "exec disv..sp_sgt_bl_cons " . $bl;
+                $results = Yii::$app->db->createCommand($sql)->queryAll();
+
+                $line = null;
+                $response['deliveryDate'] = null;
+
+                foreach ($results as $result)
+                {
+                    if($line === null)
+                    {
+                        $line = Line::findOne(
+                            ['code'=>$result['cod_linea'],
+                            'oce'=>$result['linea'],
+                            'name'=>$result['nombre_linea']]);
+
+                        if($line === null)
+                        {
+                            $line = new Line();
+                            $line->name = $result['nombre_linea'];
+                            $line->oce = $result['linea'];
+                            $line->code = $result['cod_linea'];
+                            $line->active = 1;
+                            if(!$line->save())
+                            {
+                                $response['success'] = false;
+                                $response['containers'] = [];
+                                $response['msg'] = 'Ah occurrido un error al procesar los datos de la Linea Naviera.';
+                                break;
+                            }
+                        }
+                        $response['line']= $line;
+                    }
+
+
+                    $data = Container::find()
+                        ->select('container.id, 
+                                           container.name, 
+                                           container.status, 
+                                           process_transaction.delivery_date as deliveryDate, 
+                                           process_transaction.id as ptId, 
+                                           container_type.id as typeId, 
+                                           container_type.name as typeName, 
+                                           container_type.code as typeCode, 
+                                           container_type.tonnage as typeTonnage')
+                        ->innerJoin('process_transaction', 'process_transaction.container_id=container.id')
+                        ->innerJoin('process', 'process.id=process_transaction.process_id')
+                        ->innerJoin('container_type', 'container_type.id=container.type_id')
+                        ->where(['process.bl' => $bl, 'process_transaction.active'=>1])
+                        ->andWhere(['container.name' => $result['contenedor']])
+                        ->andWhere(['container.active' => 1])
+                        ->asArray()
+                        ->one();
+
+                    $container = null;
+
+                    if ($data === null) {
+                        $container = [];
+                        $container['id'] = -1;
+                        $container['name'] = $result['contenedor'];
+                        $container['ptId'] = -1;
+                        $container['type'] = ["id"=>-1,"name"=>""];
+                        $container['status'] = 'PENDIENTE';
+
+                    }
+                    else
+                    {
+                        $container = [];
+                        $container['id'] = $data['id'];
+                        $container['name'] = $data['name'];
+                        $container['ptId'] =  $data['ptId'];
+                        $container['type'] = new  ContainerType();
+                        $container['type']->id = $data['typeId'];
+                        $container['type']->name = $data['typeName'];
+                        $container['type']->code = $data['typeCode'];
+                        $container['type']->tonnage = $data['typeTonnage'];
+                        $container['status'] = $data['status'];
+                    }
+                    $container['deliveryDate'] = $result['fecha_limite'];
+                    $container['line'] = $result['linea'];
+                    $container['lineName'] = $result['nombre_linea'];
+                    $container['errCode'] = $result['err_code'];
+                    $response['containers'][] = $container;
+                }
+            }
+            catch (Exception $ex)
+            {
+                $response['success'] = false;
+                $response['msg'] = 'Ah occurrido un error al buscar los contenedores.';
+                $response['msg_dev'] = $ex->getMessage();
+            }
+        }
+        return $response;
     }
 }

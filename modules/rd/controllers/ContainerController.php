@@ -2,12 +2,12 @@
 
 namespace app\modules\rd\controllers;
 
-use app\modules\rd\models\Line;
-use app\modules\rd\models\ProcessTransaction;
-use Yii;
 use app\modules\rd\models\Container;
 use app\modules\rd\models\ContainerType;
 use app\modules\rd\models\ContainerSearch;
+use app\modules\rd\models\ProcessTransaction;
+
+use Yii;
 use yii\db\Command;
 use yii\db\Exception;
 use yii\web\Controller;
@@ -41,7 +41,6 @@ class ContainerController extends Controller
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['POST'],
-                    'containers' => ['GET']
                 ],
             ],
         ];
@@ -148,106 +147,6 @@ class ContainerController extends Controller
         }
 
         return $this->redirect(['index']);
-    }
-
-    public function actionContainers()
-    {
-        Yii::$app->response->format = Response::FORMAT_JSON;
-
-        $response = array();
-        $response['success'] = true;
-        $response['containers'] = [];
-        $response['msg'] = '';
-        $response['msg_dev'] = '';
-        $response['line'] = null;
-
-        $bl = Yii::$app->request->get('bl');
-
-        if(!isset($bl))
-        {
-            $response['success'] = false;
-            $response['msg'] = "Debe especificar el código de búsqueda.";
-        }
-
-        if($response['success'])
-        {
-            try{
-                $sql = "exec disv..sp_sgt_bl_cons " . $bl;
-                $results = Yii::$app->db->createCommand($sql)->queryAll();
-
-                $line = null;
-
-                foreach ($results as $result) {
-
-                    if($line === null)
-                    {
-                        $line = Line::findOne(['code'=>$result['cod_linea'],
-                                              'oce'=>$result['linea'],
-                                             'name'=>$result['nombre_linea']]);
-                        if($line === null)
-                        {
-
-                        }
-                    }
-
-                    $data = Container::find()
-                        ->select('container.id, 
-                                           container.name, 
-                                           container.status, 
-                                           process_transaction.delivery_date as deliveryDate, 
-                                           process_transaction.id as ptId, 
-                                           container_type.id as typeId, 
-                                           container_type.name as typeName, 
-                                           container_type.code as typeCode, 
-                                           container_type.tonnage as typeTonnage')
-                        ->innerJoin('process_transaction', 'process_transaction.container_id=container.id')
-                        ->innerJoin('process', 'process.id=process_transaction.process_id')
-                        ->innerJoin('container_type', 'container_type.id=container.type_id')
-                        ->where(['process.bl' => $bl, 'process_transaction.active'=>1])
-                        ->andWhere(['container.name' => $result['contenedor']])
-                        ->andWhere(['container.active' => 1])
-                        ->asArray()
-                        ->one();
-
-                    $container = null;
-
-                    if ($data === null) {
-                        $container = [];
-                        $container['id'] = -1;
-                        $container['name'] = $result['contenedor'];
-                        $container['ptId'] = -1;
-                        $container['type'] = ["id"=>-1,"name"=>""];
-                        $container['status'] = 'PENDIENTE';
-                    }
-                    else
-                    {
-                        $container = [];
-                        $container['id'] = $data['id'];
-                        $container['name'] = $data['name'];
-                        $container['ptId'] =  $data['ptId'];
-                        $container['type'] = new  ContainerType();
-                        $container['type']->id = $data['typeId'];
-                        $container['type']->name = $data['typeName'];
-                        $container['type']->code = $data['typeCode'];
-                        $container['type']->tonnage = $data['typeTonnage'];
-                        $container['status'] = $data['status'];
-                        $container['deliveryDate'] = $data['deliveryDate'];
-                    }
-                    $container['deliveryDate'] = $result['fecha_limite'];
-                    $container['line'] = $result['linea'];
-                    $container['lineName'] = $result['nombre_linea'];
-                    $container['errCode'] = $result['err_code'];
-                    $response['containers'][] = $container;
-                }
-            }
-            catch (Exception $ex)
-            {
-                $response['success'] = false;
-                $response['msg'] = 'Ah occurrido un error al buscar los contenedores.';
-                $response['msg_dev'] = $ex->getMessage();
-            }
-        }
-        return $response;
     }
 
     /**
