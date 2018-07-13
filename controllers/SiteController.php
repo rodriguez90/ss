@@ -221,18 +221,22 @@ class SiteController extends Controller
                 $session = Yii::$app->session;
                 $session->open();
 
-                $user = AdmUser::findOne(['id'=>Yii::$app->user->id]);
-                $session->set('user',$user);
-
-                return $this->redirect(Url::toRoute('/site/index'));
+                $user = AdmUser::findOne(['id'=>Yii::$app->user->getId(),'status'=>1]);
+                if($user!=null){
+                    $session->set('user',$user);
+                    return $this->redirect(Url::toRoute('/site/index'));
+                }else{
+                    return $this->render('login', ['model' => $model,'msg'=>'Usuario inactivo, contacte al administrador.']);
+                }
             }
             else
             {
-                return $this->render('login', ['model' => $model]);
+                return $this->render('login', ['model' => $model,'msg'=>'Usuario o contraseña incorrecta.']);
             }
 
         }else{
-            return $this->render('login', ['model' => $model]);
+            $msg = Yii::$app->request->get('msg');
+            return $this->render('login', ['model' => $model,'msg'=>$msg]);
         }
     }
 
@@ -276,26 +280,55 @@ class SiteController extends Controller
                 $model->creado_por = Yii::$app->user->identity->username;
                 $model->status =0;
 
+                $auth =  Yii::$app->authManager;
+                $new_rol = null;
+                $ok = true;
+                $msg = '';
+
+
                 if ($model->save() && $usertype!=null && $usertypeid!=null) {
 
                     switch ($usertype){
                         case "1":
-                             $user_agency = new UserAgency();
-                             $user_agency->user_id = $model->id;
-                             $user_agency->agency_id = $usertypeid;
-                             $user_agency->save();
+                            $user_agency = new UserAgency();
+                            $user_agency->user_id = $model->id;
+                            $user_agency->agency_id = $usertypeid;
+                            $user_agency->save();
+                            $new_rol = $auth->createRole("Importador");
                             break;
                         case "2":
+                            $user_agency = new UserAgency();
+                            $user_agency->user_id = $model->id;
+                            $user_agency->agency_id = $usertypeid;
+                            $user_agency->save();
+                            $new_rol = $auth->createRole("Exportador");
+                            break;
+                        case "3":
+                            $user_agency = new UserAgency();
+                            $user_agency->user_id = $model->id;
+                            $user_agency->agency_id = $usertypeid;
+                            $user_agency->save();
+                            $new_rol = $auth->createRole("importador_exportador");
+                            break;
+                        case "4":
                             $user_trans = new UserTranscompany();
                             $user_trans->user_id = $model->id;
                             $user_trans->agency_id = $usertypeid;
                             $user_trans->save();
+                            $new_rol = $auth->createRole("Cia_transporte");
                             break;
                         default:
                             break;
                     }
 
-                    return $this->render("login", ['model'=>$modelLogin]);
+                    $ok = $ok && $auth->assign($new_rol,$model->id);
+                    if($ok){
+                        $msg = "Usuario registrado correctamente, espere a ser activado.";
+                    }else{
+                        $msg = "Ah ocurrido un error en el registro.";
+                    }
+
+                    return $this->redirect (['site/login','msg'=>$msg]);
                 }
             }
         }
