@@ -252,6 +252,7 @@ var fetchContainers = function (bl) {
         dataType:'json',
         data: {
             'bl': bl,
+            'type': processType,
         },
         success: function(response) {
             console.log(response);
