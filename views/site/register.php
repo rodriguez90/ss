@@ -171,8 +171,8 @@ $this->params['breadcrumbs'][] = $this->title;
                                 <option value=''>Tipo de Usuario</option>
                                 <option value="1">Importador</option>
                                 <option value="2">Exportador</option>
-                                <option value="3">Importador_Exportador</option>
-                                <option value="4">Agencia de Transporte</option>
+                                <option value="3">Importador/Exportador</option>
+                                <option value="4">Empresa de Transporte</option>
                             </select>
                         </div>
                     </div>
