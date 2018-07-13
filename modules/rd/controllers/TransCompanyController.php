@@ -331,9 +331,16 @@ class TransCompanyController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = TransCompany::findOne(['id'=>$id, 'active'=>1])) !== null) {
+
+        $model = TransCompany::find()
+            ->where(['id'=>$id])
+            ->andWhere(['<>', 'active',-1])
+            ->one();
+
+        if ($model  !== null) {
             return $model;
         }
+
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
