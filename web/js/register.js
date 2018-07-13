@@ -12,13 +12,13 @@ $(function () {
          switch ($(this).val()){
              case "1":
                  action = "/site/getagencias";
-                 option0 = "<option value='' selected=''>Seleccione agencia</option>";
-                 label.text("Agencia*");
+                 option0 = "<option value='' selected=''>Seleccione Empresa</option>";
+                 label.text("Empresa*");
                  break;
              case "2":
                  action = "/site/getagenciastrans";
-                 option0 = "<option value='' selected=''>Seleccione agencia de transporte</option>";
-                 label.text("Compañía de Transporte*");
+                 option0 = "<option value='' selected=''>Seleccione la Empresa de transporte</option>";
+                 label.text("Empresa de Transporte*");
                  break;
              default:
                  action = '';
