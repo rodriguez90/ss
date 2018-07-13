@@ -45,7 +45,7 @@ use yii\helpers\Url;
 
         #datalle td {
             padding: 10px 10px 10px 10px;
-            width: 25%;
+            width: 33.333333%;
             border: 1px solid #DDD;
         }
 
@@ -85,7 +85,7 @@ use yii\helpers\Url;
         <tr>
             <td>
                 <div id="logo">
-                    <img src="<?php echo Yii::$app->homeUrl . "/../img/logo.png"; ?>">
+                    <img src="<?php echo Yii::$app->homeUrl; ?>/../img/logo.png">
                 </div>
             </td>
             <td style="text-align: center"><h4 >NOTIFICACION DE NUEVO PROCESO</h4> </td>
@@ -169,28 +169,31 @@ use yii\helpers\Url;
         </tbody>
     </table>
 
+    <?php
+        if(count($containers) > 50)
+        {
+    ?>
+        <table id="links" width="100%">
 
-    <table id="links" width="100%">
-
-        <tbody>
-
-
-        <tr style="text-align: center">
-            <td></td>
-            <td></td>
-            <td class="btn">
-                <a href="<?php echo Url::toRoute(['/rd/ticket/create', 'id' => $model->id], true); ?>">Reservar
-                    Cupos </a>
-            </td>
-            <td></td>
-            <td></td>
-        </tr>
-
-        </tbody>
-    </table>
+            <tbody>
 
 
+            <tr style="text-align: center">
+                <td></td>
+                <td></td>
+                <td class="btn">
+                    <a href="<?php echo Url::toRoute(['/rd/ticket/create', 'id' => $model->id], true); ?>">Reservar
+                        Cupos </a>
+                </td>
+                <td></td>
+                <td></td>
+            </tr>
+
+            </tbody>
+        </table>
+    <?php
+    }
+    ?>
 </div>
-
 </body>
 </html>

@@ -454,8 +454,8 @@ $(document).ready(function () {
         // $('#blCode').prop('disabled', true);
         var bl = $('#blCode').val();
         cleanUI();
-        fetchContainers(bl);
-        // fetchContainersOffLine();
+        // fetchContainers(bl);
+        fetchContainersOffLine();
         return false;
     });
 

@@ -481,7 +481,7 @@ class UserController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = AdmUser::findOne(['id'=>$id, 'status'=>1])) !== null) {
+        if (($model = AdmUser::findOne(['id'=>$id])) !== null) {
             return $model;
         }
 
