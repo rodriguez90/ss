@@ -759,7 +759,7 @@ class TicketController extends Controller
                     {
                         $response['success'] = false;
                         $response['msg'] = "Ah ocurrido un error al actualizar el acceso del turno al TPG.";
-                        $response['msg_dev'] = $ticket->;
+                        $response['msg_dev'] = implode(' ', $ticket->getErrorSummary(false));
                         break;
                     }
                 }
