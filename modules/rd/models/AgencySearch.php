@@ -41,7 +41,7 @@ class AgencySearch extends Agency
      */
     public function search($params)
     {
-        $query = Agency::find()->where(['active'=>1]);
+        $query = Agency::find()->where(['<>', 'active',-1]);
 
         // add conditions that should always apply here
 
