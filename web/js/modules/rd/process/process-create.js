@@ -47,6 +47,8 @@ var containertDataMap = new  Map();
 var lineNav = null;
 var processDeliveryDate = null;
 
+var containerFetchUrl = '';
+
 var cleanUI = function () {
     selectedContainers = [];
     containertDataMap.clear();
@@ -250,6 +252,7 @@ var fetchContainers = function (bl) {
         dataType:'json',
         data: {
             'bl': bl,
+            'type': processType,
         },
         success: function(response) {
             console.log(response);

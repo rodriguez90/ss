@@ -435,7 +435,9 @@ class TicketController extends Controller
         Yii::$app->response->format = Response::FORMAT_JSON;
 
         $response['success'] = true;
-        $response['msg'] = 'Unknow';
+        $response['msg'] = '';
+        $response['warning'] = '';
+        $response['msg_dev'] = '';
         $customMsg = '';
 
         if($status === Ticket::PRE_BOOKING)
@@ -504,8 +506,7 @@ class TicketController extends Controller
                         if (!$processStatus) {
                             $processStatus = false;
                             $response['msg'] = 'Ah ocurrido un error al crear el cupo.';
-                            $response['msg_dev'] = 'Ah ocurrido un error al crear el cupo' .
-                                implode(" ", $model->getErrorSummary(false));
+                            $response['msg_dev'] = implode(" ", $model->getErrorSummary(false));
                             break;
                         }
 
@@ -576,8 +577,8 @@ class TicketController extends Controller
                 foreach ($calendarToSave as $c) {
                     if ($c->save() === false) {
                         $processStatus = false;
-                        $response['msg'] = 'Ah ocurrido un error al actualizar la disponibilidad del calendario: ' .
-                            implode(" ", $calendarSlot->getErrorSummary(false));
+                        $response['msg'] = 'Ah ocurrido un error al actualizar la disponibilidad del calendario.';
+                        $response['msg_dev'] = implode(" ", $calendarSlot->getErrorSummary(false));
                         break;
                     }
                     $calendarsMod[]=$c;
@@ -590,8 +591,9 @@ class TicketController extends Controller
 
                     if ($pt->save() === false) {
                         $processStatus = false;
-                        $response['msg'] = 'Ah ocurrido un error al actualizar los datos del ticket: ' .
-                            implode(" ", $calendarSlot->getErrorSummary(false));
+                        $response['msg'] = 'Ah ocurrido un error al actualizar los datos del ticket';
+                        $response['msg_dev'] = implode(' ', $pt->getErrorSummary(false));
+
                         break;
                     }
                     $ptMod[] = $pt;
@@ -626,7 +628,7 @@ class TicketController extends Controller
                 foreach ($cardsServiceData as $cardService) {					
                     if($this->generateServiceCardByTicket($cardService) === false)
                     {
-                        $response['warning'] = 'Error al enviar las cartas de servicio.';
+                        $response['warning'] = 'Error al generar y enviar las cartas de servicio.';
                     }
                 }
                 $response['success'] = true;
@@ -677,10 +679,13 @@ class TicketController extends Controller
 
         if($processStatus)
         {
-            //        $sqlChainded = 'SET CHAINED ON';
-            //        \Yii::$app->db->createCommand($sqlChainded)->execute();
-//            var_dump("notifyNewTickets");
            $result = $this->notifyNewTickets($processType, $processModel->bl, $userName, $newTickets);
+            if(!$result['success'])
+            {
+                $response['warning'] = $result['msg'];
+                $response['msg_dev'] = $result['msg_dev'];
+            }
+
         }
         return $response;
     }
@@ -692,7 +697,8 @@ class TicketController extends Controller
     {
         $response = [];
         $response['success'] = true;
-//        $response['tickets'] = [];
+        $response['msg'] = '';
+        $response['msg_dev'] = '';
 
         try
         {
@@ -737,10 +743,7 @@ class TicketController extends Controller
                                 $user . "','";
                                 $bl . "'";
 
-                // var_dump($sql_complete);
-
                 $result = \Yii::$app->db3->createCommand($sql_complete)->queryAll();
-
 
                 if($result['err_code'] == "1")
                 {
@@ -752,17 +755,14 @@ class TicketController extends Controller
                 else {
 
                     $ticket->acc_id = $result[0]['acc_id'];
-//                    $processTransaction->update(true, ['register_truck', 'register_driver', 'name_driver']
-//                    var_dump($ticket);
                     if($ticket->update(true, ['acc_id']) == false)
                     {
                         $response['success'] = false;
                         $response['msg'] = "Ah ocurrido un error al actualizar el acceso del turno al TPG.";
+                        $response['msg_dev'] = $ticket->;
                         break;
                     }
                 }
-
-//                $response['tickets'][] = $ticket;
             }
         }
         catch (Exception $exception)
@@ -771,8 +771,6 @@ class TicketController extends Controller
             $response['msg'] = "Ah ocurrido un error al notificar los nuevos turnos al TPG";
             $response['msg_dev'] = $exception->getMessage();
         }
-
-        // var_dump($response);
 
         return $response;
     }
