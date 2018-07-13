@@ -65,9 +65,17 @@ $this->params['breadcrumbs'][] = $this->title;
                     <button type="submit" class="btn btn-success btn-block btn-lg">Entrar</button>
                 </div>
 
-            <div class="m-t-20 m-b-40">
-              Registrarse <a href=" <?= Url::to(['/site/register']) ?>" class="text-success">aqui</a>.
+            <div class="m-t-20">
+              Regístrate <a href=" <?= Url::to(['/site/register']) ?>" class="text-success">aquí</a>
             </div>
+
+
+            <ul class="parsley-errors-list filled" style="text-align: center;" >
+                <li class="parsley-required"> <?php if(isset($msg)){ echo $msg; } ?></li>
+            </ul>
+
+
+
 
             <?php ActiveForm::end(); ?>
 

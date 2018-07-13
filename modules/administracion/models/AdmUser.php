@@ -168,7 +168,7 @@ class AdmUser extends ActiveRecord implements IdentityInterface
     public static function findByUsername($username)
     {
         try {
-            return static::findOne(['username' => $username, 'status' => 1]);
+            return static::findOne(['username' => $username]);
         } catch (Exception $e) {
             die("Error en el acceso a la base de datos.<br/> Database access error.");
         }

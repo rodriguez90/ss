@@ -165,12 +165,14 @@ $this->params['breadcrumbs'][] = $this->title;
 
                     <div class="form-group">
 
-                        <label class="control-label col-md-4 col-sm-4"> Tipo</label>
+                        <label class="control-label col-md-4 col-sm-4">Tipo*</label>
                         <div class="col-md-8 col-sm-8">
                             <select id="selectpicker-type" name="usertype"  class='form-control'  data-parsley-required='true'>
                                 <option value=''>Tipo de Usuario</option>
-                                <option value="1">Tipo 1</option>
-                                <option value="2">Tipo 2</option>
+                                <option value="1">Importador</option>
+                                <option value="2">Exportador</option>
+                                <option value="3">Importador_Exportador</option>
+                                <option value="4">Agencia de Transporte</option>
                             </select>
                         </div>
                     </div>

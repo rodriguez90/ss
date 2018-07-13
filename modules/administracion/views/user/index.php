@@ -87,7 +87,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                     ]
                                 ])
                             ],
-                            //'item_name',
+                            'item_name',
 
                             [
                                 'attribute' => 'status',
