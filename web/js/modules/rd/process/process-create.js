@@ -47,6 +47,8 @@ var containertDataMap = new  Map();
 var lineNav = null;
 var processDeliveryDate = null;
 
+var containerFetchUrl = '';
+
 var cleanUI = function () {
     selectedContainers = [];
     containertDataMap.clear();
