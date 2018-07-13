@@ -117,7 +117,13 @@ class ContainerTypeController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+
+        if($model)
+        {
+            $model->active = 0;
+            $model->save();
+        }
 
         return $this->redirect(['index']);
     }
@@ -152,7 +158,7 @@ class ContainerTypeController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = ContainerType::findOne($id)) !== null) {
+        if (($model = ContainerType::findOne(['id'=>$id, 'active'=>1])) !== null) {
             return $model;
         }
 

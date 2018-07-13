@@ -3,8 +3,8 @@
 namespace app\modules\rd\controllers;
 
 
-use app\modules\rd\models\Agency;
 use app\modules\rd\models\ContainerType;
+use app\modules\rd\models\Line;
 use app\modules\rd\models\TransCompany;
 use DateTime;
 use DateTimeZone;
@@ -12,7 +12,6 @@ use app\modules\administracion\models\AdmUser;
 use app\modules\rd\models\Container;
 use app\modules\rd\models\Process;
 use app\modules\rd\models\UserAgency;
-use app\modules\rd\models\ProcessSearch;
 use app\modules\rd\models\ContainerSearch;
 use app\modules\rd\models\ProcessTransaction;
 use QRcode;
@@ -24,9 +23,7 @@ use yii\web\NotFoundHttpException;
 use yii\web\ForbiddenHttpException;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
-use yii\helpers\Html;
 use yii\helpers\Url;
-use kartik\mpdf\Pdf;
 use Mpdf\Mpdf;
 
 use yii\web\Response;
@@ -56,7 +53,8 @@ class ProcessController extends Controller
                 'actions' => [
                     'delete' => ['POST'],
                     'transactions' => ['GET'],
-                    'containers' => ['GET']
+                    'containers' => ['GET'],
+                    'Sgtblcons' => ['GET']
                 ],
             ],
         ];
@@ -92,6 +90,7 @@ class ProcessController extends Controller
             throw new ForbiddenHttpException('Usted no tiene acceso a esta recepción');
 
         $model = $this->findModel($id);
+        $user = Yii::$app->user->identity;
 
         if($user && $user->hasRol('Agencia')) // FIXME: change role to Importer/Exporter
         {
@@ -202,8 +201,13 @@ class ProcessController extends Controller
         if(!Yii::$app->user->can("process_delete"))
             throw new ForbiddenHttpException('Usted no tiene permiso para eliminar esta recepción');
 
+        $model = $this->findModel($id);
 
-        $this->findModel($id)->delete();
+        if($model)
+        {
+            $model->active = 0;
+            $model->save();
+        }
 
         return $this->redirect(['index']);
     }
@@ -217,7 +221,7 @@ class ProcessController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = Process::findOne($id)) !== null) {
+        if (($model = Process::findOne(['id'=>$id, 'active'=>1])) !== null) {
             return $model;
         }
 
@@ -299,6 +303,7 @@ class ProcessController extends Controller
                 $response['containers'] = [];
                 foreach ( $transactions as $t)
                 {
+                    $t->name_driver = utf8_encode($t->name_driver);
                     array_push($response['transactions'], $t);
                     array_push($response['containers'], $t->container);
                 }
@@ -404,6 +409,27 @@ class ProcessController extends Controller
                             }
                         }
 
+                        $processTransModelOld = ProcessTransaction::findOne(['id'=>$container['ptId']]);
+
+                        if($processTransModelOld !== null)
+                        {
+                            // FIXME softdelete of asociated ticket
+//                            $ticket = Ticket::findOne(['process_transaction_id'=>$processTransModelOld->id]);
+//                            if($ticket)
+//                            {
+//                                $ticket->active = 0;
+//                            }
+
+                            $processTransModelOld->active = 0;
+                            if(!$processTransModelOld->save())
+                            {
+                                $tmpResult = false;
+                                $response['msg'] = "Ah ocurrido un error al actualizar los datos del proceso.";
+                                $response['msg_dev'] = implode(" ", $processTransModelOld->getErrorSummary(false));
+                                break;
+                            }
+                        }
+
                         $processTransModel = new ProcessTransaction();
                         $processTransModel->process_id = $model->id;
                         $processTransModel->container_id = $containerModel->id;
@@ -435,7 +461,7 @@ class ProcessController extends Controller
                    {
                        if($tmpResult)
                        {
-                           // send email
+                           $response['success'] = true;
                            $remitente = AdmUser::findOne(['id'=>\Yii::$app->user->getId()]);
 
                            foreach($containersByTransCompany as $t=>$c) {
@@ -447,11 +473,11 @@ class ProcessController extends Controller
 
                                if($destinatario)
                                {
-
-                                   $containers = [];
-                                   foreach ($c as $c2) {
-                                       $containers[]= $c2;
-                                   }
+//
+//                                   $containers = [];
+//                                   foreach ($c as $c2) {
+//                                       $containers[]= $c2;
+//                                   }
                                     /*
                                    //pdf create
                                    $pdf =  new mPDF( ['format'=>"A4-L"]);
@@ -460,10 +486,13 @@ class ProcessController extends Controller
                                        'containers'=>$containers]));
                                    $path= $pdf->Output("","S");*/
 
-                                   $body = Yii::$app->view->renderFile('notification.php', ['model' => $model,
-                                       'containers'=>$containers]);
+                                   $body = Yii::$app->controller->renderPartial('notification.php', ['model' => $model,
+                                       'containers'=>$c]);
 
-                                   // TODO: send email user too from the admin system
+//                                   $body = Yii::$app->view->renderFile('notification.php', ['model' => $model,
+//                                       'containers'=>$c]);
+
+                                   // TODO: send email user
                                    $result = Yii::$app->mailer->compose()
                                                    ->setFrom($remitente->email)
                                                    ->setTo($destinatario->email)
@@ -474,16 +503,12 @@ class ProcessController extends Controller
 
                                    if($result === false)
                                    {
-                                       $tmpResult = false;
-                                       $response['msg'] ="Ah ocurrido un error al enviar la notificación vía email a la empresa de transporte.";
+                                       $response['success'] = true ;
+                                       $response['warning'] ="Ah ocurrido un error al enviar la notificación vía email a la empresa de transporte.";
                                    }
                                }
                            }
-                       }
 
-                       if($tmpResult)
-                       {
-                           $response['success'] = true;
                            $response['msg'] = Yii::t("app", "Recepción creada correctamente.");
                            $response['url'] = Url::to(['/site/index']);
 
@@ -505,7 +530,7 @@ class ProcessController extends Controller
                 }
                 else {
                     $response['success'] = false;
-                    $response['msg'] =  "No fue posible crear la solicitud. " .$error ;
+                    $response['msg'] =  "No fue posible crear la solicitud" ;
                 }
             }
             catch (Exception $e)
@@ -604,7 +629,7 @@ class ProcessController extends Controller
                                 //$qrCode->writeFile($qrpath);
                                 //$paths [] = $qrpath;
                                 ob_start();
-                                QRcode::png($info, null);
+                                \QRcode::png($info, null);
                                 $imageString = base64_encode(ob_get_contents());
                                 ob_end_clean();
 
@@ -687,5 +712,246 @@ class ProcessController extends Controller
     protected function notifyEmail($process)
     {
 
+    }
+
+    public function actionSgtblcons()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $response = array();
+        $response['success'] = true;
+        $response['containers'] = [];
+        $response['msg'] = '';
+        $response['msg_dev'] = '';
+        $response['line'] = null;
+        $response['deliveryDate'] = null;
+
+        $bl = Yii::$app->request->get('bl');
+        $processType = Yii::$app->request->get('type');
+
+        if(!isset($bl))
+        {
+            $response['success'] = false;
+            $response['msg'] = "Debe especificar el código de búsqueda.";
+        }
+
+        if($response['success'])
+        {
+            try
+            {
+                $sql = "exec disv..sp_sgt_bl_cons " . $bl;
+                $results = Yii::$app->db->createCommand($sql)->queryAll();
+
+                $line = null;
+                $response['deliveryDate'] = null;
+
+                if(count($results) > 0)
+                {
+                    $line = Line::findOne(
+                        ['code'=>$results[0]['cod_linea'],
+                            'oce'=>$results[0]['linea'],
+                            'name'=>$results[0]['nombre_linea']]);
+
+                    if($line === null)
+                    {
+                        $line = new Line();
+                        $line->name = $results[0]['nombre_linea'];
+                        $line->oce = $results[0]['linea'];
+                        $line->code = $results[0]['cod_linea'];
+                        $line->active = 1;
+                        if(!$line->save())
+                        {
+                            $response['success'] = false;
+                            $response['containers'] = [];
+                            $response['msg'] = 'Ah occurrido un error al procesar los datos de la Linea Naviera.';
+                        }
+                    }
+                    $response['line']= $line;
+                    $response['deliveryDate'] = $results[0]['fecha_limite'];
+                }
+
+                foreach ($results as $result)
+                {
+                    $data = Container::find()
+                        ->select('container.id, 
+                                           container.name, 
+                                           container.status, 
+                                           process_transaction.delivery_date as deliveryDate, 
+                                           process_transaction.id as ptId, 
+                                           container_type.id as typeId, 
+                                           container_type.name as typeName, 
+                                           container_type.code as typeCode, 
+                                           container_type.tonnage as typeTonnage')
+                        ->innerJoin('process_transaction', 'process_transaction.container_id=container.id')
+                        ->innerJoin('process', 'process.id=process_transaction.process_id')
+                        ->innerJoin('container_type', 'container_type.id=container.type_id')
+                        ->where(['process.bl' => $bl])
+                        ->andWhere(['process.type'=>$processType])
+                        ->andWhere(['process_transaction.active'=>1])
+                        ->andWhere(['container.name' => $result['contenedor']])
+                        ->andWhere(['container.active' => 1])
+                        ->asArray()
+                        ->one();
+
+                    $container = null;
+
+                    if ($data === null) {
+                        $container = [];
+                        $container['id'] = -1;
+                        $container['name'] = $result['contenedor'];
+                        $container['ptId'] = -1;
+                        $container['type'] = ["id"=>-1,"name"=>""];
+                        $container['status'] = 'PENDIENTE';
+
+                    }
+                    else
+                    {
+                        $container = [];
+                        $container['id'] = $data['id'];
+                        $container['name'] = $data['name'];
+                        $container['ptId'] =  $data['ptId'];
+                        $container['type'] = new  ContainerType();
+                        $container['type']->id = $data['typeId'];
+                        $container['type']->name = $data['typeName'];
+                        $container['type']->code = $data['typeCode'];
+                        $container['type']->tonnage = $data['typeTonnage'];
+                        $container['status'] = $data['status'];
+                    }
+                    $container['deliveryDate'] = $result['fecha_limite'];
+                    $container['line'] = $result['linea'];
+                    $container['lineName'] = $result['nombre_linea'];
+                    $container['errCode'] = $result['err_code'];
+                    $response['containers'][] = $container;
+                }
+            }
+            catch (Exception $ex)
+            {
+                $response['success'] = false;
+                $response['msg'] = 'Ah occurrido un error al buscar los contenedores.';
+                $response['msg_dev'] = $ex->getMessage();
+            }
+        }
+        return $response;
+    }
+
+    public function actionSpsgtbookingcons()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $response = array();
+        $response['success'] = true;
+        $response['containers'] = [];
+        $response['msg'] = '';
+        $response['msg_dev'] = '';
+        $response['line'] = null;
+        $response['deliveryDate'] = null;
+
+        $bl = Yii::$app->request->get('bl');
+        $processType = Yii::$app->request->get('type');
+
+        if(!isset($bl))
+        {
+            $response['success'] = false;
+            $response['msg'] = "Debe especificar el código de búsqueda.";
+        }
+
+        if($response['success'])
+        {
+            try
+            {
+                $sql = "exec disv..sp_sgt_booking_cons " . $bl;
+                $results = Yii::$app->db->createCommand($sql)->queryAll();
+
+                $line = null;
+                $response['deliveryDate'] = null;
+
+                if(count($results) > 0)
+                {
+                    $line = Line::findOne(
+                        ['code'=>$results[0]['cod_linea'],
+                            'oce'=>$results[0]['linea'],
+                            'name'=>$results[0]['nombre_linea']]);
+
+                    if($line === null)
+                    {
+                        $line = new Line();
+                        $line->name = $results[0]['nombre_linea'];
+                        $line->oce = $results[0]['linea'];
+                        $line->code = $results[0]['cod_linea'];
+                        $line->active = 1;
+                        if(!$line->save())
+                        {
+                            $response['success'] = false;
+                            $response['containers'] = [];
+                            $response['msg'] = 'Ah occurrido un error al procesar los datos de la Linea Naviera.';
+                        }
+                    }
+                    $response['line']= $line;
+                    $response['deliveryDate'] = $results[0]['fecha_limite'];
+                }
+
+                // FIXME AQUI ESTO CAMBIA
+                foreach ($results as $result)
+                {
+                    $data = Container::find()
+                        ->select('container.id, 
+                                           container.name, 
+                                           container.status, 
+                                           process_transaction.delivery_date as deliveryDate, 
+                                           process_transaction.id as ptId, 
+                                           container_type.id as typeId, 
+                                           container_type.name as typeName, 
+                                           container_type.code as typeCode, 
+                                           container_type.tonnage as typeTonnage')
+                        ->innerJoin('process_transaction', 'process_transaction.container_id=container.id')
+                        ->innerJoin('process', 'process.id=process_transaction.process_id')
+                        ->innerJoin('container_type', 'container_type.id=container.type_id')
+                        ->where(['process.bl' => $bl])
+                        ->andWhere(['process.type'=>$processType])
+                        ->andWhere(['process_transaction.active'=>1])
+                        ->andWhere(['container.name' => $result['contenedor']])
+                        ->andWhere(['container.active' => 1])
+                        ->asArray()
+                        ->one();
+
+                    $container = null;
+
+                    if ($data === null) {
+                        $container = [];
+                        $container['id'] = -1;
+                        $container['name'] = $result['contenedor'];
+                        $container['ptId'] = -1;
+                        $container['type'] = ["id"=>-1,"name"=>""];
+                        $container['status'] = 'PENDIENTE';
+
+                    }
+                    else
+                    {
+                        $container = [];
+                        $container['id'] = $data['id'];
+                        $container['name'] = $data['name'];
+                        $container['ptId'] =  $data['ptId'];
+                        $container['type'] = new  ContainerType();
+                        $container['type']->id = $data['typeId'];
+                        $container['type']->name = $data['typeName'];
+                        $container['type']->code = $data['typeCode'];
+                        $container['type']->tonnage = $data['typeTonnage'];
+                        $container['status'] = $data['status'];
+                    }
+                    $container['deliveryDate'] = $result['fecha_limite'];
+                    $container['line'] = $result['linea'];
+                    $container['lineName'] = $result['nombre_linea'];
+                    $container['errCode'] = $result['err_code'];
+                    $response['containers'][] = $container;
+                }
+            }
+            catch (Exception $ex)
+            {
+                $response['success'] = false;
+                $response['msg'] = 'Ah occurrido un error al buscar los contenedores.';
+                $response['msg_dev'] = $ex->getMessage();
+            }
+        }
+        return $response;
     }
 }

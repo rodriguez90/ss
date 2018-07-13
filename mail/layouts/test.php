@@ -87,7 +87,7 @@ $date = $aux->format("YmdHi");
 
 			<tr>
 				<td class="title" >CHOFER</td>
-				<td class="data"  ><?php echo utf8_encode($ticket["name_driver"])?></td>
+				<td class="data"  ><?php echo $ticket["name_driver"]?></td>
 				<td class="title" >PLACA</td>
 				<td class="data"  > <?php echo $ticket["register_truck"] ?></td>
 			</tr>
