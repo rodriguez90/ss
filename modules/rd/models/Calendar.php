@@ -60,7 +60,7 @@ class Calendar extends \yii\db\ActiveRecord
      */
     public function getWarehouse()
     {
-        return $this->hasOne(Warehouse::className(), ['id' => 'id_warehouse', 'active'=>1]);
+        return $this->hasOne(Warehouse::className(), ['id' => 'id_warehouse']);
     }
 
     /**
@@ -68,6 +68,6 @@ class Calendar extends \yii\db\ActiveRecord
      */
     public function getTickets()
     {
-        return $this->hasMany(Ticket::className(), ['calendar_id' => 'id', 'active'=>1]);
+        return $this->hasMany(Ticket::className(), ['calendar_id' => 'id']);
     }
 }
