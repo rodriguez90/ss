@@ -534,7 +534,7 @@ class TicketController extends Controller
                         $processTransaction->register_truck = $data['registerTruck'];
                         $processTransaction->register_driver = $data['registerDriver'];
                         $processTransaction->name_driver = $data['nameDriver'];
-                        $ptMod[] = $processTransaction;
+                        $ptToSave[] = $processTransaction;
 //                        $result = $processTransaction->update(true, ['register_truck', 'register_driver', 'name_driver']);
 //                        if ($result === false) {
 //                            $processStatus = false;
@@ -593,11 +593,24 @@ class TicketController extends Controller
                         $processStatus = false;
                         $response['msg'] = 'Ah ocurrido un error al actualizar los datos del ticket';
                         $response['msg_dev'] = implode(' ', $pt->getErrorSummary(false));
-
                         break;
                     }
                     $ptMod[] = $pt;
                 }
+            }
+
+            if($processStatus)
+            {
+
+                foreach ($cardsServiceData as $cardService) {
+                    if($this->generateServiceCardByTicket($cardService) === false)
+                    {
+                        $response['warning'] = 'Error al generar y enviar las cartas de servicio.';
+                    }
+                }
+                $response['success'] = true;
+                $response['msg'] = 'Reservas Realizada';
+                $response['url'] = Url::to(['/site/index']);
             }
 
             if(!$processStatus) // manual rollback
@@ -621,22 +634,6 @@ class TicketController extends Controller
                     $pt->save();
                 }
             }
-
-            if($processStatus)
-            {
-			
-                foreach ($cardsServiceData as $cardService) {					
-                    if($this->generateServiceCardByTicket($cardService) === false)
-                    {
-                        $response['warning'] = 'Error al generar y enviar las cartas de servicio.';
-                    }
-                }
-                $response['success'] = true;
-                $response['msg'] = 'Reservas Realizada';
-                $response['url'] = Url::to(['/site/index']);
-            }
-
-
 
 //            if($processStatus) // update process status
 //            {
