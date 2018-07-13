@@ -3,10 +3,8 @@
 namespace app\modules\rd\controllers;
 
 
-use app\modules\rd\models\Agency;
 use app\modules\rd\models\ContainerType;
 use app\modules\rd\models\Line;
-use app\modules\rd\models\Ticket;
 use app\modules\rd\models\TransCompany;
 use DateTime;
 use DateTimeZone;
@@ -14,7 +12,6 @@ use app\modules\administracion\models\AdmUser;
 use app\modules\rd\models\Container;
 use app\modules\rd\models\Process;
 use app\modules\rd\models\UserAgency;
-use app\modules\rd\models\ProcessSearch;
 use app\modules\rd\models\ContainerSearch;
 use app\modules\rd\models\ProcessTransaction;
 use QRcode;
@@ -26,9 +23,7 @@ use yii\web\NotFoundHttpException;
 use yii\web\ForbiddenHttpException;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
-use yii\helpers\Html;
 use yii\helpers\Url;
-use kartik\mpdf\Pdf;
 use Mpdf\Mpdf;
 
 use yii\web\Response;
@@ -95,6 +90,7 @@ class ProcessController extends Controller
             throw new ForbiddenHttpException('Usted no tiene acceso a esta recepción');
 
         $model = $this->findModel($id);
+        $user = Yii::$app->user->identity;
 
         if($user && $user->hasRol('Agencia')) // FIXME: change role to Importer/Exporter
         {
@@ -633,7 +629,7 @@ class ProcessController extends Controller
                                 //$qrCode->writeFile($qrpath);
                                 //$paths [] = $qrpath;
                                 ob_start();
-                                QRcode::png($info, null);
+                                \QRcode::png($info, null);
                                 $imageString = base64_encode(ob_get_contents());
                                 ob_end_clean();
 
@@ -748,34 +744,33 @@ class ProcessController extends Controller
                 $line = null;
                 $response['deliveryDate'] = null;
 
-                foreach ($results as $result)
+                if(count($results) > 0)
                 {
+                    $line = Line::findOne(
+                        ['code'=>$result[0]['cod_linea'],
+                            'oce'=>$result[0]['linea'],
+                            'name'=>$result[0]['nombre_linea']]);
+
                     if($line === null)
                     {
-                        $line = Line::findOne(
-                            ['code'=>$result['cod_linea'],
-                            'oce'=>$result['linea'],
-                            'name'=>$result['nombre_linea']]);
-
-                        if($line === null)
+                        $line = new Line();
+                        $line->name = $result[0]['nombre_linea'];
+                        $line->oce = $result[0]['linea'];
+                        $line->code = $result[0]['cod_linea'];
+                        $line->active = 1;
+                        if(!$line->save())
                         {
-                            $line = new Line();
-                            $line->name = $result['nombre_linea'];
-                            $line->oce = $result['linea'];
-                            $line->code = $result['cod_linea'];
-                            $line->active = 1;
-                            if(!$line->save())
-                            {
-                                $response['success'] = false;
-                                $response['containers'] = [];
-                                $response['msg'] = 'Ah occurrido un error al procesar los datos de la Linea Naviera.';
-                                break;
-                            }
+                            $response['success'] = false;
+                            $response['containers'] = [];
+                            $response['msg'] = 'Ah occurrido un error al procesar los datos de la Linea Naviera.';
                         }
-                        $response['line']= $line;
                     }
+                    $response['line']= $line;
+                    $response['deliveryDate'] = $result['fecha_limite'];
+                }
 
-
+                foreach ($results as $result)
+                {
                     $data = Container::find()
                         ->select('container.id, 
                                            container.name, 

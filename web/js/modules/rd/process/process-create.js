@@ -263,14 +263,16 @@ var fetchContainers = function (bl) {
                         .clear()
                         .draw();
 
-                    for (var i = 0; i < containers.length; i++)
+                    lineNav = response['line'];
+
+                    processDeliveryDate = moment(response['deliveryDate']).format("DD-MM-YYYY");
+
+                    document.getElementById('oce').innerHTML = "OCE: " + lineNav.oce;
+                    document.getElementById('line').innerHTML = "NOMBRE: " + lineNav.name;
+
+                    for (var i = 0; i < response['containers'].length; i++)
                     {
-                        if(i == 0)
-                        {
-                            document.getElementById('oce').innerHTML = "OCE: " + dataContainer.line;;
-                            document.getElementById('line').innerHTML = "LINEA: " + dataContainer.nameLine;
-                        }
-                        addContainer(table, containers[i])
+                        addContainer(table, response['containers'][i])
                     }
                 }
                 else {
