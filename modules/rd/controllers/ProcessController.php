@@ -747,16 +747,16 @@ class ProcessController extends Controller
                 if(count($results) > 0)
                 {
                     $line = Line::findOne(
-                        ['code'=>$result[0]['cod_linea'],
-                            'oce'=>$result[0]['linea'],
-                            'name'=>$result[0]['nombre_linea']]);
+                        ['code'=>$results[0]['cod_linea'],
+                            'oce'=>$results[0]['linea'],
+                            'name'=>$results[0]['nombre_linea']]);
 
                     if($line === null)
                     {
                         $line = new Line();
-                        $line->name = $result[0]['nombre_linea'];
-                        $line->oce = $result[0]['linea'];
-                        $line->code = $result[0]['cod_linea'];
+                        $line->name = $results[0]['nombre_linea'];
+                        $line->oce = $results[0]['linea'];
+                        $line->code = $results[0]['cod_linea'];
                         $line->active = 1;
                         if(!$line->save())
                         {
@@ -766,7 +766,7 @@ class ProcessController extends Controller
                         }
                     }
                     $response['line']= $line;
-                    $response['deliveryDate'] = $result['fecha_limite'];
+                    $response['deliveryDate'] = $results[0]['fecha_limite'];
                 }
 
                 foreach ($results as $result)
