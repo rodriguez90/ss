@@ -114,9 +114,7 @@ class ProcessController extends Controller
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'pagination' => [
-                'pageSize' => 3,
-            ],
+            'pagination' => false,
             'sort' => [
                 'defaultOrder' => [
                     'name' => SORT_ASC,
@@ -726,6 +724,8 @@ class ProcessController extends Controller
         $response['line'] = null;
         $response['deliveryDate'] = null;
 
+        $deliveryDate = null;
+
         $bl = Yii::$app->request->get('bl');
         $processType = Yii::$app->request->get('type');
 
@@ -767,7 +767,8 @@ class ProcessController extends Controller
                         }
                     }
                     $response['line']= $line;
-                    $response['deliveryDate'] = $results[0]['fecha_limite'];
+                    $deliveryDate = new DateTime($results[0]['fecha_limite'], new DateTimeZone("UTC"));
+//                    $deliveryDate->setTimezone(new DateTimeZone("UTC"));
                 }
 
                 foreach ($results as $result)
@@ -792,6 +793,12 @@ class ProcessController extends Controller
                         ->andWhere(['container.active' => 1])
                         ->asArray()
                         ->one();
+
+                    $currentDeliveryDate = new DateTime($results['fecha_limite'], new DateTimeZone("UTC"));
+                    if($currentDeliveryDate > $deliveryDate)
+                    {
+                        $deliveryDate = $currentDeliveryDate;
+                    }
 
                     $container = null;
 
@@ -823,6 +830,8 @@ class ProcessController extends Controller
                     $container['errCode'] = $result['err_code'];
                     $response['containers'][] = $container;
                 }
+
+                $response['deliveryDate'] = $deliveryDate->format("Y-m-d H:i:s");
             }
             catch (Exception $ex)
             {
@@ -887,6 +896,7 @@ class ProcessController extends Controller
                         }
                     }
                     $response['line']= $line;
+
                     $response['deliveryDate'] = $results[0]['fecha_limite'];
                 }
 
