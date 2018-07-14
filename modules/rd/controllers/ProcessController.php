@@ -941,7 +941,7 @@ class ProcessController extends Controller
                         $deliveryDate = $currentDeliveryDate;
                     }
 
-                    $count = (int)$result['count'];
+                    $count = (int)$result['cantidad'];
 
                     for($i = 0; $i < $count; $i++)
                     {
