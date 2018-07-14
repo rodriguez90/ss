@@ -6,6 +6,7 @@ namespace app\modules\rd\controllers;
 use app\modules\rd\models\ContainerType;
 use app\modules\rd\models\Line;
 use app\modules\rd\models\TransCompany;
+use app\modules\rd\models\Ticket;
 use DateTime;
 use DateTimeZone;
 use app\modules\administracion\models\AdmUser;
@@ -54,7 +55,8 @@ class ProcessController extends Controller
                     'delete' => ['POST'],
                     'transactions' => ['GET'],
                     'containers' => ['GET'],
-                    'Sgtblcons' => ['GET']
+                    'Sgtblcons' => ['GET'],
+                    'Sgtbookingcons'=>['GET']
                 ],
             ],
         ];
@@ -332,18 +334,11 @@ class ProcessController extends Controller
 
         if($model->load(Yii::$app->request->post()))
         {
-//            print_r($model->bl);
-//            print_r($model->active);
-//            print_r($model->agency_id);
-//            print_r($model->trans_company_id);
-//
             $transaction = Process::getDb()->beginTransaction();
             $containersByTransCompany = [];
 
             try {
-                $aux = new DateTime($model->delivery_date);
-                $aux->setTimezone(new DateTimeZone("UTC"));
-
+                $aux = new DateTime($model->delivery_date, new DateTimeZone("UTC"));
                 $model->delivery_date = $aux->format("Y-m-d H:i:s");
 
                 if($model->save())
@@ -407,13 +402,6 @@ class ProcessController extends Controller
 
                         if($processTransModelOld !== null)
                         {
-                            // FIXME softdelete of asociated ticket
-//                            $ticket = Ticket::findOne(['process_transaction_id'=>$processTransModelOld->id]);
-//                            if($ticket)
-//                            {
-//                                $ticket->active = 0;
-//                            }
-
                             $processTransModelOld->active = 0;
                             if(!$processTransModelOld->save())
                             {
@@ -421,6 +409,20 @@ class ProcessController extends Controller
                                 $response['msg'] = "Ah ocurrido un error al actualizar los datos del proceso.";
                                 $response['msg_dev'] = implode(" ", $processTransModelOld->getErrorSummary(false));
                                 break;
+                            }
+
+                            // FIXME soft delete of asociated ticket
+                            $ticket = Ticket::findOne(['process_transaction_id'=>$processTransModelOld->id, 'active'=>1]);
+                            if($ticket)
+                            {
+                                $ticket->active = 0;
+                                if(!$ticket->save())
+                                {
+                                    $tmpResult = false;
+                                    $response['msg'] = "Ah ocurrido un error al actualizar los datos del proceso.";
+                                    $response['msg_dev'] = implode(" ", $processTransModelOld->getErrorSummary(false));
+                                    break;
+                                }
                             }
                         }
 
@@ -780,7 +782,6 @@ class ProcessController extends Controller
                     }
                     $response['line']= $line;
                     $deliveryDate = new DateTime($results[0]['fecha_limite'], new DateTimeZone("UTC"));
-//                    $deliveryDate->setTimezone(new DateTimeZone("UTC"));
                 }
 
                 foreach ($results as $result)
@@ -802,7 +803,6 @@ class ProcessController extends Controller
                         ->andWhere(['process.type'=>$processType])
                         ->andWhere(['process_transaction.active'=>1])
                         ->andWhere(['container.name' => $result['contenedor']])
-                        ->andWhere(['container.active' => 1])
                         ->asArray()
                         ->one();
 
@@ -856,7 +856,7 @@ class ProcessController extends Controller
         return $response;
     }
 
-    public function actionSpsgtbookingcons()
+    public function actionSgtbookingcons()
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
 
@@ -915,11 +915,40 @@ class ProcessController extends Controller
                     $deliveryDate = new DateTime($results[0]['fecha_limite'], new DateTimeZone("UTC"));
                 }
 
-                // FIXME AQUI ESTO CAMBIA
                 foreach ($results as $result)
                 {
-                    $data = Container::find()
-                        ->select('container.id, 
+                    $type = ContainerType::findOne(['code'=>$result['tipo'], 'tonnage'=>(int)$result['tamanio']]);
+
+                    if($type === null)
+                    {
+                        $type = new ContainerType();
+                        $type->code = $result['tipo'];
+                        $type->tonnage = (int)$result['tamanio'];
+                        $type->name = $type->code . $type->tonnage;
+                        $type->active = 1;
+                        if(!$type->save())
+                        {
+                            $response['success'] = false;
+                            $response['containers'] = [];
+                            $response['msg'] = 'Ah occurrido un error al procesar los grupos de contenedores.';
+                            break;
+                        }
+                    }
+
+                    $currentDeliveryDate = new DateTime($results['fecha_limite'], new DateTimeZone("UTC"));
+                    if($currentDeliveryDate > $deliveryDate)
+                    {
+                        $deliveryDate = $currentDeliveryDate;
+                    }
+
+                    $count = (int)$result['count'];
+
+                    for($i = 0; $i < $count; $i++)
+                    {
+                        $containerName = $booking . $type->code . $type->tonnage . '-' . $i;
+
+                        $data = Container::find()
+                            ->select('container.id, 
                                            container.name, 
                                            process_transaction.status, 
                                            process_transaction.delivery_date as deliveryDate, 
@@ -928,54 +957,55 @@ class ProcessController extends Controller
                                            container_type.name as typeName, 
                                            container_type.code as typeCode, 
                                            container_type.tonnage as typeTonnage')
-                        ->innerJoin('process_transaction', 'process_transaction.container_id=container.id')
-                        ->innerJoin('process', 'process.id=process_transaction.process_id')
-                        ->innerJoin('container_type', 'container_type.id=container.type_id')
-                        ->where(['process.bl' => $booking])
-                        ->andWhere(['process.type'=>$processType])
-                        ->andWhere(['process_transaction.active'=>1])
-                        ->andWhere(['container.name' => $result['contenedor']])
-                        ->andWhere(['container.active' => 1])
-                        ->asArray()
-                        ->one();
+                            ->innerJoin('process_transaction', 'process_transaction.container_id=container.id')
+                            ->innerJoin('process', 'process.id=process_transaction.process_id')
+                            ->innerJoin('container_type', 'container_type.id=container.type_id')
+                            ->where(['process.bl' => $booking])
+                            ->andWhere(['process.type'=>$processType])
+                            ->andWhere(['process_transaction.active'=>1])
+                            ->andWhere(['container.name' => $containerName])
+                            ->asArray()
+                            ->one();
 
-                    $currentDeliveryDate = new DateTime($results['fecha_limite'], new DateTimeZone("UTC"));
+                        $currentDeliveryDate = new DateTime($results['fecha_limite'], new DateTimeZone("UTC"));
 
-                    if($currentDeliveryDate > $deliveryDate)
-                    {
-                        $deliveryDate = $currentDeliveryDate;
+                        if($currentDeliveryDate > $deliveryDate)
+                        {
+                            $deliveryDate = $currentDeliveryDate;
+                        }
+
+                        $container = null;
+
+                        if ($data === null) {
+                            $container = [];
+                            $container['id'] = -1;
+                            $container['name'] = $containerName;
+                            $container['ptId'] = -1;
+                            $container['type'] = $type;
+                            $container['status'] = '';
+
+                        }
+                        else
+                        {
+                            $container = [];
+                            $container['id'] = $data['id'];
+                            $container['name'] = $data['name'];
+                            $container['ptId'] =  $data['ptId'];
+                            $container['type'] = new  ContainerType();
+                            $container['type']->id = $data['typeId'];
+                            $container['type']->name = $data['typeName'];
+                            $container['type']->code = $data['typeCode'];
+                            $container['type']->tonnage = $data['typeTonnage'];
+                            $container['status'] = $data['status'];
+                        }
+                        $container['deliveryDate'] = $results['fecha_limite'];
+                        $container['line'] = $result['linea'];
+                        $container['lineName'] = $result['nombre_linea'];
+                        $container['errCode'] = $result['err_code'];
+                        $response['containers'][] = $container;
                     }
-
-                    $container = null;
-
-                    if ($data === null) {
-                        $container = [];
-                        $container['id'] = -1;
-                        $container['name'] = $result['contenedor'];
-                        $container['ptId'] = -1;
-                        $container['type'] = ["id"=>-1,"name"=>""];
-                        $container['status'] = 'PENDIENTE';
-
-                    }
-                    else
-                    {
-                        $container = [];
-                        $container['id'] = $data['id'];
-                        $container['name'] = $data['name'];
-                        $container['ptId'] =  $data['ptId'];
-                        $container['type'] = new  ContainerType();
-                        $container['type']->id = $data['typeId'];
-                        $container['type']->name = $data['typeName'];
-                        $container['type']->code = $data['typeCode'];
-                        $container['type']->tonnage = $data['typeTonnage'];
-                        $container['status'] = $data['status'];
-                    }
-                    $container['deliveryDate'] = $result['fecha_limite'];
-                    $container['line'] = $result['linea'];
-                    $container['lineName'] = $result['nombre_linea'];
-                    $container['errCode'] = $result['err_code'];
-                    $response['containers'][] = $container;
                 }
+
                 $response['deliveryDate'] = $deliveryDate->format("Y-m-d H:i:s");
             }
             catch (Exception $ex)
