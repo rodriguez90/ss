@@ -836,7 +836,7 @@ class ProcessController extends Controller
                         $container['type']->tonnage = $data['typeTonnage'];
                         $container['status'] = $data['status'];
                     }
-                    $container['deliveryDate'] = $result['fecha_limite'];
+                    $container['deliveryDate'] = $currentDeliveryDate->format("d-m-Y");
                     $container['errCode'] = $result['err_code'];
                     $response['containers'][] = $container;
                 }
@@ -963,7 +963,7 @@ class ProcessController extends Controller
                             ->asArray()
                             ->one();
 
-                        $currentDeliveryDate = new DateTime($results['fecha_limite'], new DateTimeZone("UTC"));
+                        $currentDeliveryDate = new DateTime($result['fecha_limite'], new DateTimeZone("UTC"));
 
                         if($currentDeliveryDate > $deliveryDate)
                         {
@@ -995,13 +995,13 @@ class ProcessController extends Controller
                             $container['status'] = $data['status'];
                         }
 
-                        $container['deliveryDate'] = $result['fecha_limite'];
+                        $container['deliveryDate'] = $currentDeliveryDate->format("d-m-Y");
                         $container['errCode'] = $result['err_code'];
                         $response['containers'][] = $container;
                     }
                 }
 
-                $response['deliveryDate'] = $deliveryDate->format("d-m-Y H:i:s");
+                $response['deliveryDate'] = $deliveryDate->format("d-m-Y");
             }
             catch (Exception $ex)
             {
