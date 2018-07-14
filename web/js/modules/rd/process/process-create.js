@@ -247,7 +247,7 @@ var handleSelectTransCompany = function () {
 
 var fetchContainers = function (bl) {
     $.ajax({
-        url: homeUrl + "/rd/process/sgtblcons",
+        url: containerFetchUrl,
         type: "get",
         dataType:'json',
         data: {
@@ -431,6 +431,15 @@ $(document).ready(function () {
 
     console.log(agency);
     console.log(processType);
+
+    if(processType == 1)
+    {
+        containerFetchUrl = homeUrl + "/rd/process/sgtblcons";
+    }
+    else {
+        containerFetchUrl = homeUrl + "/rd/process/sgtbookingcons";
+
+    }
 
     // init wizar
     FormWizardValidation.init();
