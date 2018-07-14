@@ -270,7 +270,7 @@ var fetchContainers = function (bl) {
 
                     lineNav = response['line'];
 
-                    processDeliveryDate = moment(response['deliveryDate']).format("DD-MM-YYYY");
+                    processDeliveryDate = response['deliveryDate'];
 
                     document.getElementById('oce').innerHTML = "OCE: " + lineNav.oce;
                     document.getElementById('line').innerHTML = "NOMBRE: " + lineNav.name;
