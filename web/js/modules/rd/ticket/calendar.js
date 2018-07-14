@@ -137,8 +137,18 @@ var handleCalendarDemo = function () {
 
                         var indexSelected = selectedTransactions.indexOf(transaction.id);
                         var indexTicket = transactionWithTicket.indexOf(transaction.id);
+                        var deliveryDate = moment(transaction.delivery_date);
 
-                        if(indexSelected === -1 && indexTicket === -1)
+                        var now = moment();
+                        var then = moment(date);
+
+                        if (compareTo > then) {
+                            $('.result').text('Date is past');
+                        } else {
+                            $('.result').text('Date is future');
+                        }
+
+                        if(indexSelected === -1 && indexTicket === -1 && currentCalendarEvent.end  > deliveryDate )
                         {
                             table.row.add(
                                 {

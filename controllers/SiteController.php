@@ -168,7 +168,7 @@ class SiteController extends Controller
 
         $user = AdmUser::findOne(['id'=>Yii::$app->user->getId()]);
         $params = Yii::$app->request->queryParams;
-        if($user && ($user->hasRol('Importador')  ||  $user->hasRol('Exportador')))
+        if($user && ($user->hasRol('Importador')  ||  $user->hasRol('Exportador') ||  $user->hasRol('Importador_Exportador')))
         {
             $agency = $user->getAgency();
             $params['agency_id'] = '';
