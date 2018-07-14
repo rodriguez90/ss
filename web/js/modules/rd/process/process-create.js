@@ -261,6 +261,8 @@ var fetchContainers = function (bl) {
             {
                 if(response['containers'].length)
                 {
+                    fetchContainerTypes(false);
+
                     var table = $('#data-table').DataTable();
                     table
                         .clear()
@@ -325,6 +327,8 @@ var fetchContainersOffLine = function (bl) {
     document.getElementById('oce').innerHTML = "OCE: " + lineNav.oce;
     document.getElementById('line').innerHTML = "NOMBRE: " + lineNav.name;
 
+    fetchContainerTypes(false);
+
     for (var i = 0; i < 10; i++)
     {
 
@@ -342,22 +346,23 @@ var fetchContainersOffLine = function (bl) {
             type: type,
             deliveryDate: processDeliveryDate,
             status: status,
-
             errCode:Math.round(Math.random())
         };
         addContainer(table, dataContainer);
     }
 };
 
-var fetchContainerTypes = function () {
+var fetchContainerTypes = function (async) {
     $.ajax({
-        async:false,
+        async:async,
         url: homeUrl + '/rd/container-type/types',
         type: "GET",
         dataType: "json",
         success: function (response) {
             if(response.success)
             {
+                containerTypeArray = [];
+                containerTypeMap.clear();
                 containerTypeArray.push({id:-1, text:""});
 
                 $.each(response.types, function (index, item) {
@@ -419,7 +424,7 @@ var addContainer = function (table, dataContainer) {
     {
         container.selectable = true;
     }
-    // console.log(container);
+    console.log(container);
 
     table.row.add(
         container
@@ -465,13 +470,13 @@ $(document).ready(function () {
         var bl = $('#blCode').val();
         cleanUI();
         fetchContainers(bl);
-        // fetchContainersOffLine();
-        return false;
+    //     fetchContainersOffLine();
+    //     return false;
     });
 
     // select2 to agency
     handleSelectTransCompany();
 
     // get container types
-    fetchContainerTypes();
+    // fetchContainerTypes(true);
 });
