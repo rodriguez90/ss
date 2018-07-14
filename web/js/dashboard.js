@@ -43,7 +43,19 @@ var handleWidgetOptions = function() {
         document.getElementById('export').style.display = 'inline';
         document.getElementById('report').style.display = 'inline';
     }
-    else if(role === 'Importador' || role === 'Exportador')
+    else if(role === 'Importador')
+    {
+        document.getElementById('import').style.display = 'inline';
+        // document.getElementById('export').style.display = 'inline';
+        document.getElementById('report').style.display = 'inline';
+    }
+    else if( role === 'Exportador')
+    {
+        // document.getElementById('import').style.display = 'inline';
+        document.getElementById('export').style.display = 'inline';
+        document.getElementById('report').style.display = 'inline';
+    }
+    else if( role === 'Importador_Exportador')
     {
         document.getElementById('import').style.display = 'inline';
         document.getElementById('export').style.display = 'inline';
