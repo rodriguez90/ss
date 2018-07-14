@@ -105,21 +105,17 @@ class ProcessController extends Controller
                 throw new ForbiddenHttpException('Usted no tiene acceso a este proceso');
         }
 
-        $searchModel = new ContainerSearch();
-
-        $query = $searchModel->find()
-                ->innerJoin('process_transaction', 'process_transaction.container_id = container.id')
+        $query = ProcessTransaction::find()
+                ->innerJoin('container', 'process_transaction.container_id = container.id')
                 ->innerJoin('process', 'process_transaction.process_id = process.id')
-                ->where(['process.id'=>$id]);
+                ->where(['process.id'=>$id, 'process_transaction.active'=>1]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'pagination' => [
-                'pageSize' => 3,
-            ],
+            'pagination' => false,
             'sort' => [
                 'defaultOrder' => [
-                    'name' => SORT_ASC,
+                    'id' => SORT_ASC,
                 ]
             ],
         ]);
@@ -363,7 +359,6 @@ class ProcessController extends Controller
                             $containerModel->code = $type->code;
                             $containerModel->tonnage = $type->tonnage;
                             $containerModel->type_id = $type->id;
-                            $containerModel->status = 'PENDIENTE';
                             $result = $containerModel->update();
                             if($result === false)
                             {
@@ -380,7 +375,7 @@ class ProcessController extends Controller
                             $containerModel->code = $type->code;
                             $containerModel->tonnage = $type->tonnage;
                             $containerModel->type_id = $type->id;
-                            $containerModel->status = 'PENDIENTE';
+                            $containerModel->status = '';
                             $containerModel->active = 1;
 
                             if(!$containerModel->save())
@@ -435,8 +430,10 @@ class ProcessController extends Controller
                         $processTransModel->container_id = $containerModel->id;
                         $processTransModel->active = 1;
                         $processTransModel->trans_company_id = $transCompany->id;
-                        $aux = new DateTime($container['deliveryDate']);
-                        $aux->setTimezone(new DateTimeZone("UTC"));
+                        $processTransModel->status = 'PENDIENTE';
+
+                        $aux = new DateTime($container['deliveryDate'], new DateTimeZone("UTC"));
+//                        $aux->setTimezone(new DateTimeZone("UTC"));
                         $processTransModel->delivery_date = $aux->format("Y-m-d H:i:s");
 
                         if(!$processTransModel->save()) {
@@ -584,7 +581,22 @@ class ProcessController extends Controller
 
                     try {
                         $tickes = ProcessTransaction::find()
-                            ->select("process_transaction.register_truck,process_transaction.register_driver,process_transaction.name_driver,process.type,process.bl,process.delivery_date,container.code,container.tonnage,trans_company.name,trans_company.ruc,ticket.id,ticket.status,calendar.start_datetime,calendar.end_datetime,warehouse.name as w_name, agency.name as a_name")
+                            ->select("process_transaction.register_truck,
+                                              process_transaction.register_driver,
+                                              process_transaction.name_driver,
+                                              process.type,
+                                              process.bl,
+                                              process.delivery_date,
+                                              container.code,
+                                              container.tonnage,
+                                              trans_company.name,
+                                              trans_company.ruc,
+                                              ticket.id,
+                                              ticket.status,
+                                              calendar.start_datetime,
+                                              calendar.end_datetime,
+                                              warehouse.name as w_name, 
+                                              agency.name as a_name")
                             ->innerJoin("process", "process_transaction.process_id = process.id ")
                             ->innerJoin("container", "container.id = process_transaction.container_id")
                             ->innerJoin("trans_company", "trans_company.id = process_transaction.trans_company_id")
@@ -635,7 +647,11 @@ class ProcessController extends Controller
 
 
 
-                                $bodypdf = $this->renderPartial('@app/mail/layouts/card.php', ["trans_company" => $trans_company, "ticket" => $ticket, "qr" => "data:image/png;base64, " . $imageString, 'dateImp' => $dateImp]);
+                                $bodypdf = $this->renderPartial('@app/mail/layouts/card.php',
+                                                                ["trans_company" => $trans_company,
+                                                                 "ticket" => $ticket,
+                                                                 "qr" => "data:image/png;base64, " . $imageString,
+                                                                 'dateImp' => $dateImp]);
 
                                 $pdf = new mPDF(['mode' => 'utf-8', 'format' => 'A4-L']);
                                 //$pdf->SetHTMLHeader( "<div style='font-weight: bold; text-align: center;font-family: 'Helvetica', 'Arial', sans-serif;font-size: 14px;width: 100%> Carta de Servicio </div>");
@@ -690,18 +706,14 @@ class ProcessController extends Controller
 
         $model = $this->findModel($id);
 
-        $contenedores = Container::find()
-            ->innerJoin('process_transaction', 'process_transaction.container_id = container.id')
+        $transactions = ProcessTransaction::find()
+            ->innerJoin('container', 'process_transaction.container_id = container.id')
             ->innerJoin('process', 'process_transaction.process_id = process.id')
-            ->where(['process.id'=>$id])
+            ->where(['process.id'=>$id, 'process_transaction.active'=>1])
             ->orderBy(['name' => SORT_ASC])
-            ->asArray()
             ->all();
 
-       $body = $this->renderPartial('print', [
-            'model' => $model,'contenedores'=>$contenedores
-             ,
-        ]);
+        $body = $this->renderPartial('print', ['model' => $model,'transactions'=>$transactions]);
 
         $pdf =  new mPDF(['mode'=>'utf-8' , 'format'=>'A4-L']);
         $pdf->SetTitle("Carta de Servicio");
@@ -717,6 +729,10 @@ class ProcessController extends Controller
     public function actionSgtblcons()
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
+        $deliveryDate = null;
+
+        $bl = Yii::$app->request->get('bl');
+        $processType = Yii::$app->request->get('type');
 
         $response = array();
         $response['success'] = true;
@@ -726,13 +742,10 @@ class ProcessController extends Controller
         $response['line'] = null;
         $response['deliveryDate'] = null;
 
-        $bl = Yii::$app->request->get('bl');
-        $processType = Yii::$app->request->get('type');
-
-        if(!isset($bl))
+        if(!isset($bl) || !isset($processType))
         {
             $response['success'] = false;
-            $response['msg'] = "Debe especificar el código de búsqueda.";
+            $response['msg'] = "Debe especificar el BL y el tipo de trámite de búsqueda.";
         }
 
         if($response['success'])
@@ -767,7 +780,8 @@ class ProcessController extends Controller
                         }
                     }
                     $response['line']= $line;
-                    $response['deliveryDate'] = $results[0]['fecha_limite'];
+                    $deliveryDate = new DateTime($results[0]['fecha_limite'], new DateTimeZone("UTC"));
+//                    $deliveryDate->setTimezone(new DateTimeZone("UTC"));
                 }
 
                 foreach ($results as $result)
@@ -775,7 +789,7 @@ class ProcessController extends Controller
                     $data = Container::find()
                         ->select('container.id, 
                                            container.name, 
-                                           container.status, 
+                                           process_transaction.status, 
                                            process_transaction.delivery_date as deliveryDate, 
                                            process_transaction.id as ptId, 
                                            container_type.id as typeId, 
@@ -793,6 +807,13 @@ class ProcessController extends Controller
                         ->asArray()
                         ->one();
 
+                    $currentDeliveryDate = new DateTime($results['fecha_limite'], new DateTimeZone("UTC"));
+
+                    if($currentDeliveryDate > $deliveryDate)
+                    {
+                        $deliveryDate = $currentDeliveryDate;
+                    }
+
                     $container = null;
 
                     if ($data === null) {
@@ -801,7 +822,7 @@ class ProcessController extends Controller
                         $container['name'] = $result['contenedor'];
                         $container['ptId'] = -1;
                         $container['type'] = ["id"=>-1,"name"=>""];
-                        $container['status'] = 'PENDIENTE';
+                        $container['status'] = '';
 
                     }
                     else
@@ -823,6 +844,8 @@ class ProcessController extends Controller
                     $container['errCode'] = $result['err_code'];
                     $response['containers'][] = $container;
                 }
+
+                $response['deliveryDate'] = $deliveryDate->format("Y-m-d H:i:s");
             }
             catch (Exception $ex)
             {
@@ -838,6 +861,9 @@ class ProcessController extends Controller
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
 
+        $booking = Yii::$app->request->get('bl');
+        $processType = Yii::$app->request->get('type');
+
         $response = array();
         $response['success'] = true;
         $response['containers'] = [];
@@ -846,20 +872,19 @@ class ProcessController extends Controller
         $response['line'] = null;
         $response['deliveryDate'] = null;
 
-        $bl = Yii::$app->request->get('bl');
-        $processType = Yii::$app->request->get('type');
+        $deliveryDate = null;
 
-        if(!isset($bl))
+        if(!isset($booking) || !isset($processType))
         {
             $response['success'] = false;
-            $response['msg'] = "Debe especificar el código de búsqueda.";
+            $response['msg'] = "Debe especificar el Booking y el tipo de trámite de búsqueda.";
         }
 
         if($response['success'])
         {
             try
             {
-                $sql = "exec disv..sp_sgt_booking_cons " . $bl;
+                $sql = "exec disv..sp_sgt_booking_cons " . $booking;
                 $results = Yii::$app->db->createCommand($sql)->queryAll();
 
                 $line = null;
@@ -887,7 +912,8 @@ class ProcessController extends Controller
                         }
                     }
                     $response['line']= $line;
-                    $response['deliveryDate'] = $results[0]['fecha_limite'];
+
+                    $deliveryDate = new DateTime($results[0]['fecha_limite'], new DateTimeZone("UTC"));
                 }
 
                 // FIXME AQUI ESTO CAMBIA
@@ -896,7 +922,7 @@ class ProcessController extends Controller
                     $data = Container::find()
                         ->select('container.id, 
                                            container.name, 
-                                           container.status, 
+                                           process_transaction.status, 
                                            process_transaction.delivery_date as deliveryDate, 
                                            process_transaction.id as ptId, 
                                            container_type.id as typeId, 
@@ -906,13 +932,20 @@ class ProcessController extends Controller
                         ->innerJoin('process_transaction', 'process_transaction.container_id=container.id')
                         ->innerJoin('process', 'process.id=process_transaction.process_id')
                         ->innerJoin('container_type', 'container_type.id=container.type_id')
-                        ->where(['process.bl' => $bl])
+                        ->where(['process.bl' => $booking])
                         ->andWhere(['process.type'=>$processType])
                         ->andWhere(['process_transaction.active'=>1])
                         ->andWhere(['container.name' => $result['contenedor']])
                         ->andWhere(['container.active' => 1])
                         ->asArray()
                         ->one();
+
+                    $currentDeliveryDate = new DateTime($results['fecha_limite'], new DateTimeZone("UTC"));
+
+                    if($currentDeliveryDate > $deliveryDate)
+                    {
+                        $deliveryDate = $currentDeliveryDate;
+                    }
 
                     $container = null;
 
@@ -944,6 +977,7 @@ class ProcessController extends Controller
                     $container['errCode'] = $result['err_code'];
                     $response['containers'][] = $container;
                 }
+                $response['deliveryDate'] = $deliveryDate->format("Y-m-d H:i:s");
             }
             catch (Exception $ex)
             {

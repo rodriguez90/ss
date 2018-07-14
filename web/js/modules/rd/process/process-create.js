@@ -301,8 +301,8 @@ var fetchContainersOffLine = function (bl) {
     var statusArray = [
         'PENDIENTE',
         moment().format(),
-        'PENDIENTE',
-        'PENDIENTE',
+        '',
+        '',
         'PENDIENTE',
         'EMBARCADO',
         'DESPACHADO'];
@@ -413,6 +413,7 @@ var addContainer = function (table, dataContainer) {
     }
 
     if( (container.status == "PENDIENTE" ||
+        container.status == "" ||
         statusIsDate == true )&&
         errCode == 0)
     {

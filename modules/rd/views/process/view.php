@@ -106,16 +106,21 @@ $this->params['breadcrumbs'][] = $this->title;
                     'dataProvider' => $dataProvider,
                     'filterModel' => $searchModel,
                     'columns' => [
-                        'name',
                         [
-                            'label' => "Tipo/Tamaño",
-                            value  => function($data)
-                            {
-                                return $data['code'] . $data['tonnage'];
-                            }
+                            'class' => 'yii\grid\DataColumn',
+                            'label' => "Nombre",
+                            'attribute' => 'container_id',
+                            'value' => 'container.name',
                         ],
-                        //                                    'code',
-                        //                                    'tonnage',
+                        [
+                            'class' => 'yii\grid\DataColumn',
+                            'label' => "Tipo/Tamaño",
+                            'attribute' => 'container_id',
+                            'value'  => function($data)
+                            {
+                                return $data->container->code . $data->container->tonnage;
+                            },
+                        ],
                         'status',
                     ],
                 ]);

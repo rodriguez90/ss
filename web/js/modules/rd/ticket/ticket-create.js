@@ -489,7 +489,7 @@ var handleTableInWizar = function() {
                     data:'dateTicket',
                     render: function ( data, type, full, meta ) {
                         // console.log("In render: " + data);
-                        var dateFormated =  moment(data).format("DD/MM/YYYY");
+                        var dateFormated =  moment(data).format("DD/MM/YYYY HH:mm");
                         // console.log("In render format: " + dateFormated);
                         return dateFormated;
                     },
