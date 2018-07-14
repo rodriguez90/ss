@@ -737,9 +737,9 @@ class ProcessController extends Controller
 
         $response = array();
         $response['success'] = true;
-        $response['containers'] = [];
         $response['msg'] = '';
         $response['msg_dev'] = '';
+        $response['containers'] = [];
         $response['line'] = null;
         $response['deliveryDate'] = null;
 
@@ -757,7 +757,6 @@ class ProcessController extends Controller
                 $results = Yii::$app->db->createCommand($sql)->queryAll();
 
                 $line = null;
-                $response['deliveryDate'] = null;
 
                 if(count($results) > 0)
                 {
@@ -806,7 +805,7 @@ class ProcessController extends Controller
                         ->asArray()
                         ->one();
 
-                    $currentDeliveryDate = new DateTime($results['fecha_limite'], new DateTimeZone("UTC"));
+                    $currentDeliveryDate = new DateTime($result['fecha_limite'], new DateTimeZone("UTC"));
 
                     if($currentDeliveryDate > $deliveryDate)
                     {
@@ -865,9 +864,9 @@ class ProcessController extends Controller
 
         $response = array();
         $response['success'] = true;
-        $response['containers'] = [];
         $response['msg'] = '';
         $response['msg_dev'] = '';
+        $response['containers'] = [];
         $response['line'] = null;
         $response['deliveryDate'] = null;
 
@@ -887,7 +886,6 @@ class ProcessController extends Controller
                 $results = Yii::$app->db->createCommand($sql)->queryAll();
 
                 $line = null;
-                $response['deliveryDate'] = null;
 
                 if(count($results) > 0)
                 {
@@ -935,7 +933,7 @@ class ProcessController extends Controller
                         }
                     }
 
-                    $currentDeliveryDate = new DateTime($results['fecha_limite'], new DateTimeZone("UTC"));
+                    $currentDeliveryDate = new DateTime($result['fecha_limite'], new DateTimeZone("UTC"));
                     if($currentDeliveryDate > $deliveryDate)
                     {
                         $deliveryDate = $currentDeliveryDate;
@@ -999,7 +997,7 @@ class ProcessController extends Controller
                             $container['status'] = $data['status'];
                         }
 
-                        $container['deliveryDate'] = $results['fecha_limite'];
+                        $container['deliveryDate'] = $result['fecha_limite'];
                         $container['errCode'] = $result['err_code'];
                         $response['containers'][] = $container;
                     }
