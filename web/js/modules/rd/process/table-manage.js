@@ -24,7 +24,7 @@ var handleDataTable = function() {
             },
             order: [[ 1, 'asc' ]],
             responsive: true,
-            deferRender: false,
+            deferRender: true,
             rowCallback: function( row, data, index ) {
                     // console.log("rowCallback to: " + data.name);
             },
@@ -36,45 +36,40 @@ var handleDataTable = function() {
                 }
                 else {
                     var elementId =  String(data.name).replace(' ','');
-                    if(processType === "2")
+                    if(processType == 2)
                     {
-                        var  html = '<input type=\"text\" class=\"form-control\" id=\"' + elementId +  '\" placeholder=\"Seleccionar\"' + 'value=\"' + moment(data.deliveryDate).format('DD/MM/YYYY') + '\" >';
+                        // var  html = '<input type=\"text\" class=\"form-control\" id=\"' + elementId +  '\" placeholder=\"Seleccionar\"' + 'value=\"' + moment(data.deliveryDate).format('DD/MM/YYYY') + '\" >';
 
-                        $('td', row).eq(3).html(html)
+                        // $('td', row).eq(3).html(html)
 
                         $('td:eq(3)', row).datepicker({
                             title:"Seleccione la Fecha Límite",
                             language: 'es',
-                            // format: 'dd/mm/yyyy',
-                            // todayHighlight: true,
                             autoclose: true,
                             immediateUpdates:true,
-                            // startDate: '-3d',
-                            // zIndexOffset:20
-                            // container:"#data-table"
-                            // toggleActive:true
+                            format:'dd/mm/yyyy'
                         }).on('changeDate', function(event){
-                            // var dateValue = moment(event.date).format('DD/MM/YYYY');
-                            var dateValue = moment(event.date).format('YYYY/MM/DD');
-                            // console.log(row);
-                            // console.log($(row));
-                            // console.log(data);
-                            // console.log(index);
-                            // console.log(dateValue);
-                            data.deliveryDate = dateValue;
-                            table.row(index).data(data)
+                            console.log(event.date);
+                            console.log(dateValue);
+                            var dateValue = moment(event.date).utc().format('DD-MM-YYYY');
+                            // data.deliveryDate = dateValue;
+                            table.cell(dataIndex, 3).data(dateValue)
                         });
                     }
-                    // $('td:eq(2)', row).select2(
-                    // $('td', row).eq(2).select2(
-                    $('select', row).select2(
+                    if(processType == 1)
                     {
-                        language: "es",
-                        placeholder: 'Seleccione Tipo de Contenedor',
-                        width: '100%',
-                        closeOnSelect: true,
-                        data:containerTypeArray,
-                        }).on('select2:select', function (e) {
+                        // $('td:eq(2)', row).select2(
+                        // $('td', row).eq(2).select2(
+                        console.log(data);
+                        console.log(data.type);
+                        $('select', row).select2(
+                            {
+                                language: "es",
+                                placeholder: 'Seleccione Tipo de Contenedor',
+                                width: '100%',
+                                closeOnSelect: true,
+                                data:containerTypeArray,
+                            }).on('select2:select', function (e) {
                             var type = e.params.data;
                             var containerType = {
                                 id:type.id,
@@ -86,7 +81,10 @@ var handleDataTable = function() {
                             // $('#mySelect2').trigger('change:select2'); // Notify any JS components that the value changed
                             // table.row(dataIndex).data(data); -- esto prococa que la fila se repinte de nuevo y x tango perdemos la inicializacion del select
                             // return true;
-                    });
+                        }).val(data.type.id).trigger('change');
+                        // $('select', row).val(data.type.id); // Select the option with a value of '1'
+                        // $('select', row).trigger('change:select2'); // Notify any JS components that the value changed
+                    }
                 }
             },
             columns: [
@@ -100,7 +98,7 @@ var handleDataTable = function() {
                 { "title": "Tipo/Tamaño",
                     "data":"type",
                 },
-                { "title": "Fecha Limite",
+                { "title": "Fecha Límite",
                   "data":"deliveryDate",
                 },
                 { "title": "Estado",
@@ -117,10 +115,11 @@ var handleDataTable = function() {
                 {
                     targets: [2],
                     data:'type',
-                    render: function ( data, type, full, meta ) {
+                    render: function ( data, type, full, meta )
+                    {
                         var elementId =  String(full.name).trim();
                         // console.log("render: " + elementId + " " + type);
-                        if(type == 'display' && full.selectable)
+                        if(type == 'display' && full.selectable && processType == 1)
                         {
                             var selectHtml = "<select class=\"form-control\" id=\"selectType" +elementId + "\"></select>";
                             return selectHtml;
@@ -131,8 +130,20 @@ var handleDataTable = function() {
                 {
                     targets: [3],
                     data:'deliveryDate',
-                    render: function ( data, type, full, meta ) {
-                        return moment(data).format("DD/MM/YYYY");
+                    render: function ( data, type, full, meta )
+                    {
+                        var elementId =  String(full.name).trim();
+                        console.log("render: " + elementId + " " + type);
+                        console.log("data: ");
+                        console.log(data);
+                        if(type == 'display' && full.selectable && processType == 2)
+                        {
+                            var  html = '<input type=\"text\" class=\"form-control\" id=\"' + elementId +  '\" placeholder=\"Seleccionar\"' + ' value=\"' + data + '\"' + ' data-date=\"' +  data + '\" >';
+                            console.log(html)
+                            return html;
+                        }
+
+                        return data;
                     },
                 },
             ],
@@ -175,7 +186,7 @@ var handleDataTable2 = function () {
         { "title": "Tipo/Tamaño",
             "data":"type",
         },
-        { "title": "Fecha Limite",
+        { "title": "Fecha Límite",
             "data":"deliveryDate",
         },
         { "title": "Estado",
@@ -208,8 +219,11 @@ var handleDataTable2 = function () {
                 {
                     targets: [2],
                     data:'deliveryDate',
-                    render: function ( data, type, full, meta ) {
-                        return moment(data).format("DD/MM/YYYY");
+                    render: function ( data, type, full, meta )
+                    {
+                        console.log(data);
+                        // return moment(data).format("DD/MM/YYYY");
+                        return data;
                     },
                 },
                 {
@@ -276,8 +290,6 @@ var handleDataTable3 = function () {
                     title:"Tipo",
                     data:"type",
                     render: function ( data, type, full, meta ) {
-                        // console.log("RENDER TYPE TABLE 3");
-                        // console.log(data);
                         return data.name;
                     },
                 },
@@ -285,7 +297,7 @@ var handleDataTable3 = function () {
                     targets: [3],
                     data:'deliveryDate',
                     render: function ( data, type, full, meta ) {
-                        return moment(data).format("DD/MM/YYYY");
+                        return data;
                     },
                 },
                 {

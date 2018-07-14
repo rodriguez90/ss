@@ -28,7 +28,8 @@ var handleBootstrapWizardsValidation = function() {
 
                             if(value.selectable)
                             {
-                                value.type = containertDataMap.get(value.name);
+                                if(processType === 1)
+                                    value.type = containertDataMap.get(value.name);
 
                                 table.row.add(
                                     value
@@ -100,13 +101,17 @@ var handleBootstrapWizardsValidation = function() {
                                         return false;
                                     }
                                 }
-                                var type =  value.type = containertDataMap.get(value.name, null);
 
-                                if(!type)
+                                if(processType === 1)
                                 {
-                                    result = false;
-                                    alert("Debe asignar un tipo para los contenedores seleccionados.");
-                                    return false;
+                                    var type =  value.type = containertDataMap.get(value.name, null);
+
+                                    if(!type)
+                                    {
+                                        result = false;
+                                        alert("Debe asignar un tipo para los contenedores seleccionados.");
+                                        return false;
+                                    }
                                 }
                             }
                         } );
@@ -155,10 +160,10 @@ var handleBootstrapWizardsValidation = function() {
                         // set label text
 
                         var process = {
-                            "Process[agency_id]": agency.id, // FIXME THIS DEFINE BY USER WITH ROLE AGENCY OR IMPORTER/EXPORTER
+                            "Process[agency_id]": agency.id, // FIXME THIS DEFINE BY USER WITH ROLE IMPORTER/EXPORTER
                             "Process[bl]":blCode,
                             "Process[active]":1,
-                            "Process[delivery_date]":processDeliveryDate, // FIXME COMO DEFINO ESTO PARA LA EXPORTACION
+                            "Process[delivery_date]":processDeliveryDate,
                             "Process[type]":processType,
                             "Process[line_id]":lineNav.id,
                             "containers":containers
