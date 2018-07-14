@@ -108,7 +108,8 @@ class ProcessController extends Controller
         $query = ProcessTransaction::find()
                 ->innerJoin('container', 'process_transaction.container_id = container.id')
                 ->innerJoin('process', 'process_transaction.process_id = process.id')
-                ->where(['process.id'=>$id, 'process_transaction.active'=>1]);
+                ->where(['process.id'=>$id, 'process_transaction.active'=>1])
+                ->all();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
