@@ -805,7 +805,7 @@ class ProcessController extends Controller
                         ->asArray()
                         ->one();
 
-                    $currentDeliveryDate = new DateTime($results['fecha_limite'], new DateTimeZone("UTC"));
+                    $currentDeliveryDate = new DateTime($result['fecha_limite'], new DateTimeZone("UTC"));
 
                     if($currentDeliveryDate > $deliveryDate)
                     {
@@ -997,7 +997,7 @@ class ProcessController extends Controller
                             $container['status'] = $data['status'];
                         }
 
-                        $container['deliveryDate'] = $results['fecha_limite'];
+                        $container['deliveryDate'] = $result['fecha_limite'];
                         $container['errCode'] = $result['err_code'];
                         $response['containers'][] = $container;
                     }
