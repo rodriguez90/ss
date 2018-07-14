@@ -534,6 +534,8 @@ class TicketController extends Controller
                         $processTransaction->register_truck = $data['registerTruck'];
                         $processTransaction->register_driver = $data['registerDriver'];
                         $processTransaction->name_driver = $data['nameDriver'];
+                        $dateStatus = new DateTime($calendarSlot->start_datetime, new DateTimeZone('UTC'));
+                        $processTransaction->status = $dateStatus->format("Y-m-d H:i:s");
                         $ptToSave[] = $processTransaction;
 //                        $result = $processTransaction->update(true, ['register_truck', 'register_driver', 'name_driver']);
 //                        if ($result === false) {
@@ -631,6 +633,7 @@ class TicketController extends Controller
                     $pt->register_truck = '';
                     $pt->register_driver = '';
                     $pt->name_driver = '';
+                    $pt->status = 'PENDIENTE';
                     $pt->save();
                 }
             }
