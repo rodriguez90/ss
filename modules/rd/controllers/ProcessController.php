@@ -339,7 +339,7 @@ class ProcessController extends Controller
 
             try {
                 $aux = new DateTime($model->delivery_date, new DateTimeZone("UTC"));
-                $model->delivery_date = $aux->format("Y-m-d H:i:s");
+                $model->delivery_date = $aux->format("Y-m-d");
 
                 if($model->save())
                 {
@@ -435,7 +435,7 @@ class ProcessController extends Controller
 
                         $aux = new DateTime($container['deliveryDate'], new DateTimeZone("UTC"));
 //                        $aux->setTimezone(new DateTimeZone("UTC"));
-                        $processTransModel->delivery_date = $aux->format("Y-m-d H:i:s");
+                        $processTransModel->delivery_date = $aux->format("Y-m-d");
 
                         if(!$processTransModel->save()) {
                             $tmpResult = false;
@@ -837,8 +837,6 @@ class ProcessController extends Controller
                         $container['status'] = $data['status'];
                     }
                     $container['deliveryDate'] = $result['fecha_limite'];
-                    $container['line'] = $result['linea'];
-                    $container['lineName'] = $result['nombre_linea'];
                     $container['errCode'] = $result['err_code'];
                     $response['containers'][] = $container;
                 }
