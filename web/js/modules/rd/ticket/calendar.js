@@ -139,8 +139,8 @@ var handleCalendarDemo = function () {
                         var indexTicket = transactionWithTicket.indexOf(transaction.id);
                         var deliveryDate = moment(transaction.delivery_date);
 
-                        var now = moment();
-                        var then = moment(date);
+                        // var now = moment();
+                        // var then = moment(date);
 
                         // if (compareTo > then) {
                         //     $('.result').text('Date is past');
