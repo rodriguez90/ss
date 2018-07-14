@@ -346,7 +346,7 @@ var fetchContainersOffLine = function (bl) {
             type: type,
             deliveryDate: processDeliveryDate,
             status: status,
-            errCode:Math.round(Math.random())
+            errCode:Math.round(Math.random()),
         };
         addContainer(table, dataContainer);
     }
@@ -403,8 +403,6 @@ var addContainer = function (table, dataContainer) {
         type: dataContainer.type,
         deliveryDate:dataContainer.deliveryDate,
         transCompany:{name:'', id:-1, ruc:""},
-        line:dataContainer.line,
-        lineName:dataContainer.nameLine,
         status:dataContainer.status,
         errCode:errCode,
         checkbox:"",
