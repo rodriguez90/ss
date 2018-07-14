@@ -142,11 +142,11 @@ var handleCalendarDemo = function () {
                         var now = moment();
                         var then = moment(date);
 
-                        if (compareTo > then) {
-                            $('.result').text('Date is past');
-                        } else {
-                            $('.result').text('Date is future');
-                        }
+                        // if (compareTo > then) {
+                        //     $('.result').text('Date is past');
+                        // } else {
+                        //     $('.result').text('Date is future');
+                        // }
 
                         if(indexSelected === -1 && indexTicket === -1 && currentCalendarEvent.end  > deliveryDate )
                         {
