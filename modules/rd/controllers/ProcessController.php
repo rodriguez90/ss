@@ -115,7 +115,7 @@ class ProcessController extends Controller
             'pagination' => false,
             'sort' => [
                 'defaultOrder' => [
-                    'id' => SORT_ASC,
+                    'process_transaction.id' => SORT_ASC,
                 ]
             ],
         ]);
@@ -123,7 +123,7 @@ class ProcessController extends Controller
         return $this->render('view', [
             'model' => $model,
             'dataProvider'=>$dataProvider,
-            'searchModel'=>$searchModel ,
+//            'searchModel'=>$searchModel ,
         ]);
     }
 
