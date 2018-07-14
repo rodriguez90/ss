@@ -731,13 +731,13 @@ class TicketController extends Controller
                 $registerTrunk = $processTransaction->register_truck;
                 $registerDriver = $processTransaction->register_driver;
                 $containerName = $container->name;
-//                exec  disv..sp_sgt_access_ins 'EXPO','MCH0992','1203270564','ContainerName9','2018/04/05 22:00','Yander'"
+
                 $sql_complete = $sql . $processType . "','".
                                 $registerTrunk . "','" .
                                 $registerDriver . "','" .
                                 $containerName . "','" .
                                 $dateTicket . "','" .
-                                $user . "','";
+                                $user . "','" .
                                 $bl . "'";
 
                 $result = \Yii::$app->db3->createCommand($sql_complete)->queryAll();
