@@ -108,17 +108,16 @@ class ProcessController extends Controller
         $query = ProcessTransaction::find()
                 ->innerJoin('container', 'process_transaction.container_id = container.id')
                 ->innerJoin('process', 'process_transaction.process_id = process.id')
-                ->where(['process.id'=>$id, 'process_transaction.active'=>1])
-                ->all();
+                ->where(['process.id'=>$id, 'process_transaction.active'=>1]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
             'pagination' => false,
-            'sort' => [
-                'defaultOrder' => [
-                    'process_transaction.id' => SORT_ASC,
-                ]
-            ],
+//            'sort' => [
+//                'defaultOrder' => [
+//                    'process_transaction.id' => SORT_ASC,
+//                ]
+//            ],
         ]);
 
         return $this->render('view', [
