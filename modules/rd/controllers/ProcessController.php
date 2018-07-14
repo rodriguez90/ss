@@ -375,7 +375,6 @@ class ProcessController extends Controller
                             $containerModel->code = $type->code;
                             $containerModel->tonnage = $type->tonnage;
                             $containerModel->type_id = $type->id;
-                            $containerModel->status = '';
                             $containerModel->active = 1;
 
                             if(!$containerModel->save())
