@@ -945,7 +945,7 @@ class ProcessController extends Controller
 
                     for($i = 0; $i < $count; $i++)
                     {
-                        $containerName = $booking . $type->code . $type->tonnage . '-' . $i + 1;
+                        $containerName = $booking . $type->code . $type->tonnage . '-' . ($i + 1);
 
                         $data = Container::find()
                             ->select('container.id, 
@@ -998,15 +998,14 @@ class ProcessController extends Controller
                             $container['type']->tonnage = $data['typeTonnage'];
                             $container['status'] = $data['status'];
                         }
+
                         $container['deliveryDate'] = $results['fecha_limite'];
-                        $container['line'] = $result['linea'];
-                        $container['lineName'] = $result['nombre_linea'];
                         $container['errCode'] = $result['err_code'];
                         $response['containers'][] = $container;
                     }
                 }
 
-                $response['deliveryDate'] = $deliveryDate->format("Y-m-d H:i:s");
+                $response['deliveryDate'] = $deliveryDate->format("d-m-Y H:i:s");
             }
             catch (Exception $ex)
             {
