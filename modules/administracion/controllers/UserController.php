@@ -566,7 +566,7 @@ class UserController extends Controller
                 }
             }
         }
-        return $response['companies'];
+        return $response;
     }
 
     public function actionGetdeposito(){
@@ -684,6 +684,6 @@ class UserController extends Controller
                 }
             }
         }
-        return $response['trans_companies'];
+        return $response;;
     }
 }
