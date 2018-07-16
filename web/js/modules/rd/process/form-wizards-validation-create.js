@@ -97,7 +97,7 @@ var handleBootstrapWizardsValidation = function() {
                                 if(processType == 2)
                                 {
                                     var deliveryDate = value.deliveryDate;
-                                    if(!moment(deliveryDate).isValid())
+                                    if(!moment(deliveryDate, 'DD-MM-YYYY').isValid())
                                     {
                                         result = false;
                                         alert("Debe definir la Fecha Límite para los contenedores del Booking.");
