@@ -31,7 +31,7 @@ class Agency extends \yii\db\ActiveRecord
         return [
             [['name', 'code_oce', 'ruc', 'active'], 'required'],
             [['name', 'code_oce', 'ruc'], 'string'],
-            [['active'], 'boolean'],
+            [['active'], 'integer'],
         ];
     }
 
