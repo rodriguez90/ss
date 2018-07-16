@@ -429,8 +429,8 @@ class UserController extends Controller
 
             $roles  = $auth->getRoles();
 
-            var_dump($modelAuxId);
-            var_dump($modelAuxName);die;
+//            var_dump($modelAuxId);
+//            var_dump($modelAuxName);die;
 
             return $this->render('update', [
                 'model' => $model,
