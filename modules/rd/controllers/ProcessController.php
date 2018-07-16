@@ -998,13 +998,13 @@ class ProcessController extends Controller
                                 $container['status'] = $data['status'];
                             }
 
-                            $container['deliveryDate'] = $currentDeliveryDate->format("d/m/Y");
+                            $container['deliveryDate'] = $currentDeliveryDate->format("d-m-Y");
                             $container['errCode'] = $result['err_code'];
                             $response['containers'][] = $container;
                         }
                     }
 
-                    $response['deliveryDate'] = $deliveryDate->format("d/m/Y");
+                    $response['deliveryDate'] = $deliveryDate->format("d-m-Y");
                 }
             }
             catch (Exception $ex)

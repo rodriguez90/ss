@@ -47,11 +47,11 @@ var handleDataTable = function() {
                             language: 'es',
                             autoclose: true,
                             immediateUpdates:true,
-                            format:'dd/mm/yyyy'
+                            format:'dd-mm-yyyy'
                         }).on('changeDate', function(event){
                             // console.log(event.date);
                             // console.log(dateValue);
-                            var dateValue = moment(event.date).utc().format('DD/MM/YYYY');
+                            var dateValue = moment(event.date).utc().format('DD-MM-YYYY');
                             var mDateValue = moment(event.date)
                             var mProcessDD = moment(processDeliveryDate)
                             console.log("Container deliveryDate: " + dateValue);
