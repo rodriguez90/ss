@@ -68,19 +68,15 @@ var handleJqueryAutocomplete2 = function(op,changeRol) {
             // delay: 250,
             // cache: true,
             data: function (params) {
-                var query = ''
-                if(op == 3)
-                {
-                    query = {
-                        code: params.term,
-                    };
-                }
+                var query = {
+                    code: params.term,
+                };
                 return query;
             },
             processResults: function (response) {
                 console.log(response);
                 var results  = [];
-                $.each(response, function (index, item) {
+                $.each(response.objects, function (index, item) {
                     results .push({
                         id: item.id,
                         text: item.name,

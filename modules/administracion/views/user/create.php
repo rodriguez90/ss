@@ -12,7 +12,7 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <script type="text/javascript">
-    var modelAux = null;     
+    var modelAux = null;
 </script>
 
 <div class="row">

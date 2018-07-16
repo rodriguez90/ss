@@ -494,7 +494,7 @@ class UserController extends Controller
 
         $response = array();
         $response['success'] = true;
-        $response['companies'] = [];
+        $response['objects'] = [];
         $response['msg'] = '';
         $response['msg_dev'] = '';
 
@@ -541,7 +541,7 @@ class UserController extends Controller
                         $str = utf8_encode($agency->name);
                         $agency->name = $str;
                     }
-                    $response['companies'][] = $agency;
+                    $response['objects'][] = $agency;
                 }
 
                 if($response['success'])
@@ -573,14 +573,36 @@ class UserController extends Controller
 
         Yii::$app->response->format = Response::FORMAT_JSON;
 
-        $result = Warehouse::find()
-                            ->where(['active'=>1])
-                            ->all();
+        $response = array();
+        $response['success'] = true;
+        $response['objects'] = [];
+        $response['msg'] = '';
+        $response['msg_dev'] = '';
 
-        if($result!=null)
-            return $result;
+        $code = Yii::$app->request->get('code');
 
-        return [];
+        if(!isset($code))
+        {
+            $response['success'] = false;
+            $response['msg'] = "Debe especificar el nombre.";
+        }
+
+        try
+        {
+            $response['objects'] = Warehouse::find()
+                ->where(['active'=>1])
+                ->andWhere(['like','name', $code])
+                ->all();
+        }
+        catch (Exception $ex)
+        {
+            $response['success'] = false;
+            $response['objects'] = [];
+            $response['msg'] = 'Ah ocurrido un error al buscar los depositos';
+            $response['msg_dev'] = $ex->getMessage();
+        }
+
+        $response;
     }
 
     public function actionGetagenciastrans()
@@ -590,7 +612,7 @@ class UserController extends Controller
 
         $response = array();
         $response['success'] = true;
-        $response['trans_companies'] = [];
+        $response['objects'] = [];
         $response['msg'] = '';
         $response['msg_dev'] = '';
 
@@ -637,7 +659,7 @@ class UserController extends Controller
                         $str = utf8_encode($t->name);
                         $t->name = $str;
                     }
-                    $response['trans_companies'][] = $t;
+                    $response['objects'][] = $t;
                 }
 
                 if($response['success'])
