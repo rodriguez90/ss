@@ -127,12 +127,13 @@ use app\modules\rd\models\Process;
         </thead>
         <tbody>
         <?php
-        foreach ($contenedores as $contenedor) {
+        foreach ($transactions as $transaction) {
+            $container = $transaction->container;
             echo "<tr >";
             echo "<td></td>";
-            echo "<td style='border: solid 1px #DDD;'>" . $contenedor['name'] . "</td>";
-            echo "<td style='border: solid 1px #DDD;'>" . $contenedor['code'] . $contenedor['tonnage'] . "</td>";
-            echo "<td style='border: solid 1px #DDD;'>" . $contenedor['status'] . "</td>";
+            echo "<td style='border: solid 1px #DDD;'>" . $container->name . "</td>";
+            echo "<td style='border: solid 1px #DDD;'>" . $container->code . $container->tonnage . "</td>";
+            echo "<td style='border: solid 1px #DDD;'>" . $transaction->status . "</td>";
             echo "<td></td>";
             echo "</tr>";
         }

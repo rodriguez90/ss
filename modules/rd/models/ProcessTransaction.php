@@ -16,11 +16,12 @@ use Yii;
  * @property int $active
  * @property string $name_driver
  * @property int $trans_company_id
+ * @property string $status
  *
  * @property Container $container
  * @property Process $process
  * @property TransCompany $transCompany
- * @property Ticket $ticket
+ * @property Ticket[] $tickets
  */
 class ProcessTransaction extends \yii\db\ActiveRecord
 {
@@ -40,7 +41,7 @@ class ProcessTransaction extends \yii\db\ActiveRecord
         return [
             [['process_id', 'container_id', 'delivery_date', 'active', 'trans_company_id'], 'required'],
             [['process_id', 'container_id', 'active', 'trans_company_id'], 'integer'],
-            [['register_truck', 'register_driver', 'name_driver'], 'string'],
+            [['register_truck', 'register_driver', 'name_driver', 'status'], 'string'],
             [['delivery_date'], 'safe'],
             [['container_id'], 'exist', 'skipOnError' => true, 'targetClass' => Container::class, 'targetAttribute' => ['container_id' => 'id']],
             [['process_id'], 'exist', 'skipOnError' => true, 'targetClass' => Process::class, 'targetAttribute' => ['process_id' => 'id']],
@@ -63,6 +64,7 @@ class ProcessTransaction extends \yii\db\ActiveRecord
             'active' => 'Activa',
             'name_driver' => 'Nombre del Chofer',
             'trans_company_id' => 'Compañia de Transporte',
+            'status' => 'Estado',
         ];
     }
 
@@ -95,6 +97,12 @@ class ProcessTransaction extends \yii\db\ActiveRecord
      */
     public function getTicket()
     {
-        return $this->hasOne(Ticket::class, ['process_transaction_id' => 'id']);
+        //        return $this->hasOne(Ticket::class, ['process_transaction_id' => 'id']);
+
+        $model = Ticket::find()->where(['process_transaction_id'=>$this->id])
+                               ->where(['active'=>1])
+                               ->orderBy(['id' => SORT_DESC])
+                               ->one();
+        return $model;
     }
 }

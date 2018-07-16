@@ -89,13 +89,14 @@ class Process extends \yii\db\ActiveRecord
      */
     public function getProcessTransactions()
     {
-        return $this->hasMany(ProcessTransaction::className(), ['process_id' => 'id']);
+        return $this->hasMany(ProcessTransaction::className(), ['process_id' => 'id'])->andWhere(['active'=>1]);
     }
 
     public function getProcessTransactionsByTransCompany($transCompanyId)
     {
         return ProcessTransaction::find()->where(['process_id'=>$this->id])
                                          ->andWhere(['trans_company_id'=>$transCompanyId])
+                                         ->andWhere(['active'=>1])
                                          ->all();
     }
 

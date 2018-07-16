@@ -19,7 +19,7 @@ class ContainerSearch extends Container
     {
         return [
             [['id', ], 'integer'],
-            [['active', 'type_id', 'tonnage', 'name', 'code', 'status'], 'safe'],
+            [['active', 'type_id', 'tonnage', 'name', 'code'], 'safe'],
         ];
     }
 
@@ -85,8 +85,7 @@ class ContainerSearch extends Container
         }
 
         $query->andFilterWhere(['like', 'name', $this->name])
-            ->andFilterWhere(['like', 'code', $this->code])
-            ->andFilterWhere(['like', 'status', $this->status]);
+            ->andFilterWhere(['like', 'code', $this->code]);
 
         return $dataProvider;
     }

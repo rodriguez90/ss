@@ -28,7 +28,11 @@ var handleBootstrapWizardsValidation = function() {
 
                             if(value.selectable)
                             {
-                                value.type = containertDataMap.get(value.name);
+                                if(processType == 1)
+								{
+                                    value.type = containertDataMap.get(value.name);
+									console.log(value.type);
+								}
 
                                 table.row.add(
                                     value
@@ -90,7 +94,7 @@ var handleBootstrapWizardsValidation = function() {
                             // console.log( 'Data in index: '+index +' is: '+ value.name );
                             if(result && value.selectable) {
                                 // FIXME: It Export -> Booking code -> check delyveryDate it's set
-                                if(processType === 2)
+                                if(processType == 2)
                                 {
                                     var deliveryDate = value.deliveryDate;
                                     if(!moment(deliveryDate).isValid())
@@ -100,13 +104,17 @@ var handleBootstrapWizardsValidation = function() {
                                         return false;
                                     }
                                 }
-                                var type =  value.type = containertDataMap.get(value.name, null);
 
-                                if(!type)
+                                if(processType == 1)
                                 {
-                                    result = false;
-                                    alert("Debe asignar un tipo para los contenedores seleccionados.");
-                                    return false;
+                                    var type =  value.type = containertDataMap.get(value.name, null);
+
+                                    if(!type)
+                                    {
+                                        result = false;
+                                        alert("Debe asignar un tipo para los contenedores seleccionados.");
+                                        return false;
+                                    }
                                 }
                             }
                         } );
@@ -124,7 +132,7 @@ var handleBootstrapWizardsValidation = function() {
                         .data()
                         .each( function ( value, index ) {
 
-                            if(result && value.transCompany.id === -1){
+                            if(result && value.transCompany.id == -1){
                                 result = false;
                                 alert("Debe asignarle a todos los contenedores la empresa de transporte .");
                             }
@@ -155,10 +163,10 @@ var handleBootstrapWizardsValidation = function() {
                         // set label text
 
                         var process = {
-                            "Process[agency_id]": agency.id, // FIXME THIS DEFINE BY USER WITH ROLE AGENCY OR IMPORTER/EXPORTER
+                            "Process[agency_id]": agency.id, // FIXME THIS DEFINE BY USER WITH ROLE IMPORTER/EXPORTER
                             "Process[bl]":blCode,
                             "Process[active]":1,
-                            "Process[delivery_date]":processDeliveryDate, // FIXME COMO DEFINO ESTO PARA LA EXPORTACION
+                            "Process[delivery_date]":processDeliveryDate,
                             "Process[type]":processType,
                             "Process[line_id]":lineNav.id,
                             "containers":containers

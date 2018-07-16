@@ -44,7 +44,13 @@ class UserController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::class,
+//                'only' => ['Getagencias', 'Getdeposito', 'Getagenciastrans'],
+//                'except' => ['getagencias','getdeposito','getagenciastrans',],
                 'rules' => [
+//                    [
+//                        'allow' => true,
+//                        'actions' => ['Getagencias','Getdeposito','Getagenciastrans',],
+//                    ],
                     [
                         'allow' => true,
                         'roles' => ['@'],
@@ -133,17 +139,15 @@ class UserController extends Controller
             switch($rol){
                 case 'Importador':
                 case 'Exportador':
+                case "Importador_Exportador":
                 case 'Agencia':
                     if($type == '')
-                        $model->addError('error', "Seleccione una agencia." );
+                        $model->addError('error', "Seleccione una empresa." );
                     break;
                 case 'Administrador_depósito':
-                    if($type == '')
-                    $model->addError('error', "Seleccione un depósito." );
-                    break;
                 case 'Depósito':
                     if($type == '')
-                        $model->addError('error', "Seleccione un depósito." );
+                    $model->addError('error', "Seleccione un depósito." );
                     break;
                 case 'Cia_transporte':
                     if($type == '')
@@ -179,6 +183,7 @@ class UserController extends Controller
                     switch($rol){
                         case 'Importador':
                         case 'Exportador':
+                        case "Importador_Exportador":
                         case 'Agencia':
                             $userAgency = new UserAgency();
                             $userAgency->user_id = $model->id;
@@ -186,11 +191,6 @@ class UserController extends Controller
                             $userAgency->save();
                             break;
                         case 'Administrador_depósito':
-                            $userWarehouse = new UserWarehouse();
-                            $userWarehouse->user_id = $model->id;
-                            $userWarehouse->warehouse_id = $type;
-                            $userWarehouse->save();
-                            break;
                         case 'Depósito':
                             $userWarehouse = new UserWarehouse();
                             $userWarehouse->user_id = $model->id;
@@ -254,12 +254,13 @@ class UserController extends Controller
 
                     $rol_actual = $auth->getRole($model->getRole());
 
-                    $modelAux=null;
+                    $modelAux = null;
                     $modelAuxId = '';
                     $modelAuxName = '';
                     switch($rol_actual->name){
                         case 'Importador':
                         case 'Exportador':
+                        case "Importador_Exportador":
                         case 'Agencia':
                             $error  = "Seleccione una agencia.";
                             $modelAux = UserAgency::findOne(['user_id'=>$model->id]);
@@ -338,6 +339,7 @@ class UserController extends Controller
                                 switch($rol){
                                     case "Importador":
                                     case "Exportador":
+                                    case "Importador_Exportador":
                                     case "Agencia":
                                         if($change_rol){
                                             $userAgency = new UserAgency();
@@ -345,7 +347,7 @@ class UserController extends Controller
                                             $userAgency->user_id = $model->id;
 
                                             $ok = $ok && $userAgency->save();
-                                            if($modelAux!=null)
+                                            if($modelAux != null)
                                                 $modelAux->delete();
                                         }else{
                                             $userAgency = UserAgency::findOne(['user_id'=>$model->id]);
@@ -388,7 +390,7 @@ class UserController extends Controller
                                         }
                                         break;
                                     default :
-                                        if($modelAux!=null){
+                                        if($modelAux != null){
                                             $modelAux->delete();
                                         }
                                         break;
@@ -441,7 +443,7 @@ class UserController extends Controller
                 'rol_actual'=>$rol_actual->name,
                 'roles'=>$roles,
                 'type'=>$type_actual,
-                'modelAux'=>['id'=>$modelAuxId,  'name'=>$modelAuxName]
+                'modelAux'=>['id'=>$modelAuxId,  'name'=>utf8_encode($modelAuxName)]
             ]);
 
         }else{
@@ -481,7 +483,7 @@ class UserController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = AdmUser::findOne(['id'=>$id, 'status'=>1])) !== null) {
+        if (($model = AdmUser::findOne(['id'=>$id])) !== null) {
             return $model;
         }
 
@@ -494,7 +496,7 @@ class UserController extends Controller
 
         $response = array();
         $response['success'] = true;
-        $response['companies'] = [];
+        $response['objects'] = [];
         $response['msg'] = '';
         $response['msg_dev'] = '';
 
@@ -509,7 +511,7 @@ class UserController extends Controller
         if($response['success'])
         {
             $sql = "exec sp_sgt_empresa_cons '" . $code . "'";
-            $results = Yii::$app->db2->createCommand($sql)->queryAll();
+            $results = Yii::$app->db3->createCommand($sql)->queryAll();
 
             try{
                 $trasaction = Yii::$app->db->beginTransaction();
@@ -541,7 +543,7 @@ class UserController extends Controller
                         $str = utf8_encode($agency->name);
                         $agency->name = $str;
                     }
-                    $response['companies'][] = $agency;
+                    $response['objects'][] = $agency;
                 }
 
                 if($response['success'])
@@ -566,21 +568,43 @@ class UserController extends Controller
                 }
             }
         }
-        return $response['companies'];
+        return $response;
     }
 
     public function actionGetdeposito(){
 
         Yii::$app->response->format = Response::FORMAT_JSON;
 
-        $result = Warehouse::find()
-                            ->where(['active'=>1])
-                            ->all();
+        $response = array();
+        $response['success'] = true;
+        $response['objects'] = [];
+        $response['msg'] = '';
+        $response['msg_dev'] = '';
 
-        if($result!=null)
-            return $result;
+        $code = Yii::$app->request->get('code');
 
-        return [];
+        if(!isset($code))
+        {
+            $response['success'] = false;
+            $response['msg'] = "Debe especificar el nombre.";
+        }
+
+        try
+        {
+            $response['objects'] = Warehouse::find()
+                ->where(['active'=>1])
+                ->andWhere(['like','name', $code])
+                ->all();
+        }
+        catch (Exception $ex)
+        {
+            $response['success'] = false;
+            $response['objects'] = [];
+            $response['msg'] = 'Ah ocurrido un error al buscar los depositos';
+            $response['msg_dev'] = $ex->getMessage();
+        }
+
+        $response;
     }
 
     public function actionGetagenciastrans()
@@ -590,7 +614,7 @@ class UserController extends Controller
 
         $response = array();
         $response['success'] = true;
-        $response['trans_companies'] = [];
+        $response['objects'] = [];
         $response['msg'] = '';
         $response['msg_dev'] = '';
 
@@ -637,7 +661,7 @@ class UserController extends Controller
                         $str = utf8_encode($t->name);
                         $t->name = $str;
                     }
-                    $response['trans_companies'][] = $t;
+                    $response['objects'][] = $t;
                 }
 
                 if($response['success'])
@@ -662,6 +686,6 @@ class UserController extends Controller
                 }
             }
         }
-        return $response['trans_companies'];
+        return $response;;
     }
 }

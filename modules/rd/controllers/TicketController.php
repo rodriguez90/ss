@@ -534,6 +534,8 @@ class TicketController extends Controller
                         $processTransaction->register_truck = $data['registerTruck'];
                         $processTransaction->register_driver = $data['registerDriver'];
                         $processTransaction->name_driver = $data['nameDriver'];
+                        $dateStatus = new DateTime($calendarSlot->start_datetime, new DateTimeZone('UTC'));
+                        $processTransaction->status = $dateStatus->format("Y-m-d H:i:s");
                         $ptToSave[] = $processTransaction;
 //                        $result = $processTransaction->update(true, ['register_truck', 'register_driver', 'name_driver']);
 //                        if ($result === false) {
@@ -631,6 +633,7 @@ class TicketController extends Controller
                     $pt->register_truck = '';
                     $pt->register_driver = '';
                     $pt->name_driver = '';
+                    $pt->status = 'PENDIENTE';
                     $pt->save();
                 }
             }
@@ -731,13 +734,13 @@ class TicketController extends Controller
                 $registerTrunk = $processTransaction->register_truck;
                 $registerDriver = $processTransaction->register_driver;
                 $containerName = $container->name;
-//                exec  disv..sp_sgt_access_ins 'EXPO','MCH0992','1203270564','ContainerName9','2018/04/05 22:00','Yander'"
+
                 $sql_complete = $sql . $processType . "','".
                                 $registerTrunk . "','" .
                                 $registerDriver . "','" .
                                 $containerName . "','" .
                                 $dateTicket . "','" .
-                                $user . "','";
+                                $user . "','" .
                                 $bl . "'";
 
                 $result = \Yii::$app->db3->createCommand($sql_complete)->queryAll();
