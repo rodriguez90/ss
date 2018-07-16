@@ -151,7 +151,12 @@ class AgencyController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = Agency::findOne(['id'=>$id, 'active'=>1])) !== null) {
+        $model = Agency::find()
+            ->where(['id'=>$id])
+            ->andWhere(['<>', 'active',-1])
+            ->one();
+
+        if ($model  !== null) {
             return $model;
         }
 

@@ -17,12 +17,13 @@ var handleJqueryAutocomplete2 = function(op,changeRol) {
     var action = '';
     var option0 = '';
     var min = -1;
-    var validator = "data-parsley-type=\"digits\" data-parsley-length=\"[13, 13]\"";
+    var validator = "";
     switch (op){
         case 1:
             action = "/administracion/user/getagencias";
             option0 = "Seleccione la epmpresa";
-            validator = ""
+            validator = "data-parsley-type=\'digits\' data-parsley-length=\'[13, 13]\'";
+            min = 13;
             break;
         case 2:
             action = "/administracion/user/getdeposito";
@@ -67,19 +68,15 @@ var handleJqueryAutocomplete2 = function(op,changeRol) {
             // delay: 250,
             // cache: true,
             data: function (params) {
-                var query = ''
-                if(op == 3)
-                {
-                    query = {
-                        code: params.term,
-                    };
-                }
+                var query = {
+                    code: params.term,
+                };
                 return query;
             },
             processResults: function (response) {
                 console.log(response);
                 var results  = [];
-                $.each(response, function (index, item) {
+                $.each(response.objects, function (index, item) {
                     results .push({
                         id: item.id,
                         text: item.name,
@@ -176,6 +173,4 @@ $(function () {
             }
         }
     );
-
-
 });

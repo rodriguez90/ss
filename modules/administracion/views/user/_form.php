@@ -8,7 +8,6 @@ use yii\widgets\ActiveForm;
 /* @var $model app\modules\administracion\models\User */
 /* @var $form yii\widgets\ActiveForm */
 /* @var $roles */
-/* @var $modelAux */
 
 use app\assets\FormAsset;
 FormAsset::register($this);
@@ -172,7 +171,7 @@ FormAsset::register($this);
                             <label class="control-label col-md-4 col-sm-4">Activo</label>
                             <div class="col-md-8 col-sm-8"  <?= \Yii::$app->user->can('admin_mod') ? "": "style='visibility: hidden'"?>>
 
-                                <input data-switchery="true"    id="admuser-status" name="AdmUser[status]" value="1" data-render="switchery" type="checkbox" <?= $model->isNewRecord || $model->status  ? 'checked=""' : '' ?> >
+                                <input data-switchery="true" id="admuser-status" name="status" value="1" data-render="switchery" type="checkbox" <?= $model->isNewRecord || $model->status  ? 'checked=""' : '' ?> >
 
                             </div>
                         </div>
@@ -205,12 +204,6 @@ FormAsset::register($this);
 
 
 </div>
-
-<script type="text/javascript">
-    var modelAux = <?php echo json_encode(['name'=>$modelAux['name'],
-                                        'id'=>$modelAux['id']]);
-                    ?>;
-</script>
 
 <?php
 $this->registerJsFile('@web/js/modules/utiles.js',              ['depends' => ['app\assets\FormAsset']]);

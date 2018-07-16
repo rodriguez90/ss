@@ -33,6 +33,7 @@ class AuthItem extends \yii\db\ActiveRecord
     const ROLE_CIA_TRANS_COMPANY = 'Cia_transporte';
     const ROLE_IMPORTER = 'Importador';
     const ROLE_EXPORTER = 'Exportador';
+    const ROLE_IMPORTER_EXPORTER = 'Importador_Exportador';
 
     const ROL_LABEL = [ROL_ADMIN=>'Administrador',
         ROL_ADMIN_WHAREHOUSE=>'Administrador de Depósito',
@@ -41,11 +42,16 @@ class AuthItem extends \yii\db\ActiveRecord
         ROLE_TRANS_COMPANY=>'Cia de Transporte',
         ROLE_IMPORTER=>'Importador',
         ROLE_EXPORTER=>'Exportador',
+        ROLE_IMPORTER_EXPORTER=>'Importador-Exportador',
 
     ];
 
     const DEFAULT_ROLES = [ROLE_ADMIN, ROLE_ADMIN_WHAREHOUSE,
-                           ROLE_WHAREHOUSE, ROLE_AGENCY, ROLE_CIA_TRANS_COMPANY, ROLE_IMPORTER,ROLE_EXPORTER];
+                           ROLE_WHAREHOUSE, ROLE_AGENCY,
+                           ROLE_CIA_TRANS_COMPANY,
+                           ROLE_IMPORTER,
+                           ROLE_EXPORTER,
+                           ROLE_IMPORTER_EXPORTER];
 
     /**
      * {@inheritdoc}

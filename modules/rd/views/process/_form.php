@@ -81,8 +81,28 @@ else if ($intVal === Process::PROCESS_EXPORT)
                 </div>
             </div>
             <!-- end BL search-->
+
+            <!-- begin from line nav data-->
+            <div class="col-md-3">
+                <div class="panel panel-default m-1">
+                    <div id="blCodeHeading" class="panel-heading p-2">
+                        <h4 class="panel-title">Linea</h4>
+                    </div>
+                    <div class="panel-body p-5">
+                        <div class="col col-md-12">
+                            <div class="row">
+                                <span id="oce" class="label label-info f-s-12">OCE: -</span>
+                            </div>
+                            <div class="row">
+                                <span id="line" class="label label-info f-s-12">LINEA: -</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end line nav data-->
             <!-- begin wharehouse select-->
-            <div class="col-md-4">
+            <div class="col-md-2">
                 <div class="panel panel-default  m-1">
                     <div id="blCodeHeading" class="panel-heading p-2">
                         <h4 class="panel-title">Depósito Destino</h4>
@@ -98,7 +118,7 @@ else if ($intVal === Process::PROCESS_EXPORT)
             </div>
             <!-- end wharehouse select-->
             <!-- begin time-->
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div id="stop_watch_widget" class="widget widget-stats bg-green p-5">
                     <div class="stats-icon"><i class="fa fa-clock-o"></i></div>
                     <div class="stats-info">
@@ -123,23 +143,31 @@ else if ($intVal === Process::PROCESS_EXPORT)
                         <!-- begin wizard step-1 -->
                         <div class="wizard-step-1">
                             <fieldset>
-                                <!-- begin row -->
-                                <div class="row">
-                                    <div class="table-responsive">
-                                        <table id="data-table" class="table table-bordered nowrap" width="100%">
-                                            <thead>
-                                            <tr>
-                                                <th>Seleccione <input type="checkbox" name="select_all" value="1" id="select-all"></th>
-                                                <th>Contenedores</th>
-                                                <th>Tipo/Tamaño</th>
-                                                <th>Fecha Límite</th>
-                                                <th>Cliente</th>
-                                            </tr>
-                                            </thead>
-                                        </table>
+                                <div class="col col-md-12">
+                                    <!-- begin row -->
+                                    <div class="row">
+                                        <div class="table-responsive">
+                                            <table id="data-table" class="table table-bordered nowrap" width="100%">
+                                                <thead>
+                                                <tr>
+                                                    <th>Seleccione <input type="checkbox" name="select_all" value="1" id="select-all"></th>
+                                                    <th>Contenedores</th>
+                                                    <th>Tipo/Tamaño</th>
+                                                    <th>Fecha Límite</th>
+                                                    <th>Estado</th>
+                                                </tr>
+                                                </thead>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <!-- end row -->
+                                    <div class="row">
+                                        <div class="col-md-8 col-md-offset-4">
+                                            <a href="http://www.tpg.com.ec" class="btn btn-primary btn-xs m-r-5">Solicitar crédito</a>
+                                            <a href="http://www.tpg.com.ec" class="btn btn-primary btn-xs m-r-5">Factura en línea</a>
+                                        </div>
                                     </div>
                                 </div>
-                                <!-- end row -->
                             </fieldset>
                         </div>
                         <!-- end wizard step-1 -->

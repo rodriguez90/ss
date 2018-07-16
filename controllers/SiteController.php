@@ -52,7 +52,7 @@ class SiteController extends Controller
                 'only' => ['logout'],
                 'rules' => [
                     [
-                        'actions' => ['logout', 'contact', 'about', 'index'],
+                        'actions' => ['logout', 'contact', 'about', 'index','register'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -168,7 +168,7 @@ class SiteController extends Controller
 
         $user = AdmUser::findOne(['id'=>Yii::$app->user->getId()]);
         $params = Yii::$app->request->queryParams;
-        if($user && ($user->hasRol('Importador')  ||  $user->hasRol('Exportador')))
+        if($user && ($user->hasRol('Importador')  ||  $user->hasRol('Exportador') ||  $user->hasRol('Importador_Exportador')))
         {
             $agency = $user->getAgency();
             $params['agency_id'] = '';
@@ -221,20 +221,124 @@ class SiteController extends Controller
                 $session = Yii::$app->session;
                 $session->open();
 
-                $user = AdmUser::findOne(['id'=>Yii::$app->user->id]);
-                $session->set('user',$user);
-
-                return $this->redirect(Url::toRoute('/site/index'));
+                $user = AdmUser::findOne(['id'=>Yii::$app->user->getId(),'status'=>1]);
+                if($user!=null){
+                    $session->set('user',$user);
+                    return $this->redirect(Url::toRoute('/site/index'));
+                }else{
+                    return $this->render('login', ['model' => $model,'msg'=>'Usuario inactivo, contacte al administrador.']);
+                }
             }
             else
             {
-                return $this->render('login', ['model' => $model]);
+                return $this->render('login', ['model' => $model,'msg'=>'Usuario o contraseña incorrecta.']);
             }
 
         }else{
-            return $this->render('login', ['model' => $model]);
+            $msg = Yii::$app->request->get('msg');
+            return $this->render('login', ['model' => $model,'msg'=>$msg]);
         }
     }
+
+
+    public function actionRegister()
+    {
+        $this->layout = '@app/views/layouts/login';
+        $confirm = Yii::$app->request->post('AdmUser')["passwordConfirm"];
+        $usertype =  Yii::$app->request->post('usertype');
+        $usertypeid =  Yii::$app->request->post('usertypeid');
+
+        $model = new AdmUser();
+        $modelLogin = new LoginForm();
+
+        $agencias = Agency::findAll(['active'=>1]);
+        $trans_comp = TransCompany::findAll(['active'=>1]);
+
+
+        if ($model->load(Yii::$app->request->post() )  ) {
+
+            if( $model->password==''){
+                $model->addError('error', 'La Contraseña no pueden ser vacía');
+            }
+
+            if( $confirm!=null && $model->password != $confirm){
+                $model->addError('error', 'Las contraseñas no son iguales.');
+            }
+            if(AdmUser::findOne(['username'=>$model->username])!=null){
+                $model->addError('error', "Ya existe el nombre de usuario." );
+            }
+
+            if (AdmUser::findOne(['cedula' => $model->cedula]) != null)
+            {
+                $model->addError('error', "La cédula {$model->cedula} ya fue registrada en el sistema" );
+            }
+
+            if (!$model->hasErrors()) {
+                $model->setPassword($model->password);
+                $model->created_at = time();
+                $model->updated_at = time();
+                $model->creado_por = Yii::$app->user->identity->username;
+                $model->status =0;
+
+                $auth =  Yii::$app->authManager;
+                $new_rol = null;
+                $ok = true;
+                $msg = '';
+
+
+                if ($model->save() && $usertype!=null && $usertypeid!=null) {
+
+                    switch ($usertype){
+                        case '1':
+                        case '2':
+                        case '3':
+                            $user_agency = new UserAgency();
+                            $user_agency->user_id = $model->id;
+                            $user_agency->agency_id = $usertypeid;
+                            $user_agency->save();
+                            $roleName  = '';
+                            if($usertype == '1')
+                            {
+                                $roleName = 'Importador';
+                            }
+                            elseif ($usertype == '2')
+                            {
+                                $roleName = 'Exportador';
+                            }
+                            elseif ($usertype == 3)
+                            {
+                                $roleName = 'Importador_Exportador';
+                            }
+                            $new_rol = $auth->createRole($roleName);
+                            break;
+                        case '4':
+                            $user_trans = new UserTranscompany();
+                            $user_trans->user_id = $model->id;
+                            $user_trans->agency_id = $usertypeid;
+                            $user_trans->save();
+                            $new_rol = $auth->createRole("Cia_transporte");
+                            break;
+                        default:
+                            break;
+                    }
+
+                    $ok = $ok && $auth->assign($new_rol,$model->id);
+                    if($ok){
+                        $msg = "Usuario registrado correctamente, espere a ser activado.";
+                    }else{
+                        $msg = "Ah ocurrido un error en el registro.";
+                    }
+
+                    return $this->redirect (['site/login','msg'=>$msg]);
+                }
+            }
+        }
+
+
+        return $this->render('register', ['model'=>$model,'agencias'=>$agencias,'trans_comp'=>$trans_comp]);
+    }
+
+
 
     /**
      * Logout action.
@@ -443,5 +547,166 @@ class SiteController extends Controller
         $pdf->WriteHTML($body);
         $path= $pdf->Output("Solicitudes Realizadas.pdf","D");
 
+    }
+
+    public function actionGetagenciastrans()
+    {
+
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $response = array();
+        $response['success'] = true;
+        $response['objects'] = [];
+        $response['msg'] = '';
+        $response['msg_dev'] = '';
+
+        $code = Yii::$app->request->get('code');
+
+        if(!isset($code))
+        {
+            $response['success'] = false;
+            $response['msg'] = "Debe especificar el código de búsqueda.";
+        }
+
+        if($response['success'])
+        {
+            $sql = "exec sp_sgt_companias_cons '" . $code . "'";
+            $results = Yii::$app->db2->createCommand($sql)->queryAll();
+
+            try{
+                $trasaction = TransCompany::getDb()->beginTransaction();
+                $doCommit = false;
+
+                foreach ($results as $result)
+                {
+                    $t = TransCompany::findOne(['ruc'=>$result['ruc_empresa']]);
+
+                    if($t === null)
+                    {
+                        $doCommit = true;
+                        $t = new TransCompany();
+                        $str = utf8_decode($result['nombre_empresa']);
+                        $t->name = $str;
+                        $t->ruc = $result['ruc_empresa'];
+                        $t->address = "NO TIENE";
+                        $t->active = 1;
+
+                        if(!$t->save())
+                        {
+                            $response['success'] = false;
+                            $response['msg'] = "Ah ocurrido un error al buscar las Empresas de Transporte.";
+                            $response['msg_dev'] = implode(' ', $t->getErrors(false));
+                            break;
+                        }
+                    }
+                    else {
+                        $str = utf8_encode($t->name);
+                        $t->name = $str;
+                    }
+                    $response['objects'][] = $t;
+                }
+
+                if($response['success'])
+                {
+                    if($doCommit)
+                        $trasaction->commit();
+                }
+                else
+                {
+                    $trasaction->rollBack();
+                }
+            }
+            catch ( \PDOException $e)
+            {
+                if($e->getCode() !== '01000')
+                {
+                    $response['success'] = false;
+                    $response['msg'] = "Ah ocurrido un error al buscar las Empresas de Transporte.";
+                    $response['msg_dev'] = $e->getMessage();
+                    $trasaction->rollBack();
+                }
+            }
+        }
+        return $response;;
+    }
+
+    public function actionGetagencias(){
+
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $response = array();
+        $response['success'] = true;
+        $response['objects'] = [];
+        $response['msg'] = '';
+        $response['msg_dev'] = '';
+
+        $code = Yii::$app->request->get('code');
+
+        if(!isset($code))
+        {
+            $response['success'] = false;
+            $response['msg'] = "Debe especificar el código de búsqueda.";
+        }
+
+        if($response['success'])
+        {
+            $sql = "exec sp_sgt_empresa_cons '" . $code . "'";
+            $results = Yii::$app->db3->createCommand($sql)->queryAll();
+
+            try{
+                $trasaction = Yii::$app->db->beginTransaction();
+                $doCommit = false;
+
+                foreach ($results as $result)
+                {
+                    $agency = Agency::findOne(['ruc'=>$result['rutempresa']]);
+
+                    if($agency === null)
+                    {
+                        $doCommit = true;
+                        $agency = new Agency();
+                        $str = utf8_decode($result['nombre']);
+                        $agency->name = $str;
+                        $agency->ruc = $result['rutempresa'];
+                        $agency->code_oce = '';
+                        $agency->active = 1;
+
+                        if(!$agency->save(false))
+                        {
+                            $response['success'] = false;
+                            $response['msg'] = "Ah ocurrido un error al buscar las Empresas.";
+                            $response['msg_dev'] = implode(' ', $agency->getErrors(false));
+                            break;
+                        }
+                    }
+                    else {
+                        $str = utf8_encode($agency->name);
+                        $agency->name = $str;
+                    }
+                    $response['objects'][] = $agency;
+                }
+
+                if($response['success'])
+                {
+                    if($doCommit)
+                        $trasaction->commit();
+                }
+                else
+                {
+                    $trasaction->rollBack();
+                }
+            }
+            catch ( \PDOException $e)
+            {
+                if($e->getCode() !== '01000')
+                {
+                    $response['success'] = false;
+                    $response['msg'] = "Ah ocurrido un error al buscar las Empresas de Transporte.";
+                    $response['msg_dev'] = $e->getMessage();
+                    $trasaction->rollBack();
+                }
+            }
+        }
+        return $response;
     }
 }

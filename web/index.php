@@ -37,10 +37,13 @@ class SGTApplication extends yii\web\Application
 
         if ($this->user->isGuest)
         {
-            if (!in_array($this->controller->action->id, ['login', 'about']))
+            if (!in_array($this->controller->action->id, ['login', 'about','register','getagencias','getagenciastrans']))
             {
                 $_SESSION['redirect'] = Yii::$app->request->url;
                 return $this->controller->redirect(Url::toRoute('site/login'));
+            }
+            else{
+//                var_dump($this->controller->action->id);die;
             }
         }
         else

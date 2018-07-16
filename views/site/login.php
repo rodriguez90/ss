@@ -6,6 +6,7 @@
 
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
+use yii\helpers\Url;
 
 $this->title = 'Login';
 $this->params['breadcrumbs'][] = $this->title;
@@ -58,9 +59,23 @@ $this->params['breadcrumbs'][] = $this->title;
                         <input type="checkbox" /> Recordarme
                     </label>
                 </div>
+
+
                 <div class="login-buttons">
                     <button type="submit" class="btn btn-success btn-block btn-lg">Entrar</button>
                 </div>
+
+            <div class="m-t-20">
+              Regístrate <a href=" <?= Url::to(['/site/register']) ?>" class="text-success">aquí</a>
+            </div>
+
+
+            <ul class="parsley-errors-list filled" style="text-align: center;" >
+                <li class="parsley-required"> <?php if(isset($msg)){ echo $msg; } ?></li>
+            </ul>
+
+
+
 
             <?php ActiveForm::end(); ?>
 
