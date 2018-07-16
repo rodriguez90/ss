@@ -810,7 +810,6 @@ class ProcessController extends Controller
 
                     if($currentDeliveryDate > $deliveryDate)
                     {
-						var_dump(currentDeliveryDate);
                         $deliveryDate = $currentDeliveryDate;
                     }
 
@@ -946,7 +945,7 @@ class ProcessController extends Controller
                     {
                         $containerName = $booking . $type->code . $type->tonnage . '-' . ($i + 1);
 
-                        $data = Container::find()
+                        $data = ProcessTransaction::find()
                             ->select('container.id, 
                                            container.name, 
                                            process_transaction.status, 
@@ -963,6 +962,7 @@ class ProcessController extends Controller
                             ->andWhere(['process.type'=>$processType])
                             ->andWhere(['process_transaction.active'=>1])
                             ->andWhere(['container.name' => $containerName])
+                            ->orderBy(['process_transaction.id'=>SORT_DESC])
                             ->asArray()
                             ->one();
 
@@ -982,7 +982,6 @@ class ProcessController extends Controller
                             $container['ptId'] = -1;
                             $container['type'] = $type;
                             $container['status'] = '';
-
                         }
                         else
                         {

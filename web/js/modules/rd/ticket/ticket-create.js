@@ -177,7 +177,7 @@ var handleTableInModal = function () {
             ],
             processing:true,
             lengthMenu: [5, 10, 15],
-            "pageLength": 5,
+            "pageLength": 10,
             "language": lan,
             // select: true,
             responsive: true,
@@ -308,7 +308,7 @@ var handleTableInWizar = function() {
             info: true,
             processing:true,
             lengthMenu: [5, 10, 15],
-            pageLength: 5,
+            pageLength: 10,
             order: [[1, "asc"]],
             columns: [
                 { title: "Contenedor",
@@ -544,7 +544,7 @@ var handleTable3InWizar = function() {
             info: true,
             // processing:true,
             lengthMenu: [5, 10, 15],
-            pageLength: 5,
+            pageLength: 10,
             order: [[1, "asc"]],
             columns: [
                 { title: "Contenedor",
