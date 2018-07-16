@@ -802,6 +802,7 @@ class ProcessController extends Controller
                         ->andWhere(['process.type'=>$processType])
                         ->andWhere(['process_transaction.active'=>1])
                         ->andWhere(['container.name' => $result['contenedor']])
+                        ->orderBy(['process_transaction.id', SORT_DESC])
                         ->asArray()
                         ->one();
 
@@ -819,7 +820,7 @@ class ProcessController extends Controller
                         $container['id'] = -1;
                         $container['name'] = $result['contenedor'];
                         $container['ptId'] = -1;
-                        $container['type'] = ["id"=>-1,"name"=>""];
+                        $container['type'] = ["id"=>-1, "name"=> ""];
                         $container['status'] = '';
 
                     }

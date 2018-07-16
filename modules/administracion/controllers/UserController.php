@@ -133,17 +133,15 @@ class UserController extends Controller
             switch($rol){
                 case 'Importador':
                 case 'Exportador':
+                case "Importador_Exportador":
                 case 'Agencia':
                     if($type == '')
-                        $model->addError('error', "Seleccione una agencia." );
+                        $model->addError('error', "Seleccione una empresa." );
                     break;
                 case 'Administrador_depósito':
-                    if($type == '')
-                    $model->addError('error', "Seleccione un depósito." );
-                    break;
                 case 'Depósito':
                     if($type == '')
-                        $model->addError('error', "Seleccione un depósito." );
+                    $model->addError('error', "Seleccione un depósito." );
                     break;
                 case 'Cia_transporte':
                     if($type == '')
@@ -179,6 +177,7 @@ class UserController extends Controller
                     switch($rol){
                         case 'Importador':
                         case 'Exportador':
+                        case "Importador_Exportador":
                         case 'Agencia':
                             $userAgency = new UserAgency();
                             $userAgency->user_id = $model->id;
@@ -186,11 +185,6 @@ class UserController extends Controller
                             $userAgency->save();
                             break;
                         case 'Administrador_depósito':
-                            $userWarehouse = new UserWarehouse();
-                            $userWarehouse->user_id = $model->id;
-                            $userWarehouse->warehouse_id = $type;
-                            $userWarehouse->save();
-                            break;
                         case 'Depósito':
                             $userWarehouse = new UserWarehouse();
                             $userWarehouse->user_id = $model->id;
@@ -254,12 +248,13 @@ class UserController extends Controller
 
                     $rol_actual = $auth->getRole($model->getRole());
 
-                    $modelAux=null;
+                    $modelAux = null;
                     $modelAuxId = '';
                     $modelAuxName = '';
                     switch($rol_actual->name){
                         case 'Importador':
                         case 'Exportador':
+                        case "Importador_Exportador":
                         case 'Agencia':
                             $error  = "Seleccione una agencia.";
                             $modelAux = UserAgency::findOne(['user_id'=>$model->id]);
@@ -338,6 +333,7 @@ class UserController extends Controller
                                 switch($rol){
                                     case "Importador":
                                     case "Exportador":
+                                    case "Importador_Exportador":
                                     case "Agencia":
                                         if($change_rol){
                                             $userAgency = new UserAgency();
@@ -345,7 +341,7 @@ class UserController extends Controller
                                             $userAgency->user_id = $model->id;
 
                                             $ok = $ok && $userAgency->save();
-                                            if($modelAux!=null)
+                                            if($modelAux != null)
                                                 $modelAux->delete();
                                         }else{
                                             $userAgency = UserAgency::findOne(['user_id'=>$model->id]);
@@ -388,7 +384,7 @@ class UserController extends Controller
                                         }
                                         break;
                                     default :
-                                        if($modelAux!=null){
+                                        if($modelAux != null){
                                             $modelAux->delete();
                                         }
                                         break;
@@ -433,8 +429,8 @@ class UserController extends Controller
 
             $roles  = $auth->getRoles();
 
-//            var_dump($modelAuxId);
-//            var_dump($modelAuxName);die;
+            var_dump($modelAuxId);
+            var_dump($modelAuxName);die;
 
             return $this->render('update', [
                 'model' => $model,
