@@ -437,7 +437,7 @@ class UserController extends Controller
                 'rol_actual'=>$rol_actual->name,
                 'roles'=>$roles,
                 'type'=>$type_actual,
-                'modelAux'=>['id'=>$modelAuxId,  'name'=>$modelAuxName]
+                'modelAux'=>['id'=>$modelAuxId,  'name'=>utf8_encode($modelAuxName)]
             ]);
 
         }else{

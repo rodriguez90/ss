@@ -785,7 +785,7 @@ class ProcessController extends Controller
 
                 foreach ($results as $result)
                 {
-                    $data = Container::find()
+                    $data = ProcessTransaction::find()
                         ->select('container.id, 
                                            container.name, 
                                            process_transaction.status, 
@@ -795,16 +795,16 @@ class ProcessController extends Controller
                                            container_type.name as typeName, 
                                            container_type.code as typeCode, 
                                            container_type.tonnage as typeTonnage')
-                        ->innerJoin('process_transaction', 'process_transaction.container_id=container.id')
+                        ->innerJoin('container', 'process_transaction.container_id=container.id')
                         ->innerJoin('process', 'process.id=process_transaction.process_id')
                         ->innerJoin('container_type', 'container_type.id=container.type_id')
                         ->where(['process.bl' => $bl])
                         ->andWhere(['process.type'=>$processType])
                         ->andWhere(['process_transaction.active'=>1])
                         ->andWhere(['container.name' => $result['contenedor']])
-                        ->orderBy(['process_transaction.id', SORT_DESC])
+                        ->orderBy(['process_transaction.id'=>SORT_DESC])
                         ->asArray()
-                        ->one();
+                        ->one();											
 
                     $currentDeliveryDate = new DateTime($result['fecha_limite'], new DateTimeZone("UTC"));
 
