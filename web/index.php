@@ -42,6 +42,9 @@ class SGTApplication extends yii\web\Application
                 $_SESSION['redirect'] = Yii::$app->request->url;
                 return $this->controller->redirect(Url::toRoute('site/login'));
             }
+            else{
+//                var_dump($this->controller->action->id);die;
+            }
         }
         else
         {

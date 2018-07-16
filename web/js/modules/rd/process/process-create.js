@@ -170,8 +170,8 @@ var handleSelectTransCompany = function () {
         // tags: true,
         closeOnSelect: true,
         ajax: {
-            // url: homeUrl + '/rd/api-trans-company',
-            url: homeUrl + '/rd/trans-company/from-sp',
+            url: homeUrl + '/rd/api-trans-company',
+            // url: homeUrl + '/rd/trans-company/from-sp',
             dataType: 'json',
             // delay: 250,
             cache: true,
@@ -185,8 +185,8 @@ var handleSelectTransCompany = function () {
             processResults: function (data) {
                 // console.log(data);
                 var results  = [];
-                $.each(data.trans_companies, function (index, item) {
-                // $.each(data, function (index, item) {
+                // $.each(data.trans_companies, function (index, item) {
+                $.each(data, function (index, item) {
                     // console.log(item);
                     results .push({
                         id: item.id,
@@ -467,8 +467,8 @@ $(document).ready(function () {
         // $('#blCode').prop('disabled', true);
         var bl = $('#blCode').val();
         cleanUI();
-        fetchContainers(bl);
-    //     fetchContainersOffLine();
+        // fetchContainers(bl);
+        fetchContainersOffLine();
     //     return false;
     });
 

@@ -184,13 +184,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
                         </div>
                     </div>
-
-
-
-
                 </div>
-
-
                 <div class="col-md-12" style="margin-bottom: 15px;">
                     <div class="col-md-4">
 
@@ -202,19 +196,10 @@ $this->params['breadcrumbs'][] = $this->title;
                         </div>
                     </div>
                     <div class="col-md-4">
-
                     </div>
-
-
                 </div>
-
-
             </div>
-
             <?php ActiveForm::end(); ?>
-
-
-
     </div>
     <!-- end login -->
 </div>

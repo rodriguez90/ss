@@ -2,64 +2,97 @@
  * Created by yopt on 08/07/2018.
  */
 
-$(function () {
-    $("#selectpicker-type").change(function(){
-        var action = '';
-        var option0 = '';
-        var div = $('#select-conten');
-        var label = $("#label-type");
+var handleSelect2 = function(op) {
 
-         switch ($(this).val()){
-             case "1":
-             case "2":
-             case "3":
-                 action = "/site/getagencias";
-                 option0 = "<option value='' selected=''>Seleccione Empresa</option>";
-                 label.text("Empresa*");
-                 break;
-             case "4":
-                 action = "/site/getagenciastrans";
-                 option0 = "<option value='' selected=''>Seleccione la Empresa de transporte</option>";
-                 label.text("Empresa de Transporte*");
-                 break;
-             default:
-                 action = '';
-                 break;
-         }
+    var action = '';
+    var option0 = '';
+    var min = -1;
+    var validator = "";
+    var div = $('#select-conten');
+    var label = $("#label-type");
+    console.log(op);
 
-        if(action!=''){
-            $.ajax({
-                url: homeUrl+ action,
-                type: 'get',
-                dataType: "json",
-                data:{},
+    switch (op)
+    {
+        case 1:
+        case 2:
+        case 3:
+            action = "/site/getagencias";
+            option0 = "Seleccione la empresa";
+            min = 13;
+            label.text("Empresa*");
+            break;
+        case 4:
+            action = "/site/getagenciastrans";
+            option0 = "Seleccione la empresa de transporte";
+            min = 5;
+            label.text("Empresa de Transporte*");
+            break;
+        // default:
+        //     break;
+    }
 
-                success:function(data){
+    div.empty();
 
-                    div.empty();
+    console.log(option0);
+    console.log(action);
 
-                    var conten = "<select id='selectpicker-type' name='usertypeid' class='form-control'  data-parsley-required='true'  data-size='10' data-live-search='true'>";
-                    conten += option0;
+    if(action != '' )
+    {
+        var conten = "<select id='select-entity' name='type' class='form-control'  data-parsley-required='true'  data-size='10' data-live-search='true' " + validator + "></select>";
+        div.append(conten);
 
-                    $.each(data,function(i){
-                        conten += "<option value='"+ data[i].id+"' >" +data[i].name +"</option>";
-                    })
-                    conten+="</select>"
-                    div.append(conten);
+        var select2 = $("#select-entity").select2(
+        {
+            language: "es",
 
+            placeholder: option0,
+            width: '100%',
+            minimumInputLength:min,
+            // allowClear: true,
+            // tags: true,
+            closeOnSelect: true,
+            ajax: {
+                url: homeUrl + action,
+                dataType: 'json',
+                // delay: 250,
+                // cache: true,
+                data: function (params) {
+                    var query = {
+                        code: params.term,
+                    };
+                    return query;
                 },
-                error: function(data) {
-                    console.log(data.responseText);
-                    alert(data.responseText);
-                    result = false;
-                    // return false;
-                }
-            });
-        }else {
-            div.empty();
-            label.text("---");
-        }
+                processResults: function (response) {
+                    console.log(response);
+                    var results  = [];
+                    $.each(response.objects, function (index, item) {
+                        results .push({
+                            id: item.id,
+                            text: item.name,
+                        });
+                    });
+                    return {
+                        results: results
+                    };
+                },
+            },
+        }).on('select2:select', function (e)
+        {
+            var data = e.params.data;
+        });
+    }
+    else
+    {
+        label.text("---");
+    }
 
+};
 
+$(function ()
+{
+    $("#selectpicker-type").change(function()
+    {
+        handleSelect2(parseInt($(this).val()));
     });
 });

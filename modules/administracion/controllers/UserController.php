@@ -44,7 +44,13 @@ class UserController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::class,
+//                'only' => ['Getagencias', 'Getdeposito', 'Getagenciastrans'],
+//                'except' => ['getagencias','getdeposito','getagenciastrans',],
                 'rules' => [
+//                    [
+//                        'allow' => true,
+//                        'actions' => ['Getagencias','Getdeposito','Getagenciastrans',],
+//                    ],
                     [
                         'allow' => true,
                         'roles' => ['@'],

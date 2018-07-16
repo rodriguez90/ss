@@ -289,28 +289,29 @@ class SiteController extends Controller
                 if ($model->save() && $usertype!=null && $usertypeid!=null) {
 
                     switch ($usertype){
-                        case "1":
+                        case '1':
+                        case '2':
+                        case '3':
                             $user_agency = new UserAgency();
                             $user_agency->user_id = $model->id;
                             $user_agency->agency_id = $usertypeid;
                             $user_agency->save();
-                            $new_rol = $auth->createRole("Importador");
+                            $roleName  = '';
+                            if($usertype == '1')
+                            {
+                                $roleName = 'Importador';
+                            }
+                            elseif ($usertype == '2')
+                            {
+                                $roleName = 'Exportador';
+                            }
+                            elseif ($usertype == 3)
+                            {
+                                $roleName = 'Importador_Exportador';
+                            }
+                            $new_rol = $auth->createRole($roleName);
                             break;
-                        case "2":
-                            $user_agency = new UserAgency();
-                            $user_agency->user_id = $model->id;
-                            $user_agency->agency_id = $usertypeid;
-                            $user_agency->save();
-                            $new_rol = $auth->createRole("Exportador");
-                            break;
-                        case "3":
-                            $user_agency = new UserAgency();
-                            $user_agency->user_id = $model->id;
-                            $user_agency->agency_id = $usertypeid;
-                            $user_agency->save();
-                            $new_rol = $auth->createRole("importador_exportador");
-                            break;
-                        case "4":
+                        case '4':
                             $user_trans = new UserTranscompany();
                             $user_trans->user_id = $model->id;
                             $user_trans->agency_id = $usertypeid;
@@ -548,45 +549,164 @@ class SiteController extends Controller
 
     }
 
-
-
-
-    public function actionGetagenciastrans(){
+    public function actionGetagenciastrans()
+    {
 
         Yii::$app->response->format = Response::FORMAT_JSON;
-        Yii::$app->response->charset = 'CP1257';
 
-        $results = TransCompany::find()
-            ->all();
-        $transactions = [];
+        $response = array();
+        $response['success'] = true;
+        $response['objects'] = [];
+        $response['msg'] = '';
+        $response['msg_dev'] = '';
 
-        if($results != null)
+        $code = Yii::$app->request->get('code');
+
+        if(!isset($code))
         {
-            foreach ($results as $result)
-            {
-                $str = iconv("CP1257", "UTF-8", $result->name);
-                $result->name = $str;
-                $transactions[]=$result;
-            }
+            $response['success'] = false;
+            $response['msg'] = "Debe especificar el código de búsqueda.";
         }
 
-        return $transactions;
+        if($response['success'])
+        {
+            $sql = "exec sp_sgt_companias_cons '" . $code . "'";
+            $results = Yii::$app->db2->createCommand($sql)->queryAll();
 
+            try{
+                $trasaction = TransCompany::getDb()->beginTransaction();
+                $doCommit = false;
+
+                foreach ($results as $result)
+                {
+                    $t = TransCompany::findOne(['ruc'=>$result['ruc_empresa']]);
+
+                    if($t === null)
+                    {
+                        $doCommit = true;
+                        $t = new TransCompany();
+                        $str = utf8_decode($result['nombre_empresa']);
+                        $t->name = $str;
+                        $t->ruc = $result['ruc_empresa'];
+                        $t->address = "NO TIENE";
+                        $t->active = 1;
+
+                        if(!$t->save())
+                        {
+                            $response['success'] = false;
+                            $response['msg'] = "Ah ocurrido un error al buscar las Empresas de Transporte.";
+                            $response['msg_dev'] = implode(' ', $t->getErrors(false));
+                            break;
+                        }
+                    }
+                    else {
+                        $str = utf8_encode($t->name);
+                        $t->name = $str;
+                    }
+                    $response['objects'][] = $t;
+                }
+
+                if($response['success'])
+                {
+                    if($doCommit)
+                        $trasaction->commit();
+                }
+                else
+                {
+                    $trasaction->rollBack();
+                }
+            }
+            catch ( \PDOException $e)
+            {
+                if($e->getCode() !== '01000')
+                {
+                    $response['success'] = false;
+                    $response['msg'] = "Ah ocurrido un error al buscar las Empresas de Transporte.";
+                    $response['msg_dev'] = $e->getMessage();
+                    $trasaction->rollBack();
+                }
+            }
+        }
+        return $response;;
     }
 
     public function actionGetagencias(){
 
         Yii::$app->response->format = Response::FORMAT_JSON;
 
-        $result = Agency::find()
-            ->all();
+        $response = array();
+        $response['success'] = true;
+        $response['objects'] = [];
+        $response['msg'] = '';
+        $response['msg_dev'] = '';
 
-        if($result!=null)
-            return $result;
+        $code = Yii::$app->request->get('code');
 
-        return false;
+        if(!isset($code))
+        {
+            $response['success'] = false;
+            $response['msg'] = "Debe especificar el código de búsqueda.";
+        }
 
+        if($response['success'])
+        {
+            $sql = "exec sp_sgt_empresa_cons '" . $code . "'";
+            $results = Yii::$app->db3->createCommand($sql)->queryAll();
+
+            try{
+                $trasaction = Yii::$app->db->beginTransaction();
+                $doCommit = false;
+
+                foreach ($results as $result)
+                {
+                    $agency = Agency::findOne(['ruc'=>$result['rutempresa']]);
+
+                    if($agency === null)
+                    {
+                        $doCommit = true;
+                        $agency = new Agency();
+                        $str = utf8_decode($result['nombre']);
+                        $agency->name = $str;
+                        $agency->ruc = $result['rutempresa'];
+                        $agency->code_oce = '';
+                        $agency->active = 1;
+
+                        if(!$agency->save(false))
+                        {
+                            $response['success'] = false;
+                            $response['msg'] = "Ah ocurrido un error al buscar las Empresas.";
+                            $response['msg_dev'] = implode(' ', $agency->getErrors(false));
+                            break;
+                        }
+                    }
+                    else {
+                        $str = utf8_encode($agency->name);
+                        $agency->name = $str;
+                    }
+                    $response['objects'][] = $agency;
+                }
+
+                if($response['success'])
+                {
+                    if($doCommit)
+                        $trasaction->commit();
+                }
+                else
+                {
+                    $trasaction->rollBack();
+                }
+            }
+            catch ( \PDOException $e)
+            {
+                if($e->getCode() !== '01000')
+                {
+                    $response['success'] = false;
+                    $response['msg'] = "Ah ocurrido un error al buscar las Empresas de Transporte.";
+                    $response['msg_dev'] = $e->getMessage();
+                    $trasaction->rollBack();
+                }
+            }
+        }
+        return $response;
     }
-
-
 }

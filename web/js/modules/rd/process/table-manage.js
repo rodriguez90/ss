@@ -15,7 +15,7 @@ var handleDataTable = function() {
             dom: '<"top"ip<"clear">>t',
             processing:true,
             lengthMenu: [5, 10, 15],
-            pageLength: 3,
+            pageLength: 10,
             language: lan,
             select: {
                 // items: 'cells',
@@ -49,9 +49,20 @@ var handleDataTable = function() {
                             immediateUpdates:true,
                             format:'dd/mm/yyyy'
                         }).on('changeDate', function(event){
-                            console.log(event.date);
-                            console.log(dateValue);
+                            // console.log(event.date);
+                            // console.log(dateValue);
                             var dateValue = moment(event.date).utc().format('DD-MM-YYYY');
+                            var mDateValue = moment(event.date)
+                            var mProcessDD = moment(processDeliveryDate)
+                            console.log("Container deliveryDate: " + dateValue);
+                            console.log("Current deliveryDate: " + processDeliveryDate);
+                            var result = mDateValue.isAfter(mProcessDD);
+                            console.log(result);
+                            if(result)
+                            {
+                                console.log("Change processDeliveryDate: " + dateValue);
+                                processDeliveryDate = dateValue;
+                            }
                             // data.deliveryDate = dateValue;
                             table.cell(dataIndex, 3).data(dateValue)
                         });
@@ -205,7 +216,7 @@ var handleDataTable2 = function () {
             "columns": columns,
             processing:true,
             lengthMenu: [5, 10, 15],
-            "pageLength": 3,
+            pageLength: 10,
             "language": lan,
             responsive: true,
             columnDefs: [
@@ -247,7 +258,7 @@ var handleDataTable3 = function () {
             dom: '<"top"ip<"clear">>t',
             processing:true,
             lengthMenu: [5, 10, 15],
-            "pageLength": 3,
+            "pageLength": 10,
             "language": lan,
             responsive: true,
             rowId: 'name',
