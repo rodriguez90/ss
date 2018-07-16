@@ -8,7 +8,6 @@ use yii\widgets\ActiveForm;
 /* @var $model app\modules\administracion\models\User */
 /* @var $form yii\widgets\ActiveForm */
 /* @var $roles */
-/* @var $modelAux */
 
 use app\assets\FormAsset;
 FormAsset::register($this);
@@ -205,12 +204,6 @@ FormAsset::register($this);
 
 
 </div>
-
-<script type="text/javascript">
-    var modelAux = <?php echo json_encode(['name'=>$modelAux['name'],
-                                        'id'=>$modelAux['id']]);
-                    ?>;
-</script>
 
 <?php
 $this->registerJsFile('@web/js/modules/utiles.js',              ['depends' => ['app\assets\FormAsset']]);
