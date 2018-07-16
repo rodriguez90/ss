@@ -955,7 +955,7 @@ class ProcessController extends Controller
                                            container_type.name as typeName, 
                                            container_type.code as typeCode, 
                                            container_type.tonnage as typeTonnage')
-                            ->innerJoin('process_transaction', 'process_transaction.container_id=container.id')
+                            ->innerJoin('container', 'process_transaction.container_id=container.id')
                             ->innerJoin('process', 'process.id=process_transaction.process_id')
                             ->innerJoin('container_type', 'container_type.id=container.type_id')
                             ->where(['process.bl' => $booking])
