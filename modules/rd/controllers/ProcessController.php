@@ -804,12 +804,13 @@ class ProcessController extends Controller
                         ->andWhere(['container.name' => $result['contenedor']])
                         ->orderBy(['process_transaction.id'=>SORT_DESC])
                         ->asArray()
-                        ->one();											
+                        ->one();									
 
                     $currentDeliveryDate = new DateTime($result['fecha_limite'], new DateTimeZone("UTC"));
 
                     if($currentDeliveryDate > $deliveryDate)
                     {
+						var_dump(currentDeliveryDate);
                         $deliveryDate = $currentDeliveryDate;
                     }
 
@@ -840,9 +841,10 @@ class ProcessController extends Controller
                     $container['deliveryDate'] = $currentDeliveryDate->format("d-m-Y");
                     $container['errCode'] = $result['err_code'];
                     $response['containers'][] = $container;
-                }
+                }						
 
-                $response['deliveryDate'] = $deliveryDate->format("Y-m-d H:i:s");
+                $response['deliveryDate'] = $deliveryDate->format("d-m-Y");
+							
             }
             catch (Exception $ex)
             {

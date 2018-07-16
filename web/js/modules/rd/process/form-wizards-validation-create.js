@@ -28,8 +28,11 @@ var handleBootstrapWizardsValidation = function() {
 
                             if(value.selectable)
                             {
-                                if(processType === 1)
+                                if(processType == 1)
+								{
                                     value.type = containertDataMap.get(value.name);
+									console.log(value.type);
+								}
 
                                 table.row.add(
                                     value
@@ -91,7 +94,7 @@ var handleBootstrapWizardsValidation = function() {
                             // console.log( 'Data in index: '+index +' is: '+ value.name );
                             if(result && value.selectable) {
                                 // FIXME: It Export -> Booking code -> check delyveryDate it's set
-                                if(processType === 2)
+                                if(processType == 2)
                                 {
                                     var deliveryDate = value.deliveryDate;
                                     if(!moment(deliveryDate).isValid())
@@ -102,7 +105,7 @@ var handleBootstrapWizardsValidation = function() {
                                     }
                                 }
 
-                                if(processType === 1)
+                                if(processType == 1)
                                 {
                                     var type =  value.type = containertDataMap.get(value.name, null);
 
@@ -129,7 +132,7 @@ var handleBootstrapWizardsValidation = function() {
                         .data()
                         .each( function ( value, index ) {
 
-                            if(result && value.transCompany.id === -1){
+                            if(result && value.transCompany.id == -1){
                                 result = false;
                                 alert("Debe asignarle a todos los contenedores la empresa de transporte .");
                             }

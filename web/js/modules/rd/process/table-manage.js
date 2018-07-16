@@ -63,18 +63,19 @@ var handleDataTable = function() {
                         console.log(data);
                         console.log(data.type);
                         $('select', row).select2(
-                            {
-                                language: "es",
-                                placeholder: 'Seleccione Tipo de Contenedor',
-                                width: '100%',
-                                closeOnSelect: true,
-                                data:containerTypeArray,
-                            }).on('select2:select', function (e) {
+						{
+							language: "es",
+							placeholder: 'Seleccione Tipo de Contenedor',
+							width: '100%',
+							closeOnSelect: true,
+							data:containerTypeArray,
+						}).on('select2:select', function (e) {
                             var type = e.params.data;
                             var containerType = {
                                 id:type.id,
                                 name:type.text
                             };
+							console.log(containerType);
                             containertDataMap.set(data.name,containerType);
 
                             // $('#mySelect2').val(type.id); // Select the option with a value of '1'
@@ -133,9 +134,9 @@ var handleDataTable = function() {
                     render: function ( data, type, full, meta )
                     {
                         var elementId =  String(full.name).trim();
-                        console.log("render: " + elementId + " " + type);
-                        console.log("data: ");
-                        console.log(data);
+                        // console.log("render: " + elementId + " " + type);
+                        // console.log("data: ");
+                        // console.log(data);
                         if(type == 'display' && full.selectable && processType == 2)
                         {
                             var  html = '<input type=\"text\" class=\"form-control\" id=\"' + elementId +  '\" placeholder=\"Seleccionar\"' + ' value=\"' + data + '\"' + ' data-date=\"' +  data + '\" >';
@@ -221,7 +222,7 @@ var handleDataTable2 = function () {
                     data:'deliveryDate',
                     render: function ( data, type, full, meta )
                     {
-                        console.log(data);
+                        // console.log(data);
                         // return moment(data).format("DD/MM/YYYY");
                         return data;
                     },
