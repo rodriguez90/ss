@@ -781,12 +781,11 @@ class ProcessController extends Controller
                     }
                     $response['line']= $line;
                     $deliveryDate = new DateTime($results[0]['fecha_limite'], new DateTimeZone("UTC"));
-                }
 
-                foreach ($results as $result)
-                {
-                    $data = ProcessTransaction::find()
-                        ->select('container.id, 
+                    foreach ($results as $result)
+                    {
+                        $data = ProcessTransaction::find()
+                            ->select('container.id, 
                                            container.name, 
                                            process_transaction.status, 
                                            process_transaction.delivery_date as deliveryDate, 
@@ -795,54 +794,57 @@ class ProcessController extends Controller
                                            container_type.name as typeName, 
                                            container_type.code as typeCode, 
                                            container_type.tonnage as typeTonnage')
-                        ->innerJoin('container', 'process_transaction.container_id=container.id')
-                        ->innerJoin('process', 'process.id=process_transaction.process_id')
-                        ->innerJoin('container_type', 'container_type.id=container.type_id')
-                        ->where(['process.bl' => $bl])
-                        ->andWhere(['process.type'=>$processType])
-                        ->andWhere(['process_transaction.active'=>1])
-                        ->andWhere(['container.name' => $result['contenedor']])
-                        ->orderBy(['process_transaction.id'=>SORT_DESC])
-                        ->asArray()
-                        ->one();									
+                            ->innerJoin('container', 'process_transaction.container_id=container.id')
+                            ->innerJoin('process', 'process.id=process_transaction.process_id')
+                            ->innerJoin('container_type', 'container_type.id=container.type_id')
+                            ->where(['process.bl' => $bl])
+                            ->andWhere(['process.type'=>$processType])
+                            ->andWhere(['process_transaction.active'=>1])
+                            ->andWhere(['container.name' => $result['contenedor']])
+                            ->orderBy(['process_transaction.id'=>SORT_DESC])
+                            ->asArray()
+                            ->one();
 
-                    $currentDeliveryDate = new DateTime($result['fecha_limite'], new DateTimeZone("UTC"));
+                        $currentDeliveryDate = new DateTime($result['fecha_limite'], new DateTimeZone("UTC"));
 
-                    if($currentDeliveryDate > $deliveryDate)
-                    {
-                        $deliveryDate = $currentDeliveryDate;
+                        if($currentDeliveryDate > $deliveryDate)
+                        {
+                            $deliveryDate = $currentDeliveryDate;
+                        }
+
+                        $container = null;
+
+                        if ($data === null) {
+                            $container = [];
+                            $container['id'] = -1;
+                            $container['name'] = $result['contenedor'];
+                            $container['ptId'] = -1;
+                            $container['type'] = ["id"=>-1, "name"=> ""];
+                            $container['status'] = '';
+
+                        }
+                        else
+                        {
+                            $container = [];
+                            $container['id'] = $data['id'];
+                            $container['name'] = $data['name'];
+                            $container['ptId'] =  $data['ptId'];
+                            $container['type'] = new  ContainerType();
+                            $container['type']->id = $data['typeId'];
+                            $container['type']->name = $data['typeName'];
+                            $container['type']->code = $data['typeCode'];
+                            $container['type']->tonnage = $data['typeTonnage'];
+                            $container['status'] = $data['status'];
+                        }
+                        $container['deliveryDate'] = $currentDeliveryDate->format("d-m-Y");
+                        $container['errCode'] = $result['err_code'];
+                        $response['containers'][] = $container;
                     }
 
-                    $container = null;
+                    $response['deliveryDate'] = $deliveryDate->format("d-m-Y");
+                }
 
-                    if ($data === null) {
-                        $container = [];
-                        $container['id'] = -1;
-                        $container['name'] = $result['contenedor'];
-                        $container['ptId'] = -1;
-                        $container['type'] = ["id"=>-1, "name"=> ""];
-                        $container['status'] = '';
 
-                    }
-                    else
-                    {
-                        $container = [];
-                        $container['id'] = $data['id'];
-                        $container['name'] = $data['name'];
-                        $container['ptId'] =  $data['ptId'];
-                        $container['type'] = new  ContainerType();
-                        $container['type']->id = $data['typeId'];
-                        $container['type']->name = $data['typeName'];
-                        $container['type']->code = $data['typeCode'];
-                        $container['type']->tonnage = $data['typeTonnage'];
-                        $container['status'] = $data['status'];
-                    }
-                    $container['deliveryDate'] = $currentDeliveryDate->format("d-m-Y");
-                    $container['errCode'] = $result['err_code'];
-                    $response['containers'][] = $container;
-                }						
-
-                $response['deliveryDate'] = $deliveryDate->format("d-m-Y");
 							
             }
             catch (Exception $ex)
@@ -911,42 +913,41 @@ class ProcessController extends Controller
                     $response['line']= $line;
 
                     $deliveryDate = new DateTime($results[0]['fecha_limite'], new DateTimeZone("UTC"));
-                }
 
-                foreach ($results as $result)
-                {
-                    $type = ContainerType::findOne(['code'=>$result['tipo'], 'tonnage'=>(int)$result['tamanio']]);
-
-                    if($type === null)
+                    foreach ($results as $result)
                     {
-                        $type = new ContainerType();
-                        $type->code = $result['tipo'];
-                        $type->tonnage = (int)$result['tamanio'];
-                        $type->name = $type->code . $type->tonnage;
-                        $type->active = 1;
-                        if(!$type->save())
+                        $type = ContainerType::findOne(['code'=>$result['tipo'], 'tonnage'=>(int)$result['tamanio']]);
+
+                        if($type === null)
                         {
-                            $response['success'] = false;
-                            $response['containers'] = [];
-                            $response['msg'] = 'Ah occurrido un error al procesar los grupos de contenedores.';
-                            break;
+                            $type = new ContainerType();
+                            $type->code = $result['tipo'];
+                            $type->tonnage = (int)$result['tamanio'];
+                            $type->name = $type->code . $type->tonnage;
+                            $type->active = 1;
+                            if(!$type->save())
+                            {
+                                $response['success'] = false;
+                                $response['containers'] = [];
+                                $response['msg'] = 'Ah occurrido un error al procesar los grupos de contenedores.';
+                                break;
+                            }
                         }
-                    }
 
-                    $currentDeliveryDate = new DateTime($result['fecha_limite'], new DateTimeZone("UTC"));
-                    if($currentDeliveryDate > $deliveryDate)
-                    {
-                        $deliveryDate = $currentDeliveryDate;
-                    }
+                        $currentDeliveryDate = new DateTime($result['fecha_limite'], new DateTimeZone("UTC"));
+                        if($currentDeliveryDate > $deliveryDate)
+                        {
+                            $deliveryDate = $currentDeliveryDate;
+                        }
 
-                    $count = (int)$result['cantidad'];
+                        $count = (int)$result['cantidad'];
 
-                    for($i = 0; $i < $count; $i++)
-                    {
-                        $containerName = $booking . $type->code . $type->tonnage . '-' . ($i + 1);
+                        for($i = 0; $i < $count; $i++)
+                        {
+                            $containerName = $booking . $type->code . $type->tonnage . '-' . ($i + 1);
 
-                        $data = ProcessTransaction::find()
-                            ->select('container.id, 
+                            $data = ProcessTransaction::find()
+                                ->select('container.id, 
                                            container.name, 
                                            process_transaction.status, 
                                            process_transaction.delivery_date as deliveryDate, 
@@ -955,55 +956,56 @@ class ProcessController extends Controller
                                            container_type.name as typeName, 
                                            container_type.code as typeCode, 
                                            container_type.tonnage as typeTonnage')
-                            ->innerJoin('container', 'process_transaction.container_id=container.id')
-                            ->innerJoin('process', 'process.id=process_transaction.process_id')
-                            ->innerJoin('container_type', 'container_type.id=container.type_id')
-                            ->where(['process.bl' => $booking])
-                            ->andWhere(['process.type'=>$processType])
-                            ->andWhere(['process_transaction.active'=>1])
-                            ->andWhere(['container.name' => $containerName])
-                            ->orderBy(['process_transaction.id'=>SORT_DESC])
-                            ->asArray()
-                            ->one();
+                                ->innerJoin('container', 'process_transaction.container_id=container.id')
+                                ->innerJoin('process', 'process.id=process_transaction.process_id')
+                                ->innerJoin('container_type', 'container_type.id=container.type_id')
+                                ->where(['process.bl' => $booking])
+                                ->andWhere(['process.type'=>$processType])
+                                ->andWhere(['process_transaction.active'=>1])
+                                ->andWhere(['container.name' => $containerName])
+                                ->orderBy(['process_transaction.id'=>SORT_DESC])
+                                ->asArray()
+                                ->one();
 
-                        $currentDeliveryDate = new DateTime($result['fecha_limite'], new DateTimeZone("UTC"));
+                            $currentDeliveryDate = new DateTime($result['fecha_limite'], new DateTimeZone("UTC"));
 
-                        if($currentDeliveryDate > $deliveryDate)
-                        {
-                            $deliveryDate = $currentDeliveryDate;
+                            if($currentDeliveryDate > $deliveryDate)
+                            {
+                                $deliveryDate = $currentDeliveryDate;
+                            }
+
+                            $container = null;
+
+                            if ($data === null) {
+                                $container = [];
+                                $container['id'] = -1;
+                                $container['name'] = $containerName;
+                                $container['ptId'] = -1;
+                                $container['type'] = $type;
+                                $container['status'] = '';
+                            }
+                            else
+                            {
+                                $container = [];
+                                $container['id'] = $data['id'];
+                                $container['name'] = $data['name'];
+                                $container['ptId'] =  $data['ptId'];
+                                $container['type'] = new  ContainerType();
+                                $container['type']->id = $data['typeId'];
+                                $container['type']->name = $data['typeName'];
+                                $container['type']->code = $data['typeCode'];
+                                $container['type']->tonnage = $data['typeTonnage'];
+                                $container['status'] = $data['status'];
+                            }
+
+                            $container['deliveryDate'] = $currentDeliveryDate->format("d-m-Y");
+                            $container['errCode'] = $result['err_code'];
+                            $response['containers'][] = $container;
                         }
-
-                        $container = null;
-
-                        if ($data === null) {
-                            $container = [];
-                            $container['id'] = -1;
-                            $container['name'] = $containerName;
-                            $container['ptId'] = -1;
-                            $container['type'] = $type;
-                            $container['status'] = '';
-                        }
-                        else
-                        {
-                            $container = [];
-                            $container['id'] = $data['id'];
-                            $container['name'] = $data['name'];
-                            $container['ptId'] =  $data['ptId'];
-                            $container['type'] = new  ContainerType();
-                            $container['type']->id = $data['typeId'];
-                            $container['type']->name = $data['typeName'];
-                            $container['type']->code = $data['typeCode'];
-                            $container['type']->tonnage = $data['typeTonnage'];
-                            $container['status'] = $data['status'];
-                        }
-
-                        $container['deliveryDate'] = $currentDeliveryDate->format("d-m-Y");
-                        $container['errCode'] = $result['err_code'];
-                        $response['containers'][] = $container;
                     }
-                }
 
-                $response['deliveryDate'] = $deliveryDate->format("d-m-Y");
+                    $response['deliveryDate'] = $deliveryDate->format("d-m-Y");
+                }
             }
             catch (Exception $ex)
             {
