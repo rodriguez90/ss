@@ -263,26 +263,23 @@ class CalendarController extends Controller
                 ->where(["calendar.id"=>$model->id])
                 ->count();
 
-            if($reservados == 0){
+            if($reservados == 0)
+            {
                 $model = $this->findModel($id);
                 $result = 0;
 
                 if($model)
                 {
-                    $model->active = 0;
+                    $model->active = -1;
                     $result = $model->update();
-                }
-                {
-                    $result ['status']= 0;
-                    $result['msg'] = "El calendario no existe.";
                 }
 
                 if($result > 0){
-                    $result ['status']= 1;
+                    $result ['status'] = 1;
                     $result['msg'] = "Disponibilidad eliminadas: ".$amount;
                 }else{
                     $result ['status']= 0;
-                    $result['msg'] = "No se pudieron eliminar la disponibilidad.";
+                    $result['msg'] = "No fue posible eliminar la disponibilidad.";
                 }
             }else{
                 $result ['status']= 0;

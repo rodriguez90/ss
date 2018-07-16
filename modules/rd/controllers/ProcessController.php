@@ -338,8 +338,7 @@ class ProcessController extends Controller
             $containersByTransCompany = [];
 
             try {
-                // $aux = new DateTime($model->delivery_date, new DateTimeZone("UTC"));
-				$aux = new DateTime($model->delivery_date);
+                $aux = new DateTime($model->delivery_date, new DateTimeZone("UTC"));
                 $model->delivery_date = $aux->format("Y-m-d");
 
                 if($model->save())
@@ -434,8 +433,7 @@ class ProcessController extends Controller
                         $processTransModel->trans_company_id = $transCompany->id;
                         $processTransModel->status = 'PENDIENTE';
 
-                        // $aux = new DateTime($container['deliveryDate'], new DateTimeZone("UTC"));
-						$aux = new DateTime($container['deliveryDate']);
+                        $aux = new DateTime($container['deliveryDate'], new DateTimeZone("UTC"));
 //                        $aux->setTimezone(new DateTimeZone("UTC"));
                         $processTransModel->delivery_date = $aux->format("Y-m-d");
 
