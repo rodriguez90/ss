@@ -338,7 +338,8 @@ class ProcessController extends Controller
             $containersByTransCompany = [];
 
             try {
-                $aux = new DateTime($model->delivery_date, new DateTimeZone("UTC"));
+                // $aux = new DateTime($model->delivery_date, new DateTimeZone("UTC"));
+				$aux = new DateTime($model->delivery_date);
                 $model->delivery_date = $aux->format("Y-m-d");
 
                 if($model->save())
@@ -433,7 +434,8 @@ class ProcessController extends Controller
                         $processTransModel->trans_company_id = $transCompany->id;
                         $processTransModel->status = 'PENDIENTE';
 
-                        $aux = new DateTime($container['deliveryDate'], new DateTimeZone("UTC"));
+                        // $aux = new DateTime($container['deliveryDate'], new DateTimeZone("UTC"));
+						$aux = new DateTime($container['deliveryDate']);
 //                        $aux->setTimezone(new DateTimeZone("UTC"));
                         $processTransModel->delivery_date = $aux->format("Y-m-d");
 
@@ -998,13 +1000,13 @@ class ProcessController extends Controller
                                 $container['status'] = $data['status'];
                             }
 
-                            $container['deliveryDate'] = $currentDeliveryDate->format("d-m-Y");
+                            $container['deliveryDate'] = $currentDeliveryDate->format("d/m/Y");
                             $container['errCode'] = $result['err_code'];
                             $response['containers'][] = $container;
                         }
                     }
 
-                    $response['deliveryDate'] = $deliveryDate->format("d-m-Y");
+                    $response['deliveryDate'] = $deliveryDate->format("d/m/Y");
                 }
             }
             catch (Exception $ex)
