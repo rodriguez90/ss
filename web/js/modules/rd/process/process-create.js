@@ -49,13 +49,16 @@ var processDeliveryDate = null;
 
 var containerFetchUrl = '';
 
+var hasErrorContainer = false;
+
 var cleanUI = function () {
     selectedContainers = [];
     containertDataMap.clear();
 
     document.getElementById('oce').innerHTML = "OCE: -" ;
     document.getElementById('line').innerHTML = "LINEA: -";
-
+    document.getElementById('staticLinks').style.display = 'none';
+    hasErrorContainer = false;
 
     var table = $('#data-table').DataTable();
 
@@ -395,6 +398,12 @@ var addContainer = function (table, dataContainer) {
     var statusIsDate = moment(dataContainer.status).isValid();
     // console.log("Status Date Valid: " + statusIsDate);
     var errCode = parseInt(dataContainer.errCode);
+
+    if(!hasErrorContainer && errCode == 1)
+    {
+        hasErrorContainer = true;
+        document.getElementById('staticLinks').style.display = 'inline';
+    }
 
     var container =  {
         id:dataContainer.id,

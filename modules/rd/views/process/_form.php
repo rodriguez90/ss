@@ -161,7 +161,7 @@ else if ($intVal === Process::PROCESS_EXPORT)
                                         </div>
                                     </div>
                                     <!-- end row -->
-                                    <div class="row">
+                                    <div id="staticLinks" class="row" style="display: none;">
                                         <div class="col-md-8 col-md-offset-4">
                                             <a href="http://www.tpg.com.ec" class="btn btn-primary btn-xs m-r-5">Solicitar crédito</a>
                                             <a href="http://www.tpg.com.ec" class="btn btn-primary btn-xs m-r-5">Factura en línea</a>
