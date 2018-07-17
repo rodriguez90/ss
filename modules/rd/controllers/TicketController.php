@@ -349,7 +349,8 @@ class TicketController extends Controller
 
                 if($response['success'])
                 {
-                    if($model->delete())
+                    $model->active = -1;
+                    if($model->save())
                     {
                         $calendarSlot = Calendar::findOne(['id'=>$model->calendar_id]);
                         $calendarSlot->amount++;
@@ -583,7 +584,7 @@ class TicketController extends Controller
                         $response['msg_dev'] = implode(" ", $calendarSlot->getErrorSummary(false));
                         break;
                     }
-                    $calendarsMod[]=$c;
+                    $calendarsMod[] = $c;
                 }
             }
 

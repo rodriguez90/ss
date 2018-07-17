@@ -29,7 +29,7 @@ class Agency extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'code_oce', 'ruc', 'active'], 'required'],
+            [['name', 'ruc', 'active'], 'required'],
             [['name', 'code_oce', 'ruc'], 'string'],
             [['active'], 'integer'],
         ];

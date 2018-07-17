@@ -203,7 +203,7 @@ class ProcessController extends Controller
 
         if($model)
         {
-            $model->active = 0;
+            $model->active = -1;
             $model->save();
         }
 
@@ -244,7 +244,9 @@ class ProcessController extends Controller
             $response['containers'] = Container::find()
                 ->innerJoin('process_transaction', 'process_transaction.container_id = container.id')
                 ->innerJoin('process', 'process_transaction.process_id = process.id')
-                ->where(['bl'=>$bl])
+                ->where(['process.bl'=>$bl])
+                ->andWhere(['process_transaction.active', 1])
+                ->orderBy(['process_transaction.delivery_date'])
                 ->all();
             $response['success'] = true;
         }
@@ -290,6 +292,7 @@ class ProcessController extends Controller
             {
                 $transactions = ProcessTransaction::find()->where(['process_id'=>$id])
                                                           ->andWhere(['trans_company_id'=>$trans_company->id])
+                                                          ->andWhere(['process_transaction.active'=>1])
                     ->orderBy('delivery_date', SORT_ASC)
                     ->all();
 
