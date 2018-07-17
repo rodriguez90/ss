@@ -31,10 +31,10 @@ if($user)
 <style>
     .fc-time-grid .fc-slats td
     {
-        height: 2.5em !important;
+        height: 2.0em !important;
     }
     .fc-title {
-        font-size: 14px !important;
+        font-size: 16px !important;
     }
     /*.bwizard .well*/
     /*{*/
