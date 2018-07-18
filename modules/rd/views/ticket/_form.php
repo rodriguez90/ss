@@ -60,7 +60,10 @@ if($user)
                <?= DetailView::widget([
                    'model' => $model,
                    'attributes' => [
-                       'bl',
+                       [
+                           'attribute'=>'bl',
+                           'label'=>$model->type == \app\modules\rd\models\Process::PROCESS_IMPORT ? "BL" : "Booking"
+                       ],
                        'delivery_date:date',
                    ],
                    'options'=>['class' => 'table table-condensed detail-view detalle'],

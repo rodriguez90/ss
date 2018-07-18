@@ -278,6 +278,7 @@ class TransCompanyController extends Controller
         $response['msg_dev'] = '';
 
         $code = Yii::$app->request->get('code');
+        $mode = Yii::$app->request->get('mode');
 
         if(!isset($code))
         {
@@ -287,12 +288,30 @@ class TransCompanyController extends Controller
 
         if($response['success'])
         {
-//            $sql = "exec sp_sgt_placa_cons " . $code;
-            $sql = "exec sp_sgt_placa_cons '" .$code ."'";
-            $response['trunks'] = Yii::$app->db2->createCommand($sql)->queryAll();
+            if($mode == 1)
+            {
+                $sql = "exec sp_sgt_placa_cons '" .$code ."'";
+                $response['trunks'] = Yii::$app->db2->createCommand($sql)->queryAll();
+            }
+            else
+            {
+//                id: item.placa,
+//                                    text: item.placa,
+//                                    err_code: item.err_code,
+//                                    err_msg: item.err_msg,
+//                                    rfid: item.rfid,
 
+                for($i = 0; $i < 5; $i++)
+                {
+                   $trunk = ['placa'=>$i . $i . $i,
+                             'err_code'=>"0",
+                             'err_msg'=>"",
+                             'rfid'=>$i . $i . $i];
+
+                    $response['trunks'][] = $trunk;
+                }
+            }
         }
-
         return $response;
     }
 

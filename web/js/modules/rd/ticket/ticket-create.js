@@ -45,6 +45,9 @@ var calendarEventMap = new Map(); // calendar id - key
 
 var transactionDataMap = new Map();
 
+var driverDataMap = new Map();
+var dateTicketMap = new Map(); // map key: date ticket, value: array of containers with at date
+
 var calendarSlotEvents = {
     id:'calendarSlotEvents',
     events:[]
@@ -358,6 +361,7 @@ var handleTableInWizar = function() {
                             var query = {
                                 // code: params.term,
                                 code: transCompanyRuc,
+                                mode:1
                             }
                             return query;
                         },
@@ -384,22 +388,66 @@ var handleTableInWizar = function() {
                     // alert(e.params.data);
                     var trunk = e.params.data;
                     var transactionData = transactionDataMap.get(data.name);
+
                     if(trunk.err_code !== "0")
                     {
                         e.preventDefault();
                         transactionData.registerTrunk = "";
-                        alert("Este Chofer no puede ser seleccionado: " + driver.err_msg);
+                        alert("Esta placa no puede ser seleccionada: " + driver.err_msg);
                         $("#selectTrunk" +elementId).val("").trigger("change.select2");
-
-
                     }
                     else
                     {
-                        transactionData.registerTrunk = trunk.id;
+                        var valid = true;
+                        var msg = '';
+                        var containersArray = dateTicketMap.get(data.dateTicket);
+                        var containersByTrunk20= 0;
+                        var containersByTrunk40 = 0;
+
+                        for(var i=0, count = containersArray.length; i < count; i++)
+                        {
+                            var container = containers.get(data.id);
+                            var cTransactionData = transactionDataMap.get(containersArray[i]);
+
+                            if(cTransactionData.registerTrunk == trunk.id)
+                            {
+                                if(container.tonnage == 20)
+                                {
+                                    containersByTrunk20++;
+                                }
+                                else if(container.tonnage == 40)
+                                {
+                                    containersByTrunk40++;
+                                }
+                            }
+                        }
+
+                        if(containersByTrunk40 == 1) // ya la placa esta asignada en un contenedor de 40 para la misma fecha
+                        {
+                            valid = false;
+                            msg = 'Esta placa esta asiganda a otro contenedor de 40 toneladas en esta fecha.'
+                        }
+                        else if(containersByTrunk20 == 2) // ya la placa esta asignada a 2 contenedores de 20 para la misma fecha
+                        {
+                            valid = false;
+                            msg = 'Esta placa esta asiganda a dos contenedores de 20 toneladas en esta fecha.'
+                        }
+                        else if(containersByTrunk20 == 1 && data.tonnage == 40) // no puede asiganr un contenedor de 40 toneladas
+                        {
+                            valid = false;
+                            msg = 'Esta placa esta asiganda a un contenedor de 20 toneladas en esta fecha.'
+                        }
+
+                        if(valid)
+                            transactionData.registerTrunk = trunk.id;
+                        else
+                        {
+                            $('td select', row).eq(0).val('').trigger('change:select2');
+                            alert(msg);
+                        }
                     }
 
-                    transactionDataMap.set(data.name,transactionData);
-
+                    transactionDataMap.set(data.name, transactionData);
                     // api.cell({row: meta.row, column: 5}).data(trunk.id);
                     // table.row(index).data(data)
                 });
@@ -454,7 +502,7 @@ var handleTableInWizar = function() {
                             transactionData.registerDriver = "";
                             transactionData.nameDriver = "";
                             table.cell({row: dataIndex, column: 7}).data("");
-
+                            $("#selectDriver" +elementId).val("").trigger("change.select2");
                         }
                         else
                         {
@@ -479,8 +527,6 @@ var handleTableInWizar = function() {
                     targets: [2],
                     data:'deliveryDate',
                     render: function ( data, type, full, meta ) {
-                        // console.log("In render: " + data);
-                        // console.log("In render format: " + moment(data).format("DD/MM/YYYY"));
                         return moment(data).format("DD/MM/YYYY");
                     },
                 },
@@ -488,9 +534,7 @@ var handleTableInWizar = function() {
                     targets: [4],
                     data:'dateTicket',
                     render: function ( data, type, full, meta ) {
-                        // console.log("In render: " + data);
                         var dateFormated =  moment(data).format("DD/MM/YYYY HH:mm");
-                        // console.log("In render format: " + dateFormated);
                         return dateFormated;
                     },
                 },
@@ -595,9 +639,7 @@ var handleTable3InWizar = function() {
                     targets: [4],
                     data:'dateTicket',
                     render: function ( data, type, full, meta ) {
-                        console.log("In render: " + data);
-                        var dateFormated =  moment(data).format("DD/MM/YYYY");
-                        console.log("In render format: " + dateFormated);
+                        var dateFormated =  moment(data).format("DD/MM/YYYY HH:mm");
                         return dateFormated;
                     },
                 },
@@ -966,12 +1008,12 @@ var fetchReceptionTransactions = function () {
                     // view.start = minDeliveryDate;
                     // view.end = maxDeliveryDate;
 
-                    console.log(minDeliveryDate.toISOString());
-                    console.log(maxDeliveryDate.toISOString());
-                    console.log(minDeliveryDate.format('YYYY-MM-DD'));
-                    console.log(maxDeliveryDate.format('YYYY-MM-DD'));
+                    // console.log(minDeliveryDate.toISOString());
+                    // console.log(maxDeliveryDate.toISOString());
+                    // console.log(minDeliveryDate.format('YYYY-MM-DD'));
+                    // console.log(maxDeliveryDate.format('YYYY-MM-DD'));
 
-                    fetchCalendar(null, maxDeliveryDate.format('YYYY-MM-DD HH:mm:ss'), false);
+                    fetchCalendar(currentDate.format('YYYY-MM-DD HH:mm:ss'), maxDeliveryDate.format('YYYY-MM-DD HH:mm:ss'), false);
                     // fetchCalendar(minDeliveryDate.toISOString(), maxDeliveryDate.toISOString(), false);
 
                     fetchTickets(modelId, false);
@@ -999,8 +1041,6 @@ var fetchTickets = function (processId, async) {
             processId: processId,
         },
         success: function(response) {
-            // console.log("success");
-            // console.log(response);
 
             $('#calendar').fullCalendar('removeEventSources', ticketEvents.id);
             ticketEvents.events = [];
@@ -1013,7 +1053,6 @@ var fetchTickets = function (processId, async) {
                 var id = response['tickets'][i].calendar_id ;
                 var tId = response['tickets'][i].process_transaction_id;
                 var t = transactions.get(tId);
-                // console.log(t);
                 if(t)
                 {
                     var container = containers.get(t.container_id);

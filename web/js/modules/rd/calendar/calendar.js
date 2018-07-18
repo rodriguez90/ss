@@ -285,10 +285,7 @@ $(function (){
                                 $('#calendar').fullCalendar('addEventSource',events);
                                 $('#calendar').fullCalendar('refetchEvents');
 
-
                                 console.log("viewRender: " , events);
-
-
 
                             },
                             error: function(response) {
@@ -296,7 +293,6 @@ $(function (){
                                 return false;
                             }
                         });
-
                     }
                 },
                 selectable: false,

@@ -73,8 +73,8 @@ var handleDataTable = function() {
                     {
                         // $('td:eq(2)', row).select2(
                         // $('td', row).eq(2).select2(
-                        console.log(data);
-                        console.log(data.type);
+                        // console.log(data);
+                        // console.log(data.type);
                         $('select', row).select2(
 						{
 							language: "es",
@@ -88,7 +88,7 @@ var handleDataTable = function() {
                                 id:type.id,
                                 name:type.text
                             };
-							console.log(containerType);
+							// console.log(containerType);
                             containertDataMap.set(data.name,containerType);
 
                             // $('#mySelect2').val(type.id); // Select the option with a value of '1'

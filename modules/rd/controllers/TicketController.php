@@ -729,8 +729,7 @@ class TicketController extends Controller
                 }
 
                 $aux = new \DateTime($calendarSlot->start_datetime);
-                $aux->setTimezone(new DateTimeZone("UTC"));
-                $dateTicket = $aux->format("Y/m/d H:i");
+                $dateTicket = $aux->format("Ymd H:i");
 
                 $registerTrunk = $processTransaction->register_truck;
                 $registerDriver = $processTransaction->register_driver;

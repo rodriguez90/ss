@@ -181,7 +181,7 @@ var handleCalendarDemo = function () {
                         mode = 'create';
                         $('#select-all')[0].checked = false;
                         $("#modalTitle").get(0).textContent = 'Cupos disponibles: ' + currentCalendarEvent.title;
-                        $("#modalTicket").get(0).textContent = moment(currentCalendarEvent.start).format("dddd, MMMM YYYY H:mm");
+                        $("#modalTicket").get(0).textContent = moment(currentCalendarEvent.start).format("DD-MM-YYYY H:mm");
                         $("#aceptBtn").removeClass("btn-danger").addClass("btn-success");
                         $("#aceptBtn").text("Aceptar");
                         $("#modal-select-containers").modal("show");
@@ -255,7 +255,7 @@ var handleCalendarDemo = function () {
                     mode = 'delete';
                     $('#select-all')[0].checked = false;
                     $("#modalTitle").get(0).textContent = 'Eliminar Cupos';
-                    $("#modalTicket").get(0).textContent = moment(currentCalendarEvent.start).format("dddd, MMMM YYYY H:mm");
+                    $("#modalTicket").get(0).textContent = moment(currentCalendarEvent.start).format("DD-MM-YYYY H:mm");
                     $("#aceptBtn").removeClass("btn-success").addClass("btn-danger");
                     $("#aceptBtn").text("Eliminar");
                     $("#modal-select-containers").modal("show");

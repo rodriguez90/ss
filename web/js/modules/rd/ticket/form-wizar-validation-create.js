@@ -12,8 +12,6 @@ var handleBootstrapWizardsValidation = function() {
             // clickableSteps: true,
             activeIndexChanged:  function (e, ui) {
 
-                // alert("UI index: " + ui.index);
-
                 if(ui.index == 0)
                 {
                     $('ul.bwizard-buttons li.next a').text('Siguiente');
@@ -21,6 +19,7 @@ var handleBootstrapWizardsValidation = function() {
                 else if(ui.index == 1)
                 {
                     $('ul.bwizard-buttons li.next a').text('Siguiente');
+
                     // hace prereservas
                     var table2 = $('#data-table2').DataTable();
 
@@ -28,8 +27,7 @@ var handleBootstrapWizardsValidation = function() {
                         .clear()
                         .draw();
                     transactionDataMap.clear();
-
-                    //clone to table 2
+                    dateTicketMap.clear();
 
                     $.each(selectedTransactions, function (i) {
 
@@ -50,19 +48,44 @@ var handleBootstrapWizardsValidation = function() {
                                 registerTrunk: '',
                                 registerDriver: '',
                                 nameDriver: '',
-                                transactionId:tId
+                                transactionId:tId,
+                                id:c.id
                             };
+
                             transactionDataMap.set(c.name, {
                                 registerTrunk: '',
                                 registerDriver: '',
                                 nameDriver: '',
                             });
 
+                            var containersArray = [];
+
+                            if(dateTicketMap.has(ticketData.dateTicket))
+                            {
+                                containersArray = dateTicketMap.get(ticketData.dateTicket);
+                            }
+
+                            containersArray.push(c.name);
+                            dateTicketMap.set(ticketData.dateTicket, containersArray);
+
                             table2.row.add(
                                 data
                             ).draw();
                         }
                     });
+
+                    // FIXME: validation server side
+                    // add dateTicket map the ticket that exist
+                    // ticketDataMap.forEach(function(valor, clave) {
+                    //
+                    //     var transaction =  transactions.get(clave);
+                    //     var container = containers.get(transaction.container_id);
+                    //     var containersArray = dateTicketMap.get(transaction.delivery_date);
+                    //     containersArray.push(container.name);
+                    //     dateTicketMap.set(transaction.delivery_date, containersArray);
+                    // });
+
+                    // console.log(dateTicketMap);
                 }
                 else if(ui.index==2)
                 {
