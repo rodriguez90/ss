@@ -5,6 +5,8 @@ Author: Sean Ngu
 Website: http://www.seantheme.com/color-admin-v1.9/admin/
 */
 
+var colHeaderContainer = processType == 1 ? 'Contenedor' : 'Booking/Contenedor' ;
+
 var handleDataTable = function() {
 	"use strict";
     
@@ -105,6 +107,7 @@ var handleDataTable = function() {
                    "data":'checkbox', // FIXME CHECK THIS
                 },
                 {
+                    "title":colHeaderContainer,
                    "data":"name",
                 },
                 { "title": "Tipo/Tamaño",
@@ -192,7 +195,7 @@ var handleDataTable = function() {
 
 var handleDataTable2 = function () {
     var columns = [
-        { //"title": "Contenedor",
+        {  "title":colHeaderContainer,
             "data":"name",
         },
         { "title": "Tipo/Tamaño",
@@ -272,7 +275,7 @@ var handleDataTable3 = function () {
                     // "title": "Seleccione",
                     "data":'checkbox', // FIXME CHECK THIS
                 },
-                { //"title": "Contenedor",
+                {   "title":colHeaderContainer,
                     "data":"name",
                 },
                 { "title": "Tipo/Tamaño",
