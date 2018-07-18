@@ -9,13 +9,18 @@ var handleBootstrapWizardsValidation = function() {
     "use strict";
     $("#wizard").bwizard(
         {
-            clickableSteps: true,
+            // clickableSteps: true,
             activeIndexChanged:  function (e, ui) {
 
                 // alert("UI index: " + ui.index);
 
-                if(ui.index == 1)
+                if(ui.index == 0)
                 {
+                    $('ul.bwizard-buttons li.next a').text('Siguiente');
+                }
+                else if(ui.index == 1)
+                {
+                    $('ul.bwizard-buttons li.next a').text('Siguiente');
                     // hace prereservas
                     var table2 = $('#data-table2').DataTable();
 
@@ -61,6 +66,8 @@ var handleBootstrapWizardsValidation = function() {
                 }
                 else if(ui.index==2)
                 {
+                    $('ul.bwizard-buttons li.next a').text('Finalizar');
+
                     var table = $('#data-table2').DataTable();
                     var table3 = $('#data-table3').DataTable();
                     var error = false;

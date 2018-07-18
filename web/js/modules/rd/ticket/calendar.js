@@ -127,6 +127,7 @@ var handleCalendarDemo = function () {
                     var table = $('#data-table-modal').DataTable();
 
                     var count = 0;
+                    var count2 = 0;
                     table
                         .clear()
                         .draw();
@@ -137,7 +138,8 @@ var handleCalendarDemo = function () {
 
                         var indexSelected = selectedTransactions.indexOf(transaction.id);
                         var indexTicket = transactionWithTicket.indexOf(transaction.id);
-                        var deliveryDate = moment(transaction.delivery_date);
+                        var deliveryDate = moment(transaction.delivery_date).format('YYYY/MM/DD');
+                        var calendarDeliveryDate = moment(currentCalendarEvent.end).format('YYYY/MM/DD');
 
                         // var now = moment();
                         // var then = moment(date);
@@ -148,20 +150,29 @@ var handleCalendarDemo = function () {
                         //     $('.result').text('Date is future');
                         // }
 
-                        if(indexSelected === -1 && indexTicket === -1 && currentCalendarEvent.end  > deliveryDate )
+                        var result = moment(calendarDeliveryDate) <= moment(deliveryDate);
+
+                        if(indexSelected === -1 && indexTicket === -1)
                         {
-                            table.row.add(
-                                {
-                                    checkbox:"",
-                                    name: container.name,
-                                    type: container.code,
-                                    tonnage: container.tonnage,
-                                    deliveryDate:transaction.delivery_date,
-                                    agency:agency.name,
-                                    transactionId:transaction.id
-                                }
-                            ).draw();
-                            count++;
+                            if(result)
+                            {
+                                table.row.add(
+                                    {
+                                        checkbox:"",
+                                        name: container.name,
+                                        type: container.code,
+                                        tonnage: container.tonnage,
+                                        deliveryDate:transaction.delivery_date,
+                                        agency:agency.name,
+                                        transactionId:transaction.id
+                                    }
+                                ).draw();
+                                count++;
+                            }
+                            else
+                            {
+                                count2++;
+                            }
                         }
                     });
 
@@ -175,9 +186,17 @@ var handleCalendarDemo = function () {
                         $("#aceptBtn").text("Aceptar");
                         $("#modal-select-containers").modal("show");
                     }
-                    else {
-                        alert('Ya todas los contenedores de esta recepción tienen cupos');
-                        return false;
+                    else
+                    {
+                        if(count2)
+                        {
+                            alert('La fecha seleccionada en el calendario es mayor que la fecha límite de los contenedores');
+                            return false;
+                        }
+                        {
+                            alert('Ya todas los contenedores de esta recepción tienen cupos');
+                            return false;
+                        }
                     }
                 }
                 else {

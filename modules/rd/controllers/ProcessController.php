@@ -725,11 +725,6 @@ class ProcessController extends Controller
         $path= $pdf->Output("Detalles del Proceso.pdf","D");
     }
 
-    protected function notifyEmail($process)
-    {
-
-    }
-
     public function actionSgtblcons()
     {
         Yii::$app->response->format = Response::FORMAT_JSON;

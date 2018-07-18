@@ -22,7 +22,7 @@ var handleJqueryAutocomplete2 = function(op,changeRol) {
         case 1:
             action = "/administracion/user/getagencias";
             option0 = "Seleccione la epmpresa";
-            validator = "data-parsley-type=\'digits\' data-parsley-length=\'[13, 13]\'";
+            // validator = "data-parsley-type=\'digits\' data-parsley-length=\'[13, 13]\'";
             min = 13;
             break;
         case 2:

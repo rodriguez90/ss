@@ -947,7 +947,6 @@ var fetchReceptionTransactions = function () {
             if(firstRun)
             {
                 var count =  response['transactions'].length;
-                console.log(count);
                 if(count > 0)
                 {
                     // minDeliveryDate = moment(response['transactions'][0].delivery_date).utc().toDate();
@@ -972,7 +971,7 @@ var fetchReceptionTransactions = function () {
                     console.log(minDeliveryDate.format('YYYY-MM-DD'));
                     console.log(maxDeliveryDate.format('YYYY-MM-DD'));
 
-                    fetchCalendar(minDeliveryDate.format('YYYY-MM-DD HH:mm:ss'), maxDeliveryDate.format('YYYY-MM-DD HH:mm:ss'), false);
+                    fetchCalendar(null, maxDeliveryDate.format('YYYY-MM-DD HH:mm:ss'), false);
                     // fetchCalendar(minDeliveryDate.toISOString(), maxDeliveryDate.toISOString(), false);
 
                     fetchTickets(modelId, false);

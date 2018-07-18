@@ -104,7 +104,7 @@ var handleDataTable = function() {
                     // "title": "Selecionar",
                    "data":'checkbox', // FIXME CHECK THIS
                 },
-                { "title": "Contenedor",
+                {
                    "data":"name",
                 },
                 { "title": "Tipo/Tamaño",
@@ -192,7 +192,7 @@ var handleDataTable = function() {
 
 var handleDataTable2 = function () {
     var columns = [
-        { "title": "Contenedor",
+        { //"title": "Contenedor",
             "data":"name",
         },
         { "title": "Tipo/Tamaño",
@@ -272,7 +272,7 @@ var handleDataTable3 = function () {
                     // "title": "Seleccione",
                     "data":'checkbox', // FIXME CHECK THIS
                 },
-                { "title": "Contenedor",
+                { //"title": "Contenedor",
                     "data":"name",
                 },
                 { "title": "Tipo/Tamaño",

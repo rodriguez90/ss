@@ -151,7 +151,7 @@ else if ($intVal === Process::PROCESS_EXPORT)
                                                 <thead>
                                                 <tr>
                                                     <th>Seleccione <input type="checkbox" name="select_all" value="1" id="select-all"></th>
-                                                    <th>Contenedores</th>
+                                                    <th><?php echo $intVal == Process::PROCESS_IMPORT ? ' Contenedor': 'Booking/Contenedor'?></th>
                                                     <th>Tipo/Tamaño</th>
                                                     <th>Fecha Límite</th>
                                                     <th>Estado</th>
@@ -163,8 +163,8 @@ else if ($intVal === Process::PROCESS_EXPORT)
                                     <!-- end row -->
                                     <div id="staticLinks" class="row" style="display: none;">
                                         <div class="col-md-8 col-md-offset-4">
-                                            <a href="http://www.tpg.com.ec" class="btn btn-primary btn-xs m-r-5">Solicitar crédito</a>
-                                            <a href="http://www.tpg.com.ec" class="btn btn-primary btn-xs m-r-5">Factura en línea</a>
+                                            <a href="http://www.tpg.com.ec" >Solicitar crédito</a>
+                                            <a href="http://www.tpg.com.ec" >Factura en línea</a>
                                         </div>
                                     </div>
                                 </div>
@@ -200,7 +200,7 @@ else if ($intVal === Process::PROCESS_EXPORT)
                                                 <thead>
                                                 <tr>
                                                     <th>Seleccione <input type="checkbox" name="select_all2" id="select_all2" value="1" ></th>
-                                                    <th>Contenedores</th>
+                                                    <th><?php echo $intVal == Process::PROCESS_IMPORT ? ' Contenedor': 'Booking/Contenedor'?></th>
                                                     <th>Tipo/Tamaño</th>
                                                     <th>Fecha Límite</th>
                                                     <th>Cliente</th>

@@ -12,8 +12,18 @@ var handleBootstrapWizardsValidation = function() {
             clickableSteps: true,
             activeIndexChanged:  function (e, ui) {
 
-                if(ui.index == 1)
+                // var wizard = $(this).bwizard();
+                // console.log(wizard);
+                // wizard.nextBtnText = "Finalizar";
+
+                if(ui.index == 0)
                 {
+                    $('ul.bwizard-buttons li.next a').text('Siguiente');
+                }
+                else if(ui.index == 1)
+                {
+                    $('ul.bwizard-buttons li.next a').text('Siguiente');
+
                     var sourceTable = $('#data-table').DataTable();
                     var table = $('#data-table3').DataTable();
 
@@ -42,9 +52,7 @@ var handleBootstrapWizardsValidation = function() {
                 }
                 else if(ui.index == 2)
                 {
-                    // var wizard = $(this).bwizard();
-                    // console.log(wizard);
-                    // wizard.nextBtnText = "Finalizar";
+                    $('ul.bwizard-buttons li.next a').text('Finalizar');
 
                     $('#confirming').prop('checked', false);
 
@@ -212,7 +220,7 @@ var handleBootstrapWizardsValidation = function() {
                 }
             },
             backBtnText:'Anterior',
-            nextBtnText: "Siguiente"
+            nextBtnText: 'Siguiente'
 	    }
     );
 
