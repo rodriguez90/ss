@@ -119,55 +119,65 @@ class UserController extends Controller
         $model = new AdmUser();
         $rol = '';
         $type = -1;
+        $postData = Yii::$app->request->post();
+//        var_dump($postData);die;
 
-        if ($model->load(Yii::$app->request->post()) ) {
-
-        $rol = Yii::$app->request->post("rol");
-
-        if( $model->password==''){
-            $model->addError('error', 'La Contraseña no pueden ser vacía');
+        if(!isset($postData['status']))
+        {
+            $postData['status']= 0;
         }
 
-        if( $confirm!=null && $model->password != $confirm){
-            $model->addError('error', 'Las contraseñas no son iguales.');
-        }
+        if ($model->load($postData))
+        {
 
-        if( $rol==null ||  $auth->getRole($rol) ==null){
-            $model->addError('error', "Seleccione un rol válido." );
-        }else{
-            $type = Yii::$app->request->post("type");
-            switch($rol){
-                case 'Importador':
-                case 'Exportador':
-                case "Importador_Exportador":
-                case 'Agencia':
-                    if($type == '')
-                        $model->addError('error', "Seleccione una empresa." );
-                    break;
-                case 'Administrador_depósito':
-                case 'Depósito':
-                    if($type == '')
-                    $model->addError('error', "Seleccione un depósito." );
-                    break;
-                case 'Cia_transporte':
-                    if($type == '')
-                    $model->addError('error', "Seleccione una compañía de transporte." );
-                    break;
-                default :
-                    break;
+            $rol = Yii::$app->request->post("rol");
+
+            if( $model->password==''){
+                $model->addError('error', 'La Contraseña no pueden ser vacía');
             }
-        }
 
-        if(AdmUser::findOne(['username'=>$model->username])!=null){
-            $model->addError('error', "Ya existe el nombre de usuario." );
-        }
+            if( $confirm != null && $model->password != $confirm){
+                $model->addError('error', 'Las contraseñas no son iguales.');
+            }
 
-        if (AdmUser::findOne(['cedula' => $model->cedula]) != null)
+            if( $rol == null ||  $auth->getRole($rol) == null){
+                $model->addError('error', "Seleccione un rol válido." );
+            }
+            else{
+                $type = Yii::$app->request->post("type");
+                switch($rol){
+                    case 'Importador':
+                    case 'Exportador':
+                    case "Importador_Exportador":
+                    case 'Agencia':
+                        if($type == '')
+                            $model->addError('error', "Seleccione una empresa." );
+                        break;
+                    case 'Administrador_depósito':
+                    case 'Depósito':
+                        if($type == '')
+                        $model->addError('error', "Seleccione un depósito." );
+                        break;
+                    case 'Cia_transporte':
+                        if($type == '')
+                        $model->addError('error', "Seleccione una compañía de transporte." );
+                        break;
+                    default :
+                        break;
+                }
+            }
+
+            if(AdmUser::findOne(['username'=>$model->username]) != null){
+
+                $model->addError('error', "Ya existe el nombre de usuario." );
+            }
+
+            if (AdmUser::findOne(['cedula' => $model->cedula]) != null)
             {
                 $model->addError('error', "La cédula {$model->cedula} ya fue registrada en el sistema" );
             }
 
-        if (!$model->hasErrors())
+            if (!$model->hasErrors())
             {
                 $model->setPassword($model->password);
                 $model->created_at = time();

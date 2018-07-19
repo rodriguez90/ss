@@ -341,7 +341,7 @@ var handleTableInWizar = function() {
             ],
             "language": lan,
             "createdRow": function( row, data, dataIndex ) {
-                console.log('init select2: ' + data.name);
+                // console.log('init select2: ' + data.name);
 
                 $('td select', row).eq(0).select2(
                 {
@@ -394,7 +394,8 @@ var handleTableInWizar = function() {
                         e.preventDefault();
                         transactionData.registerTrunk = "";
                         alert("Esta placa no puede ser seleccionada: " + driver.err_msg);
-                        $("#selectTrunk" +elementId).val("").trigger("change.select2");
+                        // $("#selectTrunk" +elementId).val("").trigger("change.select2");
+                        $('td select', row).eq(0).val("").trigger("change.select2");
                     }
                     else
                     {
@@ -502,7 +503,8 @@ var handleTableInWizar = function() {
                             transactionData.registerDriver = "";
                             transactionData.nameDriver = "";
                             table.cell({row: dataIndex, column: 7}).data("");
-                            $("#selectDriver" +elementId).val("").trigger("change.select2");
+                            // $("#selectDriver" +elementId).val("").trigger("change.select2");
+                            $('td select', row).eq(1).trigger("change.select2");
                         }
                         else
                         {
@@ -997,12 +999,12 @@ var fetchReceptionTransactions = function () {
                     currentDate = moment().set({'hours': 0, 'minutes': 0}).utc().set({'hours': 0, 'minutes': 0, 'seconds':0});
                     maxDeliveryDate = moment(response['transactions'][count - 1].delivery_date).utc().set({'hours': 23, 'minutes': 59, 'seconds':59});
 
-                    // $('#calendar').fullCalendar({
-                    //     visibleRange: {
-                    //         start: minDeliveryDate,
-                    //         end: maxDeliveryDate
-                    //     }
-                    // });
+                    $('#calendar').fullCalendar({
+                        visibleRange: {
+                            start: currentDate,
+                            end: maxDeliveryDate
+                        }
+                    });
 
                     // var view = $('#calendar').fullCalendar('getView');
                     // view.start = minDeliveryDate;
@@ -1012,7 +1014,10 @@ var fetchReceptionTransactions = function () {
                     // console.log(maxDeliveryDate.toISOString());
                     // console.log(minDeliveryDate.format('YYYY-MM-DD'));
                     // console.log(maxDeliveryDate.format('YYYY-MM-DD'));
-
+                    // visibleRange: {
+                    //     start: '2017-03-22',
+                    //         end: '2017-03-25'
+                    // }
                     fetchCalendar(currentDate.format('YYYY-MM-DD HH:mm:ss'), maxDeliveryDate.format('YYYY-MM-DD HH:mm:ss'), false);
                     // fetchCalendar(minDeliveryDate.toISOString(), maxDeliveryDate.toISOString(), false);
 
