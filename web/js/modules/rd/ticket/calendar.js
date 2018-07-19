@@ -110,7 +110,6 @@ var handleCalendarDemo = function () {
 
 		},
         eventClick: function(calEvent, jsEvent, view) {
-
             if(calEvent.type === 'D')
             {
                 // var result = findSlotEvent(calEvent.start, calEvent.end);

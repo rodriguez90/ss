@@ -35,8 +35,11 @@ $(function (){
             dataType: 'json',
             type: "POST",
             data: {'events':events2},
-
+            beforeSend:function () {
+                $("#modal-select-bussy").modal("show");
+            },
             success: function (response) {
+                $("#modal-select-bussy").modal("hide");
                 if(response['status']){
 
 
@@ -96,10 +99,10 @@ $(function (){
 
             },
             error: function (response) {
+                $("#modal-select-bussy").modal("hide");
                 console.log(response.responseText);
                 return false;
             }
-
         });
         return false;
     });

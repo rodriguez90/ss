@@ -473,6 +473,7 @@ $(document).ready(function () {
 
     // search container
     $('#search-container').click( function() {
+
         // $('#blCode').prop('disabled', true);
         var bl = $('#blCode').val();
         cleanUI();

@@ -226,7 +226,11 @@ var handleBootstrapWizardsValidation = function() {
                                 reception:reception,
                                 tickets:tickets
                             },
+                            beforeSend:function () {
+                                $("#modal-select-bussy").modal("show");
+                            },
                             success: function (response) {
+                                $("#modal-select-bussy").modal("hide");
                                 // you will get response from your php page (what you echo or print)
                                 console.log(response);
                                 // var obj = response;
@@ -245,6 +249,7 @@ var handleBootstrapWizardsValidation = function() {
                                 return valid;
                             },
                             error: function(data) {
+                                $("#modal-select-bussy").modal("hide");
                                 console.log(data);
                                 alert(data['msg']);
                                 valid = false;

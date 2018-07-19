@@ -102,16 +102,16 @@ var handleBootstrapWizardsValidation = function() {
                             // console.log( 'Data in index: '+index +' is: '+ value.name );
                             if(result && value.selectable) {
                                 // FIXME: It Export -> Booking code -> check delyveryDate it's set
-                                if(processType == 2)
-                                {
-                                    var deliveryDate = value.deliveryDate;
-                                    if(!moment(deliveryDate, 'DD-MM-YYYY').isValid())
-                                    {
-                                        result = false;
-                                        alert("Debe definir la Fecha Límite para los contenedores del Booking.");
-                                        return false;
-                                    }
-                                }
+                                // if(processType == 2)
+                                // {
+                                //     var deliveryDate = value.deliveryDate;
+                                //     if(!moment(deliveryDate, 'DD-MM-YYYY').isValid())
+                                //     {
+                                //         result = false;
+                                //         alert("Debe definir la Fecha Límite para los contenedores del Booking.");
+                                //         return false;
+                                //     }
+                                // }
 
                                 if(processType == 1)
                                 {
@@ -180,8 +180,7 @@ var handleBootstrapWizardsValidation = function() {
                             "containers":containers
                         };
 
-                        console.log(process);
-
+                        // console.log(process);
                         $.ajax({
                             // async:false,
                             url: homeUrl + "/rd/process/create?type="+processType,
@@ -189,7 +188,12 @@ var handleBootstrapWizardsValidation = function() {
                             dataType: "json",
                             data:  process,
 //                            contentType: "application/json; charset=utf-8",
+                            beforeSend:function () {
+                                $("#modal-select-bussy").modal("show");
+                            },
                             success: function (response) {
+
+                                $("#modal-select-bussy").modal("hide");
                                 // you will get response from your php page (what you echo or print)
                                 console.log(response);
 
@@ -205,11 +209,12 @@ var handleBootstrapWizardsValidation = function() {
                                 result = false;
                             },
                             error: function(data) {
+                                $("#modal-select-bussy").modal("hide");
                                 // console.log(data);
                                 console.log(data.responseText);
                                 result = false;
                                 // return false;
-                            }
+                            },
                         });
 
                         return result;

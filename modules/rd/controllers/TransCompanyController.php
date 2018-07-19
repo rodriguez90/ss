@@ -276,9 +276,11 @@ class TransCompanyController extends Controller
         $response['trunks'] = [];
         $response['msg'] = '';
         $response['msg_dev'] = '';
+        $trunks = [];
 
         $code = Yii::$app->request->get('code');
         $mode = Yii::$app->request->get('mode');
+        $term = Yii::$app->request->get('term');
 
         if(!isset($code))
         {
@@ -291,7 +293,7 @@ class TransCompanyController extends Controller
             if($mode == 1)
             {
                 $sql = "exec sp_sgt_placa_cons '" .$code ."'";
-                $response['trunks'] = Yii::$app->db2->createCommand($sql)->queryAll();
+                $trunks = Yii::$app->db2->createCommand($sql)->queryAll();
             }
             else
             {
@@ -304,12 +306,25 @@ class TransCompanyController extends Controller
                 for($i = 0; $i < 5; $i++)
                 {
                    $trunk = ['placa'=>$i . $i . $i,
-                             'err_code'=>"1",
+                             'err_code'=>"0",
                              'err_msg'=>"error",
                              'rfid'=>$i . $i . $i];
 
-                    $response['trunks'][] = $trunk;
+                    $trunks[] = $trunk;
                 }
+            }
+
+            if(isset($term) && $term !== '')
+            {
+                foreach ($trunks as $trunk)
+                {
+                    if (strpos($trunk['placa'], $term) !== false) {
+                        $response['trunks'][]  = $trunk;
+                    }
+                }
+            }
+            else{
+                $response['trunks'] = $trunks;
             }
         }
         return $response;
@@ -324,9 +339,11 @@ class TransCompanyController extends Controller
         $response['drivers'] = [];
         $response['msg'] = '';
         $response['msg_dev'] = '';
+        $drivers = [];
 
         $code = Yii::$app->request->get('code');
         $mode = Yii::$app->request->get('mode');
+        $term = Yii::$app->request->get('term');
 
         if(!isset($code))
         {
@@ -339,7 +356,7 @@ class TransCompanyController extends Controller
             if($mode == 1)
             {
                 $sql = "exec sp_sgt_chofer_cons '" .$code ."'";
-                $response['drivers'] = Yii::$app->db2->createCommand($sql)->queryAll();
+                $drivers = Yii::$app->db2->createCommand($sql)->queryAll();
             }
             else
             {
@@ -354,12 +371,25 @@ class TransCompanyController extends Controller
                     $driver = [
                         'chofer_ruc'=>$i . $i . $i,
                         'chofer_nombre'=>$i . $i . $i,
-                        'err_code'=>"1",
+                        'err_code'=>"0",
                         'err_msg'=>"error",
                         ];
 
-                    $response['drivers'][] = $driver;
+                    $drivers[] = $driver;
                 }
+            }
+
+            if(isset($term) && $term !== '')
+            {
+                foreach ($drivers as $driver)
+                {
+                    if (strpos($driver['chofer_ruc'], $term) !== false || strpos($driver['chofer_nombre'], $term) !== false ) {
+                        $response['drivers'] [] = $driver;
+                    }
+                }
+            }
+            else{
+                $response['drivers'] = $drivers;
             }
         }
         return $response;

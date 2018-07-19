@@ -286,6 +286,28 @@ if($user)
     </div>
 </div>
 
+<!-- #modal-containers -->
+<div class="modal fade" id="modal-select-bussy" role="dialog" data-backdrop='static'>
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <!--            <div class="modal-header">-->
+            <!--                <h4 id="modalTitle" class="modal-title">Proceso Completado</h4>-->
+            <!--            </div>-->
+            <div class="modal-body p-15">
+                <!-- begin #page-loader -->
+                <div id="page-loader-process" class="fade in">
+                    <span class="spinner"></span>
+                    <div class="jumbotron m-b-0 text-center">
+                        <h1>Proceso Completado</h1>
+                        <p>Los datos han sido enviados al servidor.</p>
+                    </div>
+                </div>
+                <!-- end #page-loader -->
+            </div>
+        </div>
+    </div>
+</div>
+
 <script type="text/javascript">
     var modelId = '<?php echo $model->id; ?>';
     var transCompanyId = '<?php echo $trasCompany->id; ?>';

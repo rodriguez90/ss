@@ -37,38 +37,38 @@ var handleDataTable = function() {
                     $(row).addClass('text-danger');
                 }
                 else {
-                    var elementId =  String(data.name).replace(' ','');
-                    if(processType == 2)
-                    {
-                        // var  html = '<input type=\"text\" class=\"form-control\" id=\"' + elementId +  '\" placeholder=\"Seleccionar\"' + 'value=\"' + moment(data.deliveryDate).format('DD/MM/YYYY') + '\" >';
-
-                        // $('td', row).eq(3).html(html)
-
-                        $('td:eq(3)', row).datepicker({
-                            title:"Seleccione la Fecha Límite",
-                            language: 'es',
-                            autoclose: true,
-                            immediateUpdates:true,
-                            format:'dd-mm-yyyy'
-                        }).on('changeDate', function(event){
-                            // console.log(event.date);
-                            // console.log(dateValue);
-                            var dateValue = moment(event.date).utc().format('DD-MM-YYYY');
-                            var mDateValue = moment(event.date)
-                            var mProcessDD = moment(processDeliveryDate)
-                            console.log("Container deliveryDate: " + dateValue);
-                            console.log("Current deliveryDate: " + processDeliveryDate);
-                            var result = mDateValue.isAfter(mProcessDD);
-                            console.log(result);
-                            if(result)
-                            {
-                                console.log("Change processDeliveryDate: " + dateValue);
-                                processDeliveryDate = dateValue;
-                            }
-                            // data.deliveryDate = dateValue;
-                            table.cell(dataIndex, 3).data(dateValue)
-                        });
-                    }
+                    // var elementId =  String(data.name).replace(' ','');
+                    // if(processType == 2)
+                    // {
+                    //     // var  html = '<input type=\"text\" class=\"form-control\" id=\"' + elementId +  '\" placeholder=\"Seleccionar\"' + 'value=\"' + moment(data.deliveryDate).format('DD/MM/YYYY') + '\" >';
+                    //
+                    //     // $('td', row).eq(3).html(html)
+                    //
+                    //     $('td:eq(3)', row).datepicker({
+                    //         title:"Seleccione la Fecha Límite",
+                    //         language: 'es',
+                    //         autoclose: true,
+                    //         immediateUpdates:true,
+                    //         format:'dd-mm-yyyy'
+                    //     }).on('changeDate', function(event){
+                    //         // console.log(event.date);
+                    //         // console.log(dateValue);
+                    //         var dateValue = moment(event.date).utc().format('DD-MM-YYYY');
+                    //         var mDateValue = moment(event.date)
+                    //         var mProcessDD = moment(processDeliveryDate)
+                    //         console.log("Container deliveryDate: " + dateValue);
+                    //         console.log("Current deliveryDate: " + processDeliveryDate);
+                    //         var result = mDateValue.isAfter(mProcessDD);
+                    //         console.log(result);
+                    //         if(result)
+                    //         {
+                    //             console.log("Change processDeliveryDate: " + dateValue);
+                    //             processDeliveryDate = dateValue;
+                    //         }
+                    //         // data.deliveryDate = dateValue;
+                    //         table.cell(dataIndex, 3).data(dateValue)
+                    //     });
+                    // }
                     if(processType == 1)
                     {
                         // $('td:eq(2)', row).select2(
@@ -142,25 +142,25 @@ var handleDataTable = function() {
                         return data.name;
                     },
                 },
-                {
-                    targets: [3],
-                    data:'deliveryDate',
-                    render: function ( data, type, full, meta )
-                    {
-                        var elementId =  String(full.name).trim();
-                        // console.log("render: " + elementId + " " + type);
-                        // console.log("data: ");
-                        // console.log(data);
-                        if(type == 'display' && full.selectable && processType == 2)
-                        {
-                            var  html = '<input type=\"text\" class=\"form-control\" id=\"' + elementId +  '\" placeholder=\"Seleccionar\"' + ' value=\"' + data + '\"' + ' data-date=\"' +  data + '\" >';
-                            console.log(html)
-                            return html;
-                        }
-
-                        return data;
-                    },
-                },
+                // {
+                //     targets: [3],
+                //     data:'deliveryDate',
+                //     render: function ( data, type, full, meta )
+                //     {
+                //         var elementId =  String(full.name).trim();
+                //         // console.log("render: " + elementId + " " + type);
+                //         // console.log("data: ");
+                //         // console.log(data);
+                //         if(type == 'display' && full.selectable && processType == 2)
+                //         {
+                //             var  html = '<input type=\"text\" class=\"form-control\" id=\"' + elementId +  '\" placeholder=\"Seleccionar\"' + ' value=\"' + data + '\"' + ' data-date=\"' +  data + '\" >';
+                //             console.log(html)
+                //             return html;
+                //         }
+                //
+                //         return data;
+                //     },
+                // },
             ],
         });
 

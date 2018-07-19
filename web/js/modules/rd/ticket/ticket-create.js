@@ -154,6 +154,32 @@ var makePopoverContent = function (event) {
     return result;
 };
 
+function matchCustom(params, data) {
+    // If there are no search terms, return all of the data
+    if ($.trim(params.term) === '') {
+        return data;
+    }
+
+    // Do not display the item if there is no 'text' property
+    if (typeof data.text === 'undefined') {
+        return null;
+    }
+
+    // `params.term` should be the term that is used for searching
+    // `data.text` is the text that is displayed for the data object
+    if (data.text.indexOf(params.term) > -1) {
+        var modifiedData = $.extend({}, data, true);
+        modifiedData.text += ' (matched)';
+
+        // You can return modified objects from here
+        // This includes matching the `children` how you want in nested data sets
+        return modifiedData;
+    }
+
+    // Return `null` if the term should not be displayed
+    return null;
+}
+
 // init table in modal dialog
 var handleTableInModal = function () {
 
@@ -350,8 +376,6 @@ var handleTableInWizar = function() {
                     // allowClear: true,
                     width: '100%',
                     closeOnSelect: true,
-                    // minimumInputLength:5,
-                    minimumResultsForSearch:-1,
                     ajax:{
                         url: homeUrl + '/rd/trans-company/trunks',
                         type: "GET",
@@ -359,7 +383,7 @@ var handleTableInWizar = function() {
                         cache: true,
                         data: function (params) {
                             var query = {
-                                // code: params.term,
+                                term: params.term,
                                 code: transCompanyRuc,
                                 mode:1
                             }
@@ -456,16 +480,9 @@ var handleTableInWizar = function() {
                     {
                         language: "es",
                         placeholder: 'Seleccione el Chofer',
-                        // allowClear: true,
                         width: '100%',
                         closeOnSelect: true,
-                        // minimumInputLength:5,
-                        // minimumResultsForSearch:-1,
-                        matcher: function(term, text, option) {
-                            console.log(term);
-                            console.log(option);
-                            return false;
-                        },
+                        matcher: matchCustom,
                         ajax:{
                             url: homeUrl + '/rd/trans-company/drivers',
                             type: "GET",
@@ -473,7 +490,7 @@ var handleTableInWizar = function() {
                             cache: true,
                             data: function (params) {
                                 var query = {
-                                    // code: params.term,
+                                    term: params.term,
                                     code: transCompanyRuc,
                                     mode:1
                                 }
