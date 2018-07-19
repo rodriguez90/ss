@@ -394,8 +394,7 @@ var handleTableInWizar = function() {
                         e.preventDefault();
                         transactionData.registerTrunk = "";
                         alert("Esta placa no puede ser seleccionada: " + driver.err_msg);
-                        // $("#selectTrunk" +elementId).val("").trigger("change.select2");
-                        $('td select', row).eq(0).val("").trigger("change.select2");
+                        $('td select', row).eq().val('').trigger("change.select2");
                     }
                     else
                     {
@@ -480,8 +479,6 @@ var handleTableInWizar = function() {
                                 console.log(response);
                                 var results  = [];
                                 $.each(response.drivers, function (index, item) {
-                                    // console.log(item);
-                                    // [err_code], [err_msg], [placa], [rfid]
                                     results.push({
                                         id: item.chofer_ruc,
                                         text: item.chofer_nombre,
@@ -505,15 +502,12 @@ var handleTableInWizar = function() {
                             transactionData.registerDriver = "";
                             transactionData.nameDriver = "";
                             table.cell({row: dataIndex, column: 7}).data("");
-                            // $("#selectDriver" +elementId).val("").trigger("change.select2");
-                            // $('td select', row).eq(1).trigger("change.select2");
-                            $('td select', row).eq(1).select2("val", "");
+                            $('td select', row).eq(1).val('').trigger("change.select2");
                         }
                         else
                         {
                             transactionData.registerDriver = driver.id;
                             transactionData.nameDriver = driver.text;
-                            // api.cell({row: meta.row, column: 6}).data(driver.id);
                             table.cell({row: dataIndex, column: 7}).data(driver.id);
                         }
                         transactionDataMap.set(data.name,transactionData);
