@@ -462,6 +462,8 @@ var handleTableInWizar = function() {
                         closeOnSelect: true,
                         // minimumInputLength:5,
                         minimumResultsForSearch:-1,
+                        initSelection: function(element, callback) {
+                        },
                         ajax:{
                             url: homeUrl + '/rd/trans-company/drivers',
                             type: "GET",
@@ -504,7 +506,8 @@ var handleTableInWizar = function() {
                             transactionData.nameDriver = "";
                             table.cell({row: dataIndex, column: 7}).data("");
                             // $("#selectDriver" +elementId).val("").trigger("change.select2");
-                            $('td select', row).eq(1).trigger("change.select2");
+                            // $('td select', row).eq(1).trigger("change.select2");
+                            $('td select', row).eq(1).select2("val", "");
                         }
                         else
                         {
