@@ -304,8 +304,8 @@ class TransCompanyController extends Controller
                 for($i = 0; $i < 5; $i++)
                 {
                    $trunk = ['placa'=>$i . $i . $i,
-                             'err_code'=>"0",
-                             'err_msg'=>"",
+                             'err_code'=>"1",
+                             'err_msg'=>"error",
                              'rfid'=>$i . $i . $i];
 
                     $response['trunks'][] = $trunk;
@@ -326,6 +326,7 @@ class TransCompanyController extends Controller
         $response['msg_dev'] = '';
 
         $code = Yii::$app->request->get('code');
+        $mode = Yii::$app->request->get('mode');
 
         if(!isset($code))
         {
@@ -335,8 +336,31 @@ class TransCompanyController extends Controller
 
         if($response['success'])
         {
-            $sql = "exec sp_sgt_chofer_cons '" .$code ."'";
-            $response['drivers'] = Yii::$app->db2->createCommand($sql)->queryAll();
+            if($mode == 1)
+            {
+                $sql = "exec sp_sgt_chofer_cons '" .$code ."'";
+                $response['drivers'] = Yii::$app->db2->createCommand($sql)->queryAll();
+            }
+            else
+            {
+//                id: item.chofer_ruc,
+//                                        text: item.chofer_nombre,
+//                                        err_code: item.err_code,
+//                                        err_msg: item.err_msg,
+//                                        chofer_ruc: item.chofer_ruc,
+
+                for($i = 0; $i < 5; $i++)
+                {
+                    $driver = [
+                        'chofer_ruc'=>$i . $i . $i,
+                        'chofer_nombre'=>$i . $i . $i,
+                        'err_code'=>"1",
+                        'err_msg'=>"error",
+                        ];
+
+                    $response['drivers'][] = $driver;
+                }
+            }
         }
         return $response;
     }

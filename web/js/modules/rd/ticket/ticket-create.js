@@ -361,7 +361,7 @@ var handleTableInWizar = function() {
                             var query = {
                                 // code: params.term,
                                 code: transCompanyRuc,
-                                mode:1
+                                mode:2
                             }
                             return query;
                         },
@@ -393,8 +393,8 @@ var handleTableInWizar = function() {
                     {
                         e.preventDefault();
                         transactionData.registerTrunk = "";
-                        alert("Esta placa no puede ser seleccionada: " + driver.err_msg);
-                        $('td select', row).eq().val('').trigger("change.select2");
+                        alert("Esta placa no puede ser seleccionada: " + trunk.err_msg);
+                        $('td select', row).eq(0).val('').trigger("change.select2");
                     }
                     else
                     {
@@ -461,8 +461,6 @@ var handleTableInWizar = function() {
                         closeOnSelect: true,
                         // minimumInputLength:5,
                         minimumResultsForSearch:-1,
-                        initSelection: function(element, callback) {
-                        },
                         ajax:{
                             url: homeUrl + '/rd/trans-company/drivers',
                             type: "GET",
@@ -472,6 +470,7 @@ var handleTableInWizar = function() {
                                 var query = {
                                     // code: params.term,
                                     code: transCompanyRuc,
+                                    mode:2
                                 }
                                 return query;
                             },
@@ -990,34 +989,20 @@ var fetchReceptionTransactions = function () {
                 var count =  response['transactions'].length;
                 if(count > 0)
                 {
-                    // minDeliveryDate = moment(response['transactions'][0].delivery_date).utc().toDate();
-                    // maxDeliveryDate = moment(response['transactions'][count - 1].delivery_date).utc().add(1, 'days');
-                    minDeliveryDate = moment(response['transactions'][0].delivery_date).utc().set({'hours': 0, 'minutes': 0, 'seconds':0});
-                    currentDate = moment().set({'hours': 0, 'minutes': 0}).utc().set({'hours': 0, 'minutes': 0, 'seconds':0});
-                    maxDeliveryDate = moment(response['transactions'][count - 1].delivery_date).utc().set({'hours': 23, 'minutes': 59, 'seconds':59});
+                    minDeliveryDate = moment().set({'hours': 0, 'minutes': 0}).utc().set({'hours': 0, 'minutes': 0, 'seconds':0});
+                    maxDeliveryDate = moment(reception.delivery_date).utc().set({'hours': 23, 'minutes': 59, 'seconds':59});
 
-                    $('#calendar').fullCalendar({
-                        visibleRange: {
-                            start: currentDate,
-                            end: maxDeliveryDate
-                        }
-                    });
+                    // $('#calendar').fullCalendar({
+                    //     visibleRange: {
+                    //         start: minDeliveryDate,
+                    //         end: maxDeliveryDate
+                    //     }
+                    // });
 
-                    // var view = $('#calendar').fullCalendar('getView');
-                    // view.start = minDeliveryDate;
-                    // view.end = maxDeliveryDate;
+                    console.log(minDeliveryDate.format('YYYY-MM-DD HH:mm:ss'));
+                    console.log(maxDeliveryDate.format('YYYY-MM-DD HH:mm:ss'));
 
-                    // console.log(minDeliveryDate.toISOString());
-                    // console.log(maxDeliveryDate.toISOString());
-                    // console.log(minDeliveryDate.format('YYYY-MM-DD'));
-                    // console.log(maxDeliveryDate.format('YYYY-MM-DD'));
-                    // visibleRange: {
-                    //     start: '2017-03-22',
-                    //         end: '2017-03-25'
-                    // }
-                    fetchCalendar(currentDate.format('YYYY-MM-DD HH:mm:ss'), maxDeliveryDate.format('YYYY-MM-DD HH:mm:ss'), false);
-                    // fetchCalendar(minDeliveryDate.toISOString(), maxDeliveryDate.toISOString(), false);
-
+                    fetchCalendar(minDeliveryDate.format('YYYY-MM-DD HH:mm:ss'), maxDeliveryDate.format('YYYY-MM-DD HH:mm:ss'), false);
                     fetchTickets(modelId, false);
                 }
 
