@@ -421,7 +421,7 @@ var addContainer = function (table, dataContainer) {
 
     if(statusIsDate)
     {
-        container.status = moment(dataContainer.status).format("DD/MM/YYYY");
+        container.status = moment(dataContainer.status).format("DD/MM/YYYY HH:mm");
     }
 
     if( (container.status == "PENDIENTE" ||

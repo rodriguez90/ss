@@ -361,7 +361,7 @@ var handleTableInWizar = function() {
                             var query = {
                                 // code: params.term,
                                 code: transCompanyRuc,
-                                mode:2
+                                mode:1
                             }
                             return query;
                         },
@@ -460,7 +460,12 @@ var handleTableInWizar = function() {
                         width: '100%',
                         closeOnSelect: true,
                         // minimumInputLength:5,
-                        minimumResultsForSearch:-1,
+                        // minimumResultsForSearch:-1,
+                        matcher: function(term, text, option) {
+                            console.log(term);
+                            console.log(option);
+                            return false;
+                        },
                         ajax:{
                             url: homeUrl + '/rd/trans-company/drivers',
                             type: "GET",
@@ -470,7 +475,7 @@ var handleTableInWizar = function() {
                                 var query = {
                                     // code: params.term,
                                     code: transCompanyRuc,
-                                    mode:2
+                                    mode:1
                                 }
                                 return query;
                             },
