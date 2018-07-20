@@ -238,10 +238,10 @@ if($user)
                         <!-- end wizard step-3 -->
                         <!-- begin wizard step-4 -->
                         <div>
-                            <div class="jumbotron m-b-0 text-center">
-                                <h1>Proceso Completado</h1>
-                                <p>Los datos han sido enviados al servidor.</p>
-                            </div>
+<!--                            <div class="jumbotron m-b-0 text-center">-->
+<!--                                <h1>Proceso Completado</h1>-->
+<!--                                <p>Los datos han sido enviados al servidor.</p>-->
+<!--                            </div>-->
                         </div>
                         <!-- end wizard step-4 -->
                     </div>

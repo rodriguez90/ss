@@ -12,13 +12,6 @@ $this->title = 'Login';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
-
-
-
-
-
-
-
 <!-- begin #page-loader -->
 <div id="page-loader" class="fade in"><span class="spinner"></span></div>
 <!-- end #page-loader -->
@@ -75,11 +68,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <li class="parsley-required"> <?php if(isset($msg)){ echo $msg; } ?></li>
             </ul>
 
-
-
-
             <?php ActiveForm::end(); ?>
-
 
         </div>
     </div>

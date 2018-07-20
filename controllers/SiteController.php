@@ -214,29 +214,33 @@ class SiteController extends Controller
         }
 
         $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()))
+        if ($model->load(Yii::$app->request->post()) && $model->validate())
         {
+            var_dump($model->login());die;
             if ($model->login())
             {
                 $session = Yii::$app->session;
                 $session->open();
 
                 $user = AdmUser::findOne(['id'=>Yii::$app->user->getId(),'status'=>1]);
-                if($user!=null){
+                if($user != null){
                     $session->set('user',$user);
                     return $this->redirect(Url::toRoute('/site/index'));
-                }else{
+                }
+                else {
                     return $this->render('login', ['model' => $model,'msg'=>'Usuario inactivo, contacte al administrador.']);
                 }
             }
             else
             {
-                return $this->render('login', ['model' => $model,'msg'=>'Usuario o contraseña incorrecta.']);
+//                var_dump($model->getErrors());die;
+                return $this->render('login', ['model' => $model,'msg'=>implode('', $model->getErrorSummary(false))]);
             }
 
-        }else{
-            $msg = Yii::$app->request->get('msg');
-            return $this->render('login', ['model' => $model,'msg'=>$msg]);
+        }
+        else{
+            $msg = 'Debe ingresar el usurio y la contraseña.';
+            return $this->render('login', ['model' => $model,'msg'=>implode('', $model->getErrorSummary(false))]);
         }
     }
 
@@ -278,7 +282,7 @@ class SiteController extends Controller
                 $model->created_at = time();
                 $model->updated_at = time();
                 $model->creado_por = Yii::$app->user->identity->username;
-                $model->status =0;
+                $model->status = 0;
 
                 $auth =  Yii::$app->authManager;
                 $new_rol = null;
