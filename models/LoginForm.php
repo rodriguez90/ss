@@ -240,6 +240,7 @@ class LoginForm extends Model
             {
                 $result['nombre'] = utf8_decode($result['nombre']);
                 $result['nombre_empresa'] = utf8_decode($result['nombre_empresa']);
+                $response['user'] = $result;
             }
         }
         catch (Exception $ex)
