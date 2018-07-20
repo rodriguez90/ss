@@ -123,6 +123,7 @@ class LoginForm extends Model
             if ($newUser->save())
             {
                 $roleName = $userData['rol'];
+                $rol = '';
                 switch ($roleName)
                 {
                     case 'IMPORTADOR_EXPORTADOR':
@@ -146,7 +147,7 @@ class LoginForm extends Model
 
                             $ok = $user_agency->save();
                         }
-
+                        $rol = 'Importador_Exportador';
                         break;
                     case 'CIA_TRANSPORTE':
                         $transCompany = TransCompany::findOne(['ruc'=>$userData['ruc_empresa']]);
@@ -169,6 +170,7 @@ class LoginForm extends Model
 
                             $ok = $user_trans->save();
                         }
+                        $rol = 'Cia_transporte';
 
                         break;
                     case 'ADMINISTRADOR_DEPOSITO': // FIXME CHECK THIS
@@ -192,6 +194,12 @@ class LoginForm extends Model
 
                             $ok = $user_wharehouse->save();
                         }
+                        $rol = 'Administrador_depósito';
+
+                        break;
+
+                    case 'ADMINISTRADOR': // FIXME CHECK THIS
+                        $rol = 'Administracion';
 
                         break;
                     default:
@@ -200,7 +208,7 @@ class LoginForm extends Model
 
                 if($ok)
                 {
-                    $new_rol = $auth->createRole($roleName);
+                    $new_rol = $auth->getRole($rol);
                     $ok = $ok && $auth->assign($new_rol, $newUser->id);
                 }
 
@@ -213,15 +221,12 @@ class LoginForm extends Model
             }
 			else
 			{
-				var_dump(implode('', $newUser->getErrorSummary(false)));die;
 				 $msg = "Ah ocurrido un error al registrar el usuario.";
 				 $this->addError('error', $msg);
 				 return false;
 			}
         }
 		
-		// var_dump($newUser);die;
-
         return Yii::$app->user->login($newUser, $this->rememberMe == 'on' ? 3600 * 24 * 30 : 0);
 
     }
