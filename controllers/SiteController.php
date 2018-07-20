@@ -216,7 +216,7 @@ class SiteController extends Controller
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->validate())
         {
-            var_dump($model->login());die;
+//            var_dump($model->login());die;
             if ($model->login())
             {
                 $session = Yii::$app->session;

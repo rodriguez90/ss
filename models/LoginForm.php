@@ -70,11 +70,10 @@ class LoginForm extends Model
 //            $customPassword = $this->makeTPGPassword($this->password);
 
         $response = $this->tpgLogin($this->username, $this->password); // FIXME en produccion pasar el $customPassword
-        return $response;
+//        return $response;
 //            var_dump($response);die;
 
-//            user_id,nombre,ruc,email,ruc_empresa,nombre_empresa,rol,estado
-//            '0391014531001','JUAN CHIMBO','0301010252','papa.felipe@hotmail.com','0391014531001','COMPAÃ\x91IA DE TRANSPORTE PESADO Y COMBUSTIBLE TROREC','CIA_TRANSPORTE','ACTIVO'
+//          user_id,nombre,ruc,email,ruc_empresa,nombre_empresa,rol,estado
 
         if(!$response['sucess'])
         {
