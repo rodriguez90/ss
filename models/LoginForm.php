@@ -71,37 +71,45 @@ class LoginForm extends Model
 
         $response = $this->tpgLogin($this->username, $this->password); // FIXME en produccion pasar el $customPassword
 //        return $response;
-//            var_dump($response);die;
+           // var_dump($response);
 
 //          user_id,nombre,ruc,email,ruc_empresa,nombre_empresa,rol,estado
 
-        if(!$response['sucess'])
+		// var_dump($response['user']);die;
+		
+		$userData = $response['user'];
+		// var_dump($userData['estado']);
+		// var_dump($userData !== null && $userData['estado'] !== "ACTIVO");die;
+
+        if(!$response['success'])
         {
             $this->addError('error', 'Ah ocurrido un error al realizar la autenticación con TPG.');
             return false;
         }
-        elseif ($response['user'] == null)
+        elseif ($userData == null)
         {
             $this->addError('error', 'Usuario ó Contraseña Incorrecta.');
             return false;
         }
-        elseif ($response['user'] !== null && $response['user']['estado'] !== 'ACTIVO' )
-        {
+        elseif ($userData !== null && $userData['estado'] !== "ACTIVO")
+        {			
             $this->addError('error', 'El usuario esta inactivo, consulte al administrador.');
             return false;
         }
 
-        $sgtUser = AdmUser::findOne(['username'=>$this->username]); // find user in sgt
+        $newUser = AdmUser::findOne(['username'=>$this->username]); // find user in sgt
+		
+		// var_dump($newUser);die;
 
-        if($sgtUser == null)
+        if($newUser == null)
         {
             $newUser = new AdmUser();
-            $newUser->username = $response['user']['user_id'];
-            $newUser->nombre = $response['user']['nombre'];
+            $newUser->username = $userData['user_id'];
+            $newUser->nombre = $userData['nombre'];
             $newUser->apellidos = '';
-            $newUser->cedula = $response['user']['ruc'];
-            $newUser->email = $response['user']['email'];
-            $newUser->status = $response['user']['estado'] == 'ACTIVO' ? 1:0;
+            $newUser->cedula = $userData['ruc'];
+            $newUser->email = $userData['email'];
+            $newUser->status = $userData['estado'] == "ACTIVO" ? 1:0;
             $newUser->created_at = time();
             $newUser->updated_at = time();
             $newUser->creado_por = 'login';
@@ -114,16 +122,16 @@ class LoginForm extends Model
 
             if ($newUser->save())
             {
-                $roleName = $response['user']['rol'];
+                $roleName = $userData['rol'];
                 switch ($roleName)
                 {
                     case 'IMPORTADOR_EXPORTADOR':
-                        $agency = Agency::findOne(['ruc'=>$response['user']['ruc_empresa']]);
+                        $agency = Agency::findOne(['ruc'=>$userData['ruc_empresa']]);
                         if($agency == null)
                         {
                             $agency = new Agency();
-                            $agency->name = $response['user']['nombre_empresa'];
-                            $agency->ruc = $response['user']['ruc_empresa'];
+                            $agency->name = $userData['nombre_empresa'];
+                            $agency->ruc = $userData['ruc_empresa'];
                             $agency->code_oce = '';
                             $agency->active = 1;
 
@@ -141,12 +149,12 @@ class LoginForm extends Model
 
                         break;
                     case 'CIA_TRANSPORTE':
-                        $transCompany = TransCompany::findOne(['ruc'=>$response['user']['ruc_empresa']]);
+                        $transCompany = TransCompany::findOne(['ruc'=>$userData['ruc_empresa']]);
                         if($transCompany == null)
                         {
                             $transCompany = new TransCompany();
-                            $transCompany->name = $response['user']['nombre_empresa'];
-                            $transCompany->ruc = $response['user']['ruc_empresa'];
+                            $transCompany->name = $userData['nombre_empresa'];
+                            $transCompany->ruc = $userData['ruc_empresa'];
                             $transCompany->address = 'NO TIENE';
                             $transCompany->active = 1;
 
@@ -164,13 +172,13 @@ class LoginForm extends Model
 
                         break;
                     case 'ADMINISTRADOR_DEPOSITO': // FIXME CHECK THIS
-                        $wharehouse = Warehouse::findOne(['name'=>$response['user']['nombre_empresa']]);
+                        $wharehouse = Warehouse::findOne(['name'=>$userData['nombre_empresa']]);
                         if($wharehouse == null)
                         {
                             $wharehouse = new Warehouse();
-                            $wharehouse->name = $response['user']['nombre_empresa'];
-                            $wharehouse->ruc = $response['user']['ruc_empresa'];
-                            $wharehouse->code_oce = $response['user']['ruc_empresa'];
+                            $wharehouse->name = $userData['nombre_empresa'];
+                            $wharehouse->ruc = $userData['ruc_empresa'];
+                            $wharehouse->code_oce = $userData['ruc_empresa'];
                             $wharehouse->active = 1;
 
                             $ok = $wharehouse->save();
@@ -203,9 +211,18 @@ class LoginForm extends Model
                     return false;
                 }
             }
+			else
+			{
+				var_dump(implode('', $newUser->getErrorSummary(false)));die;
+				 $msg = "Ah ocurrido un error al registrar el usuario.";
+				 $this->addError('error', $msg);
+				 return false;
+			}
         }
+		
+		// var_dump($newUser);die;
 
-        return Yii::$app->user->login($this->getUser(), $this->rememberMe == 'on' ? 3600 * 24 * 30 : 0);
+        return Yii::$app->user->login($newUser, $this->rememberMe == 'on' ? 3600 * 24 * 30 : 0);
 
     }
 
@@ -237,13 +254,24 @@ class LoginForm extends Model
             $result = Yii::$app->db3->createCommand($sql)->queryAll();
             if(count($result) > 0)
             {
-                $result['nombre'] = utf8_decode($result['nombre']);
-                $result['nombre_empresa'] = utf8_decode($result['nombre_empresa']);
-                $response['user'] = $result;
+                // $result['nombre'] = utf8_decode($result['nombre']);
+                // $result['nombre_empresa'] = utf8_decode($result['nombre_empresa']);
+				// user_id,nombre,ruc,email,ruc_empresa,nombre_empresa,rol,estado
+				
+                $response['user'] = [
+						'user_id'=> $result[0]['user_id'],
+						'nombre'=> $result[0]['nombre'],
+						'ruc' => $result[0]['ruc'],
+						'email' => $result[0]['email'],
+						'ruc_empresa'=> $result[0]['ruc_empresa'],
+						'nombre_empresa'=>$result[0]['nombre_empresa'],
+						'rol'=>$result[0]['rol'],
+						'estado'=>$result[0]['estado'],
+				];
             }
         }
         catch (Exception $ex)
-        {
+        {			
             $response['success'] = false;
             $response['msg'] = 'Ah occurrido un error al realizar el login hacia TPG.';
             $response['msg_dev'] = $ex->getMessage();

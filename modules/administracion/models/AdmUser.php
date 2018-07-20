@@ -81,7 +81,7 @@ class AdmUser extends ActiveRecord implements IdentityInterface
         ];
         */
         return [
-            [['username', 'password', 'email', 'nombre', 'apellidos', 'status', 'cedula'], 'required'],
+            [['username', 'password', 'email', 'nombre', 'status', 'cedula'], 'required'],
             [['username', 'auth_key', 'password', 'email','cedula', 'nombre', 'apellidos', 'creado_por', 'password_reset_token'], 'string'],
             [['status', 'created_at', 'updated_at'], 'integer']
 

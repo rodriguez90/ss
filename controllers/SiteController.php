@@ -222,14 +222,17 @@ class SiteController extends Controller
                 $session = Yii::$app->session;
                 $session->open();
 
-                $user = AdmUser::findOne(['id'=>Yii::$app->user->getId(),'status'=>1]);
-                if($user != null){
-                    $session->set('user',$user);
-                    return $this->redirect(Url::toRoute('/site/index'));
-                }
-                else {
-                    return $this->render('login', ['model' => $model,'msg'=>'Usuario inactivo, contacte al administrador.']);
-                }
+                $user = Yii::$app->user->identity;
+				
+				$session->set('user',$user);
+                return $this->redirect(Url::toRoute('/site/index'));
+				
+                // if($user != null){
+                    
+                // }
+                // else {
+                    // return $this->render('login', ['model' => $model,'msg'=>'Usuario inactivo, contacte al administrador.']);
+                // }
             }
             else
             {
