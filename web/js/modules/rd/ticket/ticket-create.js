@@ -527,9 +527,56 @@ var handleTableInWizar = function() {
                         }
                         else
                         {
-                            transactionData.registerDriver = driver.id;
-                            transactionData.nameDriver = driver.text;
-                            table.cell({row: dataIndex, column: 7}).data(driver.id);
+                            var valid = true;
+                            var msg = '';
+                            var containersArray = dateTicketMap.get(data.dateTicket);
+                            var containersByTrunk20= 0;
+                            var containersByTrunk40 = 0;
+                            for(var i=0, count = containersArray.length; i < count; i++)
+                            {
+                                var container = containers.get(data.id);
+                                var cTransactionData = transactionDataMap.get(containersArray[i]);
+
+                                if(cTransactionData.registerDriver == driver.id)
+                                {
+                                    if(container.tonnage == 20)
+                                    {
+                                        containersByTrunk20++;
+                                    }
+                                    else if(container.tonnage == 40)
+                                    {
+                                        containersByTrunk40++;
+                                    }
+                                }
+                            }
+
+                            if(containersByTrunk40 == 1) // ya el chofer esta asociado a un contenedor de 40 para la misma fecha
+                            {
+                                valid = false;
+                                msg = 'Esta chofer esta asociado a un contenedor de 40 toneladas en esta fecha.'
+                            }
+                            else if(containersByTrunk20 == 2) // ya la placa esta asignada a 2 contenedores de 20 para la misma fecha
+                            {
+                                valid = false;
+                                msg = 'Este chofer esta asociado a dos contenedores de 20 toneladas en esta fecha.'
+                            }
+                            else if(containersByTrunk20 == 1 && data.tonnage == 40) // no puede asiganr un contenedor de 40 toneladas
+                            {
+                                valid = false;
+                                msg = 'Este chofer ya esta asociado a un contenedor de 20 toneladas en esta fecha.'
+                            }
+
+                            if(valid)
+                            {
+                                transactionData.registerDriver = driver.id;
+                                transactionData.nameDriver = driver.text;
+                                table.cell({row: dataIndex, column: 7}).data(driver.id);
+                            }
+                            else
+                            {
+                                $('td select', row).eq(1).val('').trigger('change:select2');
+                                alert(msg);
+                            }
                         }
                         transactionDataMap.set(data.name,transactionData);
                 });
