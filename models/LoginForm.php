@@ -66,8 +66,8 @@ class LoginForm extends Model
      */
     public function login()
     {
-//            $customPassword = $this->makeTPGPassword($this->password);
-        $response = $this->tpgLogin($this->username, $this->password); // FIXME en produccion pasar el $customPassword
+        $customPassword = $this->makeTPGPassword($this->password);
+        $response = $this->tpgLogin($this->username, $customPassword); // FIXME en produccion pasar el $customPassword
 
 		$userData = $response['user'];
 
@@ -223,7 +223,6 @@ class LoginForm extends Model
         $newUser = AdmUser::findOne(['username'=>$this->username]); // find user in sgt
 
         return Yii::$app->user->login($newUser, $this->rememberMe == 'on' ? 3600 * 24 * 30 : 0);
-
     }
 
     /**
