@@ -123,6 +123,7 @@ var handleSelectpicker = function() {
         switch ($(this).val()){
             case 'Importador':
             case 'Exportador':
+            case 'Importador_Exportador':
             case 'Agencia':
                 label.text("Empresa*");
                 handleJqueryAutocomplete2(1,distint);

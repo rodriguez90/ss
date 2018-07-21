@@ -90,84 +90,13 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-//
-//        $sql =  '{ CALL  disv..sp_sgt_bl_cons (@BL =:BL)}' ;
-//
-//        $command = \Yii::app()->db->createCommand($sql);
-//        $command->bindParam(":BL", 'HLCUMTR180305591', PDO::PARAM_STR);
-//        $list = $command->queryAll();
-//
-//        var_dump($list);die;
-
-
-//        $sql = "exec disv.sp_sgt_bl_cons 'HLCUMTR180305591";
-//        $params = [':BL'=>'HLCUMTR180305591'];
-
-        // sql query for calling the procedure
-//        $sql = "exec disv..sp_sgt_bl_cons HLCUMTR180305591";
-//        $sql = "exec sp_sgt_companias_cons 12917504";
-//        $sql = "exec sp_sgt_placa_cons 12917504";
-//        $result = Yii::$app->db2->createCommand($sql)->queryAll();
-//        var_dump($result);die;
-//
-//        $result = \Yii::$app->db->createCommand($sql, $params)
-//            ->execute();
-//
-//        var_dump($result);die;
-
-//        $connection = Yii::$app->db;
-//        $command = $connection->createCommand($sql);
-//        $result = $command->execute();
-//        var_dump($result);die;
-
-//        $w = Warehouse::find()->all();
-//        var_dump($w);die;
-//        $w = new Warehouse();
-//
-//        $w->name = 'Test';
-//        $w->code_oce = 'aaaa';
-//        $w->ruc = '1111111111111';
-//        $w->active = 1;
-//        if (!$w->save())
-//        {
-//            var_dump($w->getFirstErrors());
-//        }
-//        else
-//        {
-//            var_dump($w->id);
-//        }
-//        die;
-//
-//        $agencia = new Agency();
-//        $agencia->name = 'Test';
-//        $agencia->code_oce = 'aaaa';
-//        $agencia->ruc = 'adsasdasdasdasd';
-//        $agencia->active = 1;
-//        if (!$agencia->save())
-//        {
-//            var_dump($agencia->getFirstErrors());
-//        }
-//        else
-//        {
-//            var_dump($agencia->id);
-//        }
-//
-////        $agencia = Agency::findOne(['id'=>new Expression("CONVERT(integer, 1)")]);
-//        $agencia = Agency::findOne(['name'=>new Expression("CONVERT(varchar, 'aaaa')")]);
-//        var_dump($agencia);die;
-//        $agencia->name = 'YEESSSSS!!!!';
-//        if ($agencia->save())
-//        {
-//            die('YESSS!!!');
-//        }
-//        else
-//        {
-//            var_dump($agencia->getFirstErrors());die;
-//        }
-//        return $this->render('index');
-
         $user = AdmUser::findOne(['id'=>Yii::$app->user->getId()]);
         $params = Yii::$app->request->queryParams;
+        $importCount = 0;
+        $exportCount = 0;
+
+        $searchModel = new ProcessSearch();
+
         if($user && ($user->hasRol('Importador')  ||  $user->hasRol('Exportador') ||  $user->hasRol('Importador_Exportador')))
         {
             $agency = $user->getAgency();
@@ -176,6 +105,9 @@ class SiteController extends Controller
             {
                 $params['agency_id'] = $agency->name;
             }
+
+            $importCount = Process::find()->where(['type'=>Process::PROCESS_IMPORT, 'agency_id'=>$agency->id])->count();
+            $exportCount = Process::find()->where(['type'=>Process::PROCESS_EXPORT, 'agency_id'=>$agency->id])->count();
         }
         else if ($user && $user->hasRol('Cia_transporte')){
             $transcompany = $user->getTransCompany();
@@ -185,18 +117,21 @@ class SiteController extends Controller
                 $params['trans_company_id'] = $transcompany->name;
             }
         }
+        else if($user && $user->hasRol('Administracion'))
+        {
+            $importCount = Process::find()->where(['type'=>Process::PROCESS_IMPORT])->count();
+            $exportCount = Process::find()->where(['type'=>Process::PROCESS_EXPORT])->count();
+        }
 
-        $searchModel = new ProcessSearch();
         $dataProvider = $searchModel->search($params);
-        $importCount = Process::find()->where(['type'=>Process::PROCESS_IMPORT])->count();
-        $exportCount = Process::find()->where(['type'=>Process::PROCESS_EXPORT])->count();
-        $ticketCount = TicketSearch::find()->count();
+//        $ticketCount = TicketSearch::find()->count();
+
         $myparams = array();
         $myparams['searchModel'] = $searchModel;
         $myparams['dataProvider'] = $dataProvider;
         $myparams['importCount'] = $importCount;
         $myparams['exportCount'] = $exportCount;
-        $myparams['ticketCount'] = $ticketCount;
+//        $myparams['ticketCount'] = $ticketCount;
         return $this->render('index', $myparams);
     }
 
@@ -216,7 +151,7 @@ class SiteController extends Controller
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->validate())
         {
-            if ($model->login())
+            if ($model->loginOffLine())
             {
                 $session = Yii::$app->session;
                 $session->open();
@@ -445,10 +380,6 @@ class SiteController extends Controller
 
     public function actionReport()
     {
-
-//        if(!Yii::$app->user->can("admin_mod") && Yii::$app->user->can("process_create")) {
-//            throw new ForbiddenHttpException('Usted no tiene permiso para crear una recepción');
-//        }
 
         $trans_company = TransCompany::findAll(["active"=>1]);
         $agency = Agency::findAll(["active"=>1]);

@@ -568,7 +568,6 @@ class UserController extends Controller
             }
             catch ( \PDOException $e)
             {
-//                var_dump($e->getMessage());die;
                 if($e->getCode() !== '01000')
                 {
                     $response['success'] = false;
@@ -686,7 +685,6 @@ class UserController extends Controller
             }
             catch ( \PDOException $e)
             {
-//                var_dump($e->getMessage());die;
                 if($e->getCode() !== '01000')
                 {
                     $response['success'] = false;

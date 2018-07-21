@@ -559,8 +559,8 @@ class ProcessController extends Controller
     {
 
         $result = [];
-        $result ["status"] = -1;
-        $result ["msg"] = "";
+        $result ['status'] = -1;
+        $result ['msg'] = '';
 
         $user = AdmUser::findOne(["id" => Yii::$app->user->getId()]);
 
@@ -706,7 +706,7 @@ class ProcessController extends Controller
     }
 
     public function actionPrint($id){
-        if(!Yii::$app->user->can("process_view")) // FIXME: change permission to process_view
+        if(!Yii::$app->user->can('process_view'))
             throw new ForbiddenHttpException('Usted no tiene acceso a esta recepción');
 
         $model = $this->findModel($id);
@@ -1012,6 +1012,48 @@ class ProcessController extends Controller
             {
                 $response['success'] = false;
                 $response['msg'] = 'Ah occurrido un error al buscar los contenedores.';
+                $response['msg_dev'] = $ex->getMessage();
+            }
+        }
+        return $response;
+    }
+
+
+    public function actionLikebl()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $bl = Yii::$app->request->get('bl');
+//        $processType = Yii::$app->request->get('type');
+
+        $response = array();
+        $response['success'] = true;
+        $response['msg'] = '';
+        $response['msg_dev'] = '';
+        $response['bls'] = [];
+
+//        if(!isset($bl) || !isset($processType))
+//        {
+//            $response['success'] = false;
+//            $response['msg'] = "Debe especificar el BL y el tipo de trámite de búsqueda.";
+//        }
+
+        if($response['success'])
+        {
+            try
+            {
+                $user = Yii::$app->user->identity;
+
+                $response['bls'] = Process::find()
+                                            ->select('bl')
+                                            ->where(['like', 'bl', $bl])
+                                            ->all();
+
+            }
+            catch (Exception $ex)
+            {
+                $response['success'] = false;
+                $response['msg'] = 'Ah occurrido un error al buscar los BL.';
                 $response['msg_dev'] = $ex->getMessage();
             }
         }

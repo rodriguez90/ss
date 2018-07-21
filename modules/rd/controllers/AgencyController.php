@@ -11,6 +11,7 @@ use yii\web\NotFoundHttpException;
 use yii\web\ForbiddenHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+use yii\web\Response;
 
 /**
  * AgencyController implements the CRUD actions for Agency model.
@@ -161,5 +162,49 @@ class AgencyController extends Controller
         }
 
         throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
+    }
+
+
+    public function actionLikeagency()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $term = Yii::$app->request->get('term');
+//        $processType = Yii::$app->request->get('type');
+
+        $response = array();
+        $response['success'] = true;
+        $response['msg'] = '';
+        $response['msg_dev'] = '';
+        $response['companies'] = [];
+
+//        if(!isset($bl) || !isset($processType))
+//        {
+//            $response['success'] = false;
+//            $response['msg'] = "Debe especificar el BL y el tipo de trámite de búsqueda.";
+//        }
+
+        if($response['success'])
+        {
+            try
+            {
+                $user = Yii::$app->user->identity;
+
+                $response['companies'] = Agency::find()
+                    ->select('id, name')
+                    ->where(['like', 'name', $term])
+//                    ->where(['like', 'bl', $bl])
+//                    ->orWhere(['like', 'ruc', $term])
+                    ->all();
+
+            }
+            catch (Exception $ex)
+            {
+                $response['success'] = false;
+                $response['msg'] = 'Ah occurrido un error al buscar las empresas.';
+                $response['msg_dev'] = $ex->getMessage();
+            }
+        }
+        return $response;
     }
 }

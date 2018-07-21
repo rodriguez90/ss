@@ -249,7 +249,6 @@ else if ($intVal === Process::PROCESS_EXPORT)
 <!--                                        </div>-->
 <!--                                    </div>-->
 <!--                                </div>-->
-<!--                                <div class="row p-0 m-auto">-->
                                     <div class="checkbox">
                                         <label>
                                             <input id="confirming" type="checkbox"> Confirmar Información
@@ -262,10 +261,6 @@ else if ($intVal === Process::PROCESS_EXPORT)
                         <!-- end wizard step-3 -->
                         <!-- begin wizard step-4 -->
                         <div>
-<!--                            <div class="jumbotron m-b-0 text-center">-->
-<!--                                <h1>Proceso Completado</h1>-->
-<!--                                <p>Los datos han sido enviados al servidor.</p>-->
-<!--                            </div>-->
                         </div>
                         <!-- end wizard step-4 -->
                     </div>
