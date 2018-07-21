@@ -41,7 +41,6 @@ var handleBootstrapWizardsValidation = function() {
                                 if(processType == 1)
 								{
                                     value.type = containertDataMap.get(value.name);
-									console.log(value.type);
 								}
 
                                 table.row.add(

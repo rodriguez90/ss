@@ -216,7 +216,6 @@ class SiteController extends Controller
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->validate())
         {
-//            var_dump($model->login());die;
             if ($model->login())
             {
                 $session = Yii::$app->session;
@@ -224,7 +223,7 @@ class SiteController extends Controller
 
                 $user = Yii::$app->user->identity;
 				
-				$session->set('user',$user);
+				$session->set('user', $user);
                 return $this->redirect(Url::toRoute('/site/index'));
 				
                 // if($user != null){
@@ -344,8 +343,6 @@ class SiteController extends Controller
 
         return $this->render('register', ['model'=>$model,'agencias'=>$agencias,'trans_comp'=>$trans_comp]);
     }
-
-
 
     /**
      * Logout action.

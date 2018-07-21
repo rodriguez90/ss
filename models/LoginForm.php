@@ -66,20 +66,10 @@ class LoginForm extends Model
      */
     public function login()
     {
-
 //            $customPassword = $this->makeTPGPassword($this->password);
-
         $response = $this->tpgLogin($this->username, $this->password); // FIXME en produccion pasar el $customPassword
-//        return $response;
-           // var_dump($response);
 
-//          user_id,nombre,ruc,email,ruc_empresa,nombre_empresa,rol,estado
-
-		// var_dump($response['user']);die;
-		
 		$userData = $response['user'];
-		// var_dump($userData['estado']);
-		// var_dump($userData !== null && $userData['estado'] !== "ACTIVO");die;
 
         if(!$response['success'])
         {
@@ -92,14 +82,12 @@ class LoginForm extends Model
             return false;
         }
         elseif ($userData !== null && $userData['estado'] !== "ACTIVO")
-        {			
+        {
             $this->addError('error', 'El usuario esta inactivo, consulte al administrador.');
             return false;
         }
 
         $newUser = AdmUser::findOne(['username'=>$this->username]); // find user in sgt
-		
-		// var_dump($newUser);die;
 
         if($newUser == null)
         {
@@ -226,7 +214,14 @@ class LoginForm extends Model
 				 return false;
 			}
         }
-		
+        return Yii::$app->user->login($newUser, $this->rememberMe == 'on' ? 3600 * 24 * 30 : 0);
+
+    }
+
+    public function loginOffLine()
+    {
+        $newUser = AdmUser::findOne(['username'=>$this->username]); // find user in sgt
+
         return Yii::$app->user->login($newUser, $this->rememberMe == 'on' ? 3600 * 24 * 30 : 0);
 
     }

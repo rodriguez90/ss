@@ -51,6 +51,8 @@ var containerFetchUrl = '';
 
 var hasErrorContainer = false;
 
+var systemMode = 1 // only for testing 0-offline  1-online
+
 var cleanUI = function () {
     selectedContainers = [];
     containertDataMap.clear();
@@ -164,44 +166,44 @@ var handleSelectTransCompany = function () {
 
     $("#selectTransCompany").select2(
     {
-        language: "es",
+            language: "es",
 
-        placeholder: 'Seleccione la compañia de transporte',
-        width: '100%',
-        minimumInputLength:5,
-        // allowClear: true,
-        // tags: true,
-        closeOnSelect: true,
-        ajax: {
-            // url: homeUrl + '/rd/api-trans-company',
-            url: homeUrl + '/rd/trans-company/from-sp',
-            dataType: 'json',
-            // delay: 250,
-            cache: true,
-            data: function (params) {
-                var query = {
-                    code: params.term,
-                };
+            placeholder: 'Seleccione la compañia de transporte',
+            width: '100%',
+            minimumInputLength:5,
+            // allowClear: true,
+            // tags: true,
+            closeOnSelect: true,
+            ajax: {
+                url: homeUrl + (systemMode == 0 ? '/rd/api-trans-company': '/rd/trans-company/from-sp'),
 
-                return query;
-            },
-            processResults: function (data) {
-                // console.log(data);
-                var results  = [];
-                $.each(data.trans_companies, function (index, item) {
-                // $.each(data, function (index, item) {
-                    // console.log(item);
-                    results .push({
-                        id: item.id,
-                        text: item.name,
-                        ruc: item.ruc
+                dataType: 'json',
+                // delay: 250,
+                cache: true,
+                data: function (params) {
+                    var query = {
+                        code: params.term,
+                    };
+
+                    return query;
+                },
+                processResults: function (data) {
+                    // console.log(data);
+                    var results  = [];
+                    var trans_companies = systemMode == 0 ? data : data.trans_companies;
+
+                    $.each(trans_companies, function (index, item) {
+                        results .push({
+                            id: item.id,
+                            text: item.name,
+                            ruc: item.ruc
+                        });
                     });
-                });
-                return {
-                    results: results
-                };
+                    return {
+                        results: results
+                    };
+                },
             },
-        },
     }).on('select2:opening', function (e) {
         var table = $('#data-table3').DataTable();
         var count = table.rows( { selected: true } ).count();
@@ -244,7 +246,6 @@ var handleSelectTransCompany = function () {
             } );
 
         table.rows().deselect();
-        // table.draw();
     });
 };
 
@@ -345,6 +346,7 @@ var fetchContainersOffLine = function (bl) {
         var dataContainer = {
             id:-1,
             name:"ContainerName"+i,
+            alias:"ContainerName"+i,
             ptId:-1,
             type: type,
             deliveryDate: processDeliveryDate,
@@ -409,6 +411,7 @@ var addContainer = function (table, dataContainer) {
         id:dataContainer.id,
         ptId:dataContainer.ptId,
         name:dataContainer.name,
+        alias:dataContainer.alias,
         type: dataContainer.type,
         deliveryDate:dataContainer.deliveryDate,
         transCompany:{name:'', id:-1, ruc:""},
@@ -474,11 +477,17 @@ $(document).ready(function () {
     // search container
     $('#search-container').click( function() {
 
-        // $('#blCode').prop('disabled', true);
         var bl = $('#blCode').val();
         cleanUI();
-        fetchContainers(bl);
-        // fetchContainersOffLine();
+
+        if(systemMode == 1)
+        {
+            fetchContainers(bl);
+        }
+        else {
+            fetchContainersOffLine();
+        }
+
     //     return false;
     });
 

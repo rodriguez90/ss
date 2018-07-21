@@ -69,6 +69,8 @@ var transactionWithTicket = [];
 
 var mode = null; // create and delete
 
+var systemMode = 1 // only for testing 0-offline  1-online
+
 // functions
 
 var findSlotEvent = function (start, end) {
@@ -385,7 +387,7 @@ var handleTableInWizar = function() {
                             var query = {
                                 term: params.term,
                                 code: transCompanyRuc,
-                                mode:1
+                                mode:systemMode
                             }
                             return query;
                         },
@@ -492,7 +494,7 @@ var handleTableInWizar = function() {
                                 var query = {
                                     term: params.term,
                                     code: transCompanyRuc,
-                                    mode:1
+                                    mode:systemMode
                                 }
                                 return query;
                             },

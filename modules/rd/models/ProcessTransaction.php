@@ -66,6 +66,7 @@ class ProcessTransaction extends \yii\db\ActiveRecord
             'name_driver' => 'Nombre del Chofer',
             'trans_company_id' => 'Compañia de Transporte',
             'status' => 'Estado',
+            'container_alias'=>'Alias del Contenedor'
         ];
     }
 

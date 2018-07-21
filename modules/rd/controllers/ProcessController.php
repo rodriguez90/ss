@@ -434,6 +434,7 @@ class ProcessController extends Controller
                         $processTransModel->container_id = $containerModel->id;
                         $processTransModel->active = 1;
                         $processTransModel->trans_company_id = $transCompany->id;
+                        $processTransModel->container_alias = $container['alias'];
                         $processTransModel->status = 'PENDIENTE';
 
                         $aux = new DateTime($container['deliveryDate'], new DateTimeZone("UTC"));
@@ -945,25 +946,25 @@ class ProcessController extends Controller
                             $containerName = $booking . $type->code . $type->tonnage . '-' . ($i + 1);
 
                             $data = ProcessTransaction::find()
-                                ->select('container.id, 
-                                           container.name, 
-                                           process_transaction.status, 
-                                           process_transaction.delivery_date as deliveryDate, 
-                                           process_transaction.id as ptId, 
-                                           container_type.id as typeId, 
-                                           container_type.name as typeName, 
-                                           container_type.code as typeCode, 
-                                           container_type.tonnage as typeTonnage')
-                                ->innerJoin('container', 'process_transaction.container_id=container.id')
-                                ->innerJoin('process', 'process.id=process_transaction.process_id')
-                                ->innerJoin('container_type', 'container_type.id=container.type_id')
-                                ->where(['process.bl' => $booking])
-                                ->andWhere(['process.type'=>$processType])
-                                ->andWhere(['process_transaction.active'=>1])
-                                ->andWhere(['container.name' => $containerName])
-                                ->orderBy(['process_transaction.id'=>SORT_DESC])
-                                ->asArray()
-                                ->one();
+                                                        ->select('container.id, 
+                                                                   container.name, 
+                                                                   process_transaction.status, 
+                                                                   process_transaction.delivery_date as deliveryDate, 
+                                                                   process_transaction.id as ptId, 
+                                                                   container_type.id as typeId, 
+                                                                   container_type.name as typeName, 
+                                                                   container_type.code as typeCode, 
+                                                                   container_type.tonnage as typeTonnage')
+                                                        ->innerJoin('container', 'process_transaction.container_id=container.id')
+                                                        ->innerJoin('process', 'process.id=process_transaction.process_id')
+                                                        ->innerJoin('container_type', 'container_type.id=container.type_id')
+                                                        ->where(['process.bl' => $booking])
+                                                        ->andWhere(['process.type'=>$processType])
+                                                        ->andWhere(['process_transaction.active'=>1])
+                                                        ->andWhere(['process_transaction.container_alias'=>$containerName])
+                                                        ->orderBy(['process_transaction.id'=>SORT_DESC])
+                                                        ->asArray()
+                                                        ->one();
 
                             $currentDeliveryDate = new DateTime($result['fecha_limite'], new DateTimeZone("UTC"));
 
@@ -978,6 +979,7 @@ class ProcessController extends Controller
                                 $container = [];
                                 $container['id'] = -1;
                                 $container['name'] = $containerName;
+                                $container['alias'] = $containerName;
                                 $container['ptId'] = -1;
                                 $container['type'] = $type;
                                 $container['status'] = '';
@@ -987,6 +989,7 @@ class ProcessController extends Controller
                                 $container = [];
                                 $container['id'] = $data['id'];
                                 $container['name'] = $data['name'];
+                                $container['alias'] = $containerName;
                                 $container['ptId'] =  $data['ptId'];
                                 $container['type'] = new  ContainerType();
                                 $container['type']->id = $data['typeId'];
