@@ -92,6 +92,23 @@ class Process extends \yii\db\ActiveRecord
         return $this->hasMany(ProcessTransaction::className(), ['process_id' => 'id'])->andWhere(['active'=>1]);
     }
 
+    public function getProcessTransactionsByUser()
+    {
+        $user = Yii::$app->user->identity;
+        $condition = $user->processCondition();
+        if(count($condition) > 0)
+        {
+            return ProcessTransaction::find()
+                    ->innerJoin('process','process_id=process.id')
+                    ->where(['process_id'=>$this->id])
+                    ->andWhere($condition)
+                    ->andWhere(['or','process_transaction.active='. 1, 'process_transaction.active='. 0])
+                    ->all();
+        }
+
+        return [];
+    }
+
     public function getProcessTransactionsByTransCompany($transCompanyId)
     {
         return ProcessTransaction::find()->where(['process_id'=>$this->id])

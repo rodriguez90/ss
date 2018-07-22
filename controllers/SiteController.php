@@ -151,7 +151,7 @@ class SiteController extends Controller
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->validate())
         {
-            if ($model->loginOffLine())
+            if ($model->login())
             {
                 $session = Yii::$app->session;
                 $session->open();
@@ -160,27 +160,17 @@ class SiteController extends Controller
 				
 				$session->set('user', $user);
                 return $this->redirect(Url::toRoute('/site/index'));
-				
-                // if($user != null){
-                    
-                // }
-                // else {
-                    // return $this->render('login', ['model' => $model,'msg'=>'Usuario inactivo, contacte al administrador.']);
-                // }
             }
             else
             {
-//                var_dump($model->getErrors());die;
                 return $this->render('login', ['model' => $model,'msg'=>implode('', $model->getErrorSummary(false))]);
             }
-
         }
         else{
             $msg = 'Debe ingresar el usurio y la contraseña.';
             return $this->render('login', ['model' => $model,'msg'=>implode('', $model->getErrorSummary(false))]);
         }
     }
-
 
     public function actionRegister()
     {
@@ -309,25 +299,10 @@ class SiteController extends Controller
         ]);
     }
 
-    /**                */
     public function actionAbout()
     {
-        $containers = Container::find()
-            ->all();
-
-
-        return $this->render('about',['containers'=>$containers]);
+        return $this->render('about');
     }
-
-    public function actionQr(){
-
-//    var_dump(date('YmdHis'));die;
-       return $this->render('about', [
-                "path"=> Yii::$app->request->baseUrl."/qrcodes/1-qrcode.png"
-            ]);
-
-    }
-
 
     public function actionPrint(){
         $user = AdmUser::findOne(['id'=>Yii::$app->user->getId()]);
@@ -381,45 +356,23 @@ class SiteController extends Controller
     public function actionReport()
     {
 
-        $trans_company = TransCompany::findAll(["active"=>1]);
-        $agency = Agency::findAll(["active"=>1]);
-        $process = Process::find()
-            ->all();
-
         $searchModel = null;
         $dataProvider = null;
 
-        if(Yii::$app->request->isPost){
+        $search_bl = Yii::$app->request->post("bl");
+        $search_agency_id =  Yii::$app->request->post("agency_id");
+        $search_trans_company =  Yii::$app->request->post("trans_company_id");
 
-            $params = Yii::$app->request->queryParams;
+        if(Yii::$app->request->isPost)
+        {
             $searchModel = new ProcessSearch();
-            $dataProvider = $searchModel->search($params);
-
-            $search_bl = Yii::$app->request->post("bl");
-            $search_agency_id =  Yii::$app->request->post("agency_id");
-            $search_trans_company =  Yii::$app->request->post("trans_company");
-
-            if(isset($search_bl)) {
-                $dataProvider->query->andFilterWhere(['like', 'bl', $search_bl]);
-            }
-
-            if(isset($search_agency_id)) {
-                $dataProvider->query->andFilterWhere(['like', 'agency_id', $search_agency_id]);
-            }
-
-            if(isset($search_trans_company)) {
-                    $filter = ProcessTransaction::find()->select('process_id')->where(['like','trans_company_id', $search_trans_company]);
-                    $dataProvider->query->andFilterWhere(['process.id'=>$filter]);
-            }
+            $dataProvider = $searchModel->searchReport(Yii::$app->request->post());
         }
 
         return $this->render('report', [
             'searchModel'=>$searchModel,
             'dataProvider'=>$dataProvider,
-            'trans_company'=>$trans_company,
-            'agency'=>$agency,
-             'process'=>$process,
-             'search_bl'=>$search_bl,
+            'search_bl'=>$search_bl,
             'search_agency_id'=>$search_agency_id,
             'search_trans_company'=>$search_trans_company,
 
@@ -442,7 +395,7 @@ class SiteController extends Controller
             $row = [];
             $row["process"] = $p;
             $containers = Container::find()
-                ->select('container.id,container.status,container.name,container.tonnage,process_transaction.id as process_trans_id')
+                ->select('container.id,process_transaction.status,container.name,container.tonnage,process_transaction.id as process_trans_id')
                 ->innerJoin("process_transaction","process_transaction.container_id = container.id")
                 ->innerJoin("process","process_transaction.process_id = process.id")
                 ->where(["process.id"=>$p->id])

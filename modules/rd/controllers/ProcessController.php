@@ -1024,6 +1024,7 @@ class ProcessController extends Controller
         Yii::$app->response->format = Response::FORMAT_JSON;
 
         $bl = Yii::$app->request->get('bl');
+        $user = Yii::$app->user->identity;
 //        $processType = Yii::$app->request->get('type');
 
         $response = array();
@@ -1033,10 +1034,11 @@ class ProcessController extends Controller
         $response['bls'] = [];
 
 //        if(!isset($bl) || !isset($processType))
-//        {
-//            $response['success'] = false;
-//            $response['msg'] = "Debe especificar el BL y el tipo de trámite de búsqueda.";
-//        }
+        if(!isset($bl))
+        {
+            $response['success'] = false;
+            $response['msg'] = "Debe especificar el BL y el tipo de trámite de búsqueda.";
+        }
 
         if($response['success'])
         {
@@ -1045,8 +1047,11 @@ class ProcessController extends Controller
                 $user = Yii::$app->user->identity;
 
                 $response['bls'] = Process::find()
+                                            ->innerJoin('process_transaction', 'process.id=process_transaction.process_id')
                                             ->select('bl')
                                             ->where(['like', 'bl', $bl])
+                                            ->andWhere($user->processCondition())
+                                            ->groupBy(['bl'])
                                             ->all();
 
             }

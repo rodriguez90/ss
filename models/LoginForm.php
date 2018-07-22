@@ -214,7 +214,7 @@ class LoginForm extends Model
 				 return false;
 			}
         }
-        return Yii::$app->user->login($newUser, $this->rememberMe == 'on' ? 3600 * 24 * 30 : 0);
+        return Yii::$app->user->login($newUser, $this->rememberMe == 'on' ? 1800 : 0);
 
     }
 
@@ -222,7 +222,7 @@ class LoginForm extends Model
     {
         $newUser = AdmUser::findOne(['username'=>$this->username]); // find user in sgt
 
-        return Yii::$app->user->login($newUser, $this->rememberMe == 'on' ? 3600 * 24 * 30 : 0);
+        return Yii::$app->user->login($newUser, $this->rememberMe == 'on' ? 1800 : 0);
     }
 
     /**

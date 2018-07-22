@@ -24,7 +24,8 @@ var blue		= '#348fe2',
     purpleDark	= '#5b6392',
     red         = '#ff5b57';
 
-var handleWidgetOptions = function() {
+var handleWidgetOptions = function()
+{
 	"use strict";
 
     // element.style.display = 'none';           // Hide

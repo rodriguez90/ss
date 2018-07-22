@@ -377,4 +377,50 @@ class AdmUser extends ActiveRecord implements IdentityInterface
 
         return null;
     }
+
+    public function processCondition()
+    {
+        if($this->hasRol('Importador_Exportador'))
+        {
+            $agency = $this->getAgency();
+            $params['agency_id'] = '';
+            if($agency)
+            {
+                $params['agency_id'] = $agency->id;
+            }
+        }
+        else if ($this->hasRol('Cia_transporte'))
+        {
+            $transcompany = $this->getTransCompany();
+            $params['trans_company_id'] = '';
+            if($transcompany)
+            {
+                $params['trans_company_id'] = $transcompany->id;
+            }
+        }
+        else if($this->hasRol('Administracion'))
+        {
+            $params['1']=1;
+        }
+
+        return $params;
+    }
+
+    public function asociatedEntity()
+    {
+        $entity = null;
+        if($this->hasRol('Importador_Exportador'))
+        {
+            $entity = $this->getAgency();
+        }
+        else if ($this->hasRol('Cia_transporte')){
+            $entity = $this->getTransCompany();
+        }
+        else if($this->hasRol('Administracion'))
+        {
+            $entity =  true;
+        }
+
+        return $entity;
+    }
 }

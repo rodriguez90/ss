@@ -187,13 +187,13 @@ var handleCalendarDemo = function () {
                     }
                     else
                     {
-                        if(count2)
+                        if(count2 > 0)
                         {
-                            alert('La fecha seleccionada en el calendario es mayor que la fecha límite de los contenedores');
+                            alert('La fecha seleccionada en el calendario es mayor que la fecha límite de los contenedores.');
                             return false;
                         }
                         {
-                            alert('Ya todas los contenedores de esta recepción tienen cupos');
+                            alert('Ya todas los contenedores de este proceso tienen turnos.');
                             return false;
                         }
                     }
@@ -203,7 +203,8 @@ var handleCalendarDemo = function () {
                     return false;
                 }
             }
-            else {
+            else
+            {
                 var id = calEvent.calendarId; //calEvent.type === "T20"  ? calEvent.calendarId + "T20" : calEvent.calendarId + "T40" ;
                 console.log(id);
                 currentCalendarEvent = calendarEventMap.get(id) ;

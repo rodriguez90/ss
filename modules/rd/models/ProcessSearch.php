@@ -125,4 +125,42 @@ class ProcessSearch extends Process
 
         return $dataProvider;
     }
+
+    /**
+     * Creates data provider instance with search query applied
+     *
+     * @param array $params
+     *
+     * @return ActiveDataProvider
+     */
+    public function searchReport($params)
+    {
+        $query = Process::find()->innerJoin('agency', 'agency.id = process.agency_id')
+            ->innerJoin("process_transaction","process_transaction.process_id = process.id")
+            ->innerJoin("trans_company","process_transaction.trans_company_id = trans_company.id")
+            ->where(['process.active'=>1]);
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+            'pagination' => false,
+            'sort' => [
+                'defaultOrder' => [
+                    'created_at' => SORT_ASC,
+                ]
+            ],
+        ]);
+
+
+        $this->load($params);
+
+        if (!$this->validate()) {
+            return $dataProvider;
+        }
+
+        $query->andFilterWhere(['bl'=>$params['bl']]);
+        $query->andFilterWhere(['agency.id'=>$params['agency_id']]);
+        $query->andFilterWhere(['trans_company.id'=>$params['trans_company_id']]) ;
+
+        return $dataProvider;
+    }
 }
