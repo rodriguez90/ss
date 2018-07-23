@@ -36,8 +36,6 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="panel-heading">
         <div class="panel-heading-btn">
             <a id="print-process" href="<?= Url::to(['/rd/process/print?id='.$model->id]) ?>" style="color: white;font-size: 14px;" title="Exportar PDF" > <i class="fa fa-file-pdf-o"></i></a>
-<!--            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fa fa-repeat"></i></a>-->
-<!--            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>-->
         </div>
         <h4 class="panel-title">Detalles del Proceso</h4>
     </div>

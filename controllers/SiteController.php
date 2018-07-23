@@ -379,7 +379,11 @@ class SiteController extends Controller
         ]);
     }
 
-    public function actionPrintreport($bl,$agency_id,$trans_company_id){
+    public function actionPrintreport()
+    {
+        $bl = Yii::$app->request->get('bl');
+        $agency_id = Yii::$app->request->get('agency_id');
+        $trans_company_id = Yii::$app->request->get('$trans_company_id');
 
         $process = Process::find()->innerJoin('agency', 'agency.id = process.agency_id')
             ->innerJoin("process_transaction","process_transaction.process_id = process.id")
