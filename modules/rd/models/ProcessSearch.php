@@ -157,6 +157,7 @@ class ProcessSearch extends Process
             return $dataProvider;
         }
 
+
         $query->andFilterWhere(['bl'=>$params['bl']]);
         $query->andFilterWhere(['agency.id'=>$params['agency_id']]);
         $query->andFilterWhere(['trans_company.id'=>$params['trans_company_id']]) ;
