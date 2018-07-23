@@ -178,14 +178,13 @@ if($user)
                                         $url2 = Url::toRoute(['rd/ticket/create','id'=>$model->id]);
 //                                        $ticketClass = $model->active == 1 ? 'btn-success' : 'btn-default';
                                         $ticketClass = $model->getContainerAmount() !== $model->getCountTicketReserved() ? 'btn-success' : 'btn-default';
-                                        if($role === AuthItem::ROLE_AGENCY ||
+                                        if($role === AuthItem::ROLE_IMPORTER_EXPORTER ||
                                             $role === AuthItem::ROLE_IMPORTER ||
                                             $role === AuthItem::ROLE_EXPORTER)
                                             $result = Html::a('Ver', $url1, ['class' => 'btn btn-info btn-xs', 'data-pjax' => 0]);
                                         else if($role === AuthItem::ROLE_CIA_TRANS_COMPANY)
                                             $result = Html::a('Turnos', $url2, ['class' => 'btn btn-xs ' . $ticketClass, 'data-pjax' => 0]);
-                                        if($role === AuthItem::ROLE_ADMIN ||
-                                            $role === AuthItem::ROLE_IMPORTER_EXPORTER)
+                                        if($role === AuthItem::ROLE_ADMIN)
                                         {
                                             $result = Html::beginTag('div', ['class'=>'row'])
                                                 . Html::beginTag('div', ['class'=>'col col-md-12'])
