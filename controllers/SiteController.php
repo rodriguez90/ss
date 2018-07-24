@@ -52,7 +52,7 @@ class SiteController extends Controller
                 'only' => ['logout'],
                 'rules' => [
                     [
-                        'actions' => ['logout', 'contact', 'about', 'index','register'],
+                        'actions' => ['logout', 'contact', 'about', 'index','register', 'print', 'report', 'printreport'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],

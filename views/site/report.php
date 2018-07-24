@@ -133,7 +133,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
                                 <?= Html::submitButton(Yii::t('app', 'Buscar'), ['class' => 'btn btn-primary']) ?>
 
-                                <a id="print-process" class="<?= $dataProvider !=null ?  'btn btn-inverse' : 'btn btn-inverse disabled' ?>"  href="<?php echo Url::toRoute(['/site/printreport', 'search_bl'=>$search_bl, 'agency_id'=>$search_agency_id,'trans_company_id'=>$search_trans_company]);?>" style="color: white;font-size: 14px;" title="Exportar PDF" > <i class="fa fa-file-pdf-o"></i></a>
+                                <a id="print-process" target="_blank" class="<?= $dataProvider !== null ?  'btn btn-inverse' : 'btn btn-inverse disabled' ?>"  href="<?= Url::toRoute(['/site/printreport', 'search_bl'=>$search_bl, 'agency_id'=>$search_agency_id,'trans_company_id'=>$search_trans_company])?>" style="color: white;font-size: 14px;" title="Exportar PDF" > <i class="fa fa-file-pdf-o"></i></a>
 
                             </div>
 
