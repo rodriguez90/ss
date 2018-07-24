@@ -28,6 +28,10 @@ CalendarAsset::register($this);
         width: 100% !important;
     }
 
+    #dialog-spinner
+    {
+        margin: 0px 0px 0px 0px; !important;
+    }
 
 </style>
 <!--div class="calendar-form">
@@ -231,21 +235,16 @@ CalendarAsset::register($this);
 
 <!-- #modal-containers -->
 <div class="modal fade" id="modal-select-bussy" role="dialog" data-backdrop='static'>
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-md">
         <div class="modal-content">
-            <!--            <div class="modal-header">-->
-            <!--                <h4 id="modalTitle" class="modal-title">Proceso Completado</h4>-->
-            <!--            </div>-->
+            <div class="modal-header">
+                <h4 id="modalTitle" class="modal-title">Proceso Completado</h4>
+            </div>
             <div class="modal-body p-15">
-                <!-- begin #page-loader -->
-                <div id="page-loader-process" class="fade in">
-                    <span class="spinner"></span>
-                    <div class="jumbotron m-b-0 text-center">
-<!--                        <h1>Proceso Completado</h1>-->
-                        <p>Los datos han sido enviados al servidor.</p>
-                    </div>
+                <div class="jumbotron m-b-0 text-center">
+                    <span id="dialog-spinner" class="spinner"></span>
+                    <p>Los datos de las capacidades en el calendario han sido enviadas al TPG.</p>
                 </div>
-                <!-- end #page-loader -->
             </div>
         </div>
     </div>

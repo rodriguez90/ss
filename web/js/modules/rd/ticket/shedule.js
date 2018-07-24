@@ -7,6 +7,8 @@ var ticketEvents = {
     events:[]
 };
 
+var minDeliveryDate = moment();
+
 // make custom conten to popover by event
 var makePopoverContent = function (event) {
     var result = {
@@ -25,7 +27,7 @@ var makePopoverContent = function (event) {
         var containersConten  = '';
         $.each(tickets, function (i) {
             var ticket = ticketDataMap.get(tickets[i]);
-            containersConten += "<h5>" + ticket.name + " " + ticket.code + ticket.tonnage + "<h5>";
+            containersConten += "<h5>" + ticket.name + " " + ticket.code + ticket.tonnage + " " + ticket.register_truck + "/"+ ticket.name_driver+"<h5>";
         });
 
         result.conten = containersConten;
@@ -33,8 +35,6 @@ var makePopoverContent = function (event) {
 
     return result;
 };
-
-
 
 var findTicketEvent = function (id) {
     var result = {
@@ -330,7 +330,10 @@ var fetchTickets = function (async) {
                     code:response['tickets'][i].code,
                     tonnage:response['tickets'][i].tonnage,
                     start_datetime:response['tickets'][i].start_datetime,
-                    end_datetime:response['tickets'][i].end_datetime
+                    end_datetime:response['tickets'][i].end_datetime,
+                    register_truck:response['tickets'][i].register_truck,
+                    register_driver:response['tickets'][i].register_driver,
+                    name_driver:response['tickets'][i].name_driver,
                 };
 
                 var className = [];
@@ -367,6 +370,7 @@ var fetchTickets = function (async) {
                     var event = {
                         id: id,
                         title: count,
+                        ticketId:ticket.id,
                         start: ticket.start_datetime,
                         end:  ticket.end_datetime,
                         allDay:false,
@@ -375,7 +379,7 @@ var fetchTickets = function (async) {
                         type:type,
                         count:count,
                         tickets:[ticket.id],
-                        index: -1
+                        index: -1,
                     };
                     ticketEvents.events.push(event);
                     event.index = ticketEvents.events.length - 1;
@@ -384,6 +388,13 @@ var fetchTickets = function (async) {
 
             $('#calendar').fullCalendar('addEventSource',ticketEvents);
             $('#calendar').fullCalendar('refetchEventSources');
+
+            if(response['tickets'].length > 0)
+            {
+                minDeliveryDate = response['tickets'][0].start_datetime;
+            }
+
+            $('#calendar').fullCalendar('gotoDate', moment(minDeliveryDate) );
         },
         error: function(response) {
             console.log(response);
@@ -402,7 +413,6 @@ var Calendar = function () {
         }
     };
 }();
-
 
 
 $(document).ready(function () {

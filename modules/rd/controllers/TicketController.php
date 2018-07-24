@@ -189,8 +189,6 @@ class TicketController extends Controller
             $response['msg'] = 'Bad request';
         }
 
-//        var_dump($response);die;
-
         return $response;
     }
 
@@ -300,6 +298,9 @@ class TicketController extends Controller
                                 calendar.start_datetime, 
                                 calendar.end_datetime, 
                                 process_transaction.container_id,
+                                process_transaction.register_truck,
+                                process_transaction.register_driver,
+                                process_transaction.name_driver,
                                 container.name,
                                 container.code,
                                 container.tonnage')
@@ -308,6 +309,7 @@ class TicketController extends Controller
                 ->innerJoin('container', 'container.id=process_transaction.container_id')
                 ->where(['process_transaction.trans_company_id'=>$transCompany->id])
                 ->andWhere(['ticket.active'=>1])
+                ->orderBy(['calendar.end_datetime'=>SORT_ASC])
                 ->asArray()
                 ->all();
             $response['tickets'] = $tickets;

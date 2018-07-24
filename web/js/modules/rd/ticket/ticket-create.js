@@ -1070,8 +1070,8 @@ var fetchReceptionTransactions = function () {
                     //     }
                     // });
 
-                    console.log(minDeliveryDate.format('YYYY-MM-DD HH:mm:ss'));
-                    console.log(maxDeliveryDate.format('YYYY-MM-DD HH:mm:ss'));
+                    // console.log(minDeliveryDate.format('YYYY-MM-DD HH:mm:ss'));
+                    // console.log(maxDeliveryDate.format('YYYY-MM-DD HH:mm:ss'));
 
                     fetchCalendar(minDeliveryDate.format('YYYY-MM-DD HH:mm:ss'), maxDeliveryDate.format('YYYY-MM-DD HH:mm:ss'), false);
                     fetchTickets(modelId, false);
@@ -1212,10 +1212,9 @@ var handleStopWatch = function()
 
 $(document).ready(function () {
 
-    console.log(modelId);
-    console.log(transCompanyId);
-    console.log(transCompanyRuc);
-    // transCompanyRuc = '0992125861001';
+    // console.log(modelId);
+    // console.log(transCompanyId);
+    // console.log(transCompanyRuc);
     // moment.locale('es');
     // init wizar
     FormWizardValidation.init();
