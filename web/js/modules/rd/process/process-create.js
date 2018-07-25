@@ -57,7 +57,7 @@ var cleanUI = function () {
     selectedContainers = [];
     containertDataMap.clear();
 
-    $("#selectTransCompany").select2("val", "");
+    $('#selectTransCompany').val('').trigger("change.select2");
 
     document.getElementById('oce').innerHTML = "OCE: -" ;
     document.getElementById('line').innerHTML = "LINEA: -";
@@ -357,7 +357,6 @@ var fetchContainersOffLine = function (bl) {
             status: status,
             errCode:Math.round(Math.random()),
         };
-        containertDataMap.set(dataContainer.name, type);
         addContainer(table, dataContainer);
     }
 };
