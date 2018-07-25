@@ -381,7 +381,7 @@ class SiteController extends Controller
 
     public function actionPrintreport()
     {
-        $bl = Yii::$app->request->get('bl');
+        $bl = Yii::$app->request->get('search_bl');
         $agency_id = Yii::$app->request->get('agency_id');
         $trans_company_id = Yii::$app->request->get('trans_company_id');
 
