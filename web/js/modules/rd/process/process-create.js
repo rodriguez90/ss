@@ -57,6 +57,8 @@ var cleanUI = function () {
     selectedContainers = [];
     containertDataMap.clear();
 
+    $("#selectTransCompany").select2("val", "");
+
     document.getElementById('oce').innerHTML = "OCE: -" ;
     document.getElementById('line').innerHTML = "LINEA: -";
     document.getElementById('staticLinks').style.display = 'none';
@@ -282,7 +284,6 @@ var fetchContainers = function (bl) {
 
                     for (var i = 0; i < response['containers'].length; i++)
                     {
-                        containertDataMap.set(response['containers'], response['containers'].type);
                         addContainer(table, response['containers'][i])
                     }
                 }
@@ -425,6 +426,8 @@ var addContainer = function (table, dataContainer) {
         statusIsDate:statusIsDate,
         selectable:false,
     };
+
+    containertDataMap.set(container.name, container.type);
 
     if(statusIsDate)
     {

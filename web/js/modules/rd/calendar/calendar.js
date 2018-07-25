@@ -14,16 +14,14 @@ var fullcalendatInit = false;
 
 $(function (){
 
-	
-
     $("#grabar").click(function () {
 		
 		var events2 = [];
 		for(var i=0; i < events.length; i++)
 		{
 			var event = events[i];
-			console.log(event.start);
-			console.log(moment(event.start).format('YYYY-MM-DD HH:mm:ss Z'));
+			// console.log(event.start);
+			// console.log(moment(event.start).format('YYYY-MM-DD HH:mm:ss Z'));
 			event.start = moment(event.start).format('YYYY-MM-DD HH:mm:ss Z');
 			event.end = moment(event.end).format('YYYY-MM-DD HH:mm:ss Z');
 			events2.push(event);
@@ -39,7 +37,9 @@ $(function (){
                 $("#modal-select-bussy").modal("show");
             },
             success: function (response) {
+                // console.log(response);
                 $("#modal-select-bussy").modal("hide");
+
                 if(response['status']){
 
 
@@ -75,18 +75,15 @@ $(function (){
                             var event_end = events[j].end;
                             if (event_start.getTime() === start_event_db.getTime() && event_end.getTime() === end_event_db.getTime()) {
                                 events[j].title = response["events"][i].title;
-                                console.log(" actualizado");
+                                // console.log(" actualizado");
                             }
                         }
 
                     });
 
-
-
                   $('#calendar').fullCalendar('removeEvents');
                   $('#calendar').fullCalendar('addEventSource',events);
                   $('#calendar').fullCalendar('refetchEvents');
-
                 }
 
                 $.gritter.add({
@@ -185,9 +182,7 @@ $(function (){
                 $('#calendar').fullCalendar('addEventSource',events);
                 $('#calendar').fullCalendar('refetchEvents');
 
-
-                console.log("addEvens",events);
-
+                // console.log("addEvens",events);
 
             }else{
                 alert("!Error. El campo 'Desde' tiene que ser menor que el campo 'Hasta'.")
@@ -288,11 +283,11 @@ $(function (){
                                 $('#calendar').fullCalendar('addEventSource',events);
                                 $('#calendar').fullCalendar('refetchEvents');
 
-                                console.log("viewRender: " , events);
+                                // console.log("viewRender: " , events);
 
                             },
                             error: function(response) {
-                                console.log(response.responseText);
+                                // console.log(response.responseText);
                                 return false;
                             }
                         });
@@ -443,7 +438,7 @@ $(function (){
             fullcalendatInit = true;
         },
         error: function(response) {
-            console.log(response.responseText);
+            // console.log(response.responseText);
             result = false;
             // return false;
         }
