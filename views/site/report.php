@@ -53,17 +53,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
             <div class="panel-body">
 
-                <?php Pjax::begin(); ?>
-
-                    <?php /*echo $this->render('_search', ['model' => $searchModel,
-                        'search_bl' => $search_bl,
-                        'search_agency_id' => $search_agency_id,
-                        'search_trans_company' => $search_trans_company,
-                        'dataProvider' => $dataProvider,
-
-                    ]);*/
-                    ?>
-
                 <?php $form = ActiveForm::begin(
                     [
                         'id' => 'report-form',
@@ -133,7 +122,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
                                 <?= Html::submitButton(Yii::t('app', 'Buscar'), ['class' => 'btn btn-primary']) ?>
 
-                                <a id="print-process" target="_blank" class="<?= $dataProvider !== null ?  'btn btn-inverse' : 'btn btn-inverse disabled' ?>"  href="<?= Url::toRoute(['/site/printreport', 'search_bl'=>$search_bl, 'agency_id'=>$search_agency_id,'trans_company_id'=>$search_trans_company])?>" style="color: white;font-size: 14px;" title="Exportar PDF" > <i class="fa fa-file-pdf-o"></i></a>
+                                <a id="print-process" target="_blank" rel="noopener noreferrer" class="<?= $dataProvider !== null ?  'btn btn-inverse' : 'btn btn-inverse disabled' ?>"  href="<?= Url::toRoute(['/site/printreport', 'search_bl'=>$search_bl, 'agency_id'=>$search_agency_id,'trans_company_id'=>$search_trans_company])?>" style="color: white;font-size: 14px;" title="Exportar PDF" > <i class="fa fa-file-pdf-o"></i></a>
 
                             </div>
 
@@ -194,7 +183,6 @@ $this->params['breadcrumbs'][] = $this->title;
                         ?>
                     </div>
 
-                <?php Pjax::end(); ?>
             </div>
         </div>
     </div>

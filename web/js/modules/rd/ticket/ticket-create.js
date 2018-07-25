@@ -69,7 +69,7 @@ var transactionWithTicket = [];
 
 var mode = null; // create and delete
 
-var systemMode = 1 // only for testing 0-offline  1-online
+var systemMode = 0 // only for testing 0-offline  1-online
 
 // functions
 
@@ -877,7 +877,7 @@ var handleModal = function () {
                         if(result.event) // always
                         {
                             result.event.count = result.event.count - 1;
-                            result.event.title = result.event.count;
+                            result.event.title = String(result.event.count);
                             var indexRT = result.event.rt.indexOf(value.transactionId)
                             result.event.rt.splice(indexRT, 1);
 

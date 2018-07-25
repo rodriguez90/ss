@@ -598,6 +598,7 @@ class ProcessController extends Controller
                                               trans_company.ruc,
                                               ticket.id,
                                               ticket.status,
+                                              ticket.created_at,
                                               calendar.start_datetime,
                                               calendar.end_datetime,
                                               warehouse.name as w_name, 
@@ -617,34 +618,32 @@ class ProcessController extends Controller
                         $paths = [];
                         $sendMail =true;
 
-                        if(count($tickes)>0){
-                            foreach ($tickes as $ticket) {
-
+                        if(count($tickes) > 0)
+                        {
+                            foreach ($tickes as $ticket)
+                            {
                                 $aux = new DateTime($ticket["start_datetime"]);
                                 $date = $aux->format("YmdHi");
-                                $dateImp = date('d/m/Y H:i');
+                                $dateImp = new DateTime($ticket["created_at"], new DateTimeZone('UTC'));
+                                $dateImp = $dateImp->format('d/m/Y H:i');
+
                                 $info = "";
-                                $info .= "EMP. TRANSPORTE: " . $trans_company["name"] . '-';
-                                $info .= "TICKET NO: TI-" . $date . "-" . $ticket["id"] . '-';
-                                $info .= "OPERACION: " . $ticket["type"] == Process::PROCESS_IMPORT ? "IMPORT" : "EXPOT" . '-';
-                                $info .= "DEPOSITO: " . $ticket["w_name"] . '-';
-                                $info .= "ECAS: " . $ticket["delivery_date"] . '-';
-                                $info .= "FECHA LIMITE: " . $ticket["delivery_date"] . '-';
-                                $info .= "CLIENTE: " . $ticket["a_name"] . '-';
-                                $info .= "RUC/CI: " . $ticket["ruc"] . "/" . $ticket["register_driver"] . '-';
-                                $info .= "CHOFER: " . $ticket["name_driver"] . '-';
-                                $info .= "PLACA: " . $ticket["register_truck"] . '-';
-                                $info .= "FECHA TURNO: " . substr($ticket["start_datetime"], 0, 16) . '-';
-                                $info .= "CANTIDAD: 1" . '-';
-                                $info .= "BOOKING: " . $ticket["bl"] . '-';
-                                $info .= "TIPO CONT: " . $ticket["tonnage"] . $ticket["code"] . '-';
-                                $info .= "GENERADO: " . $dateImp . '-';
+                                $info .= "EMP. TRANSPORTE: " . $trans_company["name"] . ' ';
+                                $info .= "TICKET NO: TI-" . $date . "-" . $ticket["id"] . ' ';
+                                $info .= "OPERACIÓN: " . $ticket["type"] == Process::PROCESS_IMPORT ? "IMPORTACIÓN":"EXPORTACIÓN" . '  ';
+                                $info .= "DEPÓSITO: " . $ticket["w_name"] . ' ';
+                                $info .= "ECAS: " . $ticket["delivery_date"] . ' ';
+                                $info .= "CLIENTE: " . $ticket["a_name"] . ' ';
+                                $info .= "CHOFER: " . $ticket["name_driver"] . "/" . $ticket["register_driver"] . ' ';
+                                $info .= "PLACA: " . $ticket["register_truck"] . ' ';
+                                $info .= "FECHA TURNO: " . substr($ticket["start_datetime"], 0, 16) . ' ';
+                                $info .= "CANTIDAD: 1" . ' ';
+                                $info .= $ticket["type"] == Process::PROCESS_IMPORT ? "BL":"BOOKING" . ": ". $ticket["bl"] . ' ';
+                                $info .= "TIPO CONT: " . $ticket["tonnage"] . $ticket["code"] . ' ';
+                                $info .= "GENERADO: " . $dateImp . ' ';
                                 $info .= "ESTADO: " . $ticket["status"] == 1 ? "EMITIDO" : "---";
                                 $qrCode = new QrCode($info);
-                                //$qrpath =  Yii::getAlias("@webroot"). "/qrcodes/".$ticket["id"]."-".date('YmdHis').".png";
-                                ///sgt/web/qrcodes/3-qrcode.png
-                                //$qrCode->writeFile($qrpath);
-                                //$paths [] = $qrpath;
+
                                 ob_start();
                                 \QRcode::png($info, null);
                                 $imageString = base64_encode(ob_get_contents());
@@ -656,7 +655,8 @@ class ProcessController extends Controller
                                                                 ["trans_company" => $trans_company,
                                                                  "ticket" => $ticket,
                                                                  "qr" => "data:image/png;base64, " . $imageString,
-                                                                 'dateImp' => $dateImp]);
+                                                                 'dateImp' => $dateImp,
+                                                                 'date'=>$date]);
 
                                 $pdf = new mPDF(['mode' => 'utf-8', 'format' => 'A4-L']);
                                 //$pdf->SetHTMLHeader( "<div style='font-weight: bold; text-align: center;font-family: 'Helvetica', 'Arial', sans-serif;font-size: 14px;width: 100%> Carta de Servicio </div>");
@@ -670,8 +670,6 @@ class ProcessController extends Controller
                                     ->setHtmlBody("<h5>Se adjunta carta de servicio.</h5>")
                                     ->attachContent($path, ['fileName' => "Carta de Servicio.pdf", 'contentType' => 'application/pdf'])
                                     ->send();
-
-
                             }
                             if($sendMail) {
                                 $result ["status"] = 1;
@@ -682,7 +680,7 @@ class ProcessController extends Controller
                             }
                         }else{
                             $result ["status"] = 0;//mejorar msj
-                            $result ["msg"] = "Error: No existen datos para generar cartas de servicio";
+                            $result ["msg"] = "No turnos para generar generar las cartas de servicio";
                         }
 
 

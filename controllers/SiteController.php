@@ -151,7 +151,7 @@ class SiteController extends Controller
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->validate())
         {
-            if ($model->login())
+            if ($model->loginOffLine())
             {
                 $session = Yii::$app->session;
                 $session->open();
@@ -349,7 +349,7 @@ class SiteController extends Controller
         $pdf =  new mPDF(['mode'=>'utf-8' , 'format'=>'A4-L']);
         $pdf->SetTitle("Solicitudes Realizadas");
         $pdf->WriteHTML($body);
-        $path= $pdf->Output("Solicitudes Realizadas.pdf","D");
+        $path= $pdf->Output("Solicitudes Realizadas.pdf","I");
 
     }
 
@@ -437,7 +437,7 @@ class SiteController extends Controller
         $pdf =  new mPDF(['mode'=>'utf-8' , 'format'=>'A4-L']);
         $pdf->SetTitle("Solicitudes Realizadas");
         $pdf->WriteHTML($body);
-        $path= $pdf->Output("Solicitudes Realizadas.pdf","D");
+        $path= $pdf->Output("Solicitudes Realizadas.pdf","I");
 
     }
 

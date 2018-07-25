@@ -126,7 +126,7 @@ $user = Yii::$app->user->identity;
                     }
                     ?>
                     <?php
-                    if(Yii::$app->user->can("admin_mod") || Yii::$app->user->can("process_create")){
+                    if($user){
                         echo "<li class='has-sub'>";
                         echo "<a href=".Url::to(['/site/report'])."> <i class='fa fa-file-pdf-o'></i>";
                         echo  "<span> Reporte </span>";
