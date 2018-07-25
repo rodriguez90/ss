@@ -60,7 +60,7 @@ var ticketEvents = {
 
 var currentCalendarEvent = null;
 
-// el calendario se acota x la fecha de devolución de los contenedores relacionados en la recepcion
+// el calendario se acota x la fecha de devolución d los contenedores relacionados en la recepcion
 var minDeliveryDate = null;
 var maxDeliveryDate = null;
 

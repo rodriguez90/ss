@@ -77,7 +77,8 @@ var handleBootstrapWizardsValidation = function() {
                 var result = true;
 
                 // back navigation no check validation
-                if(ui.index > ui.nextIndex)
+
+                if(ui.index >= ui.nextIndex)
                 {
                     return result;
                 }

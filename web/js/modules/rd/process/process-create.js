@@ -51,13 +51,14 @@ var containerFetchUrl = '';
 
 var hasErrorContainer = false;
 
-var systemMode = 1 // only for testing 0-offline  1-online
+var systemMode = 1; // only for testing 0-offline  1-online
 
 var cleanUI = function () {
     selectedContainers = [];
     containertDataMap.clear();
 
     $('#selectTransCompany').val('').trigger("change.select2");
+    $("#wizard").bwizard("show","0");
 
     document.getElementById('oce').innerHTML = "OCE: -" ;
     document.getElementById('line').innerHTML = "LINEA: -";
