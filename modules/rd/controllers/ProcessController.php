@@ -713,7 +713,7 @@ class ProcessController extends Controller
         $pdf =  new mPDF(['mode'=>'utf-8' , 'format'=>'A4-L']);
         $pdf->SetTitle("Carta de Servicio");
         $pdf->WriteHTML($body);
-        $path= $pdf->Output("Detalles del Proceso.pdf","D");
+        $path= $pdf->Output("Detalles del Proceso.pdf","I");
     }
 
     public function actionSgtblcons()
