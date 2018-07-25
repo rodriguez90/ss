@@ -1060,7 +1060,7 @@ var fetchReceptionTransactions = function () {
                 var count =  response['transactions'].length;
                 if(count > 0)
                 {
-                    minDeliveryDate = moment().utc();
+                    minDeliveryDate = moment();
                     maxDeliveryDate = moment(reception.delivery_date).utc().set({'hours': 23, 'minutes': 59, 'seconds':59});
 
                     // $('#calendar').fullCalendar({
@@ -1070,8 +1070,8 @@ var fetchReceptionTransactions = function () {
                     //     }
                     // });
 
-                    // console.log(minDeliveryDate.format('YYYY-MM-DD HH:mm:ss'));
-                    // console.log(maxDeliveryDate.format('YYYY-MM-DD HH:mm:ss'));
+                    console.log(minDeliveryDate.format('YYYY-MM-DD HH:mm:ss'));
+                    console.log(maxDeliveryDate.format('YYYY-MM-DD HH:mm:ss'));
 
                     fetchCalendar(minDeliveryDate.format('YYYY-MM-DD HH:mm:ss'), maxDeliveryDate.format('YYYY-MM-DD HH:mm:ss'), false);
                     fetchTickets(modelId, false);
