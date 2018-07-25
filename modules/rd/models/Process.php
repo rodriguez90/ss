@@ -128,6 +128,18 @@ class Process extends \yii\db\ActiveRecord
                 ->innerJoin('process_transaction', 'process_transaction.id=ticket.process_transaction_id')
                 ->innerJoin('process', 'process_transaction.process_id=process.id')
                 ->where(['process.id'=>$this->id])
+                ->andWhere(['ticket.active'=>1])
                 ->count();
+    }
+
+    public function getCountTicketReservedByTransCompany($transCompanyId)
+    {
+        return Ticket::find()
+            ->innerJoin('process_transaction', 'process_transaction.id=ticket.process_transaction_id')
+            ->innerJoin('process', 'process_transaction.process_id=process.id')
+            ->where(['process.id'=>$this->id])
+            ->andWhere(['ticket.active'=>1])
+            ->andWhere(['process_transaction.trans_company_id'=>$transCompanyId])
+            ->count();
     }
 }

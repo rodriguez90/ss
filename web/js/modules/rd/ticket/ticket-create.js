@@ -69,7 +69,7 @@ var transactionWithTicket = [];
 
 var mode = null; // create and delete
 
-var systemMode = 0 // only for testing 0-offline  1-online
+var systemMode = 1 // only for testing 0-offline  1-online
 
 // functions
 
@@ -1060,7 +1060,7 @@ var fetchReceptionTransactions = function () {
                 var count =  response['transactions'].length;
                 if(count > 0)
                 {
-                    minDeliveryDate = moment().set({'hours': 0, 'minutes': 0}).utc().set({'hours': 0, 'minutes': 0, 'seconds':0});
+                    minDeliveryDate = moment().utc();
                     maxDeliveryDate = moment(reception.delivery_date).utc().set({'hours': 23, 'minutes': 59, 'seconds':59});
 
                     // $('#calendar').fullCalendar({

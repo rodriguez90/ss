@@ -70,8 +70,8 @@ $user = Yii::$app->user->identity;
                                 echo '</a>';
                         echo '<ul class="dropdown-menu animated fadeInLeft">';
                             echo '<li class="arrow"></li>';
-                            echo '<li><a href="javascript:;">Editar Perficl</a></li>';
-                            echo '<li><a href="javascript:;">Configuraciones</a></li>';
+                            echo '<li><a href="'. Url::toRoute(['/administracion/user/update', 'id'=>$user->getId()]).'">Editar Perficl</a></li>';
+//                            echo '<li><a href="javascript:;">Configuraciones</a></li>';
                             echo '<li class="divider"></li>';
 
 

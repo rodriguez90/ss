@@ -557,7 +557,6 @@ class ProcessController extends Controller
 
     public function actionGeneratingcard()
     {
-
         $result = [];
         $result ['status'] = -1;
         $result ['msg'] = '';
@@ -571,12 +570,6 @@ class ProcessController extends Controller
             ->where(["user_transcompany.user_id" => $user->getId()])
             ->asArray()
             ->one();
-
-        $procesos = Process::find()
-            ->innerJoin("process_transaction", "process_transaction.process_id = process.id")
-            ->where(['process_transaction.trans_company_id' => $trans_company["id"]])
-            ->orderBy("process.bl")
-            ->all();
 
         if ($trans_company !== null) {
 
@@ -638,10 +631,11 @@ class ProcessController extends Controller
                                 $info .= "PLACA: " . $ticket["register_truck"] . ' ';
                                 $info .= "FECHA TURNO: " . substr($ticket["start_datetime"], 0, 16) . ' ';
                                 $info .= "CANTIDAD: 1" . ' ';
-                                $info .= $ticket["type"] == Process::PROCESS_IMPORT ? "BL":"BOOKING" . ": ". $ticket["bl"] . ' ';
+                                $info .= ($ticket["type"] == Process::PROCESS_IMPORT ? "BL":"BOOKING") . ": ". $ticket["bl"] . ' ';
                                 $info .= "TIPO CONT: " . $ticket["tonnage"] . $ticket["code"] . ' ';
                                 $info .= "GENERADO: " . $dateImp . ' ';
                                 $info .= "ESTADO: " . $ticket["status"] == 1 ? "EMITIDO" : "---";
+
                                 $qrCode = new QrCode($info);
 
                                 ob_start();
@@ -680,10 +674,8 @@ class ProcessController extends Controller
                             }
                         }else{
                             $result ["status"] = 0;//mejorar msj
-                            $result ["msg"] = "No turnos para generar generar las cartas de servicio";
+                            $result ["msg"] = "No hay turnos para generar las cartas de servicio.";
                         }
-
-
                     } catch (\Exception $ex) {
                         $result ["status"] = 0;
                         $result ["msg"] = "Error: " . $ex->getMessage();
@@ -700,7 +692,7 @@ class ProcessController extends Controller
             $result ["msg"] .= "El usuario " . $user->username . " no está asociado a una compañía de transporte.";
         }
 
-        return $this->render('generating_card', ["result" => $result, 'procesos' => $procesos]);
+        return $this->render('generating_card', ["result" => $result]);
     }
 
     public function actionPrint($id){

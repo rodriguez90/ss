@@ -137,7 +137,7 @@ FormAsset::register($this);
 
 
 
-                        <div class="form-group">
+                        <div class="form-group" <?= \Yii::$app->user->can('admin_mod') ? "": "style='visibility: hidden'"?>>
                             <label class="control-label col-md-4 col-sm-4">Rol</label>
 
 
@@ -159,7 +159,7 @@ FormAsset::register($this);
                         </div>
 
 
-                        <div class="form-group" id="div-type">
+                        <div class="form-group" id="div-type" <?= \Yii::$app->user->can('admin_mod') ? "": "style='visibility: hidden'"?>>
                             <label class="control-label col-md-4 col-sm-4" id="label-type">---</label>
 
                             <div class="col-md-8 col-sm-8" id="select-conten"  <?= \Yii::$app->user->can('admin_mod') ? "": "style='visibility: hidden'"?>>
@@ -167,7 +167,7 @@ FormAsset::register($this);
                             </div>
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group" <?= \Yii::$app->user->can('admin_mod') ? "": "style='visibility: hidden'"?>>
                             <label class="control-label col-md-4 col-sm-4">Activo</label>
                             <div class="col-md-8 col-sm-8"  <?= \Yii::$app->user->can('admin_mod') ? "": "style='visibility: hidden'"?>>
 

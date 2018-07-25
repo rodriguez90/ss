@@ -248,7 +248,7 @@ class UserController extends Controller
 
             try{
                 $model = $this->findModel($id);
-                if($model != null){
+                if($model !== null){
 
                     $old_password = $model->password;
                     $auth =  Yii::$app->authManager;
@@ -315,15 +315,17 @@ class UserController extends Controller
                             $model->addError('error', "Seleccione un rol válido." );
                         }
 
-                        if($type =="" && $rol_actual->name!="Administracion" && $rol!="Administracion" ){
+                        if($type == "" && $rol_actual->name!="Administracion" && $rol!="Administracion" ){
                             $model->addError('error', $error );
                         }
 
                         if (!$model->hasErrors())
                         {
-                            if($model->password!=""){
+                            if($model->password !== '')
+                            {
                                 $model->setPassword($model->password);
-                            }else
+                            }
+                            else
                                 $model->password = $old_password;
 
                             $model->updated_at = time();

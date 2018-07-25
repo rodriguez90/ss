@@ -168,16 +168,30 @@ if($user)
                                 'buttons' => [
                                     'myButton' => function($url, $model, $key) {
 
-                                        $user = AdmUser::findOne(['id'=>Yii::$app->user->getId()]);
+                                        $user = Yii::$app->user->identity;
                                         $role = '';
-                                        if($user)
+                                        $transCompany = null;
+                                        if($user !== null)
+                                        {
+                                            $transCompany = $user->getTransCompany();
                                             $role = $user->getRole();
+                                        }
+
 
                                         $result = '';
                                         $url1 = Url::toRoute(['rd/process/view','id'=>$model->id]);
                                         $url2 = Url::toRoute(['rd/ticket/create','id'=>$model->id]);
-//                                        $ticketClass = $model->active == 1 ? 'btn-success' : 'btn-default';
-                                        $ticketClass = $model->getContainerAmount() !== $model->getCountTicketReserved() ? 'btn-success' : 'btn-default';
+
+                                        $ticketClass = '';
+
+                                        if($transCompany && $role === AuthItem::ROLE_CIA_TRANS_COMPANY)
+                                            $ticketClass = $model->getContainerAmount() !== $model->getCountTicketReservedByTransCompany($transCompany->id) ? 'btn-success' : 'btn-default';
+                                        elseif ($role === AuthItem::ROLE_ADMIN)
+                                        {
+                                            $ticketClass = $model->getContainerAmount() !== $model->getCountTicketReserved() ? 'btn-success' : 'btn-default';
+                                        }
+
+
                                         if($role === AuthItem::ROLE_IMPORTER_EXPORTER ||
                                             $role === AuthItem::ROLE_IMPORTER ||
                                             $role === AuthItem::ROLE_EXPORTER)

@@ -222,7 +222,7 @@ class TicketController extends Controller
                     $info .= "PLACA: " . $ticket["register_truck"] . ' ';
                     $info .= "FECHA TURNO: " . substr($ticket["start_datetime"], 0, 16) . ' ';
                     $info .= "CANTIDAD: 1" . '-';
-                    $info .= $ticket["type"] == Process::PROCESS_IMPORT ? "BL":"BOOKING" . ": ". $ticket["bl"] . ' ';
+                    $info .= ($ticket["type"] == Process::PROCESS_IMPORT ? "BL":"BOOKING") . ": ". $ticket["bl"] . ' ';
                     $info .= "TIPO CONT: " . $ticket["tonnage"] . $ticket["code"] . ' ';
                     $info .= "GENERADO: " . $dateImp . ' ';
                     $info .= "ESTADO: " . $ticket["status"] == 1 ? "EMITIDO" : "---";
@@ -235,13 +235,13 @@ class TicketController extends Controller
                     ob_end_clean();
 
 
-                    $bodypdf = $this->renderPartial('@app/mail/layouts/test.php',
+                    $bodypdf = $this->renderPartial('@app/mail/layouts/card.php',
                         ['trans_company'=> $trans_company,
                             'ticket'=>$ticket,
                             'qr'=>"data:image/png;base64, ".$imageString,
                             'dateImp'=>$dateImp]);
 
-                    ini_set('max_execution_time', '5000');
+//                    ini_set('max_execution_time', '5000');
                     $pdf =  new mPDF(['mode'=>'utf-8' , 'format'=>'A4-L']);
                     $pdf->SetTitle("Carta de Servicio");
                     $pdf->WriteHTML($bodypdf);
@@ -369,6 +369,7 @@ class TicketController extends Controller
                             $processTransaction->register_driver = '';
                             $processTransaction->register_truck = '';
                             $processTransaction->name_driver = '';
+                            $processTransaction->status = 'PENDIENTE';
 
                             if(!$processTransaction->save())
                             {
@@ -559,7 +560,7 @@ class TicketController extends Controller
 							'ruc'=>$processTransaction->transCompany->ruc,
 							'id'=>$model->id,
 							'status'=>$model->status,
-							'created_at'=>$model->status,
+							'created_at'=>$model->created_at,
 							'start_datetime'=>$calendarSlot->start_datetime,
 							'end_datetime'=>$calendarSlot->end_datetime,
 							'w_name'=>$calendarSlot->warehouse->name,
