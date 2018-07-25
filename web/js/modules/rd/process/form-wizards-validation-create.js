@@ -99,24 +99,13 @@ var handleBootstrapWizardsValidation = function() {
                         .data()
                         .each( function ( value, index ) {
                             // console.log( 'Data in index: '+index +' is: '+ value.name );
-                            if(result && value.selectable) {
-                                // FIXME: It Export -> Booking code -> check delyveryDate it's set
-                                // if(processType == 2)
-                                // {
-                                //     var deliveryDate = value.deliveryDate;
-                                //     if(!moment(deliveryDate, 'DD-MM-YYYY').isValid())
-                                //     {
-                                //         result = false;
-                                //         alert("Debe definir la Fecha Límite para los contenedores del Booking.");
-                                //         return false;
-                                //     }
-                                // }
-
+                            if(result && value.selectable)
+                            {
                                 if(processType == 1)
                                 {
-                                    var type =  value.type = containertDataMap.get(value.name, null);
+                                    var type =  value.type = containertDataMap.get(value.name);
 
-                                    if(!type)
+                                    if(type.id == -1)
                                     {
                                         result = false;
                                         alert("Debe asignar un tipo para los contenedores seleccionados.");

@@ -731,6 +731,7 @@ class ProcessController extends Controller
         $response['containers'] = [];
         $response['line'] = null;
         $response['deliveryDate'] = null;
+        $containersProcesed = [];
 
         if(!isset($bl) || !isset($processType))
         {
@@ -771,8 +772,15 @@ class ProcessController extends Controller
                     $response['line']= $line;
                     $deliveryDate = new DateTime($results[0]['fecha_limite'], new DateTimeZone("UTC"));
 
+
                     foreach ($results as $result)
                     {
+
+                        if(in_array($result['contenedor'], $containersProcesed))
+                            continue;
+
+                        $containersProcesed [] = $result['contenedor'];
+
                         $data = ProcessTransaction::find()
                             ->select('container.id, 
                                            container.name, 
@@ -832,9 +840,6 @@ class ProcessController extends Controller
 
                     $response['deliveryDate'] = $deliveryDate->format("d-m-Y");
                 }
-
-
-
             }
             catch (Exception $ex)
             {

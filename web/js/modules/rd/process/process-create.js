@@ -276,11 +276,13 @@ var fetchContainers = function (bl) {
 
                     processDeliveryDate = response['deliveryDate'];
 
+
                     document.getElementById('oce').innerHTML = "OCE: " + lineNav.oce;
                     document.getElementById('line').innerHTML = "NOMBRE: " + lineNav.name;
 
                     for (var i = 0; i < response['containers'].length; i++)
                     {
+                        containertDataMap.set(response['containers'], response['containers'].type);
                         addContainer(table, response['containers'][i])
                     }
                 }
@@ -343,6 +345,7 @@ var fetchContainersOffLine = function (bl) {
         var status = statusArray[statusIndex];
         type = Array.from(containerTypeMap.values())[typeIndex];
 
+
         var dataContainer = {
             id:-1,
             name:"ContainerName"+i,
@@ -353,6 +356,7 @@ var fetchContainersOffLine = function (bl) {
             status: status,
             errCode:Math.round(Math.random()),
         };
+        containertDataMap.set(dataContainer.name, type);
         addContainer(table, dataContainer);
     }
 };
