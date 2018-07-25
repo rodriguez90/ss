@@ -206,7 +206,7 @@ var handleCalendarDemo = function () {
             else
             {
                 var id = calEvent.calendarId; //calEvent.type === "T20"  ? calEvent.calendarId + "T20" : calEvent.calendarId + "T40" ;
-                console.log(id);
+                //console.log(id);
                 currentCalendarEvent = calendarEventMap.get(id) ;
 
                 if(!currentCalendarEvent)

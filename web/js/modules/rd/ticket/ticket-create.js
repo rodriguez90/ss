@@ -1021,8 +1021,9 @@ var fetchCalendar = function (start, end, async) {
             $('#calendar').fullCalendar('gotoDate', moment(minDeliveryDate) );
         },
         error: function(response) {
-            console.log(response);
-            console.log(response.responseText);
+            //console.log(response);
+            //console.log(response.responseText);
+            alert("Ah ocurrido un error.");
             result = false;
             // return false;
         }
@@ -1084,6 +1085,7 @@ var fetchReceptionTransactions = function () {
         },
         error: function(response) {
             console.log(response);
+            alert("Ah ocurrido un error");
             return false;
         }
     });
