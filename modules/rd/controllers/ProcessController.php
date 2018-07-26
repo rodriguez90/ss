@@ -605,6 +605,7 @@ class ProcessController extends Controller
                             ->innerJoin("agency", "process.agency_id = agency.id")
                             ->where(["process.bl" => $bl])
                             ->andWhere(["trans_company.id" => $trans_company["id"]])
+                            ->andWhere(["ticket.active" =>1])
                             ->asArray()
                             ->all();
 
