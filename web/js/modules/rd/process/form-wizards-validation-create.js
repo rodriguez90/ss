@@ -10,12 +10,8 @@ var handleBootstrapWizardsValidation = function() {
 	$("#wizard").bwizard(
 	    {
             clickableSteps: true,
-            activeIndexChanged:  function (e, ui) {
-
-                // var wizard = $(this).bwizard();
-                // console.log(wizard);
-                // wizard.nextBtnText = "Finalizar";
-
+            activeIndexChanged:  function (e, ui)
+            {
                 if(ui.index == 0)
                 {
                     $('ul.bwizard-buttons li.next a').text('Siguiente');
@@ -23,6 +19,7 @@ var handleBootstrapWizardsValidation = function() {
                 else if(ui.index == 1)
                 {
                     $('ul.bwizard-buttons li.next a').text('Siguiente');
+                    $('#selectTransCompany').val('').trigger("change.select2");
 
                     var sourceTable = $('#data-table').DataTable();
                     var table = $('#data-table3').DataTable();
@@ -75,15 +72,25 @@ var handleBootstrapWizardsValidation = function() {
             },
             validating: function (e, ui) {
                 var result = true;
+                var index = parseInt(ui.index);
+                var nextIndex = parseInt(ui.nextIndex);
 
-                // back navigation no check validation
+                // // back navigation no check validation
+                // console.log(ui);
+                // console.log("validating step index: " +  ui.index );
+                // console.log("validating step nextIndex: " + ui.nextIndex);
+                // console.log("validating step parsed index: " + index);
+                // console.log("validating step parsed nextIndex: " + nextIndex);
 
-                if(ui.index >= ui.nextIndex)
+
+                if(index >= nextIndex)
                 {
+                    console.log("back o same");
                     return result;
                 }
 
-                if (ui.index == 0) { // step-1 validation
+                if (index == 0)
+                { // step-1 validation
 
                     var table = $('#data-table').DataTable();
 
@@ -104,9 +111,9 @@ var handleBootstrapWizardsValidation = function() {
                             {
                                 if(processType == 1)
                                 {
-                                    var type =  value.type = containertDataMap.get(value.name);
+                                    value.type = containertDataMap.get(value.name);
 
-                                    if(type.id == -1)
+                                    if(value.type.id == -1)
                                     {
                                         result = false;
                                         alert("Debe asignar un tipo para los contenedores seleccionados.");
@@ -119,7 +126,8 @@ var handleBootstrapWizardsValidation = function() {
                     return result;
 
                 }
-                else if (ui.index == 1) {
+                else if (index == 1)
+                {
 
                     // step-1 validation
                     var table = $('#data-table3').DataTable();
@@ -134,9 +142,10 @@ var handleBootstrapWizardsValidation = function() {
                                 alert("Debe asignarle a todos los contenedores la empresa de transporte .");
                             }
                         });
+
                     return result
                 }
-                else if (ui.index == 2) {
+                else if (index == 2) {
 
                     // step-2 validation
                     // alert($("#confirming").prop('checked'));

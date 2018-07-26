@@ -381,12 +381,8 @@ $(function (){
                             $('#calendar').fullCalendar('removeEvents');
                             $('#calendar').fullCalendar('addEventSource',events);
                             $('#calendar').fullCalendar('refetchEvents');
-
-
                         }
                     }
-
-
 
                     return false;
                 },

@@ -58,7 +58,7 @@ var cleanUI = function () {
     containertDataMap.clear();
 
     $('#selectTransCompany').val('').trigger("change.select2");
-    $("#wizard").bwizard("show","0");
+    $("#wizard").bwizard("show",0);
 
     document.getElementById('oce').innerHTML = "OCE: -" ;
     document.getElementById('line').innerHTML = "LINEA: -";
