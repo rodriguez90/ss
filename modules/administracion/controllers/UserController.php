@@ -330,8 +330,8 @@ class UserController extends Controller
 
                             $model->updated_at = time();
 
-                            if($status==null)
-                            $model->status = 0 ;
+                            if($status == null)
+                                $model->status = 0 ;
                             else
                                 $model->status = 1 ;
 
