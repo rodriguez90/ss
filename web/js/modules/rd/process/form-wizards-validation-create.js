@@ -9,7 +9,7 @@ var handleBootstrapWizardsValidation = function() {
 	"use strict";
 	$("#wizard").bwizard(
 	    {
-            clickableSteps: true,
+            // clickableSteps: true,
             activeIndexChanged:  function (e, ui)
             {
                 if(ui.index == 0)
