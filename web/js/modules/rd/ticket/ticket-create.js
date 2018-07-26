@@ -432,8 +432,8 @@ var handleTableInWizar = function() {
 
                         for(var i=0, count = containersArray.length; i < count; i++)
                         {
-                            var container = containers.get(data.id);
-                            var cTransactionData = transactionDataMap.get(containersArray[i]);
+                            var container = containers.get(containersArray[i]);
+                            var cTransactionData = transactionDataMap.get(container.name);
 
                             if(cTransactionData.registerTrunk == trunk.id)
                             {
@@ -451,7 +451,7 @@ var handleTableInWizar = function() {
                         if(containersByTrunk40 == 1) // ya la placa esta asignada en un contenedor de 40 para la misma fecha
                         {
                             valid = false;
-                            msg = 'Esta placa esta asiganda a otro contenedor de 40 toneladas en esta fecha.'
+                            msg = 'Esta placa esta asiganda a un contenedor de 40 toneladas en esta fecha.'
                         }
                         else if(containersByTrunk20 == 2) // ya la placa esta asignada a 2 contenedores de 20 para la misma fecha
                         {
@@ -468,8 +468,9 @@ var handleTableInWizar = function() {
                             transactionData.registerTrunk = trunk.id;
                         else
                         {
-                            $('td select', row).eq(0).val('').trigger('change:select2');
+                            transactionData.registerTrunk = "";
                             alert(msg);
+                            $('td select', row).eq(0).val('').trigger("change.select2");
                         }
                     }
 
@@ -536,8 +537,8 @@ var handleTableInWizar = function() {
                             var containersByTrunk40 = 0;
                             for(var i=0, count = containersArray.length; i < count; i++)
                             {
-                                var container = containers.get(data.id);
-                                var cTransactionData = transactionDataMap.get(containersArray[i]);
+                                var container = containers.get(containersArray[i]);
+                                var cTransactionData = transactionDataMap.get(container.name);
 
                                 if(cTransactionData.registerDriver == driver.id)
                                 {
@@ -576,8 +577,11 @@ var handleTableInWizar = function() {
                             }
                             else
                             {
-                                $('td select', row).eq(1).val('').trigger('change:select2');
+                                transactionData.registerDriver = "";
+                                transactionData.nameDriver = "";
                                 alert(msg);
+                                $('td select', row).eq(1).val('').trigger("change.select2");
+                                table.cell({row: dataIndex, column: 7}).data("");
                             }
                         }
                         transactionDataMap.set(data.name,transactionData);
@@ -1030,7 +1034,7 @@ var fetchCalendar = function (start, end, async) {
     });
 };
 
-var fetchReceptionTransactions = function () {
+var fetchProcessTransactions = function () {
 
     $.ajax({
         // async:false,
@@ -1040,7 +1044,6 @@ var fetchReceptionTransactions = function () {
         data:  {
             id:modelId,
             transCompanyId:transCompanyId,
-                actived:1, // 1 or 0 TODO no work
         },
         success: function (response) {
             // console.log(response);
@@ -1113,22 +1116,22 @@ var fetchTickets = function (processId, async) {
                 var id = response['tickets'][i].calendar_id ;
                 var tId = response['tickets'][i].process_transaction_id;
                 var t = transactions.get(tId);
+
                 if(t)
                 {
                     var container = containers.get(t.container_id);
                     var calendar = calendarEventMap.get(id);
 
+                    transactionWithTicket.push(tId);
+
                     if(calendar)
                     {
-                        transactionWithTicket.push(tId);
                         ticketDataMap.set(tId, {
                             id:response['tickets'][i].id,
                             dateTicket:calendar.start,
                             dateEndTicket:calendar.end,
                             calendarId:id,
                         });
-
-                        // console.log(c);
 
                         if(String(container.tonnage) === "20")
                         {
@@ -1150,7 +1153,6 @@ var fetchTickets = function (processId, async) {
                             result.event.title = String(result.event.count);
                             ticketEvents[result.index]= result.event;
                             result.event.rt.push(tId);
-                            // $('#calendar').fullCalendar( 'updateEvent', oldEvent);
                         }
                         else
                         {
@@ -1174,7 +1176,6 @@ var fetchTickets = function (processId, async) {
                     }
                 }
             });
-            // console.log(calendarSlotEvents);
 
             $('#calendar').fullCalendar('addEventSource',ticketEvents);
             $('#calendar').fullCalendar('refetchEventSources');
@@ -1227,7 +1228,7 @@ $(document).ready(function () {
     handleTableInModal();
     handleTableInWizar();
     handleTable3InWizar();
-    fetchReceptionTransactions();
+    fetchProcessTransactions();
 
     // stop watch
     timerId = setInterval(handleStopWatch, 1000);

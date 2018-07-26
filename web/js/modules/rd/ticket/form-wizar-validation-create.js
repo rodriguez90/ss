@@ -65,7 +65,7 @@ var handleBootstrapWizardsValidation = function() {
                                 containersArray = dateTicketMap.get(ticketData.dateTicket);
                             }
 
-                            containersArray.push(c.name);
+                            containersArray.push(c.id);
                             dateTicketMap.set(ticketData.dateTicket, containersArray);
 
                             table2.row.add(

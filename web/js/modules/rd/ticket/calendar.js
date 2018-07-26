@@ -131,7 +131,8 @@ var handleCalendarDemo = function () {
                         .clear()
                         .draw();
 
-                    transactions.forEach(function(transaction, key) {
+                    transactions.forEach(function(transaction, key)
+                    {
 
                         var container = containers.get(transaction.container_id);
 
@@ -150,6 +151,8 @@ var handleCalendarDemo = function () {
                         // }
 
                         var result = moment(calendarDeliveryDate) <= moment(deliveryDate);
+
+                        console.log(transactionWithTicket);
 
                         if(indexSelected === -1 && indexTicket === -1)
                         {

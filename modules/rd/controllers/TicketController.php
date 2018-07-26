@@ -149,8 +149,8 @@ class TicketController extends Controller
             throw new ForbiddenHttpException('Usted no tiene permiso ver esta vista');
 
         $tickets = Yii::$app->request->post('tickets');
-        $reception = Yii::$app->request->post('reception');
-        return $this->doTicket($tickets, $reception, Ticket::RESERVE);
+        $process = Yii::$app->request->post('reception');
+        return $this->doTicket($tickets, $process, Ticket::RESERVE);
     }
 
     public function actionPrebooking()
@@ -194,7 +194,7 @@ class TicketController extends Controller
         return $response;
     }
 
-    protected function generateServiceCardByTicket($ticket)
+    protected function generateServiceCardByTicket($cardsServiceData)
     {
         $user = Yii::$app->user->identity;
 
@@ -205,58 +205,71 @@ class TicketController extends Controller
         {
             try{
 
-                if($ticket !== null)
+                $attachs = [];
+
+                foreach ($cardsServiceData as $ticket)
                 {
-                    $aux = new DateTime( $ticket["start_datetime"] );
-                    $date = $aux->format("YmdHi");
-                    $dateImp = new DateTime($ticket["created_at"], new DateTimeZone('UTC'));
-                    $dateImp = $dateImp->format('d/m/Y H:i');
+                    if($ticket !== null)
+                    {
+                        $aux = new DateTime( $ticket["start_datetime"] );
+                        $date = $aux->format("YmdHi");
+                        $ticket["start_datetime"] = $aux->format("d-m-Y H:i");
+                        $dateImp = new DateTime($ticket["created_at"]);
+                        $dateImp = $dateImp->format('d-m-Y H:i');
 
-                    $info .= "EMP. TRANSPORTE: " . $trans_company["name"] . ' ';
-                    $info .= "TICKET NO: TI-" . $date . "-" . $ticket["id"] . ' ';
-                    $info .= "OPERACIÓN: " . $ticket["type"] == Process::PROCESS_IMPORT ? "IMPORTACIÓN":"EXPORTACIÓN" . '  ';
-                    $info .= "DEPÓSITO: " . $ticket["w_name"] . ' ';
-                    $info .= "ECAS: " . $ticket["delivery_date"] . ' ';
-                    $info .= "CLIENTE: " . $ticket["a_name"] . ' ';
-                    $info .= "CHOFER: " . $ticket["name_driver"] . "/" . $ticket["register_driver"] . ' ';
-                    $info .= "PLACA: " . $ticket["register_truck"] . ' ';
-                    $info .= "FECHA TURNO: " . substr($ticket["start_datetime"], 0, 16) . ' ';
-                    $info .= "CANTIDAD: 1" . '-';
-                    $info .= ($ticket["type"] == Process::PROCESS_IMPORT ? "BL":"BOOKING") . ": ". $ticket["bl"] . ' ';
-                    $info .= "TIPO CONT: " . $ticket["tonnage"] . $ticket["code"] . ' ';
-                    $info .= "GENERADO: " . $dateImp . ' ';
-                    $info .= "ESTADO: " . $ticket["status"] == 1 ? "EMITIDO" : "---";
+                        $info .= "EMP. TRANSPORTE: " . $trans_company["name"] . ' ';
+                        $info .= "TICKET NO: TI-" . $date . "-" . $ticket["id"] . ' ';
+                        $info .= "OPERACIÓN: " . $ticket["type"] == Process::PROCESS_IMPORT ? "IMPORTACIÓN":"EXPORTACIÓN" . '  ';
+                        $info .= "DEPÓSITO: " . $ticket["w_name"] . ' ';
+                        $info .= "ECAS: " . $ticket["delivery_date"] . ' ';
+                        $info .= "CLIENTE: " . $ticket["a_name"] . ' ';
+                        $info .= "CHOFER: " . $ticket["name_driver"] . "/" . $ticket["register_driver"] . ' ';
+                        $info .= "PLACA: " . $ticket["register_truck"] . ' ';
+                        $info .= "FECHA TURNO: " . $ticket["start_datetime"] . ' ';
+                        $info .= "CANTIDAD: 1" . ' ';
+                        $info .= ($ticket["type"] == Process::PROCESS_IMPORT ? "BL":"BOOKING") . ": ". $ticket["bl"] . ' ';
+                        $info .= "TIPO CONT: " . $ticket["tonnage"] . $ticket["code"] . ' ';
+                        $info .= "GENERADO: " . $dateImp . ' ';
+                        $info .= "ESTADO: " . $ticket["status"] == 1 ? "EMITIDO" : "---";
 
-                    $qrCode = new QrCode($info);
+                        $qrCode = new QrCode($info);
 
-                    ob_start();
-                    \QRcode::png($info,null);
-                    $imageString = base64_encode(ob_get_contents());
-                    ob_end_clean();
+                        ob_start();
+                        \QRcode::png($info,null);
+                        $imageString = base64_encode(ob_get_contents());
+                        ob_end_clean();
 
 
-                    $bodypdf = $this->renderPartial('@app/mail/layouts/card.php',
-                        ['trans_company'=> $trans_company,
-                            'ticket'=>$ticket,
-                            'qr'=>"data:image/png;base64, ".$imageString,
-                            'dateImp'=>$dateImp]);
+                        $bodypdf = $this->renderPartial('@app/mail/layouts/card.php',
+                            ['trans_company'=> $trans_company,
+                                'ticket'=>$ticket,
+                                'qr'=>"data:image/png;base64, ".$imageString,
+                                'dateImp'=>$dateImp]);
 
 //                    ini_set('max_execution_time', '5000');
-                    $pdf =  new mPDF(['mode'=>'utf-8' , 'format'=>'A4-L']);
-                    $pdf->SetTitle("Carta de Servicio");
-                    $pdf->WriteHTML($bodypdf);
-                    $path= $pdf->Output("","S");
+                        $pdf =  new mPDF(['mode'=>'utf-8' , 'format'=>'A4-L']);
+                        $pdf->SetTitle("Carta de Servicio");
+                        $pdf->WriteHTML($bodypdf);
 
+                        $attachs[] = $pdf->Output("", "S");
 
-                   $result = Yii::$app->mailer->compose()
-                                               ->setFrom($user->email) // FIXME: Create Email Account
-                                               ->setTo($user->email)
-                                               ->setSubject("Carta de Servicio")
-                                               ->setHtmlBody("<h5>Se adjunta carta de servicio.</h5>")
-                                               ->attachContent($path,[ 'fileName'=> "Carta de Servicio.pdf",'contentType'=>'application/pdf'])
-                                               ->send();
-
+                    }
                 }
+
+                $email = Yii::$app->mailer->compose()
+                    ->setFrom($user->email) // FIXME: Create Email Account
+                    ->setTo($user->email)
+                    ->setSubject("Carta de Servicio")
+                    ->setHtmlBody("<h5>Se adjunta carta de servicio.</h5>");
+
+                foreach ($attachs as $attach)
+                {
+                    $email->attachContent($attach, ['fileName' => "Carta de Servicio del Turno.pdf", 'contentType' => 'application/pdf']);
+                }
+
+                $result = $email->send();
+
+
             }catch (\Exception $ex){
                 $result = false;
             }
@@ -448,7 +461,7 @@ class TicketController extends Controller
         $user = AdmUser::findOne(['id'=>Yii::$app->user->getId()]);
 
         // TPG NOTTFIE
-        $processType = $processModel->type == Process::PROCESS_IMPORT ? 'IMPO':'EXPO';
+        $processType = $processModel->type == Process::PROCESS_IMPORT ? 'IMPORTACIÓN':'EXPORTACIÓN';
 
         $userName = '';
         if($user)
@@ -465,56 +478,91 @@ class TicketController extends Controller
         $calendarToSave = [];
         $ptToSave = [];
         $calendarsAmount = [];
+        $transportationDataToValidate = [];
 
         $processStatus = true;
 
         try {
 
+            // validating transportation data
+//            foreach ($tickets as $data)
+//            {
+//                $transData = $transportationDataToValidate[$data['calendar_id']];
+//                if(!$transData)
+//                    $transportationDataToValidate[$data['calendar_id']] = ['registerTruck'=>[],
+//                    'registerDriver'=>[]];
+//
+//                $transData['registerTruck'][] = $data['registerTruck'];
+//                $transData['registerDriver'][] = $data['registerDriver'];
+//
+//                $transportationDataToValidate[$data['calendar_id']] = $transData;
+//            }
+//
+//            foreach ($transportationDataToValidate as $calendar=>$transData)
+//            {
+//                $result = ProcessTransaction::find()
+//                    ->innerJoin('ticket', 'ticket.process_transaction_id=process_transaction.id')
+//                    ->innerJoin('calendar', 'calendar.id=ticket.calendar_id')
+//                    ->where(['calendar.id'=>$calendar])
+//                    ->andWhere(['or',
+//                        'process_transaction.register_truck'=>$transData['registerTruck'],
+//                        'process_transaction.register_driver'=>$transData['registerDriver']])
+//                    ->count();
+//
+//                if($result > 0)
+//                {
+//                    $processStatus = false;
+//                    $response['msg'] = 'No fue posible crear los turnos, porque ya hay placas o choferes sociados en la fecha reservada';
+//                    break;
+//                }
+//            }
 
-            foreach ($tickets as $data)
+            if($processStatus)
             {
-                $model = new Ticket();
-                $model->process_transaction_id = $data['process_transaction_id'];
-                $model->calendar_id = $data['calendar_id'];
-                $model->active = $data['active'];
-                $model->status = $data['status'];
-                $model->acc_id = 0;
-
-                $calendarSlot = Calendar::findOne(['id' => $model->calendar_id]);
-
-                if ($calendarSlot === null) {
-                    $processStatus = false;
-                    $response['msg'] = 'No fue posible encontrar el calendario.';
-                    break;
-                }
-
-                $processStatus = $calendarSlot->amount > 0; // Check disponibility in calendar
-
-                if (!$processStatus) {
-                    $processStatus = false;
-                    $response['msg'] = 'No hay disponibilidad en el calendario';
-                    break;
-                }
-
-                if ($model->validate()) // validate model
+                foreach ($tickets as $data)
                 {
-                    if ($processStatus)
+                    $model = new Ticket();
+                    $model->process_transaction_id = $data['process_transaction_id'];
+                    $model->calendar_id = $data['calendar_id'];
+                    $model->active = $data['active'];
+                    $model->status = $data['status'];
+                    $model->acc_id = 0;
+
+                    $calendarSlot = Calendar::findOne(['id' => $model->calendar_id]);
+
+                    if ($calendarSlot === null) {
+                        $processStatus = false;
+                        $response['msg'] = 'No fue posible encontrar el calendario.';
+                        break;
+                    }
+
+                    $processStatus = $calendarSlot->amount > 0; // Check disponibility in calendar
+
+                    if (!$processStatus) {
+                        $processStatus = false;
+                        $response['msg'] = 'No hay disponibilidad en el calendario';
+                        break;
+                    }
+
+                    if ($model->validate()) // validate model
                     {
-                        $model->status = $status;
-                        $processStatus = $model->save();
-                        if (!$processStatus) {
-                            $processStatus = false;
-                            $response['msg'] = 'Ah ocurrido un error al crear el turno.';
-                            $response['msg_dev'] = implode(" ", $model->getErrorSummary(false));
-                            break;
-                        }
+                        if ($processStatus)
+                        {
+                            $model->status = $status;
+                            $processStatus = $model->save();
+                            if (!$processStatus) {
+                                $processStatus = false;
+                                $response['msg'] = 'Ah ocurrido un error al crear el turno.';
+                                $response['msg_dev'] = implode(" ", $model->getErrorSummary(false));
+                                break;
+                            }
 
-                        if ($calendarToSave[$calendarSlot->id] == null) {
-                            $calendarToSave[$calendarSlot->id] = $calendarSlot;
-                            $calendarsAmount[$calendarSlot->id] = $calendarSlot->amount;
-                        }
+                            if ($calendarToSave[$calendarSlot->id] == null) {
+                                $calendarToSave[$calendarSlot->id] = $calendarSlot;
+                                $calendarsAmount[$calendarSlot->id] = $calendarSlot->amount;
+                            }
 
-                        $calendarToSave[$calendarSlot->id]->amount = $calendarToSave[$calendarSlot->id]->amount - 1;
+                            $calendarToSave[$calendarSlot->id]->amount = $calendarToSave[$calendarSlot->id]->amount - 1;
 //
 //                        $calendarSlot->amount--;
 //                        $result = $calendarSlot->update();
@@ -524,18 +572,18 @@ class TicketController extends Controller
 //                                implode(" ", $calendarSlot->getErrorSummary(false));
 //                            break;
 //                        }
-                    }
+                        }
 
-                    if ($processStatus)
-                    {
+                        if ($processStatus)
+                        {
 
-                        $processTransaction = ProcessTransaction::findOne(['id' => $model->process_transaction_id]);
-                        $processTransaction->register_truck = $data['registerTruck'];
-                        $processTransaction->register_driver = $data['registerDriver'];
-                        $processTransaction->name_driver = $data['nameDriver'];
-                        $dateStatus = new DateTime($calendarSlot->start_datetime, new DateTimeZone('UTC'));
-                        $processTransaction->status = $dateStatus->format("Y-m-d H:i:s");
-                        $ptToSave[] = $processTransaction;
+                            $processTransaction = ProcessTransaction::findOne(['id' => $model->process_transaction_id]);
+                            $processTransaction->register_truck = $data['registerTruck'];
+                            $processTransaction->register_driver = $data['registerDriver'];
+                            $processTransaction->name_driver = $data['nameDriver'];
+                            $dateStatus = new DateTime($calendarSlot->start_datetime, new DateTimeZone('UTC'));
+                            $processTransaction->status = $dateStatus->format("Y-m-d H:i:s");
+                            $ptToSave[] = $processTransaction;
 //                        $result = $processTransaction->update(true, ['register_truck', 'register_driver', 'name_driver']);
 //                        if ($result === false) {
 //                            $processStatus = false;
@@ -543,34 +591,35 @@ class TicketController extends Controller
 //                                implode(" ", $processTransaction->getErrorSummary(false));
 //                            break;
 //                        }
-                    }
+                        }
 
-                    if ($processStatus) {
-                        $newTickets[] = $model;						
-                        $cardsServiceData [] = [
-							'register_truck'=>$data['registerTruck'],
-							'register_driver'=>$data['registerDriver'],
-							'name_driver'=>$data['nameDriver'],
-							'type'=>$processModel->type,
-							'bl'=>$processModel->bl,
-							'delivery_date'=>$processModel->delivery_date,
-							'code'=>$processTransaction->container->code,
-							'tonnage'=>$processTransaction->container->tonnage,
-							'name'=>$processTransaction->transCompany->name,
-							'ruc'=>$processTransaction->transCompany->ruc,
-							'id'=>$model->id,
-							'status'=>$model->status,
-							'created_at'=>$model->created_at,
-							'start_datetime'=>$calendarSlot->start_datetime,
-							'end_datetime'=>$calendarSlot->end_datetime,
-							'w_name'=>$calendarSlot->warehouse->name,
-							'a_name'=>$processModel->agency->name,
-						];
-						
+                        if ($processStatus) {
+                            $newTickets[] = $model;
+                            $cardsServiceData [] = [
+                                'register_truck'=>$data['registerTruck'],
+                                'register_driver'=>$data['registerDriver'],
+                                'name_driver'=>$data['nameDriver'],
+                                'type'=>$processModel->type,
+                                'bl'=>$processModel->bl,
+                                'delivery_date'=>$processModel->delivery_date,
+                                'code'=>$processTransaction->container->code,
+                                'tonnage'=>$processTransaction->container->tonnage,
+                                'name'=>$processTransaction->transCompany->name,
+                                'ruc'=>$processTransaction->transCompany->ruc,
+                                'id'=>$model->id,
+                                'status'=>$model->status,
+                                'created_at'=>$model->created_at,
+                                'start_datetime'=>$calendarSlot->start_datetime,
+                                'end_datetime'=>$calendarSlot->end_datetime,
+                                'w_name'=>$calendarSlot->warehouse->name,
+                                'a_name'=>$processModel->agency->name,
+                            ];
+
+                        }
+                    } else {
+                        $processStatus = false;
+                        $response['msg'] = Yii::t("app", "Los datos enviados al servidor son invalidos.");
                     }
-                } else {
-                    $processStatus = false;
-                    $response['msg'] = Yii::t("app", "Los datos enviados al servidor son invalidos.");
                 }
             }
 
@@ -603,13 +652,11 @@ class TicketController extends Controller
 
             if($processStatus)
             {
-                foreach ($cardsServiceData as $cardService)
+                if($this->generateServiceCardByTicket($cardsServiceData) === false)
                 {
-                    if($this->generateServiceCardByTicket($cardService) === false)
-                    {
-                        $response['warning'] = 'Error al generar y enviar las cartas de servicio.';
-                    }
+                    $response['warning'] = 'Error al generar y enviar las cartas de servicio.';
                 }
+
 
                 $response['success'] = true;
                 $response['msg'] = 'Reservas Realizada';

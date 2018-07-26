@@ -84,7 +84,7 @@ use app\modules\rd\models\Process;
 
 			<tr>
 				<td class="title" >FECHA TURNO</td>
-				<td class="data"  > <?php echo (new \yii\i18n\Formatter())->asDate($ticket["start_datetime"], 'dd/M/yyyy H:i')?></td>
+				<td class="data"  > <?php echo $ticket["start_datetime"] ?></td>
 				<td class="title" >CANTIDAD</td>
 				<td class="data"  >1</td>
 			</tr>

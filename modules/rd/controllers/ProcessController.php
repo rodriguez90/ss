@@ -609,8 +609,7 @@ class ProcessController extends Controller
                             ->asArray()
                             ->all();
 
-                        $paths = [];
-                        $sendMail =true;
+                        $attachs = [];
 
                         if(count($tickes) > 0)
                         {
@@ -618,8 +617,9 @@ class ProcessController extends Controller
                             {
                                 $aux = new DateTime($ticket["start_datetime"]);
                                 $date = $aux->format("YmdHi");
-                                $dateImp = new DateTime($ticket["created_at"], new DateTimeZone('UTC'));
-                                $dateImp = $dateImp->format('d/m/Y H:i');
+                                $ticket["start_datetime"] = $aux->format("d-m-Y H:i");
+                                $dateImp = new DateTime($ticket["created_at"]);
+                                $dateImp = $dateImp->format('d-m-Y H:i');
 
                                 $info = "";
                                 $info .= "EMP. TRANSPORTE: " . $trans_company["name"] . ' ';
@@ -630,7 +630,7 @@ class ProcessController extends Controller
                                 $info .= "CLIENTE: " . $ticket["a_name"] . ' ';
                                 $info .= "CHOFER: " . $ticket["name_driver"] . "/" . $ticket["register_driver"] . ' ';
                                 $info .= "PLACA: " . $ticket["register_truck"] . ' ';
-                                $info .= "FECHA TURNO: " . substr($ticket["start_datetime"], 0, 16) . ' ';
+                                $info .= "FECHA TURNO: " . $ticket["start_datetime"] . ' ';
                                 $info .= "CANTIDAD: 1" . ' ';
                                 $info .= ($ticket["type"] == Process::PROCESS_IMPORT ? "BL":"BOOKING") . ": ". $ticket["bl"] . ' ';
                                 $info .= "TIPO CONT: " . $ticket["tonnage"] . $ticket["code"] . ' ';
@@ -656,17 +656,23 @@ class ProcessController extends Controller
                                 $pdf = new mPDF(['mode' => 'utf-8', 'format' => 'A4-L']);
                                 //$pdf->SetHTMLHeader( "<div style='font-weight: bold; text-align: center;font-family: 'Helvetica', 'Arial', sans-serif;font-size: 14px;width: 100%> Carta de Servicio </div>");
                                 $pdf->WriteHTML($bodypdf);
-                                $path = $pdf->Output("", "S");
+                                $attachs[] = $pdf->Output("", "S");
 
-                                $sendMail = $sendMail && Yii::$app->mailer->compose()
-                                    ->setFrom($user->email)
-                                    ->setTo($trans_company["email"])
-                                    ->setSubject("Carta de Servicio")
-                                    ->setHtmlBody("<h5>Se adjunta carta de servicio.</h5>")
-                                    ->attachContent($path, ['fileName' => "Carta de Servicio.pdf", 'contentType' => 'application/pdf'])
-                                    ->send();
+
                             }
-                            if($sendMail) {
+
+                            $email = Yii::$app->mailer->compose()
+                                ->setFrom($user->email)
+                                ->setTo($trans_company["email"])
+                                ->setSubject("Cartas de Servicio")
+                                ->setHtmlBody("<h5>Se adjunta carta de servicio.</h5>");
+
+                            foreach ($attachs as $attach)
+                            {
+                                $email->attachContent($attach, ['fileName' => "Carta de Servicio.pdf", 'contentType' => 'application/pdf']);
+                            }
+
+                            if($email->send()) {
                                 $result ["status"] = 1;
                                 $result ["msg"] .= "Cartas de servicio generadas correctamente.";
                             }else{
