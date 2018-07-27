@@ -23,7 +23,7 @@ var makePopoverContent = function (event) {
     else if(event.type === 'T20' || event.type === 'T40')
     {
         var tickets = event.tickets;
-        result.title = 'Cupos para contenedores de ' +   event.type.replace('T','') + ' toneladas: ' + event.title;
+        result.title = 'Turnos para contenedores de ' +   event.type.replace('T','') + ' toneladas: ' + event.title;
         var containersConten  = '';
         $.each(tickets, function (i) {
             var ticket = ticketDataMap.get(tickets[i]);

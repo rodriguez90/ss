@@ -29,14 +29,13 @@ var handleBootstrapWizardsValidation = function() {
                     transactionDataMap.clear();
                     dateTicketMap.clear();
 
-                    $.each(selectedTransactions, function (i) {
-
-                        var tId = selectedTransactions[i];
-                        var t = transactions.get(tId);
+                    transactions.forEach(function(value, key)
+                    {
+                        var t = transactions.get(key);
                         var c = containers.get(t.container_id);
-                        var ticketData = ticketDataMap.get(tId);
+                        var ticketData = ticketDataMap.get(key);
 
-                        if(ticketData)
+                        if(selectedTransactions.indexOf(key) != -1)
                         {
                             var data = {
                                 name: c.name,
@@ -45,33 +44,42 @@ var handleBootstrapWizardsValidation = function() {
                                 deliveryDate: t.delivery_date,
                                 agency: agency.name,
                                 dateTicket:ticketData.dateTicket,
+                                calendarId:ticketData.calendarId,
                                 registerTrunk: '',
                                 registerDriver: '',
                                 nameDriver: '',
-                                transactionId:tId,
+                                transactionId:key,
                                 id:c.id
                             };
+
+                            table2.row.add(
+                                data
+                            ).draw();
 
                             transactionDataMap.set(c.name, {
                                 registerTrunk: '',
                                 registerDriver: '',
                                 nameDriver: '',
                             });
-
-                            var containersArray = [];
-
-                            if(dateTicketMap.has(ticketData.dateTicket))
-                            {
-                                containersArray = dateTicketMap.get(ticketData.dateTicket);
-                            }
-
-                            containersArray.push(c.id);
-                            dateTicketMap.set(ticketData.dateTicket, containersArray);
-
-                            table2.row.add(
-                                data
-                            ).draw();
                         }
+                        else
+                        {
+                            transactionDataMap.set(c.name, {
+                                registerTrunk: t.register_truck,
+                                registerDriver:t.register_driver,
+                                nameDriver: t.name_driver,
+                            });
+                        }
+
+                        var containersArray = [];
+
+                        if(dateTicketMap.has(ticketData.calendarId))
+                        {
+                            containersArray = dateTicketMap.get(ticketData.calendarId);
+                        }
+
+                        containersArray.push(c.id);
+                        dateTicketMap.set(ticketData.calendarId, containersArray);
                     });
 
                     // FIXME: validation server side

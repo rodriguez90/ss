@@ -421,7 +421,8 @@ class UserController extends Controller
                         {
                             if($ok) {
                                 $transaction->commit();
-                                return $this->redirect(['index']);
+//                                return $this->redirect(['index']);
+                                return $this->redirect(Yii::$app->request->referrer ? Yii::$app->request->referrer: Yii::$app->homeUrl);
                             }else{
                                 $transaction->rollBack();
                             }

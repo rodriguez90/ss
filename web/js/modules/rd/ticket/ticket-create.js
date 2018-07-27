@@ -69,7 +69,7 @@ var transactionWithTicket = [];
 
 var mode = null; // create and delete
 
-var systemMode = 1 // only for testing 0-offline  1-online
+var systemMode = 1; // only for testing 0-offline  1-online
 
 // functions
 
@@ -142,12 +142,18 @@ var makePopoverContent = function (event) {
     else if(event.type === 'T20' || event.type === 'T40')
     {
         var rts = event.rt;
-        result.title = 'Cupos para contenedores de ' +   event.type.replace('T','') + ' toneladas: ' + event.title;
+        result.title = 'Turnos para contenedores de ' +   event.type.replace('T','') + ' toneladas: ' + event.title;
         var containersConten  = '';
         $.each(rts, function (i) {
             var t = transactions.get(rts[i]);
             var c = containers.get(t.container_id);
-            containersConten += "<h5>" + c.name + " " + c.code + c.tonnage + "<h5>";
+            if(ticketDataMap.has(rts[i]))
+            {
+                var ticket = ticketDataMap.get(rts[i]);
+                containersConten += "<h5>" + c.name + " " + c.code + c.tonnage + " " + t.register_truck + "/"+ t.name_driver+"<h5>";
+            }
+            else
+                containersConten += "<h5>" + c.name + " " + c.code + c.tonnage + "<h5>";
         });
 
         result.conten = containersConten;
@@ -426,7 +432,7 @@ var handleTableInWizar = function() {
                     {
                         var valid = true;
                         var msg = '';
-                        var containersArray = dateTicketMap.get(data.dateTicket);
+                        var containersArray = dateTicketMap.get(data.calendarId);
                         var containersByTrunk20= 0;
                         var containersByTrunk40 = 0;
 
@@ -532,7 +538,7 @@ var handleTableInWizar = function() {
                         {
                             var valid = true;
                             var msg = '';
-                            var containersArray = dateTicketMap.get(data.dateTicket);
+                            var containersArray = dateTicketMap.get(data.calendarId);
                             var containersByTrunk20= 0;
                             var containersByTrunk40 = 0;
                             for(var i=0, count = containersArray.length; i < count; i++)
