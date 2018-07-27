@@ -147,10 +147,9 @@ var makePopoverContent = function (event) {
         $.each(rts, function (i) {
             var t = transactions.get(rts[i]);
             var c = containers.get(t.container_id);
-            if(ticketDataMap.has(rts[i]))
+            if(ticketDataMap.has(rts[i]) && ticketDataMap.get(rts[i]).id != -1)
             {
-                var ticket = ticketDataMap.get(rts[i]);
-                containersConten += "<h5>" + c.name + " " + c.code + c.tonnage + " " + t.register_truck + "/"+ t.name_driver+"<h5>";
+                containersConten += "<h5>" + c.name + " " + c.code + c.tonnage + " " + t.register_truck + "/" + t.name_driver+"<h5>";
             }
             else
                 containersConten += "<h5>" + c.name + " " + c.code + c.tonnage + "<h5>";
