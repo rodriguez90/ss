@@ -609,10 +609,10 @@ class ProcessController extends Controller
                             ->asArray()
                             ->all();
 
-                        $attachs = [];
-
                         if(count($tickes) > 0)
                         {
+                            $pdf = new mPDF(['mode' => 'utf-8', 'format' => 'A4-L']);
+
                             foreach ($tickes as $ticket)
                             {
                                 $aux = new DateTime($ticket["start_datetime"]);
@@ -645,7 +645,6 @@ class ProcessController extends Controller
                                 ob_end_clean();
 
 
-
                                 $bodypdf = $this->renderPartial('@app/mail/layouts/card.php',
                                                                 ["trans_company" => $trans_company,
                                                                  "ticket" => $ticket,
@@ -653,26 +652,21 @@ class ProcessController extends Controller
                                                                  'dateImp' => $dateImp,
                                                                  'date'=>$date]);
 
-                                $pdf = new mPDF(['mode' => 'utf-8', 'format' => 'A4-L']);
                                 //$pdf->SetHTMLHeader( "<div style='font-weight: bold; text-align: center;font-family: 'Helvetica', 'Arial', sans-serif;font-size: 14px;width: 100%> Carta de Servicio </div>");
+                                $pdf->AddPage();
                                 $pdf->WriteHTML($bodypdf);
-                                $attachs[] = $pdf->Output("", "S");
-
-
                             }
 
+                            $attach = $pdf->Output("", "S");
                             $email = Yii::$app->mailer->compose()
                                 ->setFrom($user->email)
                                 ->setTo($trans_company["email"])
                                 ->setSubject("Cartas de Servicio")
-                                ->setHtmlBody("<h5>Se adjunta carta de servicio.</h5>");
+                                ->setHtmlBody("<h5>Se adjunta carta de servicio.</h5>")
+                                ->attachContent($attach, ['fileName' => "Carta de Servicio.pdf", 'contentType' => 'application/pdf']);
 
-                            foreach ($attachs as $attach)
+                            if($email->send())
                             {
-                                $email->attachContent($attach, ['fileName' => "Carta de Servicio.pdf", 'contentType' => 'application/pdf']);
-                            }
-
-                            if($email->send()) {
                                 $result ["status"] = 1;
                                 $result ["msg"] .= "Cartas de servicio generadas correctamente.";
                             }else{

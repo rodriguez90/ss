@@ -205,7 +205,7 @@ class TicketController extends Controller
         {
             try{
 
-                $attachs = [];
+                $pdf = new mPDF(['mode' => 'utf-8', 'format' => 'A4-L']);
 
                 foreach ($cardsServiceData as $ticket)
                 {
@@ -239,33 +239,25 @@ class TicketController extends Controller
                         $imageString = base64_encode(ob_get_contents());
                         ob_end_clean();
 
-
                         $bodypdf = $this->renderPartial('@app/mail/layouts/card.php',
                             ['trans_company'=> $trans_company,
                                 'ticket'=>$ticket,
                                 'qr'=>"data:image/png;base64, ".$imageString,
-                                'dateImp'=>$dateImp]);
+                                'dateImp'=>$dateImp,
+                                'date'=>$date]);
 
-//                    ini_set('max_execution_time', '5000');
-                        $pdf =  new mPDF(['mode'=>'utf-8' , 'format'=>'A4-L']);
-                        $pdf->SetTitle("Carta de Servicio");
+                        $pdf->AddPage();
                         $pdf->WriteHTML($bodypdf);
-
-                        $attachs[] = $pdf->Output("", "S");
-
                     }
                 }
 
+                $attach = $pdf->Output("", "S");
                 $email = Yii::$app->mailer->compose()
                     ->setFrom($user->email) // FIXME: Create Email Account
                     ->setTo($user->email)
                     ->setSubject("Carta de Servicio")
-                    ->setHtmlBody("<h5>Se adjunta carta de servicio.</h5>");
-
-                foreach ($attachs as $attach)
-                {
-                    $email->attachContent($attach, ['fileName' => "Carta de Servicio del Turno.pdf", 'contentType' => 'application/pdf']);
-                }
+                    ->setHtmlBody("<h5>Se adjunta carta de servicio.</h5>")
+                    ->attachContent($attach, ['fileName' => "Carta de Servicio.pdf", 'contentType' => 'application/pdf']);
 
                 $result = $email->send();
 

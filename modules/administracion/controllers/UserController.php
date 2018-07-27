@@ -330,10 +330,18 @@ class UserController extends Controller
 
                             $model->updated_at = time();
 
-                            if($status == null)
-                                $model->status = 0 ;
-                            else
+                            if(Yii::$app->user->getId() == $id )
+                            {
                                 $model->status = 1 ;
+                            }
+                            else
+                            {
+                                if($status == null)
+                                    $model->status = 0 ;
+                                else
+                                    $model->status = 1 ;
+                            }
+
 
                             if ($model->save())
                             {
