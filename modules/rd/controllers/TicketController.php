@@ -719,7 +719,6 @@ class TicketController extends Controller
 
         if($processStatus)
         {
-            var_dump($processType);die;
            $result = $this->notifyNewTickets($processType, $processModel->bl, $userName, $newTickets);
             if(!$result['success'])
             {

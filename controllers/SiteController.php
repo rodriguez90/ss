@@ -151,7 +151,7 @@ class SiteController extends Controller
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->validate())
         {
-            if ($model->login())
+            if ($model->loginOffLine())
             {
                 $session = Yii::$app->session;
                 $session->open();
