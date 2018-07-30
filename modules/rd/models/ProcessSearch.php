@@ -66,12 +66,11 @@ class ProcessSearch extends Process
      */
     public function search($params)
     {
-        $query = Process::find()->innerJoin('agency', 'agency.id = process.agency_id')
-            ->innerJoin("process_transaction","process_transaction.process_id = process.id")
-            ->innerJoin("trans_company","process_transaction.trans_company_id = trans_company.id")
+        $query = Process::find()
+//            ->innerJoin('agency', 'agency.id = process.agency_id')
+//            ->innerJoin("process_transaction","process_transaction.process_id = process.id")
+//            ->innerJoin("trans_company","process_transaction.trans_company_id = trans_company.id")
             ->where(['process.active'=>1]);
-
-//        $query = Process::find();
 
         // add conditions that should always apply here
 
@@ -107,20 +106,30 @@ class ProcessSearch extends Process
 
         $query->andFilterWhere(['like', 'bl', $this->bl]);
 
-//        if(isset($this->agency_id))
-//        {
-//
-//            $query->andFilterWhere(['like', 'agency.name', $this->agency_id]);
-//        }
-
         if(isset($params['agency_id']))
         {
-            $query->andFilterWhere(['agency.name'=>$params['agency_id']]);
+            $results = AgencySearch::find()
+                ->select('id')
+                ->where(['active'=>1])
+                ->andFilterWhere(['like', 'name', $params['agency_id']])
+                ->asArray();
+
+            $query->andFilterWhere(['agency_id'=>$results]);
         }
 
         if(isset($params['trans_company_id']))
         {
-            $query->andWhere(['trans_company.name'=>$params['trans_company_id']]) ;
+
+            $results = Process::find()->select('process.id')
+                                        ->innerJoin("process_transaction","process_transaction.process_id = process.id")
+                                        ->innerJoin("trans_company","process_transaction.trans_company_id = trans_company.id")
+                                         ->where(['process.active'=>1])
+                                         ->andFilterWhere(['like', 'trans_company.name', $params['trans_company_id']])
+                                         ->groupBy(['process.id'])
+                                         ->asArray();
+
+
+            $query->andWhere(['process.id'=>$results]);
         }
 
         return $dataProvider;
