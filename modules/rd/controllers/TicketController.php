@@ -253,7 +253,7 @@ class TicketController extends Controller
 
                 $attach = $pdf->Output("", "S");
                 $email = Yii::$app->mailer->compose()
-                    ->setFrom($user->email) // FIXME: Create Email Account
+                    ->setFrom(Yii::$app->params['adminEmail']) // FIXME: Create Email Account
                     ->setTo($user->email)
                     ->setSubject("Carta de Servicio")
                     ->setHtmlBody("<h5>Se adjunta carta de servicio.</h5>")
@@ -312,7 +312,7 @@ class TicketController extends Controller
                         ->innerJoin('container', 'container.id=process_transaction.container_id')
                         ->where(['process_transaction.trans_company_id'=>$transCompany->id])
                         ->andWhere(['ticket.active'=>1])
-                        ->orderBy(['calendar.end_datetime'=>SORT_ASC])
+                        ->orderBy(['calendar.start_datetime'=>SORT_ASC])
                         ->asArray()
                         ->all();
             $response['tickets'] = $tickets;

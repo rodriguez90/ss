@@ -496,7 +496,7 @@ class ProcessController extends Controller
 
                                    // TODO: send email user
                                    $result = Yii::$app->mailer->compose()
-                                                   ->setFrom($remitente->email)
+                                                   ->setFrom(Yii::$app->params['adminEmail'])
                                                    ->setTo($destinatario->email)
                                                    ->setSubject("Notificación de nuevo Proceso.")
                                                    ->setHtmlBody($body)
@@ -659,7 +659,7 @@ class ProcessController extends Controller
 
                             $attach = $pdf->Output("", "S");
                             $email = Yii::$app->mailer->compose()
-                                ->setFrom($user->email)
+                                ->setFrom(Yii::$app->params['adminEmail'])
                                 ->setTo($trans_company["email"])
                                 ->setSubject("Cartas de Servicio")
                                 ->setHtmlBody("<h5>Se adjunta carta de servicio.</h5>")
