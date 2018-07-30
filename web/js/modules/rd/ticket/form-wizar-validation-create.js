@@ -33,53 +33,59 @@ var handleBootstrapWizardsValidation = function() {
                     {
                         var t = transactions.get(key);
                         var c = containers.get(t.container_id);
-                        var ticketData = ticketDataMap.get(key);
 
-                        if(selectedTransactions.indexOf(key) != -1)
+                        var ticketData = ticketDataMap.has(key)? ticketDataMap.get(key): null;
+
+                        if(ticketData !== null)
                         {
-                            var data = {
-                                name: c.name,
-                                type: c.code,
-                                tonnage: c.tonnage,
-                                deliveryDate: t.delivery_date,
-                                agency: agency.name,
-                                dateTicket:ticketData.dateTicket,
-                                calendarId:ticketData.calendarId,
-                                registerTrunk: '',
-                                registerDriver: '',
-                                nameDriver: '',
-                                transactionId:key,
-                                id:c.id
-                            };
+                            if(selectedTransactions.indexOf(key) != -1)
+                            {
+                                var data = {
+                                    name: c.name,
+                                    type: c.code,
+                                    tonnage: c.tonnage,
+                                    deliveryDate: t.delivery_date,
+                                    agency: agency.name,
+                                    dateTicket:ticketData.dateTicket,
+                                    calendarId:ticketData.calendarId,
+                                    registerTrunk: '',
+                                    registerDriver: '',
+                                    nameDriver: '',
+                                    transactionId:key,
+                                    id:c.id
+                                };
 
-                            table2.row.add(
-                                data
-                            ).draw();
+                                table2.row.add(
+                                    data
+                                ).draw();
 
-                            transactionDataMap.set(c.name, {
-                                registerTrunk: '',
-                                registerDriver: '',
-                                nameDriver: '',
-                            });
+                                transactionDataMap.set(c.name, {
+                                    registerTrunk: '',
+                                    registerDriver: '',
+                                    nameDriver: '',
+                                });
+                            }
+                            else
+                            {
+                                transactionDataMap.set(c.name, {
+                                    registerTrunk: t.register_truck,
+                                    registerDriver:t.register_driver,
+                                    nameDriver: t.name_driver,
+                                });
+                            }
+
+                            var containersArray = [];
+
+                            if(dateTicketMap.has(ticketData.calendarId))
+                            {
+                                containersArray = dateTicketMap.get(ticketData.calendarId);
+                            }
+
+                            containersArray.push(c.id);
+                            dateTicketMap.set(ticketData.calendarId, containersArray);
                         }
-                        else
-                        {
-                            transactionDataMap.set(c.name, {
-                                registerTrunk: t.register_truck,
-                                registerDriver:t.register_driver,
-                                nameDriver: t.name_driver,
-                            });
-                        }
 
-                        var containersArray = [];
 
-                        if(dateTicketMap.has(ticketData.calendarId))
-                        {
-                            containersArray = dateTicketMap.get(ticketData.calendarId);
-                        }
-
-                        containersArray.push(c.id);
-                        dateTicketMap.set(ticketData.calendarId, containersArray);
                     });
 
                     // FIXME: validation server side

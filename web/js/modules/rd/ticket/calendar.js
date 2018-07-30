@@ -152,8 +152,6 @@ var handleCalendarDemo = function () {
 
                         var result = moment(calendarDeliveryDate) <= moment(deliveryDate);
 
-                        console.log(transactionWithTicket);
-
                         if(indexSelected === -1 && indexTicket === -1)
                         {
                             if(result)

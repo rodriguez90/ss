@@ -698,7 +698,7 @@ class TicketController extends Controller
 //                        $processStatus = false;
 //                        $response['msg'] = 'Ah ocurrido un error al actualizar el estado de la recepción: ' .
 //                            implode(" ", $processModel->getErrorSummary(false));
-//                    }
+//                    }z
 //                }
 //                else {
 //                    $processStatus = false;

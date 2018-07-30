@@ -254,19 +254,14 @@ else if ($intVal === Process::PROCESS_EXPORT)
 <!--                                    </div>-->
 <!--                                </div>-->
                                     <div class="checkbox">
-                                        <label>
-                                            <input id="confirming" type="checkbox"> Confirmar Información
-                                        </label>
+                                        <input id="confirming" type="checkbox" data-render="switchery" data-size="small" data-click="check-switchery-state" data-id="switchery-state" data-theme="blue"/>
+                                        <span id="confLabel" class="label label-success f-s-12">Confirmar Información</span>
                                     </div>
 <!--                                </div>-->
                                 <!-- end row -->
 <!--                            </fieldset>-->
                         </div>
                         <!-- end wizard step-3 -->
-                        <!-- begin wizard step-4 -->
-                        <div>
-                        </div>
-                        <!-- end wizard step-4 -->
                     </div>
                 </form>
             </div>

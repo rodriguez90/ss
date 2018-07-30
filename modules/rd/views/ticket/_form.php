@@ -231,24 +231,13 @@ if($user)
                                 </div>
                                 <!-- end row -->
                                 <div class="row">
-                                    <div class="checkbox">
-                                        <label>
-                                            <input id="confirming" type="checkbox"> Confirmar Información
-                                        </label>
-                                    </div>
+                                    <input id="confirming" type="checkbox" data-render="switchery" data-size="small" data-click="check-switchery-state" data-id="switchery-state" data-theme="blue"/>
+                                    <span id="confLabel" class="label label-success f-s-12">Confirmar Información</span>
                                 </div>
                                 <!-- end row -->
                             </fieldset>
                         </div>
                         <!-- end wizard step-3 -->
-                        <!-- begin wizard step-4 -->
-                        <div>
-<!--                            <div class="jumbotron m-b-0 text-center">-->
-<!--                                <h1>Proceso Completado</h1>-->
-<!--                                <p>Los datos han sido enviados al servidor.</p>-->
-<!--                            </div>-->
-                        </div>
-                        <!-- end wizard step-4 -->
                     </div>
                 </form>
             </div>

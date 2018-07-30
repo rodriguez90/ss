@@ -397,7 +397,7 @@ var handleTableInWizar = function() {
                             return query;
                         },
                         processResults: function (response) {
-                            console.log(response);
+                            // console.log(response);
                             var results  = [];
                             $.each(response.trunks, function (index, item) {
                                 // console.log(item);
@@ -505,7 +505,7 @@ var handleTableInWizar = function() {
                                 return query;
                             },
                             processResults: function (response) {
-                                console.log(response);
+                                // console.log(response);
                                 var results  = [];
                                 $.each(response.drivers, function (index, item) {
                                     results.push({
@@ -707,9 +707,8 @@ var handleTable3InWizar = function() {
                     targets: [2],
                     data:'deliveryDate',
                     render: function ( data, type, full, meta ) {
-                        console.log("In render: " + data);
+                        // console.log("In render: " + data);
                         var dateFormated =  moment(data).format("DD/MM/YYYY");
-                        console.log("In render format: " + dateFormated);
                         return dateFormated;
                     },
                 },
@@ -1218,6 +1217,22 @@ var handleStopWatch = function()
 
 };
 
+var handleCheckSwitcher = function()
+{
+    // console.log($('[data-click="check-switchery-state"]'));
+    //
+    // $('[data-click="check-switchery-state"]').live('click', function() {
+    //     alert("click");
+    //     if ($('[data-id="switchery-state"]').prop('checked')) {
+    //         $("#confLabel").removeClass('label-default').addClass('label-success');
+    //     }
+    //     else {
+    //         $("#confLabel").removeClass('label-success').addClass('label-default');
+    //
+    //     }
+    // });
+};
+
 $(document).ready(function () {
 
     // console.log(modelId);
@@ -1233,7 +1248,10 @@ $(document).ready(function () {
     handleTableInModal();
     handleTableInWizar();
     handleTable3InWizar();
+    handleCheckSwitcher();
     fetchProcessTransactions();
+    
+
 
     // stop watch
     timerId = setInterval(handleStopWatch, 1000);

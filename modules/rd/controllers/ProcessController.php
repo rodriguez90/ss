@@ -69,7 +69,7 @@ class ProcessController extends Controller
 //    public function actionIndex()
 //    {
 //        if(!Yii::$app->user->can("process_list"))
-//            throw new ForbiddenHttpException('Usted no tiene acceso a esta recepción');
+//            throw new ForbiddenHttpException('Usted no tiene acceso a este proceso');
 //
 //        $searchModel = new ProcessSearch();
 //        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
@@ -89,7 +89,7 @@ class ProcessController extends Controller
     public function actionView($id)
     {
         if(!Yii::$app->user->can("process_view")) // FIXME: change permission to process_view
-            throw new ForbiddenHttpException('Usted no tiene acceso a esta recepción');
+            throw new ForbiddenHttpException('Usted no tiene acceso a este proceso');
 
         $model = $this->findModel($id);
         $user = Yii::$app->user->identity;
@@ -197,7 +197,7 @@ class ProcessController extends Controller
     public function actionDelete($id)
     {
         if(!Yii::$app->user->can("process_delete"))
-            throw new ForbiddenHttpException('Usted no tiene permiso para eliminar esta recepción');
+            throw new ForbiddenHttpException('Usted no tiene permiso para eliminar este proceso');
 
         $model = $this->findModel($id);
 
@@ -511,7 +511,7 @@ class ProcessController extends Controller
                                }
                            }
 
-                           $response['msg'] = Yii::t("app", "Recepción creada correctamente.");
+                           $response['msg'] = Yii::t("app", "Proceso creado correctamente.");
                            $response['url'] = Url::to(['/site/index']);
 
                            $transaction->commit();
@@ -698,7 +698,7 @@ class ProcessController extends Controller
 
     public function actionPrint($id){
         if(!Yii::$app->user->can('process_view'))
-            throw new ForbiddenHttpException('Usted no tiene acceso a esta recepción');
+            throw new ForbiddenHttpException('Usted no tiene acceso a este proceso');
 
         $model = $this->findModel($id);
 
