@@ -40,7 +40,8 @@ $(function (){
                 // console.log(response);
                 $("#modal-select-bussy").modal("hide");
 
-                if(response['status']){
+                if(response['status'])
+                {
 
 
                     $.each(response["events"],function (i) {
@@ -319,10 +320,11 @@ $(function (){
                     calendar.fullCalendar('unselect');
                 },
                 eventClick: function(event) {
+
                     if(confirm("¿Está seguro de eliminar este elemento?")){
                         if(event.id !=-1 ){
-                            if (event.url) {
-
+                            if (event.url)
+                            {
                                 $.ajax({
                                     url: event.url,
                                     dataType: 'json',

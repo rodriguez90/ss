@@ -258,26 +258,27 @@ class CalendarController extends Controller
             $model = $this->findModel($id);
             $amount = $model->amount;
 
-            $reservados = Calendar::find()
-                ->innerJoin("ticket","calendar.id = ticket.calendar_id")
-                ->where(["calendar.id"=>$model->id])
-                ->count();
+            $reservados = Ticket::find()
+                          ->where(["calendar_id"=>$model->id])
+                          ->andWhere(['active'=>1])
+                          ->count();
 
             if($reservados == 0)
             {
-                $model = $this->findModel($id);
                 $result = 0;
 
                 if($model)
                 {
                     $model->active = -1;
-                    $result = $model->update();
+                    $result = $model->save();
                 }
 
                 if($result > 0){
                     $result ['status'] = 1;
-                    $result['msg'] = "Disponibilidad eliminadas: ".$amount;
-                }else{
+                    $result['msg'] = "Disponibilidad eliminadas: ". $amount;
+                }
+                else
+                {
                     $result ['status']= 0;
                     $result['msg'] = "No fue posible eliminar la disponibilidad.";
                 }
@@ -291,8 +292,6 @@ class CalendarController extends Controller
         else{
             throw new ForbiddenHttpException('Acceso denegado');
         }
-
-        // return $this->redirect(['index']);
     }
 
     /**
@@ -327,10 +326,10 @@ class CalendarController extends Controller
              * Order By start, ASC
              */
 
-            $query =  Calendar::find();
+            $query =  Calendar::find()->where(['active'=>1]);
 
-        $query->andFilterWhere(['>=','start_datetime', $startDate]);
-        $query->andFilterWhere(['<=','end_datetime', $endDate]);
+            $query->andFilterWhere(['>=','start_datetime', $startDate]);
+            $query->andFilterWhere(['<=','end_datetime', $endDate]);
 
 //            if(isset($startDate) && $startDate !== "")
 //            {
