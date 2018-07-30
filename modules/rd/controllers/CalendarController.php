@@ -265,23 +265,23 @@ class CalendarController extends Controller
 
             if($reservados == 0)
             {
-                $result = 0;
-
                 if($model)
                 {
                     $model->active = -1;
-                    $result = $model->save();
+
+                    if($model->save())
+                    {
+                        $result ['status'] = 1;
+                        $result['msg'] = "Disponibilidad eliminadas: ". $amount;
+                    }
+                    else
+                    {
+                        $result ['status']= 0;
+                        $result['msg'] = "No fue posible eliminar la disponibilidad.";
+                    }
                 }
 
-                if($result > 0){
-                    $result ['status'] = 1;
-                    $result['msg'] = "Disponibilidad eliminadas: ". $amount;
-                }
-                else
-                {
-                    $result ['status']= 0;
-                    $result['msg'] = "No fue posible eliminar la disponibilidad.";
-                }
+
             }else{
                 $result ['status']= 0;
                 $result['msg'] = "No se pueden eliminar el calendario porque hay turnos reservados.";
