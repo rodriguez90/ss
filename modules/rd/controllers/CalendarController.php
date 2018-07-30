@@ -128,6 +128,7 @@ class CalendarController extends Controller
 //                        die;
                         $model->amount = $event['title'];
                         $model->id_warehouse =  1;
+                        $model->active =  1;
 
                         if($ok && !$model->save())
                         {
