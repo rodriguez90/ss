@@ -222,6 +222,20 @@ class LoginForm extends Model
     {
         $newUser = AdmUser::findOne(['username'=>$this->username]); // find user in sgt
 
+        if($newUser == null)
+        {
+            $msg = "El usuario no existe.";
+            $this->addError('error', $msg);
+            return false;
+        }
+        elseif ($newUser->status !== 1)
+        {
+            $msg = "Esta cuenta no esta activa.";
+            $this->addError('error', $msg);
+            return false;
+        }
+
+
         return Yii::$app->user->login($newUser, $this->rememberMe == 'on' ? 1800 : 0);
     }
 
