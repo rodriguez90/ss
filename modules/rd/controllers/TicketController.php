@@ -453,7 +453,7 @@ class TicketController extends Controller
         $user = AdmUser::findOne(['id'=>Yii::$app->user->getId()]);
 
         // TPG NOTTFIE
-        $processType = $processModel->type == Process::PROCESS_IMPORT ? 'IMPORTACIÓN':'EXPORTACIÓN';
+        $processType = $processModel->type == 1 ? 'IMPO':'EXPO';
 
         $userName = '';
         if($user)
@@ -719,6 +719,7 @@ class TicketController extends Controller
 
         if($processStatus)
         {
+            var_dump($processType);die;
            $result = $this->notifyNewTickets($processType, $processModel->bl, $userName, $newTickets);
             if(!$result['success'])
             {
