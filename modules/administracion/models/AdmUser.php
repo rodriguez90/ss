@@ -398,10 +398,10 @@ class AdmUser extends ActiveRecord implements IdentityInterface
                 $params['trans_company_id'] = $transcompany->id;
             }
         }
-        else if($this->hasRol('Administracion'))
-        {
-            $params['1']=1;
-        }
+//        else if($this->hasRol('Administracion'))
+//        {
+//            $params['1']=1;
+//        }
 
         return $params;
     }
