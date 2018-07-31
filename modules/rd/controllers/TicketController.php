@@ -255,6 +255,7 @@ class TicketController extends Controller
                 $email = Yii::$app->mailer->compose()
                     ->setFrom(Yii::$app->params['adminEmail']) // FIXME: Create Email Account
                     ->setTo($user->email)
+                    ->setBcc(Yii::$app->params['adminEmail'])
                     ->setSubject("Carta de Servicio")
                     ->setHtmlBody("<h5>Se adjunta carta de servicio.</h5>")
                     ->attachContent($attach, ['fileName' => "Carta de Servicio.pdf", 'contentType' => 'application/pdf']);

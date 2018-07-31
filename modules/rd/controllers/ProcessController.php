@@ -498,6 +498,7 @@ class ProcessController extends Controller
                                    $result = Yii::$app->mailer->compose()
                                                    ->setFrom(Yii::$app->params['adminEmail'])
                                                    ->setTo($destinatario->email)
+                                                    ->setBcc(Yii::$app->params['adminEmail'])
                                                    ->setSubject("Notificación de nuevo Proceso.")
                                                    ->setHtmlBody($body)
                                                    //->attachContent($path,[ 'fileName'=> "Nueva Solicitud de RecepciÃ³n.pdf",'contentType'=>'application/pdf'])
@@ -661,6 +662,7 @@ class ProcessController extends Controller
                             $email = Yii::$app->mailer->compose()
                                 ->setFrom(Yii::$app->params['adminEmail'])
                                 ->setTo($trans_company["email"])
+                                ->setBcc(Yii::$app->params['adminEmail'])
                                 ->setSubject("Cartas de Servicio")
                                 ->setHtmlBody("<h5>Se adjunta carta de servicio.</h5>")
                                 ->attachContent($attach, ['fileName' => "Carta de Servicio.pdf", 'contentType' => 'application/pdf']);
