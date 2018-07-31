@@ -294,7 +294,8 @@ class TicketController extends Controller
 
         if($transCompany)
         {
-            $tickets = Ticket::find()
+            $tickets = [];
+            $results = Ticket::find()
                         ->select('ticket.id, 
                                         ticket.calendar_id, 
                                         ticket.status, 
@@ -315,6 +316,12 @@ class TicketController extends Controller
                         ->orderBy(['calendar.start_datetime'=>SORT_ASC])
                         ->asArray()
                         ->all();
+
+            foreach ($results as $result)
+            {
+                $result['name_driver'] = utf8_encode($result['name_driver']);
+                $tickets [] = $result;
+            }
             $response['tickets'] = $tickets;
             $response['success'] = true;
         }
