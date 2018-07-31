@@ -27,8 +27,8 @@ class AuthItem extends \yii\db\ActiveRecord
 
 //    const ROLE_ADMIN = 'Administrador';
     const ROLE_ADMIN = 'Administracion';
-    const ROLE_ADMIN_WHAREHOUSE = 'Administrador_depósito';
-    const ROLE_WHAREHOUSE = 'Depósito';
+    const ROLE_ADMIN_WHAREHOUSE = 'Administrador_deposito';
+    const ROLE_WHAREHOUSE = 'Deposito';
     const ROLE_AGENCY = 'Agencia';
     const ROLE_CIA_TRANS_COMPANY = 'Cia_transporte';
     const ROLE_IMPORTER = 'Importador';

@@ -138,7 +138,7 @@ INSERT INTO [dbo].[auth_item] ([name], [type], [description], [rule_name], [data
 GO
 INSERT INTO [dbo].[auth_item] ([name], [type], [description], [rule_name], [data], [created_at], [updated_at]) VALUES (N'Administracion', N'1', N'root', null, null, null, null);
 GO
-INSERT INTO [dbo].[auth_item] ([name], [type], [description], [rule_name], [data], [created_at], [updated_at]) VALUES (N'Administrador_depósito', N'1', N'Administrador del depósito ', null, null, N'1526269475', N'1526269475');
+INSERT INTO [dbo].[auth_item] ([name], [type], [description], [rule_name], [data], [created_at], [updated_at]) VALUES (N'Administrador_deposito', N'1', N'Administrador del depósito ', null, null, N'1526269475', N'1526269475');
 GO
 INSERT INTO [dbo].[auth_item] ([name], [type], [description], [rule_name], [data], [created_at], [updated_at]) VALUES (N'Agencia', N'1', N'Serán los que por medio del sistema ingresen la eCas con la información de los contenedores. El significado y lógica de eCas serán explicados más adelante.', null, null, N'1526269415', N'1526269415');
 GO
@@ -184,7 +184,7 @@ INSERT INTO [dbo].[auth_item] ([name], [type], [description], [rule_name], [data
 GO
 INSERT INTO [dbo].[auth_item] ([name], [type], [description], [rule_name], [data], [created_at], [updated_at]) VALUES (N'container_view', N'2', N'', null, null, N'1528983960', N'1528983960');
 GO
-INSERT INTO [dbo].[auth_item] ([name], [type], [description], [rule_name], [data], [created_at], [updated_at]) VALUES (N'Depósito', N'1', N'Gestiona los cupos y asigna las agencias y los tipos de contenedores a los calendarios.', null, null, N'1526269452', N'1526269452');
+INSERT INTO [dbo].[auth_item] ([name], [type], [description], [rule_name], [data], [created_at], [updated_at]) VALUES (N'Deposito', N'1', N'Gestiona los cupos y asigna las agencias y los tipos de contenedores a los calendarios.', null, null, N'1526269452', N'1526269452');
 GO
 INSERT INTO [dbo].[auth_item] ([name], [type], [description], [rule_name], [data], [created_at], [updated_at]) VALUES (N'Exportador', N'1', N'Exportador', null, null, N'1530265454', N'1530265454');
 GO
@@ -232,15 +232,15 @@ INSERT INTO [dbo].[auth_item] ([name], [type], [description], [rule_name], [data
 GO
 INSERT INTO [dbo].[auth_item] ([name], [type], [description], [rule_name], [data], [created_at], [updated_at]) VALUES (N'user_view', N'2', N'Ver Usuarios', null, null, N'1528979542', N'1528979542');
 GO
-INSERT INTO [dbo].[auth_item] ([name], [type], [description], [rule_name], [data], [created_at], [updated_at]) VALUES (N'warehouse_create', N'2', N'Crear Depósito', null, null, N'1528983960', N'1528983960');
+INSERT INTO [dbo].[auth_item] ([name], [type], [description], [rule_name], [data], [created_at], [updated_at]) VALUES (N'warehouse_create', N'2', N'Crear Deposito', null, null, N'1528983960', N'1528983960');
 GO
-INSERT INTO [dbo].[auth_item] ([name], [type], [description], [rule_name], [data], [created_at], [updated_at]) VALUES (N'warehouse_delete', N'2', N'Eliminar Depósito', null, null, N'1528983960', N'1528983960');
+INSERT INTO [dbo].[auth_item] ([name], [type], [description], [rule_name], [data], [created_at], [updated_at]) VALUES (N'warehouse_delete', N'2', N'Eliminar Deposito', null, null, N'1528983960', N'1528983960');
 GO
-INSERT INTO [dbo].[auth_item] ([name], [type], [description], [rule_name], [data], [created_at], [updated_at]) VALUES (N'warehouse_list', N'2', N'Listar Depósito', null, null, N'1528983960', N'1528983960');
+INSERT INTO [dbo].[auth_item] ([name], [type], [description], [rule_name], [data], [created_at], [updated_at]) VALUES (N'warehouse_list', N'2', N'Listar Deposito', null, null, N'1528983960', N'1528983960');
 GO
-INSERT INTO [dbo].[auth_item] ([name], [type], [description], [rule_name], [data], [created_at], [updated_at]) VALUES (N'warehouse_update', N'2', N'Actualizar Depósito', null, null, N'1528983960', N'1528983960');
+INSERT INTO [dbo].[auth_item] ([name], [type], [description], [rule_name], [data], [created_at], [updated_at]) VALUES (N'warehouse_update', N'2', N'Actualizar Deposito', null, null, N'1528983960', N'1528983960');
 GO
-INSERT INTO [dbo].[auth_item] ([name], [type], [description], [rule_name], [data], [created_at], [updated_at]) VALUES (N'warehouse_view', N'2', N'Detalle Depósito', null, null, N'1528983960', N'1528983960');
+INSERT INTO [dbo].[auth_item] ([name], [type], [description], [rule_name], [data], [created_at], [updated_at]) VALUES (N'warehouse_view', N'2', N'Detalle Deposito', null, null, N'1528983960', N'1528983960');
 GO
 
 -- ----------------------------
@@ -353,25 +353,25 @@ INSERT INTO [dbo].[auth_item_child] ([parent], [child]) VALUES (N'Administracion
 GO
 INSERT INTO [dbo].[auth_item_child] ([parent], [child]) VALUES (N'Administracion', N'warehouse_view');
 GO
-INSERT INTO [dbo].[auth_item_child] ([parent], [child]) VALUES (N'Administrador_depósito', N'calendar_create');
+INSERT INTO [dbo].[auth_item_child] ([parent], [child]) VALUES (N'Administrador_deposito', N'calendar_create');
 GO
-INSERT INTO [dbo].[auth_item_child] ([parent], [child]) VALUES (N'Administrador_depósito', N'calendar_delete');
+INSERT INTO [dbo].[auth_item_child] ([parent], [child]) VALUES (N'Administrador_deposito', N'calendar_delete');
 GO
-INSERT INTO [dbo].[auth_item_child] ([parent], [child]) VALUES (N'Administrador_depósito', N'calendar_list');
+INSERT INTO [dbo].[auth_item_child] ([parent], [child]) VALUES (N'Administrador_deposito', N'calendar_list');
 GO
-INSERT INTO [dbo].[auth_item_child] ([parent], [child]) VALUES (N'Administrador_depósito', N'calendar_update');
+INSERT INTO [dbo].[auth_item_child] ([parent], [child]) VALUES (N'Administrador_deposito', N'calendar_update');
 GO
-INSERT INTO [dbo].[auth_item_child] ([parent], [child]) VALUES (N'Administrador_depósito', N'calendar_view');
+INSERT INTO [dbo].[auth_item_child] ([parent], [child]) VALUES (N'Administrador_deposito', N'calendar_view');
 GO
-INSERT INTO [dbo].[auth_item_child] ([parent], [child]) VALUES (N'Administrador_depósito', N'ticket_create');
+INSERT INTO [dbo].[auth_item_child] ([parent], [child]) VALUES (N'Administrador_deposito', N'ticket_create');
 GO
-INSERT INTO [dbo].[auth_item_child] ([parent], [child]) VALUES (N'Administrador_depósito', N'ticket_delete');
+INSERT INTO [dbo].[auth_item_child] ([parent], [child]) VALUES (N'Administrador_deposito', N'ticket_delete');
 GO
-INSERT INTO [dbo].[auth_item_child] ([parent], [child]) VALUES (N'Administrador_depósito', N'ticket_list');
+INSERT INTO [dbo].[auth_item_child] ([parent], [child]) VALUES (N'Administrador_deposito', N'ticket_list');
 GO
-INSERT INTO [dbo].[auth_item_child] ([parent], [child]) VALUES (N'Administrador_depósito', N'ticket_update');
+INSERT INTO [dbo].[auth_item_child] ([parent], [child]) VALUES (N'Administrador_deposito', N'ticket_update');
 GO
-INSERT INTO [dbo].[auth_item_child] ([parent], [child]) VALUES (N'Administrador_depósito', N'ticket_view');
+INSERT INTO [dbo].[auth_item_child] ([parent], [child]) VALUES (N'Administrador_deposito', N'ticket_view');
 GO
 INSERT INTO [dbo].[auth_item_child] ([parent], [child]) VALUES (N'Cia_transporte', N'generating_card');
 GO
@@ -385,19 +385,19 @@ INSERT INTO [dbo].[auth_item_child] ([parent], [child]) VALUES (N'Cia_transporte
 GO
 INSERT INTO [dbo].[auth_item_child] ([parent], [child]) VALUES (N'Cia_transporte', N'ticket_view');
 GO
-INSERT INTO [dbo].[auth_item_child] ([parent], [child]) VALUES (N'Depósito', N'calendar_create');
+INSERT INTO [dbo].[auth_item_child] ([parent], [child]) VALUES (N'Deposito', N'calendar_create');
 GO
-INSERT INTO [dbo].[auth_item_child] ([parent], [child]) VALUES (N'Depósito', N'calendar_delete');
+INSERT INTO [dbo].[auth_item_child] ([parent], [child]) VALUES (N'Deposito', N'calendar_delete');
 GO
-INSERT INTO [dbo].[auth_item_child] ([parent], [child]) VALUES (N'Depósito', N'calendar_list');
+INSERT INTO [dbo].[auth_item_child] ([parent], [child]) VALUES (N'Deposito', N'calendar_list');
 GO
-INSERT INTO [dbo].[auth_item_child] ([parent], [child]) VALUES (N'Depósito', N'calendar_update');
+INSERT INTO [dbo].[auth_item_child] ([parent], [child]) VALUES (N'Deposito', N'calendar_update');
 GO
-INSERT INTO [dbo].[auth_item_child] ([parent], [child]) VALUES (N'Depósito', N'calendar_view');
+INSERT INTO [dbo].[auth_item_child] ([parent], [child]) VALUES (N'Deposito', N'calendar_view');
 GO
-INSERT INTO [dbo].[auth_item_child] ([parent], [child]) VALUES (N'Depósito', N'ticket_list');
+INSERT INTO [dbo].[auth_item_child] ([parent], [child]) VALUES (N'Deposito', N'ticket_list');
 GO
-INSERT INTO [dbo].[auth_item_child] ([parent], [child]) VALUES (N'Depósito', N'ticket_view');
+INSERT INTO [dbo].[auth_item_child] ([parent], [child]) VALUES (N'Deposito', N'ticket_view');
 GO
 INSERT INTO [dbo].[auth_item_child] ([parent], [child]) VALUES (N'Exportador', N'process_create');
 GO

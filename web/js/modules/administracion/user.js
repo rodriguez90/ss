@@ -128,8 +128,8 @@ var handleSelectpicker = function() {
                 label.text("Empresa*");
                 handleJqueryAutocomplete2(1,distint);
                 break;
-            case 'Administrador_depósito':
-            case 'Depósito':
+            case 'Administrador_deposito':
+            case 'Deposito':
                 label.text("Depósito*");
                 handleJqueryAutocomplete2(2,distint);
                 break;

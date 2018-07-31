@@ -162,7 +162,7 @@ class LoginForm extends Model
 
                         break;
                     case 'ADMINISTRADOR_DEPOSITO': // FIXME CHECK THIS
-                        $wharehouse = Warehouse::findOne(['name'=>$userData['nombre_empresa']]);
+                        $wharehouse = Warehouse::findOne(['id'=>1]);
                         if($wharehouse == null)
                         {
                             $wharehouse = new Warehouse();
@@ -182,7 +182,31 @@ class LoginForm extends Model
 
                             $ok = $user_wharehouse->save();
                         }
-                        $rol = 'Administrador_depósito';
+                        $rol = 'Administrador_deposito';
+
+                        break;
+                    case 'DEPOSITO': // FIXME CHECK THIS
+                        $wharehouse = Warehouse::findOne(['id'=>1]);
+                        if($wharehouse == null)
+                        {
+                            $wharehouse = new Warehouse();
+                            $wharehouse->name = $userData['nombre_empresa'];
+                            $wharehouse->ruc = $userData['ruc_empresa'];
+                            $wharehouse->code_oce = $userData['ruc_empresa'];
+                            $wharehouse->active = 1;
+
+                            $ok = $wharehouse->save();
+                        }
+
+                        if($ok)
+                        {
+                            $user_wharehouse = new UserWarehouse();
+                            $user_wharehouse->user_id = $newUser->id;
+                            $user_wharehouse->transcompany_id = $wharehouse->id;
+
+                            $ok = $user_wharehouse->save();
+                        }
+                        $rol = 'Administrador_deposito';
 
                         break;
 

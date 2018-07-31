@@ -153,8 +153,8 @@ class UserController extends Controller
                         if($type == '')
                             $model->addError('error', "Seleccione una empresa." );
                         break;
-                    case 'Administrador_depósito':
-                    case 'Depósito':
+                    case 'Administrador_deposito':
+                    case 'Deposito':
                         if($type == '')
                         $model->addError('error', "Seleccione un depósito." );
                         break;
@@ -200,8 +200,8 @@ class UserController extends Controller
                             $userAgency->agency_id = $type;
                             $userAgency->save();
                             break;
-                        case 'Administrador_depósito':
-                        case 'Depósito':
+                        case 'Administrador_deposito':
+                        case 'Deposito':
                             $userWarehouse = new UserWarehouse();
                             $userWarehouse->user_id = $model->id;
                             $userWarehouse->warehouse_id = $type;
@@ -281,8 +281,8 @@ class UserController extends Controller
                                 $modelAuxName = $modelAux->agency->name;
                             }
                             break;
-                        case 'Administrador_depósito':
-                        case 'Depósito':
+                        case 'Administrador_deposito':
+                        case 'Deposito':
                             $error  ="Seleccione un depósito." ;
                             $modelAux = UserWarehouse::findOne(['user_id'=>$model->id]);
                             if($modelAux)
@@ -375,8 +375,8 @@ class UserController extends Controller
                                             $ok = $ok && $userAgency->update();
                                         }
                                         break;
-                                    case "Administrador_depósito":
-                                    case "Depósito":
+                                    case "Administrador_deposito":
+                                    case "Deposito":
                                         if($change_rol){
                                             $userWarehouse = new UserWarehouse();
                                             $userWarehouse->warehouse_id = $type;
