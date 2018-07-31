@@ -288,7 +288,7 @@ class TicketController extends Controller
 
         $response['msg'] = '';
         $response['msg_dev'] = '';
-        $response['sucess'] = true;
+        $response['success'] = true;
         $response['tickets'] = [];
 
         if(!(Yii::$app->user->can('ticket_create') ||  Yii::$app->user->can("calendar_list")))
