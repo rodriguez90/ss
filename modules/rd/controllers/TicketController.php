@@ -272,7 +272,10 @@ class TicketController extends Controller
 	
 	public function actionMyCalendar()
     {
-        $user = AdmUser::findOne(['id'=>Yii::$app->user->getId()]);
+        if(!(Yii::$app->user->can('ticket_create') ||  Yii::$app->user->can("calendar_create")))
+            throw new ForbiddenHttpException('Usted no tiene permiso a esta página');
+
+        $user = Yii::$app->user->identity; // AdmUser::findOne(['id'=>Yii::$app->user->getId()]);
 
         return $this->render('shedule', [
             'user' =>$user,
@@ -281,23 +284,27 @@ class TicketController extends Controller
 
     public function actionShedule()
     {
-        Yii::$app->response->format = Response::FORMAT_JSON;
-        $user = AdmUser::findOne(['id'=>Yii::$app->user->getId()]);
-
-        $transCompany = $user->getTransCompany();
-
         $response = array();
 
         $response['msg'] = '';
         $response['msg_dev'] = '';
         $response['sucess'] = true;
+        $response['tickets'] = [];
 
-
-        if($transCompany)
+        if(!(Yii::$app->user->can('ticket_create') ||  Yii::$app->user->can("calendar_list")))
         {
-            $tickets = [];
-            $results = Ticket::find()
-                        ->select('ticket.id, 
+            $response['sucess'] = false;
+            $response['msg'] = 'Usted no tiene permiso a esta página';
+        }
+
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        $user = AdmUser::findOne(['id'=>Yii::$app->user->getId()]);
+
+        $transCompany = $user->getTransCompany();
+
+        $tickets = [];
+        $results = Ticket::find()
+            ->select('ticket.id, 
                                         ticket.calendar_id, 
                                         ticket.status, 
                                         calendar.start_datetime, 
@@ -309,24 +316,21 @@ class TicketController extends Controller
                                         container.name,
                                         container.code,
                                         container.tonnage')
-                        ->innerJoin('process_transaction', 'process_transaction.id=ticket.process_transaction_id')
-                        ->innerJoin('calendar', 'calendar.id=ticket.calendar_id')
-                        ->innerJoin('container', 'container.id=process_transaction.container_id')
-                        ->where(['process_transaction.trans_company_id'=>$transCompany->id])
-                        ->andWhere(['ticket.active'=>1])
-                        ->orderBy(['calendar.start_datetime'=>SORT_ASC])
-                        ->asArray()
-                        ->all();
+            ->innerJoin('process_transaction', 'process_transaction.id=ticket.process_transaction_id')
+            ->innerJoin('calendar', 'calendar.id=ticket.calendar_id')
+            ->innerJoin('container', 'container.id=process_transaction.container_id')
+            ->where(['ticket.active'=>1])
+            ->andFilterWhere(['process_transaction.trans_company_id'=>$transCompany->id])
+            ->orderBy(['calendar.start_datetime'=>SORT_ASC])
+            ->asArray()
+            ->all();
 
-            foreach ($results as $result)
-            {
-                $result['name_driver'] = utf8_encode($result['name_driver']);
-                $tickets [] = $result;
-            }
-            $response['tickets'] = $tickets;
-            $response['success'] = true;
+        foreach ($results as $result)
+        {
+            $result['name_driver'] = utf8_encode($result['name_driver']);
+            $tickets [] = $result;
         }
-
+        $response['tickets'] = $tickets;
 
         return $response;
     }

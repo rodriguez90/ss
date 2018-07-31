@@ -117,6 +117,15 @@ class SiteController extends Controller
                 $params['trans_company_id'] = $transcompany->name;
             }
         }
+        else if ($user && ($user->hasRol('Deposito') || $user->hasRol('Administrador_deposito')))
+        {
+            $warehouse = $user->getWhareHouse();
+            $params['warehouse_id'] = '';
+            if($warehouse)
+            {
+                $params['warehouse_id'] = $warehouse->id;
+            }
+        }
         else if($user && $user->hasRol('Administracion'))
         {
             $importCount = Process::find()->where(['type'=>Process::PROCESS_IMPORT])->count();
@@ -124,14 +133,12 @@ class SiteController extends Controller
         }
 
         $dataProvider = $searchModel->search($params);
-//        $ticketCount = TicketSearch::find()->count();
 
         $myparams = array();
         $myparams['searchModel'] = $searchModel;
         $myparams['dataProvider'] = $dataProvider;
         $myparams['importCount'] = $importCount;
         $myparams['exportCount'] = $exportCount;
-//        $myparams['ticketCount'] = $ticketCount;
         return $this->render('index', $myparams);
     }
 

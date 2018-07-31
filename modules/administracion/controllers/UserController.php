@@ -613,7 +613,7 @@ class UserController extends Controller
         {
             $response['objects'] = Warehouse::find()
                 ->where(['active'=>1])
-                ->andWhere(['like','name', $code])
+                ->andFilterWhere(['like','name', $code])
                 ->all();
         }
         catch (Exception $ex)
@@ -624,7 +624,7 @@ class UserController extends Controller
             $response['msg_dev'] = $ex->getMessage();
         }
 
-        $response;
+        return $response;
     }
 
     public function actionGetagenciastrans()

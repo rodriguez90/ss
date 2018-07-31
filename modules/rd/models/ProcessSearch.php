@@ -132,6 +132,24 @@ class ProcessSearch extends Process
             $query->andWhere(['process.id'=>$results]);
         }
 
+        if(isset($params['warehouse_id']))
+        {
+
+            $results = Process::find()->select('process.id')
+                ->innerJoin("process_transaction","process_transaction.process_id = process.id")
+                ->innerJoin("trans_company","process_transaction.trans_company_id = trans_company.id")
+                ->innerJoin("ticket","ticket.process_transaction_id = process_transaction.id")
+                ->innerJoin("calendar","calendar.id = ticket.calendar_id")
+                ->where(['process.active'=>1])
+                ->andWhere(['process_transaction.active'=>1])
+                ->andWhere(['ticket.active'=>1])
+                ->andFilterWhere(['calendar.id_warehouse'=>$params['warehouse_id']])
+                ->groupBy(['process.id'])
+                ->asArray();
+
+            $query->andWhere(['process.id'=>$results]);
+        }
+
         return $dataProvider;
     }
 
@@ -166,10 +184,9 @@ class ProcessSearch extends Process
             return $dataProvider;
         }
 
-
         $query->andFilterWhere(['bl'=>$params['bl']]);
         $query->andFilterWhere(['agency.id'=>$params['agency_id']]);
-        $query->andFilterWhere(['trans_company.id'=>$params['trans_company_id']]) ;
+        $query->andFilterWhere(['trans_company.id'=>$params['trans_company_id']]);
 
         return $dataProvider;
     }

@@ -21,7 +21,7 @@ var handleJqueryAutocomplete2 = function(op,changeRol) {
     switch (op){
         case 1:
             action = "/administracion/user/getagencias";
-            option0 = "Seleccione la epmpresa";
+            option0 = "Seleccione la empresa";
             // validator = "data-parsley-type=\'digits\' data-parsley-length=\'[13, 13]\'";
             min = 13;
             break;

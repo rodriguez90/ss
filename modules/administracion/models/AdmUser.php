@@ -378,6 +378,16 @@ class AdmUser extends ActiveRecord implements IdentityInterface
         return null;
     }
 
+    public function getWhareHouse()
+    {
+        $userWhareHouse = \app\modules\rd\models\UserWarehouse::findOne(['user_id'=>$this->id]);
+
+        if($userWhareHouse)
+            return $userWhareHouse->warehouse;
+
+        return null;
+    }
+
     public function processCondition()
     {
         if($this->hasRol('Importador_Exportador'))
@@ -398,9 +408,14 @@ class AdmUser extends ActiveRecord implements IdentityInterface
                 $params['trans_company_id'] = $transcompany->id;
             }
         }
-//        else if($this->hasRol('Administracion'))
+//        else if ($this->hasRol('Deposito') || $this->hasRol('Administrador_deposito'))
 //        {
-//            $params['1']=1;
+//            $wareHouse = $this->getWhareHouse();
+//            $params['id_warehouse'] = '';
+//            if($wareHouse)
+//            {
+//                $params['id_warehouse'] = $wareHouse->id;
+//            }
 //        }
 
         return $params;

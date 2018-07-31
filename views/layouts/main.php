@@ -136,7 +136,8 @@ $user = Yii::$app->user->identity;
                     ?>
 
                     <?php
-                    if(Yii::$app->user->can("ticket_create")){
+                    if(Yii::$app->user->can("ticket_create") || Yii::$app->user->can("calendar_create"))
+                    {
                         echo "<li class='has-sub'>";
                         echo "<a href=".Url::to(['/rd/ticket/my-calendar'])."> <i class='fa fa-calendar'></i>";
                         echo  "<span> Mi Calendario</span>";

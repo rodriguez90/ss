@@ -20,6 +20,7 @@ FormAsset::register($this);
 TableAsset::register($this);
 
 $user = \app\modules\administracion\models\AdmUser::findOne(['id'=>Yii::$app->user->getId()]);
+
 $trasCompany = null;
 
 if($user)

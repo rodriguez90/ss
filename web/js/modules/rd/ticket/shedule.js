@@ -306,7 +306,8 @@ var handleCalendarDemo = function () {
     // fetchCalendar(startDate.toISOString(),endDate.toISOString());
 };
 
-var fetchTickets = function (async) {
+var fetchTickets = function (async)
+{
     $.ajax({
         async:async,
         url: homeUrl + "/rd/ticket/shedule",
@@ -315,86 +316,93 @@ var fetchTickets = function (async) {
         // data: {
         //     receptionId: receptionId,
         // },
+
         success: function(response) {
-            console.log(response);
 
-            $('#calendar').fullCalendar('removeEventSources', ticketEvents.id);
-            ticketEvents.events = [];
-
-            $.each(response['tickets'],function (i) {
-
-                var ticket = {
-                    id: response['tickets'][i].id,
-                    calendar_id: response['tickets'][i].calendar_id,
-                    name:response['tickets'][i].name,
-                    code:response['tickets'][i].code,
-                    tonnage:response['tickets'][i].tonnage,
-                    start_datetime:response['tickets'][i].start_datetime,
-                    end_datetime:response['tickets'][i].end_datetime,
-                    register_truck:response['tickets'][i].register_truck,
-                    register_driver:response['tickets'][i].register_driver,
-                    name_driver:response['tickets'][i].name_driver,
-                };
-
-                var className = [];
-                var type = "";
-                var count = 1;
-                var id = "";
-
-               ticketDataMap.set(ticket.id, ticket);
-
-                if(ticket.tonnage === "20")
-                {
-                    id = ticket.calendar_id + 'T20';
-                    className = ['bg-green-darker'];
-                    type = "T20";
-                }
-                else if(ticket.tonnage === "40")
-                {
-                    id = ticket.calendar_id + 'T40';
-                    className = ['bg-purple-darker'];
-                    type = "T40";
-                }
-
-                var result = findTicketEvent(id);
-
-                if(result.event)
-                {
-                    result.event.count = result.event.count + count;
-                    result.event.title = result.event.count;
-                    ticketEvents[result.index]= result.event;
-                    result.event.tickets.push(ticket.id);
-                }
-                else
-                {
-                    var event = {
-                        id: id,
-                        title: count,
-                        ticketId:ticket.id,
-                        start: ticket.start_datetime,
-                        end:  ticket.end_datetime,
-                        allDay:false,
-                        className : className ,
-                        editable: false,
-                        type:type,
-                        count:count,
-                        tickets:[ticket.id],
-                        index: -1,
-                    };
-                    ticketEvents.events.push(event);
-                    event.index = ticketEvents.events.length - 1;
-                }
-            });
-
-            $('#calendar').fullCalendar('addEventSource',ticketEvents);
-            $('#calendar').fullCalendar('refetchEventSources');
-
-            if(response['tickets'].length > 0)
+            if(response['success'])
             {
-                minDeliveryDate = response['tickets'][0].start_datetime;
-            }
+                $('#calendar').fullCalendar('removeEventSources', ticketEvents.id);
+                ticketEvents.events = [];
 
-            $('#calendar').fullCalendar('gotoDate', moment(minDeliveryDate) );
+                $.each(response['tickets'],function (i) {
+
+                    var ticket = {
+                        id: response['tickets'][i].id,
+                        calendar_id: response['tickets'][i].calendar_id,
+                        name:response['tickets'][i].name,
+                        code:response['tickets'][i].code,
+                        tonnage:response['tickets'][i].tonnage,
+                        start_datetime:response['tickets'][i].start_datetime,
+                        end_datetime:response['tickets'][i].end_datetime,
+                        register_truck:response['tickets'][i].register_truck,
+                        register_driver:response['tickets'][i].register_driver,
+                        name_driver:response['tickets'][i].name_driver,
+                    };
+
+                    var className = [];
+                    var type = "";
+                    var count = 1;
+                    var id = "";
+
+                    ticketDataMap.set(ticket.id, ticket);
+
+                    if(ticket.tonnage === "20")
+                    {
+                        id = ticket.calendar_id + 'T20';
+                        className = ['bg-green-darker'];
+                        type = "T20";
+                    }
+                    else if(ticket.tonnage === "40")
+                    {
+                        id = ticket.calendar_id + 'T40';
+                        className = ['bg-purple-darker'];
+                        type = "T40";
+                    }
+
+                    var result = findTicketEvent(id);
+
+                    if(result.event)
+                    {
+                        result.event.count = result.event.count + count;
+                        result.event.title = result.event.count;
+                        ticketEvents[result.index]= result.event;
+                        result.event.tickets.push(ticket.id);
+                    }
+                    else
+                    {
+                        var event = {
+                            id: id,
+                            title: count,
+                            ticketId:ticket.id,
+                            start: ticket.start_datetime,
+                            end:  ticket.end_datetime,
+                            allDay:false,
+                            className : className ,
+                            editable: false,
+                            type:type,
+                            count:count,
+                            tickets:[ticket.id],
+                            index: -1,
+                        };
+                        ticketEvents.events.push(event);
+                        event.index = ticketEvents.events.length - 1;
+                    }
+                });
+
+                $('#calendar').fullCalendar('addEventSource',ticketEvents);
+                $('#calendar').fullCalendar('refetchEventSources');
+
+                if(response['tickets'].length > 0)
+                {
+                    minDeliveryDate = response['tickets'][0].start_datetime;
+                }
+
+                $('#calendar').fullCalendar('gotoDate', moment(minDeliveryDate) );
+            }
+            else
+            {
+                alert(response['msg']);
+            }
         },
         error: function(response) {
             console.log(response);
@@ -414,8 +422,8 @@ var Calendar = function () {
     };
 }();
 
-
-$(document).ready(function () {
+$(document).ready(function ()
+{
     Calendar.init();
 
     fetchTickets();
