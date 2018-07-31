@@ -178,7 +178,7 @@ class LoginForm extends Model
                         {
                             $user_wharehouse = new UserWarehouse();
                             $user_wharehouse->user_id = $newUser->id;
-                            $user_wharehouse->transcompany_id = $wharehouse->id;
+                            $user_wharehouse->warehouse_id = $wharehouse->id;
 
                             $ok = $user_wharehouse->save();
                         }
@@ -202,11 +202,11 @@ class LoginForm extends Model
                         {
                             $user_wharehouse = new UserWarehouse();
                             $user_wharehouse->user_id = $newUser->id;
-                            $user_wharehouse->transcompany_id = $wharehouse->id;
+                            $user_wharehouse->warehouse_id = $wharehouse->id;
 
                             $ok = $user_wharehouse->save();
                         }
-                        $rol = 'Administrador_deposito';
+                        $rol = 'Deposito';
 
                         break;
 
