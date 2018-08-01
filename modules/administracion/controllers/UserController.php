@@ -315,7 +315,7 @@ class UserController extends Controller
                             $model->addError('error', "Seleccione un rol válido." );
                         }
 
-                        if($type == "" && $rol_actual->name!="Administracion" && $rol!="Administracion" ){
+                        if($type == "" && $rol_actual->name != "Administracion" && $rol != "Administracion" ){
                             $model->addError('error', $error );
                         }
 

@@ -3,6 +3,7 @@
 namespace app\models;
 
 use app\modules\administracion\models\AdmUser;
+use app\modules\administracion\models\AuthItem;
 use app\modules\rd\models\Agency;
 use app\modules\rd\models\TransCompany;
 use app\modules\rd\models\UserAgency;
@@ -11,6 +12,7 @@ use app\modules\rd\models\UserWarehouse;
 use app\modules\rd\models\Warehouse;
 use Yii;
 use yii\base\Model;
+use yii\db\Exception;
 
 /**
  * LoginForm is the model behind the login form.
@@ -68,8 +70,11 @@ class LoginForm extends Model
     {
         $customPassword = $this->makeTPGPassword($this->password);
         $response = $this->tpgLogin($this->username, $customPassword); // FIXME en produccion pasar el $customPassword
+//        $response = $this->tpgLoginOffLine($this->username, $customPassword); // FIXME en produccion pasar el $customPassword
 
 		$userData = $response['user'];
+
+//		$transaction = Yii::$app->db->beginTransaction();
 
         if(!$response['success'])
         {
@@ -88,8 +93,9 @@ class LoginForm extends Model
         }
 
         $newUser = AdmUser::findOne(['username'=>$this->username]); // find user in sgt
+        $auth =  Yii::$app->authManager;
 
-        if($newUser == null)
+        if($newUser == null) // user no exit in sgt
         {
             $newUser = new AdmUser();
             $newUser->username = $userData['user_id'];
@@ -103,130 +109,25 @@ class LoginForm extends Model
             $newUser->creado_por = 'login';
             $newUser->setPassword($this->password);
 
-            $auth =  Yii::$app->authManager;
             $new_rol = null;
-            $ok = true;
-            $msg = '';
 
             if ($newUser->save())
             {
                 $roleName = $userData['rol'];
-                $rol = '';
-                switch ($roleName)
+                $rol = AuthItem::MAP_TPG_ROLE_TO_SGT[$roleName];
+                $result = $this->registerUserEntity($newUser, $userData, $roleName);
+
+                if(!$result['success'])
                 {
-                    case 'IMPORTADOR_EXPORTADOR':
-                        $agency = Agency::findOne(['ruc'=>$userData['ruc_empresa']]);
-                        if($agency == null)
-                        {
-                            $agency = new Agency();
-                            $agency->name = $userData['nombre_empresa'];
-                            $agency->ruc = $userData['ruc_empresa'];
-                            $agency->code_oce = '';
-                            $agency->active = 1;
-
-                            $ok = $agency->save();
-                        }
-
-                        if($ok)
-                        {
-                            $user_agency = new UserAgency();
-                            $user_agency->user_id = $newUser->id;
-                            $user_agency->agency_id = $agency->id;
-
-                            $ok = $user_agency->save();
-                        }
-                        $rol = 'Importador_Exportador';
-                        break;
-                    case 'CIA_TRANSPORTE':
-                        $transCompany = TransCompany::findOne(['ruc'=>$userData['ruc_empresa']]);
-                        if($transCompany == null)
-                        {
-                            $transCompany = new TransCompany();
-                            $transCompany->name = $userData['nombre_empresa'];
-                            $transCompany->ruc = $userData['ruc_empresa'];
-                            $transCompany->address = 'NO TIENE';
-                            $transCompany->active = 1;
-
-                            $ok = $transCompany->save();
-                        }
-
-                        if($ok)
-                        {
-                            $user_trans = new UserTranscompany();
-                            $user_trans->user_id = $newUser->id;
-                            $user_trans->transcompany_id = $transCompany->id;
-
-                            $ok = $user_trans->save();
-                        }
-                        $rol = 'Cia_transporte';
-
-                        break;
-                    case 'ADMINISTRADOR_DEPOSITO': // FIXME CHECK THIS
-                        $wharehouse = Warehouse::findOne(['id'=>1]);
-                        if($wharehouse == null)
-                        {
-                            $wharehouse = new Warehouse();
-                            $wharehouse->name = $userData['nombre_empresa'];
-                            $wharehouse->ruc = $userData['ruc_empresa'];
-                            $wharehouse->code_oce = $userData['ruc_empresa'];
-                            $wharehouse->active = 1;
-
-                            $ok = $wharehouse->save();
-                        }
-
-                        if($ok)
-                        {
-                            $user_wharehouse = new UserWarehouse();
-                            $user_wharehouse->user_id = $newUser->id;
-                            $user_wharehouse->warehouse_id = $wharehouse->id;
-
-                            $ok = $user_wharehouse->save();
-                        }
-                        $rol = 'Administrador_deposito';
-
-                        break;
-                    case 'DEPOSITO': // FIXME CHECK THIS
-                        $wharehouse = Warehouse::findOne(['id'=>1]);
-                        if($wharehouse == null)
-                        {
-                            $wharehouse = new Warehouse();
-                            $wharehouse->name = $userData['nombre_empresa'];
-                            $wharehouse->ruc = $userData['ruc_empresa'];
-                            $wharehouse->code_oce = $userData['ruc_empresa'];
-                            $wharehouse->active = 1;
-
-                            $ok = $wharehouse->save();
-                        }
-
-                        if($ok)
-                        {
-                            $user_wharehouse = new UserWarehouse();
-                            $user_wharehouse->user_id = $newUser->id;
-                            $user_wharehouse->warehouse_id = $wharehouse->id;
-
-                            $ok = $user_wharehouse->save();
-                        }
-                        $rol = 'Deposito';
-
-                        break;
-
-                    case 'ADMINISTRADOR': // FIXME CHECK THIS
-                        $rol = 'Administracion';
-
-                        break;
-                    default:
-                        break;
+                    $this->addError('error', $result['msg']);
+                    return false;
                 }
 
-                if($ok)
-                {
-                    $new_rol = $auth->getRole($rol);
-                    $ok = $ok && $auth->assign($new_rol, $newUser->id);
-                }
+                $new_rol = $auth->getRole($rol);
 
-                if(!$ok)
+                if(!$auth->assign($new_rol, $newUser->id))
                 {
-                    $msg = "Ah ocurrido un error al registrar el usuario.";
+                    $msg = "Ah ocurrido un error al registar el rol del usuario.";
                     $this->addError('error', $msg);
                     return false;
                 }
@@ -238,12 +139,83 @@ class LoginForm extends Model
 				 return false;
 			}
         }
-        return Yii::$app->user->login($newUser, $this->rememberMe == 'on' ? 1800 : 0);
+        else // the user exist in sgt
+        {
+            $currentRolName = $newUser->getRole();
+            $newRolName = AuthItem::MAP_TPG_ROLE_TO_SGT[$userData['rol']];
 
+            $newUser->nombre = $userData['nombre'];
+            $newUser->apellidos = '';
+            $newUser->cedula = $userData['ruc'];
+            $newUser->email = $userData['email'];
+            $newUser->status = $userData['estado'] == "ACTIVO" ? 1:0;
+            $newUser->created_at = time();
+            $newUser->updated_at = time();
+            $newUser->creado_por = 'login';
+            $newUser->setPassword($this->password);
+
+            if(!$newUser->save())
+            {
+                $this->addError('error', 'Ah ocurrido un error al actualziar los datos del usuario.');
+                return false;
+            }
+
+            if($currentRolName != $newRolName)
+            {
+                $currentRol = $auth->getRole($currentRolName);
+
+                if(!$auth->revoke($currentRol, $newUser->id))
+                {
+                    $msg = "Ah ocurrido un error al revocar el rol del usuario.";
+                    $this->addError('error', $msg);
+                    return false;
+                }
+
+                $newRol = $auth->getRole($newRolName);
+
+                if(!$auth->assign($newRol, $newUser->id))
+                {
+                    $msg = "Ah ocurrido un error al acutalizar el rol del usuario.";
+                    $this->addError('error', $msg);
+                    return false;
+                }
+            }
+
+            $result = $this->unregisterUserEntity($newUser);
+
+            if(!$result['success'])
+            {
+                $this->addError('error', $result['msg']);
+                return false;
+            }
+
+            $result = $this->registerUserEntity($newUser, $userData, $userData['rol']);
+
+            if(!$result['success'])
+            {
+                $this->addError('error', $result['msg']);
+                return false;
+            }
+        }
+
+        return Yii::$app->user->login($newUser, $this->rememberMe == 'on' ? 1800 : 0);
     }
 
     public function loginOffLine()
     {
+        $userData=[];
+        $userData['user'] = [
+            'user_id'=> $this->username,
+            'nombre'=> $this->username,
+            'ruc' => '8769543201',
+            'email' => 'test@co.cu',
+            'ruc_empresa'=> '1111111111111',
+            'nombre_empresa'=>'test s.a',
+            'rol'=>'DEPOSITO',
+            'estado'=>'ACTIVO',
+        ];
+
+
         $newUser = AdmUser::findOne(['username'=>$this->username]); // find user in sgt
 
         if($newUser == null)
@@ -317,6 +289,32 @@ class LoginForm extends Model
         return $response;
     }
 
+    protected function tpgLoginOffLine($user, $password)
+    {
+        $response = array();
+        $response['success'] = true;
+        $response['user'] = null;
+        $response['msg'] = '';
+        $response['msg_dev'] = '';
+
+        $response['user'] = [
+            'user_id'=> $this->username,
+            'nombre'=> $this->username,
+            'ruc' => '8769543201',
+            'email' => 'test@co.cu',
+            'ruc_empresa'=> '1234567890123',
+            'nombre_empresa'=>'test s.a',
+//            'rol'=>'ADMINISTRADOR_DEPOSITO',
+//            'rol'=>'DEPOSITO',
+            'rol'=>'CIA_TRANSPORTE',
+//            'rol'=>'IMPORTADOR_EXPORTADOR',
+//            'rol'=>'ADMINISTRADOR',
+            'estado'=>'ACTIVO',
+        ];
+
+        return $response;
+    }
+
     protected function makeTPGPassword($password)
     {
         $p = md5($password);
@@ -331,5 +329,151 @@ class LoginForm extends Model
         // Assume que $p tiene 32 chars de largo
         $q = $p{20} . $p{15} . $p{5} . $p{17} . $p{23} . $p{0} . $p{28} . $p{4} . $p{18} . $p{11} . $p{6} . $p{13} . $p{14} . $p{9} . $p{31} . $p{25} . $p{24} . $p{12} . $p{10} . $p{3} . $p{30} . $p{16} . $p{8} . $p{29} . $p{21} . $p{27} . $p{1} . $p{26} . $p{22} . $p{7} . $p{19} . $p{2};
         return $q;
+    }
+
+    protected function unregisterUserEntity($user)
+    {
+        $response = [];
+        $response['success'] = true;
+        $response['msg'] = '';
+
+        $auth =  Yii::$app->authManager;
+        $currentRole = $auth->getRole($user->getRole());
+        $entity = null;
+
+        try
+        {
+            switch($currentRole->name){
+                case 'Importador':
+                case 'Exportador':
+                case "Importador_Exportador":
+                case 'Agencia':
+                    $entity = UserAgency::findOne(['user_id'=>$user->id]);
+                    break;
+                case 'Administrador_deposito':
+                case 'Deposito':
+                    $entity = UserWarehouse::findOne(['user_id'=>$user->id]);
+                    break;
+                case 'Cia_transporte':
+                    $entity = UserTranscompany::findOne(['user_id'=>$user->id]);
+                    break;
+                default :
+                    break;
+            }
+
+            if($entity)
+            {
+                $entity->delete();
+            }
+        }
+        catch (Exception $ex)
+        {
+            $response['success'] = false;
+        }
+
+        if(!$response['success'])
+        {
+            $response['msg'] = 'Ah ocurrido un error al actualizar los datos de la empresa asociada al usuario.';
+        }
+
+        return $response;
+    }
+
+    protected function registerUserEntity($user, $entityData, $roleName)
+    {
+        $response = [];
+        $response['success'] = true;
+        $response['msg'] = '';
+        try
+        {
+           switch ($roleName)
+           {
+               case 'IMPORTADOR_EXPORTADOR':
+                   $agency = Agency::findOne(['ruc'=>$entityData['ruc_empresa']]);
+                   if($agency == null)
+                   {
+                       $agency = new Agency();
+                       $agency->name = $entityData['nombre_empresa'];
+                       $agency->ruc = $entityData['ruc_empresa'];
+                       $agency->code_oce = '';
+                       $agency->active = 1;
+
+                       $response['success'] = $agency->save();
+                   }
+
+                   if($response['success'])
+                   {
+                       $user_agency = new UserAgency();
+                       $user_agency->user_id = $user->id;
+                       $user_agency->agency_id = $agency->id;
+
+                       $response['success'] = $user_agency->save();
+                   }
+                   break;
+               case 'CIA_TRANSPORTE':
+                   $transCompany = TransCompany::findOne(['ruc'=>$entityData['ruc_empresa']]);
+                   if($transCompany == null)
+                   {
+                       $transCompany = new TransCompany();
+                       $transCompany->name = $entityData['nombre_empresa'];
+                       $transCompany->ruc = $entityData['ruc_empresa'];
+                       $transCompany->address = 'NO TIENE';
+                       $transCompany->active = 1;
+
+                       $response['success'] = $transCompany->save();
+//                       $response['msg'] = implode('', $transCompany->getErrorSummary(false));
+                   }
+
+                   if($response['success'])
+                   {
+                       $user_trans = new UserTranscompany();
+                       $user_trans->user_id = $user->id;
+                       $user_trans->transcompany_id = $transCompany->id;
+
+                       $response['success'] = $user_trans->save();
+//                       $response['msg'] = implode('', $user_trans->getErrorSummary(false));
+                   }
+
+                   break;
+               case 'ADMINISTRADOR_DEPOSITO':
+               case 'DEPOSITO':
+                   $wharehouse = Warehouse::findOne(['id'=>1]);
+                   if($wharehouse == null)
+                   {
+                       $wharehouse = new Warehouse();
+                       $wharehouse->name = $entityData['nombre_empresa'];
+                       $wharehouse->ruc = $entityData['ruc_empresa'];
+                       $wharehouse->code_oce = '';
+                       $wharehouse->active = 1;
+
+                       $response['success'] = $wharehouse->save();
+                   }
+
+                   if($response['success'])
+                   {
+                       $user_wharehouse = new UserWarehouse();
+                       $user_wharehouse->user_id = $user->id;
+                       $user_wharehouse->warehouse_id = $wharehouse->id;
+
+                       $response['success'] = $user_wharehouse->save();
+                   }
+
+                   break;
+               default:
+                   break;
+           }
+        }
+        catch (Exception $ex)
+        {
+           $response['success'] = false;
+        }
+
+        if(!$response['success'])
+        {
+//            var_dump($response['msg']);die;
+            $response['msg'] = 'Ah ocurrido un error al actualizar la empresa asociada al usuario.';
+        }
+
+        return $response;
     }
 }
