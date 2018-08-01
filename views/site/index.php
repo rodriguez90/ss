@@ -62,20 +62,20 @@ if($user)
     </div>
     <!-- end col-3 -->
 
-    <!-- begin col-3 -->
-<!--    <div id="ticket" class="col-md-3 col-sm-6"  style="display: none;">-->
-<!--        <div class="widget widget-stats bg-red">-->
-<!--            <div class="stats-icon"><i class="fa fa-ticket"></i></div>-->
-<!--            <div class="stats-info">-->
-<!--                <h4>CUPOS</h4>-->
-<!--                <p>--><?php //echo $ticketCount?><!--</p>-->
-<!--            </div>-->
-<!--            <div class="stats-link">-->
-<!--                <a href="--><?php //echo Url::to(['/rd/ticket']);?><!--">Asignación de turnos importación.<i class="fa fa-arrow-circle-o-right"></i></a>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
-    <!-- end col-3 -->
+<!--     begin col-3-->
+    <div id="ticket" class="col-md-3 col-sm-6"  style="display: none;">
+        <div class="widget widget-stats bg-red">
+            <div class="stats-icon"><i class="fa fa-ticket"></i></div>
+            <div class="stats-info">
+                <h4>Turnos</h4>
+                <p><?php echo $ticketCount?></p>
+            </div>
+            <div class="stats-link">
+                <a href="<?php echo Url::to(['/rd/ticket']);?>">Ver turnos.<i class="fa fa-arrow-circle-o-right"></i></a>
+            </div>
+        </div>
+    </div>
+<!--     end col-3-->
 
     <!-- begin col-3 -->
     <div id="report" class="col-md-3 col-sm-6"  style="display: none;">

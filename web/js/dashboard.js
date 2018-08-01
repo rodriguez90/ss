@@ -66,6 +66,11 @@ var handleWidgetOptions = function()
     {
         document.getElementById('report').style.display = 'inline';
     }
+    else if(role === 'Administrador_deposito' || role === 'Deposito')
+    {
+        document.getElementById('ticket').style.display = 'inline';
+        document.getElementById('report').style.display = 'inline';
+    }
     else if(role === 'Administracion')
     {
         document.getElementById('import').style.display = 'inline';

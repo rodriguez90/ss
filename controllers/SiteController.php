@@ -133,12 +133,14 @@ class SiteController extends Controller
         }
 
         $dataProvider = $searchModel->search($params);
+        $ticketCount = TicketSearch::find()->count();
 
         $myparams = array();
         $myparams['searchModel'] = $searchModel;
         $myparams['dataProvider'] = $dataProvider;
         $myparams['importCount'] = $importCount;
         $myparams['exportCount'] = $exportCount;
+        $myparams['ticketCount'] = $ticketCount;
         return $this->render('index', $myparams);
     }
 

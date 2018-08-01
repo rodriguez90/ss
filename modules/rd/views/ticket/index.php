@@ -3,11 +3,12 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
+use app\modules\rd\models\Process;
 /* @var $this yii\web\View */
 /* @var $searchModel app\modules\rd\models\TicketSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('app', 'Cupos');
+$this->title = Yii::t('app', 'Turnos');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="ticket-index">
@@ -40,15 +41,38 @@ $this->params['breadcrumbs'][] = $this->title;
                     ],
                     [
                         'class' => 'yii\grid\DataColumn',
+                        'attribute' => 'process_transaction_id',
+                        'value' => 'processTransaction.container.type.name',
+                    ],
+                    [
+                        'class' => 'yii\grid\DataColumn',
+                        'label'=>'Fecha del Turno',
                         'attribute' => 'calendar_id',
                         'format' => 'datetime',
                         'value' => 'calendar.start_datetime',
                     ],
-//                    [
-//                        'class' => 'yii\grid\DataColumn',
-//                        'attribute' => 'status',
-//                        'value' => 'calendar.start_datetime',
-//                    ],
+                    [
+                        'class' => 'yii\grid\DataColumn',
+                        'label'=>'Placa del Carro',
+                        'attribute' => 'register_truck',
+                        'value' => 'processTransaction.register_truck',
+                    ],
+                    [
+                        'class' => 'yii\grid\DataColumn',
+                        'label'=>'Chofer',
+                        'attribute' => 'name_driver',
+                        'value' => 'processTransaction.name_driver',
+                        'format' => function($data)
+                        {
+                            return utf8_encode($data);
+                        }
+                    ],
+                    [
+                        'class' => 'yii\grid\DataColumn',
+                        'label'=>'Ruc Chofer',
+                        'attribute' => 'register_driver',
+                        'value' => 'processTransaction.register_driver',
+                    ],
                     [
                         'attribute' => 'status',
                         'format' => 'text',
@@ -60,10 +84,17 @@ $this->params['breadcrumbs'][] = $this->title;
                             '1' => 'Activo', '0' => 'Consumido',
                         ], ['class' => 'form-control', 'prompt'=>''])
                     ],
-//                    'status',
-                    'created_at',
-                    //'active',
-
+                    [
+                        'label' => 'Proceso',
+                        'attribute' => 'processType',
+                        'value'=>'processTransaction.process.type',
+                        'format' => function($data)
+                        {
+                            return Process::PROCESS_LABEL[$data];
+                        },
+                        'filter' => ['1' =>'Importación' , '2'=>'Exportación',],
+                    ],
+//                    'created_at',
 //                    ['class' => 'yii\grid\ActionColumn'],
                 ],
             ]); ?>

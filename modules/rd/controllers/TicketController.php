@@ -76,12 +76,15 @@ class TicketController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-//    public function actionView($id)
-//    {
-//        return $this->render('view', [
-//            'model' => $this->findModel($id),
-//        ]);
-//    }
+    public function actionView($id)
+    {
+        if(!Yii::$app->user->can("ticket_view"))
+            throw new ForbiddenHttpException('Usted no tiene permiso para resevar cupos.');
+
+        return $this->render('view', [
+            'model' => $this->findModel($id),
+        ]);
+    }
 
     /**
      * Creates a new Ticket model.

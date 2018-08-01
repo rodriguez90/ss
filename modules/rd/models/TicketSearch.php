@@ -12,6 +12,10 @@ use app\modules\rd\models\Ticket;
  */
 class TicketSearch extends Ticket
 {
+    public $register_truck = '';
+    public $register_driver = '';
+    public $name_driver = '';
+    public $processType = '';
     /**
      * {@inheritdoc}
      */
@@ -19,7 +23,7 @@ class TicketSearch extends Ticket
     {
         return [
             [['id', 'process_transaction_id', 'calendar_id', 'status', 'active'], 'integer'],
-            [['created_at'], 'safe'],
+            [['created_at','register_truck', 'register_driver', 'name_driver', 'processType'], 'safe'],
         ];
     }
 
@@ -41,7 +45,12 @@ class TicketSearch extends Ticket
      */
     public function search($params)
     {
-        $query = Ticket::find()->where(['active'=>1]);
+        $query = Ticket::find()
+            ->innerJoin('calendar', 'calendar.id=ticket.calendar_id')
+            ->innerJoin('process_transaction', 'process_transaction.id=ticket.process_transaction_id')
+            ->innerJoin('process', 'process_transaction.process_id=process.id')
+            ->innerJoin('container', 'container.id=process_transaction.container_id');
+//            ->where(['ticket.active'=>1]);
 
         // add conditions that should always apply here
 
@@ -54,7 +63,13 @@ class TicketSearch extends Ticket
             'sort' => [
                 'defaultOrder' => [
                     'id' => SORT_ASC,
-                ]
+                ],
+//                'attributes' => [
+//                    'process_transaction_id' => [
+//                        'asc' => ['processTransaction.register_truck' => SORT_ASC],
+//                        'desc' => ['processTransaction.register_truck' => SORT_DESC],
+//                    ],
+//                ]
             ],
         ]);
 
@@ -83,8 +98,14 @@ class TicketSearch extends Ticket
             'calendar_id' => $this->calendar_id,
             'status' => $this->status,
             'created_at' => $this->created_at,
-            'active' => $this->active,
+            'ticket.active' => $this->active,
         ]);
+
+        $query->andFilterWhere(['like','register_truck',$this->register_truck]);
+        $query->andFilterWhere(['like','register_driver',$this->register_driver]);
+        $query->andFilterWhere(['like','name_driver',$this->name_driver]);
+        $query->andFilterWhere(['process.type'=>$this->processType]);
+
 
 //        if(isset($this->trans_company_id))
 //        {
