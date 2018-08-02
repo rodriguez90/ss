@@ -40,7 +40,8 @@ class TableAsset extends AssetBundle
     'plugins/DataTables/extensions/CellEdit/js/dataTables.cellEdit.js',
     'plugins/fullcalendar/lib/moment.min.js',
     'plugins/bootstrap-datepicker/js/bootstrap-datepicker.js',
-    'plugins/bootstrap-datepicker/locales/bootstrap-datepicker.es.js'
+    'plugins/bootstrap-datepicker/locales/bootstrap-datepicker.es.js',
+    'js/utils.js'
     ];
 
     public $depends = [

@@ -75,7 +75,7 @@ if($user)
             </div>
         </div>
     </div>
-<!--     end col-3-->
+     end col-3
 
     <!-- begin col-3 -->
     <div id="report" class="col-md-3 col-sm-6"  style="display: none;">
@@ -107,122 +107,15 @@ if($user)
             </div>
 
             <div id="panel-body" class="panel-body">
-                <?php Pjax::begin(); ?>
+
                 <div class="table-responsive">
-                    <?=
-                    GridView::widget([
-                        'dataProvider' => $dataProvider,
-                        'filterModel' => $searchModel,
-                        'columns' => [
-                            [
-                                'class' => 'yii\grid\DataColumn',
-                                'attribute' => 'id',
-                                'label' => 'Número del proceso'
-                            ],
-                            [
-                                'class' => 'yii\grid\DataColumn',
-                                'attribute' => 'bl',
-                                'label' => 'BL o Booking'
-                            ],
-                            [
-                                'class' => 'yii\grid\DataColumn',
-                                'attribute' => 'agency_id',
-                                'value' => 'agency.name',
-                            ],
-                            [
-//                                'class' => 'yii\grid\DataColumn',
-                                'attribute' => 'delivery_date',
-                                'format' => 'date',
-//                                'filter' => \yii\jui\DatePicker::widget(['language' => 'es', 'dateFormat' => 'dd-MM-yyyy','class'=>['form-control']]),
-                                'filter' => \yii\jui\DatePicker::widget([
-                                    'options' => ['class' => 'form-control'],
-                                    'model' => $searchModel,
-                                    'attribute' => 'delivery_date',
-                                    'language' => 'es',
-//                                    'dateFormat' => 'php:d/m/Y',
-                                    'dateFormat' => 'dd-MM-yyyy',
-                                    'clientOptions' => [
-                                        'prevText' => '<i style="cursor: pointer" class="fa fa-chevron-left"></i>',
-                                        'nextText' => '<i style="cursor: pointer" class="fa fa-chevron-right"></i>',
-                                    ]
-                                ]),
-                            ],
-                            [
-                                'class' => 'yii\grid\DataColumn',
-                                'label' => "Contenedores",
-                                'attribute' => 'containerAmount'
-                            ],
-                            [
-                                'class' => 'yii\grid\DataColumn', // can be omitted, as it is the default
-                                'attribute' => 'type',
-                                'value' => function($data) {
-                                    return Process::PROCESS_LABEL[$data['type']];
-                                },
-                                'filter' => ['1' =>'Importación' , '2'=>'Exportación',],
-                            ],
-                            [
-                                'class' => 'yii\grid\ActionColumn',
-                                'header' => 'Acciones',
-                                'template' => '{myButton}',  // the default buttons + your custom button
-                                'controller' => 'rd/process',
-                                'buttons' => [
-                                    'myButton' => function($url, $model, $key) {
-
-                                        $user = Yii::$app->user->identity;
-                                        $role = '';
-                                        $transCompany = null;
-                                        if($user !== null)
-                                        {
-                                            $transCompany = $user->getTransCompany();
-                                            $role = $user->getRole();
-                                        }
-
-
-                                        $result = '';
-                                        $url1 = Url::toRoute(['rd/process/view','id'=>$model->id]);
-                                        $url2 = Url::toRoute(['rd/ticket/create','id'=>$model->id]);
-
-                                        $ticketClass = '';
-
-                                        if($transCompany && $role === AuthItem::ROLE_CIA_TRANS_COMPANY)
-                                            $ticketClass = $model->getContainerAmount() !== $model->getCountTicketReservedByTransCompany($transCompany->id) ? 'btn-success' : 'btn-default';
-                                        elseif ($role === AuthItem::ROLE_ADMIN)
-                                        {
-                                            $ticketClass = $model->getContainerAmount() !== $model->getCountTicketReserved() ? 'btn-success' : 'btn-default';
-                                        }
-
-
-                                        if($role === AuthItem::ROLE_IMPORTER_EXPORTER ||
-                                            $role === AuthItem::ROLE_IMPORTER ||
-                                            $role === AuthItem::ROLE_EXPORTER)
-                                            $result = Html::a('Ver', $url1, ['class' => 'btn btn-info btn-xs', 'data-pjax' => 0]);
-                                        else if($role === AuthItem::ROLE_CIA_TRANS_COMPANY)
-                                            $result = Html::a('Turnos', $url2, ['class' => 'btn btn-xs ' . $ticketClass, 'data-pjax' => 0]);
-                                        if($role === AuthItem::ROLE_ADMIN)
-                                        {
-                                            $result = Html::beginTag('div', ['class'=>'row'])
-                                                . Html::beginTag('div', ['class'=>'col col-md-12'])
-                                                . Html::beginTag('div', ['class'=>'col col-md-6'])
-                                                . Html::a('Ver', $url1, ['class' => 'btn btn-info btn-xs col-xs-', 'data-pjax' => 0])
-                                                . Html::endTag('div')
-                                                . Html::beginTag('div', ['class'=>'col col-md-6'])
-                                                . Html::a('Turnos', $url2, ['class' => 'btn btn-xs ' . $ticketClass, 'data-pjax' => 0])
-                                                . Html::endTag('div')
-                                                . Html::endTag('div')
-                                                . Html::endTag('div');
-                                        }
-
-                                        return $result;
-                                    }
-                                ]
-                            ],
-                        ],
-//                        'options'=>['class' => 'table table-striped table-bordered table-condensed']
-                        'options'=>['class' => 'table table-striped table-bordered']
-                    ]); ?>
+                    <table id="data-table2" class="table table-bordered nowrap" width="100%">
+                        <thead>
+                        <tr>
+                        </tr>
+                        </thead>
+                    </table>
                 </div>
-
-                <?php Pjax::end(); ?>
             </div>
         </div>
     </div>

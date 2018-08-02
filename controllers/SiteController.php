@@ -133,13 +133,14 @@ class SiteController extends Controller
         }
 
         $dataProvider = $searchModel->search($params);
-        $ticketCount = TicketSearch::find()->count();
+
 
         $myparams = array();
         $myparams['searchModel'] = $searchModel;
         $myparams['dataProvider'] = $dataProvider;
         $myparams['importCount'] = $importCount;
         $myparams['exportCount'] = $exportCount;
+        $ticketCount = TicketSearch::find()->count(); // FIXME: FILTER TICKET BY ROLE
         $myparams['ticketCount'] = $ticketCount;
         return $this->render('index', $myparams);
     }
@@ -609,6 +610,105 @@ class SiteController extends Controller
                 }
             }
         }
+        return $response;
+    }
+
+    public function actionDashboardata()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $response = array();
+        $response['success'] = true;
+        $response['objects'] = [];
+        $response['msg'] = '';
+        $response['msg_dev'] = '';
+
+        $user = Yii::$app->user->identity;
+
+
+
+        if($response['success'])
+        {
+            try{
+                if($user && ($user->hasRol('Importador')  ||  $user->hasRol('Exportador') ||  $user->hasRol('Importador_Exportador')))
+                {
+                    $agency = $user->getAgency();
+                    $params['agency_id'] = '';
+                    if($agency)
+                    {
+                        $params['agency_id'] = $agency->name;
+                    }
+                }
+                else if ($user && $user->hasRol('Cia_transporte')){
+                    $transcompany = $user->getTransCompany();
+                    $params['trans_company_id'] = '';
+                    if($transcompany)
+                    {
+                        $params['trans_company_id'] = $transcompany->name;
+                    }
+                }
+                else if ($user && ($user->hasRol('Deposito') || $user->hasRol('Administrador_deposito')))
+                {
+                    $warehouse = $user->getWhareHouse();
+                    $params['warehouse_id'] = '';
+                    if($warehouse)
+                    {
+                        $params['warehouse_id'] = $warehouse->id;
+                    }
+                }
+
+                $query = Process::find()
+                    ->where(['process.active'=>1])
+                    ->andFilterWhere(['agency_id'=>$params['agency_id']]);
+
+                if(isset($params['trans_company_id']))
+                {
+
+                    $results = Process::find()->select('process.id')
+                        ->innerJoin("process_transaction","process_transaction.process_id = process.id")
+                        ->innerJoin("trans_company","process_transaction.trans_company_id = trans_company.id")
+                        ->where(['process.active'=>1])
+                        ->andFilterWhere(['like', 'trans_company.name', $params['trans_company_id']])
+                        ->groupBy(['process.id'])
+                        ->asArray();
+
+
+                    $query->andWhere(['process.id'=>$results]);
+                }
+
+                if(isset($params['warehouse_id']))
+                {
+
+                    $results = Process::find()->select('process.id')
+                        ->innerJoin("process_transaction","process_transaction.process_id = process.id")
+                        ->innerJoin("trans_company","process_transaction.trans_company_id = trans_company.id")
+                        ->innerJoin("ticket","ticket.process_transaction_id = process_transaction.id")
+                        ->innerJoin("calendar","calendar.id = ticket.calendar_id")
+                        ->where(['process.active'=>1])
+                        ->andWhere(['process_transaction.active'=>1])
+                        ->andWhere(['ticket.active'=>1])
+                        ->andFilterWhere(['calendar.id_warehouse'=>$params['warehouse_id']])
+                        ->groupBy(['process.id'])
+                        ->asArray();
+
+                    $query->andWhere(['process.id'=>$results]);
+
+                    $results = $query->select('process.id, process.bl,agency.name, process.delivery_date,process.type')
+                                    ->asArray()
+                                    ->all();
+                }
+            }
+            catch ( \PDOException $e)
+            {
+                if($e->getCode() !== '01000')
+                {
+                    $response['success'] = false;
+                    $response['msg'] = "Ah ocurrido al recuperar los procesos.";
+                    $response['msg_dev'] = $e->getMessage();
+                }
+            }
+        }
+
         return $response;
     }
 }

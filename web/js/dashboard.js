@@ -90,7 +90,83 @@ var Dashboard = function () {
     };
 }();
 
+var handleDataTable = function () {
+
+    if ($('#data-table').length !== 0)
+    {
+        $('#data-table').DataTable({
+            dom: '<"top"ip<"clear">>t',
+            processing:true,
+            lengthMenu: [5, 10, 15],
+            "pageLength": 10,
+            "language": lan,
+            responsive: true,
+            rowId: 'name',
+            select: {
+                // items: 'cells',
+                style:    'multi',
+                selector: 'td:first-child'
+            },
+            "columns": [
+                {
+                    "title": "Número del proceso",
+                    "data":'id', // FIXME CHECK THIS
+                },
+                {   "title":'BL o Booking',
+                    "data":"bl",
+                },
+                { "title": "Cliente",
+                    "data":"agency"
+                },
+                { "title": "Fecha Límite",
+                    "data":"deliveryDate",
+                },
+                { "title": "Contenedores",
+                    "data":"containerAmount",
+                },
+                { "title": "Tipo",
+                    "data":"type"
+                },
+                { "title": "Acciones",
+                    // "data":"transCompany"
+                },
+            ],
+            columnDefs: [
+                {
+                    orderable: true,
+                    searchable: true,
+                    targets:   [0,1,2,3,4,5],
+                },
+                {
+                    targets: [2],
+                    title:"Tipo",
+                    data:"type",
+                    render: function ( data, type, full, meta ) {
+                        return data;
+                    },
+                },
+                {
+                    targets: [3],
+                    data:'deliveryDate',
+                    render: function ( data, type, full, meta ) {
+                        return data;
+                    },
+                },
+                {
+                    targets: [5],
+                    render: function ( data, type, full, meta ) {
+                        return data
+                    },
+                },
+            ],
+        });
+    }
+};
+
 
 $(document).ready(function () {
     Dashboard.init();
+
+    handleDataTable();
+
 });

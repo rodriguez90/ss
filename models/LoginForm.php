@@ -69,8 +69,8 @@ class LoginForm extends Model
     public function login()
     {
         $customPassword = $this->makeTPGPassword($this->password);
-        $response = $this->tpgLogin($this->username, $customPassword); // FIXME en produccion pasar el $customPassword
-//        $response = $this->tpgLoginOffLine($this->username, $customPassword);
+//        $response = $this->tpgLogin($this->username, $customPassword); // FIXME en produccion pasar el $customPassword
+        $response = $this->tpgLoginOffLine($this->username, $customPassword);
 
 		$userData = $response['user'];
 
