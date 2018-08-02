@@ -51,7 +51,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 'class' => 'yii\grid\DataColumn',
                                 'label'=>'Fecha del Turno',
                                 'attribute' => 'dateTimeTicket',
-                                'format' => 'datetimeFormat',
+                                'format' => 'datetime',
                                 'value' => 'calendar.start_datetime',
                                 'filter' => \yii\jui\DatePicker::widget([
                                     'options' => ['class' => 'form-control'],
