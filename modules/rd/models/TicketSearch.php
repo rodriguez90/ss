@@ -52,7 +52,8 @@ class TicketSearch extends Ticket
             ->innerJoin('process_transaction', 'process_transaction.id=ticket.process_transaction_id')
             ->innerJoin('process', 'process_transaction.process_id=process.id')
             ->innerJoin('container', 'container.id=process_transaction.container_id')
-            ->innerJoin('container_type', 'container_type.id=container.type_id');
+            ->innerJoin('container_type', 'container_type.id=container.type_id')
+            ->where(['process_transaction.active'=>1]);
 
 //            ->where(['ticket.active'=>1]);
 
