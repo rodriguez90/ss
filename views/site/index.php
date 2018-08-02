@@ -126,6 +126,7 @@ if($user)
                             ],
                             [
                                 'class' => 'yii\grid\DataColumn',
+                                'label' => 'Cliente',
                                 'attribute' => 'agency_id',
                                 'value' => 'agency.name',
                             ],
