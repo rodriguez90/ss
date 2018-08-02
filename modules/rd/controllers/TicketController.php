@@ -428,7 +428,7 @@ class TicketController extends Controller
 
             if($response['success'] && $model->acc_id)
             {
-                $result = $this->notifyDeletedTickets([$model], $user->nombre);
+                $result = $this->notifyDeletedTickets([$model], $user->username);
 
                 if($result['success'] === false) // notification error
                 {
@@ -473,7 +473,7 @@ class TicketController extends Controller
         $userName = '';
         if($user)
         {
-            $userName = $user->nombre;
+            $userName = $user->username;
         }
 
 //        $transaction = Process::getDb()->beginTransaction();
