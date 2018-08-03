@@ -77,7 +77,6 @@ var handleWidgetOptions = function()
         document.getElementById('export').style.display = 'inline';
         document.getElementById('report').style.display = 'inline';
     }
-
 };
 
 var Dashboard = function () {
@@ -90,23 +89,55 @@ var Dashboard = function () {
     };
 }();
 
+var fetchProcess = function () {
+    $.ajax({
+        url: containerFetchUrl,
+        type: "get",
+        dataType:'json',
+        data: {
+            'bl': bl,
+            'type': processType,
+        },
+        success: function(response) {
+
+        },
+        error: function(response) {
+            console.log(response);
+            console.log(response.responseText);
+            result = false;
+        }
+    });
+};
+
 var handleDataTable = function () {
 
     if ($('#data-table').length !== 0)
     {
-        $('#data-table').DataTable({
-            dom: '<"top"ip<"clear">>t',
+        var table = $('#data-table').DataTable({
+            // dom: '<"top"ip<"clear">>t',
+            // dom: '<"top"ip<"clear">>t',
+            dom: '<"top"i>flrpt<"bottom"p><"clear">',
+            pagingType: "full_numbers",
             processing:true,
             lengthMenu: [5, 10, 15],
             "pageLength": 10,
             "language": lan,
             responsive: true,
-            rowId: 'name',
-            select: {
-                // items: 'cells',
-                style:    'multi',
-                selector: 'td:first-child'
+            rowId: 'id',
+            // "processing": true,
+            // "serverSide": true,
+            "ajax": homeUrl + "/site/dashboardata",
+            "dataSrc": function ( json )
+            {
+                for ( var i=0, ien=json.data.length ; i<ien ; i++ ) {
+                    json.data[i][6] = '<a href="/message/'+json.data[i][0]+'>View message</a>';
+                }
+                return json.results;
             },
+            "createdRow": function( row, data, dataIndex ) {
+
+            },
+            // deferRender:true,
             "columns": [
                 {
                     "title": "Número del proceso",
@@ -116,49 +147,92 @@ var handleDataTable = function () {
                     "data":"bl",
                 },
                 { "title": "Cliente",
-                    "data":"agency"
+                    "data":"agency_name"
                 },
                 { "title": "Fecha Límite",
-                    "data":"deliveryDate",
+                    "data":"delivery_date",
                 },
                 { "title": "Contenedores",
-                    "data":"containerAmount",
+                    "data":"countContainer",
                 },
                 { "title": "Tipo",
                     "data":"type"
                 },
                 { "title": "Acciones",
-                    // "data":"transCompany"
+                    "data":null
                 },
             ],
             columnDefs: [
                 {
                     orderable: true,
                     searchable: true,
-                    targets:   [0,1,2,3,4,5],
-                },
-                {
-                    targets: [2],
-                    title:"Tipo",
-                    data:"type",
-                    render: function ( data, type, full, meta ) {
-                        return data;
-                    },
+                    targets:   [0,1,2,3,4,5]
                 },
                 {
                     targets: [3],
-                    data:'deliveryDate',
+                    data:'delivery_date',
                     render: function ( data, type, full, meta ) {
-                        return data;
+                        return moment(data).format('DD-MM-YYYY');
                     },
                 },
                 {
                     targets: [5],
+                    title:"Tipo",
+                    data:"type",
                     render: function ( data, type, full, meta ) {
-                        return data
+                        return data == 1 ?'Importación':'Exportación';
+                    },
+                },
+                {
+                    targets: [6],
+                    // title:"Tipo",
+                    data:null,
+                    render: function ( data, type, full, meta ) {
+                        var elementId =  String(full.id);
+                        if(type == 'display')
+                        {
+                            var ticketClass = full.countContainer == full.countTicket ? 'btn-default':'btn-success';
+
+                            var selectHtml = "<div class=\"row\">";
+                            selectHtml += "<div class=\"col col-md-12\">" ;
+                            selectHtml += "<div class=\"col col-md-5\">";
+
+                            if(role == 'Importador_Exportador' || role == 'Administracion')
+                            {
+                                selectHtml += "<a " + "href=\"" + homeUrl + "/rd/process/view?id=" + elementId + "\" class=\"btn btn-info btn-xs\">Ver</a>";
+                            }
+                            selectHtml+= "</div>";
+                            selectHtml += "<div class=\"col col-md-5\">";
+                            if(role == 'Cia_transporte' || role == 'Administracion')
+                            {
+                                selectHtml += "<a " + "href=\"" + homeUrl + "/rd/ticket/create?id=" + elementId + "\" class=\"btn " + ticketClass + " btn-xs\">Turnos</a>";
+                            }
+                            selectHtml+= "</div>";
+                            selectHtml+= "</div>";
+                            selectHtml+= "</div>";
+
+                            return selectHtml;
+                        }
+                        return "-";
                     },
                 },
             ],
+        });
+        table.on('search.dt', function()
+        {
+            var process = "";
+            var flag = 0;
+            var separator = ''
+            table.rows({filter:'applied'}).data().each( function ( value, index )
+            {
+                if(flag == 0) separator = '?';
+                else separator ='&';
+                process += separator + "process[]=" + value.id;
+                flag++;
+            });
+
+            $('#print-process').attr('href', homeUrl + '/site/print' + process);
+            console.log($('print-process').attr('href'));
         });
     }
 };
@@ -168,5 +242,7 @@ $(document).ready(function () {
     Dashboard.init();
 
     handleDataTable();
+
+
 
 });

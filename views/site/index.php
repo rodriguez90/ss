@@ -75,7 +75,7 @@ if($user)
             </div>
         </div>
     </div>
-     end col-3
+<!--     end col-3-->
 
     <!-- begin col-3 -->
     <div id="report" class="col-md-3 col-sm-6"  style="display: none;">
@@ -109,7 +109,7 @@ if($user)
             <div id="panel-body" class="panel-body">
 
                 <div class="table-responsive">
-                    <table id="data-table2" class="table table-bordered nowrap" width="100%">
+                    <table id="data-table" class="table table-bordered nowrap" width="100%">
                         <thead>
                         <tr>
                         </tr>
@@ -126,5 +126,5 @@ if($user)
 </script>
 
 <?php
-   $this->registerJsFile('@web/js/dashboard.js', ['depends' => ['app\assets\SystemAsset']]);
+   $this->registerJsFile('@web/js/dashboard.js', ['depends' => ['app\assets\TableAsset']]);
 ?>

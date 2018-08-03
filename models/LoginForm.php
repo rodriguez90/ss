@@ -69,8 +69,8 @@ class LoginForm extends Model
     public function login()
     {
         $customPassword = $this->makeTPGPassword($this->password);
-//        $response = $this->tpgLogin($this->username, $customPassword); // FIXME en produccion pasar el $customPassword
-        $response = $this->tpgLoginOffLine($this->username, $customPassword);
+        $response = $this->tpgLogin($this->username, $customPassword); // FIXME en produccion pasar el $customPassword
+//        $response = $this->tpgLoginOffLine($this->username, $customPassword);
 
 		$userData = $response['user'];
 
@@ -306,8 +306,8 @@ class LoginForm extends Model
             'nombre_empresa'=>'trans prueba',
 //            'rol'=>'ADMINISTRADOR_DEPOSITO',
 //            'rol'=>'DEPOSITO',
-            'rol'=>'CIA_TRANSPORTE',
-//            'rol'=>'IMPORTADOR_EXPORTADOR',
+//            'rol'=>'CIA_TRANSPORTE',
+            'rol'=>'IMPORTADOR_EXPORTADOR',
 //            'rol'=>'ADMINISTRADOR',
             'estado'=>'ACTIVO',
         ];

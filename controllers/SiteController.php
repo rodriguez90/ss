@@ -41,6 +41,8 @@ use Da\QrCode\QrCode;
 
 class SiteController extends Controller
 {
+    protected  $agencyId = null;
+    protected  $transCompanyId = null;
     /**
      * {@inheritdoc}
      */
@@ -91,50 +93,42 @@ class SiteController extends Controller
     public function actionIndex()
     {
         $user = Yii::$app->user->identity;
-        $params = Yii::$app->request->queryParams;
         $importCount = 0;
         $exportCount = 0;
-
-        $searchModel = new ProcessSearch();
 
         if($user && ($user->hasRol('Importador')  ||  $user->hasRol('Exportador') ||  $user->hasRol('Importador_Exportador')))
         {
             $agency = $user->getAgency();
             if($agency)
             {
-                $searchModel->angecyId = $agency->id;
+                $this->agencyId = $agency->id;
+                $importCount = Process::find()->where(['type'=>Process::PROCESS_IMPORT, 'agency_id'=>$agency->id])->count();
+                $exportCount = Process::find()->where(['type'=>Process::PROCESS_EXPORT, 'agency_id'=>$agency->id])->count();
             }
-
-            $importCount = Process::find()->where(['type'=>Process::PROCESS_IMPORT, 'agency_id'=>$agency->id])->count();
-            $exportCount = Process::find()->where(['type'=>Process::PROCESS_EXPORT, 'agency_id'=>$agency->id])->count();
         }
-        else if ($user && $user->hasRol('Cia_transporte')){
+        else if ($user && $user->hasRol('Cia_transporte'))
+        {
             $transcompany = $user->getTransCompany();
             if($transcompany)
             {
-                $searchModel->transCompanyId = $transcompany->id;
+                $this->transCompanyId = $transcompany->id;
             }
         }
-        else if ($user && ($user->hasRol('Deposito') || $user->hasRol('Administrador_deposito')))
-        {
-            $warehouse = $user->getWhareHouse();
-            if($warehouse)
-            {
-                $searchModel->warehouseCompanyId = $warehouse->id;
-            }
-        }
+//        else if ($user && ($user->hasRol('Deposito') || $user->hasRol('Administrador_deposito')))
+//        {
+//            $warehouse = $user->getWhareHouse();
+//            if($warehouse)
+//            {
+//                $searchModel->warehouseCompanyId = $warehouse->id;
+//            }
+//        }
         else if($user && $user->hasRol('Administracion'))
         {
             $importCount = Process::find()->where(['type'=>Process::PROCESS_IMPORT])->count();
             $exportCount = Process::find()->where(['type'=>Process::PROCESS_EXPORT])->count();
         }
 
-        $dataProvider = $searchModel->search($params);
-
-
         $myparams = array();
-        $myparams['searchModel'] = $searchModel;
-        $myparams['dataProvider'] = $dataProvider;
         $myparams['importCount'] = $importCount;
         $myparams['exportCount'] = $exportCount;
         $ticketCount = TicketSearch::find()->count(); // FIXME: FILTER TICKET BY ROLE
@@ -312,33 +306,18 @@ class SiteController extends Controller
         return $this->render('about');
     }
 
-    public function actionPrint(){
-        $user = AdmUser::findOne(['id'=>Yii::$app->user->getId()]);
-        $params = Yii::$app->request->queryParams;
-        if($user && $user->hasRol('Agencia'))
-        {
-            $userAgency = UserAgency::findOne(['user_id'=>$user->id]);
-            $params['agency_id'] = '';
-//            if($userAgency)
-//            {
-//                $params['agency_id'] = $userAgency->agency->name;
-//            }
-        }
-        else if ($user && $user->hasRol('Cia_transporte')){
-            $userCiaTrans = UserTranscompany::findOne(['user_id'=>$user->id]);
-            $params['trans_company_id'] = '';
-            if($userCiaTrans)
-            {
-                $params['trans_company_id'] = $userCiaTrans->transcompany->name;
-            }
-        }
+    public function actionPrint()
+    {
+        $processId = Yii::$app->request->get('process');
 
         $processExp = Process::find()
             ->innerJoin('agency','process.agency_id = agency.id')
             ->innerJoin('process_transaction','process_transaction.process_id = process.id')
             ->innerJoin('container','process_transaction.container_id = container.id')
             ->where(['process.type'=>Process::PROCESS_EXPORT])
-
+            ->andWhere(['process.id'=>$processId])
+            ->andFilterWhere(['agency_id'=>$this->agencyId])
+            ->andFilterWhere(['process_transaction.trans_company_id'=>$this->transCompanyId])
             ->all();
 
         $processImp = Process::find()
@@ -346,7 +325,9 @@ class SiteController extends Controller
             ->innerJoin('process_transaction','process_transaction.process_id = process.id')
             ->innerJoin('container','process_transaction.container_id = container.id')
             ->where(['process.type'=>Process::PROCESS_IMPORT])
-
+            ->andWhere(['process.id'=>$processId])
+            ->andFilterWhere(['agency_id'=>$this->agencyId])
+            ->andFilterWhere(['process_transaction.trans_company_id'=>$this->transCompanyId])
             ->all();
 
         $body = $this->renderPartial('print', [
@@ -617,84 +598,33 @@ class SiteController extends Controller
 
         $response = array();
         $response['success'] = true;
-        $response['objects'] = [];
+        $response['data'] = [];
         $response['msg'] = '';
         $response['msg_dev'] = '';
-
-        $user = Yii::$app->user->identity;
-
-
 
         if($response['success'])
         {
             try{
-                if($user && ($user->hasRol('Importador')  ||  $user->hasRol('Exportador') ||  $user->hasRol('Importador_Exportador')))
-                {
-                    $agency = $user->getAgency();
-                    $params['agency_id'] = '';
-                    if($agency)
-                    {
-                        $params['agency_id'] = $agency->name;
-                    }
-                }
-                else if ($user && $user->hasRol('Cia_transporte')){
-                    $transcompany = $user->getTransCompany();
-                    $params['trans_company_id'] = '';
-                    if($transcompany)
-                    {
-                        $params['trans_company_id'] = $transcompany->name;
-                    }
-                }
-                else if ($user && ($user->hasRol('Deposito') || $user->hasRol('Administrador_deposito')))
-                {
-                    $warehouse = $user->getWhareHouse();
-                    $params['warehouse_id'] = '';
-                    if($warehouse)
-                    {
-                        $params['warehouse_id'] = $warehouse->id;
-                    }
-                }
 
-                $query = Process::find()
-                    ->where(['process.active'=>1])
-                    ->andFilterWhere(['agency_id'=>$params['agency_id']]);
+                $response['data'] = Process::find()
+                    ->select('process.id, 
+                                    process.bl, 
+                                    process.delivery_date, 
+                                    process.type, 
+                                    agency.name as agency_name,
+                                    COUNT(process_transaction.id) as countContainer,			 
+                                    COUNT(ticket.id) as countTicket'
+                                )
+                    ->innerJoin('agency', 'agency.id = process.agency_id')
+                    ->innerJoin("process_transaction","process_transaction.process_id = process.id")
+                    ->leftJoin("ticket","process_transaction.id = ticket.process_transaction_id")
+                    ->where(['process.active'=>1, 'process_transaction.active'=>1])
+                    ->andFilterWhere(['agency_id'=>$this->agencyId])
+                    ->andFilterWhere(['process_transaction.trans_company_id'=>$this->transCompanyId])
+                    ->groupBy(['process.id', 'process.bl', 'process.delivery_date', 'process.type', 'agency.name'])
+                    ->asArray()
+                    ->all();
 
-                if(isset($params['trans_company_id']))
-                {
-
-                    $results = Process::find()->select('process.id')
-                        ->innerJoin("process_transaction","process_transaction.process_id = process.id")
-                        ->innerJoin("trans_company","process_transaction.trans_company_id = trans_company.id")
-                        ->where(['process.active'=>1])
-                        ->andFilterWhere(['like', 'trans_company.name', $params['trans_company_id']])
-                        ->groupBy(['process.id'])
-                        ->asArray();
-
-
-                    $query->andWhere(['process.id'=>$results]);
-                }
-
-                if(isset($params['warehouse_id']))
-                {
-
-                    $results = Process::find()->select('process.id')
-                        ->innerJoin("process_transaction","process_transaction.process_id = process.id")
-                        ->innerJoin("trans_company","process_transaction.trans_company_id = trans_company.id")
-                        ->innerJoin("ticket","ticket.process_transaction_id = process_transaction.id")
-                        ->innerJoin("calendar","calendar.id = ticket.calendar_id")
-                        ->where(['process.active'=>1])
-                        ->andWhere(['process_transaction.active'=>1])
-                        ->andWhere(['ticket.active'=>1])
-                        ->andFilterWhere(['calendar.id_warehouse'=>$params['warehouse_id']])
-                        ->groupBy(['process.id'])
-                        ->asArray();
-
-                    $query->andWhere(['process.id'=>$results]);
-
-                    $results = $query->select('process.id, process.bl,agency.name, process.delivery_date,process.type')
-                                    ->asArray()
-                                    ->all();
-                }
             }
             catch ( \PDOException $e)
             {
