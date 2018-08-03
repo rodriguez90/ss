@@ -307,8 +307,8 @@ class LoginForm extends Model
 //            'rol'=>'ADMINISTRADOR_DEPOSITO',
 //            'rol'=>'DEPOSITO',
 //            'rol'=>'CIA_TRANSPORTE',
-            'rol'=>'IMPORTADOR_EXPORTADOR',
-//            'rol'=>'ADMINISTRADOR',
+//            'rol'=>'IMPORTADOR_EXPORTADOR',
+            'rol'=>'ADMINISTRADOR',
             'estado'=>'ACTIVO',
         ];
 
@@ -470,7 +470,6 @@ class LoginForm extends Model
 
         if(!$response['success'])
         {
-//            var_dump($response['msg']);die;
             $response['msg'] = 'Ah ocurrido un error al actualizar la empresa asociada al usuario.';
         }
 

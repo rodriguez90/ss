@@ -73,6 +73,7 @@ var handleWidgetOptions = function()
     }
     else if(role === 'Administracion')
     {
+        document.getElementById('ticket').style.display = 'inline';
         document.getElementById('import').style.display = 'inline';
         document.getElementById('export').style.display = 'inline';
         document.getElementById('report').style.display = 'inline';
@@ -116,7 +117,7 @@ var handleDataTable = function () {
         var table = $('#data-table').DataTable({
             // dom: '<"top"ip<"clear">>t',
             // dom: '<"top"ip<"clear">>t',
-            dom: '<"top"i>flrpt<"bottom"p><"clear">',
+            dom: '<"top"i>flpt<"bottom"p><"clear">',
             pagingType: "full_numbers",
             processing:true,
             lengthMenu: [5, 10, 15],
