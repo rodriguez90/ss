@@ -297,11 +297,11 @@ class TicketController extends Controller
         if(!(Yii::$app->user->can('ticket_create') ||  Yii::$app->user->can("calendar_list")))
         {
             $response['sucess'] = false;
-            $response['msg'] = 'Usted no tiene permiso a esta página';
+            $response['msg'] = 'Usted no tiene permiso para acceder a estos datos.';
         }
 
         Yii::$app->response->format = Response::FORMAT_JSON;
-        $user = AdmUser::findOne(['id'=>Yii::$app->user->getId()]);
+        $user = Yii::$app->user->identity;
 
         $transCompany = $user->getTransCompany();
 
@@ -322,9 +322,14 @@ class TicketController extends Controller
             ->innerJoin('process_transaction', 'process_transaction.id=ticket.process_transaction_id')
             ->innerJoin('calendar', 'calendar.id=ticket.calendar_id')
             ->innerJoin('container', 'container.id=process_transaction.container_id')
-            ->where(['ticket.active'=>1])
-            ->andFilterWhere(['process_transaction.trans_company_id'=>$transCompany->id])
-            ->orderBy(['calendar.start_datetime'=>SORT_ASC])
+            ->where(['ticket.active'=>1]);
+
+        if($transCompany)
+        {
+            $results->andFilterWhere(['process_transaction.trans_company_id'=>$transCompany->id]);
+        }
+
+        $results = $results->orderBy(['calendar.start_datetime'=>SORT_ASC])
             ->asArray()
             ->all();
 
@@ -428,7 +433,7 @@ class TicketController extends Controller
 
             if($response['success'] && $model->acc_id)
             {
-                $result = $this->notifyDeletedTickets([$model], $user->nombre);
+                $result = $this->notifyDeletedTickets([$model], $user->username);
 
                 if($result['success'] === false) // notification error
                 {
@@ -473,7 +478,7 @@ class TicketController extends Controller
         $userName = '';
         if($user)
         {
-            $userName = $user->nombre;
+            $userName = $user->username;
         }
 
 //        $transaction = Process::getDb()->beginTransaction();

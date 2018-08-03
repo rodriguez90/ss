@@ -90,7 +90,7 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        $user = AdmUser::findOne(['id'=>Yii::$app->user->getId()]);
+        $user = Yii::$app->user->identity;
         $params = Yii::$app->request->queryParams;
         $importCount = 0;
         $exportCount = 0;
@@ -100,10 +100,9 @@ class SiteController extends Controller
         if($user && ($user->hasRol('Importador')  ||  $user->hasRol('Exportador') ||  $user->hasRol('Importador_Exportador')))
         {
             $agency = $user->getAgency();
-            $params['agency_id'] = '';
             if($agency)
             {
-                $params['agency_id'] = $agency->name;
+                $searchModel->angecyId = $agency->id;
             }
 
             $importCount = Process::find()->where(['type'=>Process::PROCESS_IMPORT, 'agency_id'=>$agency->id])->count();
@@ -111,19 +110,17 @@ class SiteController extends Controller
         }
         else if ($user && $user->hasRol('Cia_transporte')){
             $transcompany = $user->getTransCompany();
-            $params['trans_company_id'] = '';
             if($transcompany)
             {
-                $params['trans_company_id'] = $transcompany->name;
+                $searchModel->transCompanyId = $transcompany->id;
             }
         }
         else if ($user && ($user->hasRol('Deposito') || $user->hasRol('Administrador_deposito')))
         {
             $warehouse = $user->getWhareHouse();
-            $params['warehouse_id'] = '';
             if($warehouse)
             {
-                $params['warehouse_id'] = $warehouse->id;
+                $searchModel->warehouseCompanyId = $warehouse->id;
             }
         }
         else if($user && $user->hasRol('Administracion'))
@@ -142,6 +139,7 @@ class SiteController extends Controller
         $myparams['exportCount'] = $exportCount;
         $ticketCount = TicketSearch::find()->count(); // FIXME: FILTER TICKET BY ROLE
         $myparams['ticketCount'] = $ticketCount;
+
         return $this->render('index', $myparams);
     }
 
