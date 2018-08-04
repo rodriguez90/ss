@@ -168,7 +168,8 @@ class ProcessSearch extends Process
         $query = Process::find()->innerJoin('agency', 'agency.id = process.agency_id')
             ->innerJoin("process_transaction","process_transaction.process_id = process.id")
             ->innerJoin("trans_company","process_transaction.trans_company_id = trans_company.id")
-            ->where(['process.active'=>1]);
+            ->where(['process.active'=>1])
+            ->andWhere(["process_transaction.active"=>1]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
