@@ -238,12 +238,7 @@ var handleDataTable = function () {
     }
 };
 
-
 $(document).ready(function () {
     Dashboard.init();
-
     handleDataTable();
-
-
-
 });

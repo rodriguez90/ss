@@ -20,42 +20,20 @@ $this->params['breadcrumbs'][] = $this->title;
             <h4 class="panel-title"><?= Html::encode($this->title) ?></h4>
         </div>
         <div class="panel-body">
-            <?php Pjax::begin(); ?>
-            <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
             <p>
                 <?= Html::a(Yii::t('app', 'Nueva Agencia'), ['create'], ['class' => 'btn btn-success']) ?>
             </p>
 
             <div class="table-responsive">
-
-            <?= GridView::widget([
-                'dataProvider' => $dataProvider,
-                'filterModel' => $searchModel,
-                'columns' => [
-                    ['class' => 'yii\grid\SerialColumn'],
-
-                    'name',
-                    'code_oce',
-                    'ruc',
-                    [
-                        'attribute' => 'active',
-                        'format' => 'text',
-                        'content' => function ($data)
-                        {
-                            return $data['active'] ? '<span class="label label-success pull-left">Activo</span>' : '<span class="label label-danger">Inactivo</span>';
-                        },
-                        'filter' => Html::activeDropDownList($searchModel, 'active', [
-                            'activo' => 'Activo', 'inactivo' => 'Inactivo',
-                        ], ['class' => 'form-control', 'prompt'=>''])
-                    ],
-
-                    ['class' => 'yii\grid\ActionColumn'],
-                ],
-            ]); ?>
-
+                <table id="data-table" class="table table-bordered nowrap" width="100%">
+                    <thead>
+                    <tr>
+                    </tr>
+                    </thead>
+                </table>
             </div>
-            <?php Pjax::end(); ?>
 
         </div>
 </div>
+
+<?php $this->registerJsFile('@web/js/modules/rd/agency/index.js', ['depends' => ['app\assets\TableAsset']]); ?>
