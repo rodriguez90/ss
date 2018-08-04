@@ -377,6 +377,8 @@ class SiteController extends Controller
 
         $process = Process::find()->innerJoin('agency', 'agency.id = process.agency_id')
             ->innerJoin("process_transaction","process_transaction.process_id = process.id")
+            ->where(['process_transaction.active'=>1])
+            ->andWhere(['process.active'=>1])
             ->andFilterWhere(['bl'=> $bl])
             ->andFilterWhere(['agency_id'=> $agency_id])
             ->andFilterWhere( ['process_transaction.trans_company_id'=>$trans_company_id])
