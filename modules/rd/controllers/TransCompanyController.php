@@ -415,6 +415,45 @@ class TransCompanyController extends Controller
         }
 
 
-        throw new NotFoundHttpException('The requested page does not exist.');
+        throw new NotFoundHttpException('Esta empresa de transporte ya no existe');
+    }
+
+    public function actionList()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $response = array();
+        $response['success'] = true;
+        $response['data'] = [];
+        $response['msg'] = '';
+        $response['msg_dev'] = '';
+
+        if($response['success'])
+        {
+            try
+            {
+                $results = TransCompany::find()
+                    ->where(['<>','active',-1])
+                    ->asArray()
+                    ->all();
+
+                foreach ($results as $result)
+                {
+                    $result['name'] = utf8_encode($result['name']);
+                    $response['data'][] = $result;
+                }
+            }
+            catch ( \PDOException $e)
+            {
+                if($e->getCode() !== '01000')
+                {
+                    $response['success'] = false;
+                    $response['msg'] = "Ah ocurrido al recuperar las empresas.";
+                    $response['msg_dev'] = $e->getMessage();
+                }
+            }
+        }
+
+        return $response;
     }
 }

@@ -17,7 +17,7 @@ var handleDataTable = function ()
             rowId: 'id',
             // "processing": true,
             // "serverSide": true,
-            "ajax": homeUrl + "/rd/agency/list",
+            "ajax": homeUrl + "/rd/trans-company/list",
             // deferRender:true,
             "columns": [
                 {
@@ -27,11 +27,11 @@ var handleDataTable = function ()
                 {   "title":'Nombre',
                     "data":"name",
                 },
-                { "title": "Código Oce",
-                    "data":"code_oce"
-                },
                 { "title": "Ruc",
                     "data":"ruc",
+                },
+                { "title": "Dirección",
+                    "data":"address",
                 },
                 { "title": "Estado",
                     "data":"active",
@@ -74,13 +74,13 @@ var handleDataTable = function ()
                             var selectHtml = "<div class=\"row row-space-2\">";
                             selectHtml += "<div class=\"col col-md-12\">" ;
                             // selectHtml += "<div class=\"col col-md-3\">";
-                            selectHtml += "<a " + "href=\"" + homeUrl + "/rd/agency/view?id=" + elementId + "\" class=\"btn btn-info btn-icon btn-circle btn-sm\" title=\"Ver\"><i class=\"fa fa-eye\"></i></a>";
+                            selectHtml += "<a " + "href=\"" + homeUrl + "/rd/trans-company/view?id=" + elementId + "\" class=\"btn btn-info btn-icon btn-circle btn-sm\" title=\"Ver\"><i class=\"fa fa-eye\"></i></a>";
                             // selectHtml+= "</div>";
                             // selectHtml += "<div class=\"col col-md-3\">";
-                            selectHtml += "<a " + "href=\"" + homeUrl + "/rd/agency/update?id=" + elementId + "\" class=\"btn btn-success btn-icon btn-circle btn-sm\" title=\"Editar\"><i class=\"fa fa-edit\"></i></a>";
+                            selectHtml += "<a " + "href=\"" + homeUrl + "/rd/trans-company/update?id=" + elementId + "\" class=\"btn btn-success btn-icon btn-circle btn-sm\" title=\"Editar\"><i class=\"fa fa-edit\"></i></a>";
                             // selectHtml+= "</div>";
                             // selectHtml += "<div class=\"col col-md-3\">";
-                            selectHtml += "<a data-confirm=\"¿Está seguro de eliminar está empresa ?\" data-method=\"post\"" + " href=\"" + homeUrl + "/rd/agency/delete?id=" + elementId + "\" class=\"btn btn-danger btn-icon btn-circle btn-sm\" title=\"Eliminar\"><i class=\"fa fa-trash\"></i></a>";
+                            selectHtml += "<a data-confirm=\"¿Está seguro de eliminar está empresa de transporte ?\" data-method=\"post\"" + " href=\"" + homeUrl + "/rd/trans-company/delete?id=" + elementId + "\" class=\"btn btn-danger btn-icon btn-circle btn-sm\" title=\"Eliminar\"><i class=\"fa fa-trash\"></i></a>";
                             // selectHtml+= "</div>";
                             selectHtml+= "</div>";
                             selectHtml+= "</div>";
