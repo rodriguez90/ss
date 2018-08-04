@@ -61,13 +61,9 @@ class TicketController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new TicketSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
+        if(!Yii::$app->user->can("ticket_list"))
+            throw new ForbiddenHttpException('Usted no tiene permiso para ver los turnos.');
+        return $this->render('index');
     }
 
     /**
@@ -79,7 +75,7 @@ class TicketController extends Controller
     public function actionView($id)
     {
         if(!Yii::$app->user->can("ticket_view"))
-            throw new ForbiddenHttpException('Usted no tiene permiso para resevar cupos.');
+            throw new ForbiddenHttpException('Usted no tiene permiso para ver turnos.');
 
         return $this->render('view', [
             'model' => $this->findModel($id),
@@ -94,7 +90,7 @@ class TicketController extends Controller
     public function actionCreate($id)
     {
         if(!Yii::$app->user->can("ticket_create"))
-            throw new ForbiddenHttpException('Usted no tiene permiso para resevar cupos.');
+            throw new ForbiddenHttpException('Usted no tiene permiso para resevar turnos.');
 
         $user = AdmUser::findOne(['id'=>Yii::$app->user->id]);
 
@@ -139,7 +135,7 @@ class TicketController extends Controller
     public function actionDelete($id)
     {
         if(!Yii::$app->user->can("ticket_delete"))
-            throw new ForbiddenHttpException('Usted no tiene permiso ver esta vista');
+            throw new ForbiddenHttpException('Usted no tiene permiso para eliminar turnos');
 
         Yii::$app->response->format = Response::FORMAT_JSON;
 
@@ -871,6 +867,65 @@ class TicketController extends Controller
             $response['success'] = false;
             $response['msg'] = "Ah ocurrido un error al notificar al TPG la eliminación de los turnos.";
             $response['msg_dev'] = $exception->getMessage();
+        }
+
+        return $response;
+    }
+
+    public function actionList()
+    {
+        if(!Yii::$app->user->can("ticket_list"))
+            throw new ForbiddenHttpException('Usted no tiene permiso para ver los turnos.');
+
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $response = array();
+        $response['success'] = true;
+        $response['data'] = [];
+        $response['msg'] = '';
+        $response['msg_dev'] = '';
+
+        if($response['success'])
+        {
+            try
+            {
+                $results = Ticket::find()
+                    ->select('ticket.id,
+                                       ticket.status,
+                                       ticket.active,
+                                       container.name as containerName,
+                                       container_type.name as containerType,
+                                       calendar.start_datetime as ticketDate,
+                                       process_transaction.register_truck as registerTruck,
+                                       process_transaction.name_driver as nameDriver,
+                                       process_transaction.register_driver as registerDriver,
+                                       process.type as processType')
+                    ->innerJoin('calendar', 'calendar.id=ticket.calendar_id')
+                    ->leftJoin('process_transaction', 'process_transaction.id=ticket.process_transaction_id')
+                    ->leftJoin('process', 'process_transaction.process_id=process.id')
+                    ->leftJoin('container', 'container.id=process_transaction.container_id')
+                    ->leftJoin('container_type', 'container_type.id=container.type_id')
+                    ->where(['process_transaction.active'=>1])
+                    ->andWhere(['ticket.active'=>1])
+                    ->asArray()
+                    ->all();
+
+                foreach ($results as $result)
+                {
+                    $result['containerName'] = utf8_encode($result['containerName']);
+                    $response['data'][] = $result;
+                }
+
+            }
+            catch ( \PDOException $e)
+            {
+                if($e->getCode() !== '01000')
+                {
+                    $response['success'] = false;
+                    $response['msg'] = "Ah ocurrido al recuperar las empresas.";
+                    $response['msg_dev'] = $e->getMessage();
+                }
+            }
         }
 
         return $response;
