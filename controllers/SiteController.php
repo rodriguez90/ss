@@ -379,6 +379,7 @@ class SiteController extends Controller
             ->innerJoin("process_transaction","process_transaction.process_id = process.id")
             ->where(['process_transaction.active'=>1])
             ->andWhere(['process.active'=>1])
+            ->andWhere(["process_transaction.active"=>1])
             ->andFilterWhere(['bl'=> $bl])
             ->andFilterWhere(['agency_id'=> $agency_id])
             ->andFilterWhere( ['process_transaction.trans_company_id'=>$trans_company_id])
@@ -395,6 +396,7 @@ class SiteController extends Controller
                 ->innerJoin("process_transaction","process_transaction.container_id = container.id")
                 ->innerJoin("process","process_transaction.process_id = process.id")
                 ->where(["process.id"=>$p->id])
+                ->andWhere(["process_transaction.active"=>1])
                 ->asArray()
                 ->all();
 
@@ -407,6 +409,7 @@ class SiteController extends Controller
                     ->innerJoin("ticket","ticket.process_transaction_id = process_transaction.id")
                     ->innerJoin("calendar","calendar.id = ticket.calendar_id")
                     ->where(["process_transaction.id"=> $container['process_trans_id']])
+                    ->andWhere(["process_transaction.active"=>1])
                     ->asArray()
                     ->one();
 
