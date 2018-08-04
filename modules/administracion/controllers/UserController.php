@@ -487,7 +487,7 @@ class UserController extends Controller
             //return $this->redirect(['create']);
             if($model)
             {
-                $model->status = 0;
+                $model->status = -1;
                 $model->save();
             }
         }
@@ -504,11 +504,16 @@ class UserController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = AdmUser::findOne(['id'=>$id])) !== null) {
+        $model = AdmUser::find()
+            ->where(['id'=>$id])
+            ->andWhere(['<>', 'status',-1])
+            ->one();
+
+        if ($model  !== null) {
             return $model;
         }
 
-        throw new NotFoundHttpException('The requested page does not exist.');
+        throw new NotFoundHttpException('El usuario no existe.');
     }
 
     public function actionGetagencias(){
@@ -706,5 +711,56 @@ class UserController extends Controller
             }
         }
         return $response;;
+    }
+
+    public function actionList()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $response = array();
+        $response['success'] = true;
+        $response['data'] = [];
+        $response['msg'] = '';
+        $response['msg_dev'] = '';
+
+        if($response['success'])
+        {
+            try
+            {
+                $results = AdmUser::find()
+                    ->select('adm_user.id, 
+                                    adm_user.username, 
+                                    adm_user.nombre, 
+                                    adm_user.apellidos, 
+                                    adm_user.email, 
+                                    adm_user.created_at, 
+                                    adm_user.status, 
+                                    auth_assignment.item_name as role')
+                    ->leftJoin('auth_assignment', 'auth_assignment.user_id=adm_user.id')
+                    ->where(['<>','status',-1])
+//                    ->groupBy(['adm_user.id']) // FIXME: CHECK THIS
+                    ->asArray()
+                    ->all();
+
+                foreach ($results as $result)
+                {
+                    $result['nombre'] = utf8_encode($result['nombre']);
+                    $result['apellidos'] = utf8_encode($result['apellidos']);
+                    $result['created_at'] = date('Y/m/d',$result['created_at']);
+                    $response['data'][] = $result;
+                }
+            }
+            catch ( \PDOException $e)
+            {
+                if($e->getCode() !== '01000')
+                {
+                    $response['success'] = false;
+                    $response['msg'] = "Ah ocurrido al recuperar las empresas.";
+                    $response['msg_dev'] = $e->getMessage();
+                }
+            }
+        }
+
+        return $response;
     }
 }

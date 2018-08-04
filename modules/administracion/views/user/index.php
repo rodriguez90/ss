@@ -52,67 +52,23 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 <?php Pjax::begin(); ?>
 
-                <div class="table-responsive">
-
-
-                    <?= GridView::widget([
-                        'dataProvider' => $dataProvider,
-                        'filterModel' => $searchModel,
-                        'columns' => [
-                            //['class' => 'yii\grid\SerialColumn'],
-                            //'id',
-                            'username',
-                            'nombre',
-                            'apellidos',
-                            'email',
-
-                            [
-                                'attribute' => 'created_at',
-                                'label' => 'Fecha de Creación',
-//                                'format' => 'html',// 'date',//date,datetime, time
-////                                'headerOptions' => ['width' => '120'],
-
-                                'content' => function ($data) {
-                                    return (new \yii\i18n\Formatter())->asDate($data->created_at, 'dd/mm/yyyy');
-                                },
-                                'filter' => DatePicker::widget([
-                                    'model' => $searchModel,
-                                    'attribute' => 'created_at',
-                                    'value'=>'created_at',
-                                    'language' => 'es',
-                                    'dateFormat' => 'php:Y-m-d',
-                                    'clientOptions' => [
-                                        'prevText' => '<i style="cursor: pointer" class="fa fa-chevron-left"></i>',
-                                        'nextText' => '<i style="cursor: pointer" class="fa fa-chevron-right"></i>',
-                                    ]
-                                ])
-                            ],
-                            'item_name',
-
-                            [
-                                'attribute' => 'status',
-                                'format' => 'text',
-                                'content' => function ($data) {
-                                    return $data['status'] ? '<span class="label label-success pull-left">Activo</span>' : '<span class="label label-danger">Inactivo</span>';
-                                },
-                                'filter' => Html::activeDropDownList($searchModel, 'status', [
-                                    'activo' => 'Activo', 'inactivo' => 'Inactivo',
-                                ], ['class' => 'form-control', 'prompt' => ''])
-                            ],
-
-                            ['class' => 'yii\grid\ActionColumn' ],
-                        ],
-                        'options'=>['class' => 'table table-striped table-responsive table-condensed table-bordered']
-                    ]); ?>
-
-            </div>
-
+                    <div class="table-responsive">
+                        <table id="data-table" class="table table-bordered nowrap" width="100%">
+                            <thead>
+                            <tr>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
 
                 <?php Pjax::end(); ?>
 
             </div>
         </div>
     </div>
+</div>
+
+<?php $this->registerJsFile('@web/js/modules/administracion/user/index.js', ['depends' => ['app\assets\TableAsset']]); ?>
 
 
 
