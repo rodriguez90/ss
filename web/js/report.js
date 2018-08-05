@@ -194,8 +194,6 @@ var handleDataTable = function ()
 
 $(function ()
 {
-    console.log(role);
-
     if(asociatedEntity !== null)
     {
         if(role == 'Importador_Exportador')

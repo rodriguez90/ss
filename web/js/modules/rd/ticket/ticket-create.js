@@ -656,9 +656,6 @@ var handleTableInWizar = function() {
 var handleTable3InWizar = function() {
     if ($('#data-table3').length !== 0) {
 
-        // var table = $('#data-table3').DataTable();
-        // table.destroy();
-
         $('#data-table3').DataTable({
             dom: '<"top"iflp<"clear">>rt',
             pagingType: "full_numbers",
