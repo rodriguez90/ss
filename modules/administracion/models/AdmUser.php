@@ -390,6 +390,7 @@ class AdmUser extends ActiveRecord implements IdentityInterface
 
     public function processCondition()
     {
+        $params = [];
         if($this->hasRol('Importador_Exportador'))
         {
             $agency = $this->getAgency();
@@ -408,6 +409,11 @@ class AdmUser extends ActiveRecord implements IdentityInterface
                 $params['trans_company_id'] = $transcompany->id;
             }
         }
+        else if ($this->hasRol('Deposito') || $this->hasRol('Administrador_deposito') || $this->hasRol('Administracion') )
+        {
+            $params['trans_company_id'] = null;
+        }
+
 //        else if ($this->hasRol('Deposito') || $this->hasRol('Administrador_deposito'))
 //        {
 //            $wareHouse = $this->getWhareHouse();

@@ -59,8 +59,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 </div>
 
             <div class="m-t-20">
-<!--              Regístrate <a href=" --><?//= Url::to(['/site/register']) ?><!--" class="text-success">aquí</a>-->
-              Regístrate <a href="http://www.tpg.com.ec/webtpg/webpages/wpg_preregistro.php" class="text-success">aquí</a>
+              Regístrese <a href="http://www.tpg.com.ec/webtpg/webpages/wpg_preregistro.php" class="text-success">aquí</a>
             </div>
 
 

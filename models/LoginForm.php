@@ -83,7 +83,7 @@ class LoginForm extends Model
         }
         elseif ($userData == null)
         {
-            $this->addError('error', 'Usuario ó Contraseña Incorrecta.');
+            $this->addError('error', 'Usuario o Contraseña Incorrecta.');
             return false;
         }
         elseif ($userData !== null && $userData['estado'] !== "ACTIVO")
@@ -306,9 +306,9 @@ class LoginForm extends Model
             'nombre_empresa'=>'trans prueba',
 //            'rol'=>'ADMINISTRADOR_DEPOSITO',
 //            'rol'=>'DEPOSITO',
-//            'rol'=>'CIA_TRANSPORTE',
+            'rol'=>'CIA_TRANSPORTE',
 //            'rol'=>'IMPORTADOR_EXPORTADOR',
-            'rol'=>'ADMINISTRADOR',
+//            'rol'=>'ADMINISTRADOR',
             'estado'=>'ACTIVO',
         ];
 

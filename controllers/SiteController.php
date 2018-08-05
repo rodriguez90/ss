@@ -344,40 +344,67 @@ class SiteController extends Controller
 
     public function actionReport()
     {
-
-        $searchModel = null;
-        $dataProvider = null;
-
-        $search_bl = Yii::$app->request->post("bl");
-        $search_agency_id =  Yii::$app->request->post("agency_id");
-        $search_trans_company =  Yii::$app->request->post("trans_company_id");
-
-
-        if(Yii::$app->request->isPost)
+        if(Yii::$app->request->post())
         {
-            $searchModel = new ProcessSearch();
-            $dataProvider = $searchModel->searchReport(Yii::$app->request->post());
+            Yii::$app->response->format = Response::FORMAT_JSON;
+
+            $bl = Yii::$app->request->post("bl");
+            $agencyId =  Yii::$app->request->post("agencyId");
+            $transCompanyId =  Yii::$app->request->post("transCompanyId");
+
+            $response = array();
+            $response['success'] = true;
+            $response['data'] = [];
+            $response['msg'] = '';
+            $response['msg_dev'] = '';
+
+            try{
+
+                $response['data'] = Process::find()
+                    ->select('process.id, 
+                                process.bl, 
+                                process.delivery_date, 
+                                process.type, 
+                                agency.name as agencyName,
+                                COUNT(process_transaction.id) as containerAmount,			 
+                                COUNT(ticket.id) as countTicket'
+                    )
+                    ->innerJoin('agency', 'agency.id = process.agency_id')
+                    ->innerJoin("process_transaction","process_transaction.process_id = process.id")
+                    ->leftJoin("ticket","process_transaction.id = ticket.process_transaction_id")
+                    ->where(['process.active'=>1, 'process_transaction.active'=>1])
+                    ->andFilterWhere(['process.bl'=>$bl])
+                    ->andFilterWhere(['agency_id'=>$agencyId])
+                    ->andFilterWhere(['process_transaction.trans_company_id'=>$transCompanyId])
+                    ->groupBy(['process.id', 'process.bl', 'process.delivery_date', 'process.type', 'agency.name'])
+                    ->asArray()
+                    ->all();
+
+            }
+            catch ( \PDOException $e)
+            {
+                if($e->getCode() !== '01000')
+                {
+                    $response['success'] = false;
+                    $response['msg'] = "Ah ocurrido al recuperar los procesos.";
+                    $response['msg_dev'] = $e->getMessage();
+                }
+            }
+
+            return $response;
         }
 
-        return $this->render('report', [
-            'searchModel'=>$searchModel,
-            'dataProvider'=>$dataProvider,
-            'search_bl'=>$search_bl,
-            'search_agency_id'=>$search_agency_id,
-            'search_trans_company'=>$search_trans_company,
-
-        ]);
+        return $this->render('report');
     }
 
     public function actionPrintreport()
     {
-        $bl = Yii::$app->request->get('bl');
-        $agency_id = Yii::$app->request->get('agency_id');
-        $trans_company_id = Yii::$app->request->get('trans_company_id');
+        $processId = Yii::$app->request->get('process');
 
         $process = Process::find()->innerJoin('agency', 'agency.id = process.agency_id')
             ->innerJoin("process_transaction","process_transaction.process_id = process.id")
             ->where(['process_transaction.active'=>1])
+            ->andWhere(['process.id'=>$processId])
             ->andWhere(['process.active'=>1])
             ->andWhere(["process_transaction.active"=>1])
             ->andFilterWhere(['bl'=> $bl])
@@ -387,8 +414,8 @@ class SiteController extends Controller
 
         $result = [];
 
-        foreach ($process as $p){
-
+        foreach ($process as $p)
+        {
             $row = [];
             $row["process"] = $p;
             $containers = Container::find()
@@ -400,10 +427,9 @@ class SiteController extends Controller
                 ->asArray()
                 ->all();
 
-
-
             $contickes = [];
-            foreach ($containers as $container){
+            foreach ($containers as $container)
+            {
                $start_datetime  = ProcessTransaction::find()
                     ->select('calendar.start_datetime')
                     ->innerJoin("ticket","ticket.process_transaction_id = process_transaction.id")
@@ -644,4 +670,5 @@ class SiteController extends Controller
 
         return $response;
     }
+
 }

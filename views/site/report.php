@@ -53,19 +53,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
             <div class="panel-body">
 
-                <?php $form = ActiveForm::begin(
-                    [
-                        'id' => 'report-form',
-                        'enableClientScript' => false,
-                        'options' =>
-                            [
-                                'enctype' => 'multipart/form-data',
-                                'class' => 'form-horizontal',
-
-                            ],
-                    ]
-                ); ?>
-
                     <div class="col-md-4 col-sm-4">
                         <div class="form-group">
                             <div class="col-md-12 col-sm-12">
@@ -107,82 +94,30 @@ $this->params['breadcrumbs'][] = $this->title;
                         </div>
                     </div>
 
-
                     <div class="col-md-12 col-sm-12">
 
                         <div class="col-md-4 col-sm-4">
-
                         </div>
                         <div class="col-md-4 col-sm-4">
-
                         </div>
                         <div class="col-md-4 col-sm-4">
-
                             <div class="form-group" style="float: right">
-
-                                <?= Html::submitButton(Yii::t('app', 'Buscar'), ['class' => 'btn btn-primary']) ?>
-
-                                <a id="print-process" target="_blank" rel="noopener noreferrer" class="<?= $dataProvider !== null ?  'btn btn-inverse' : 'btn btn-inverse disabled' ?>"  href="<?= Url::toRoute(['/site/printreport', 'search_bl'=>$search_bl, 'agency_id'=>$search_agency_id,'trans_company_id'=>$search_trans_company])?>" style="color: white;font-size: 14px;" title="Exportar PDF" > <i class="fa fa-file-pdf-o"></i></a>
-
+                                <a id="search" class="btn btn-primary"  href="#">Buscar</a>
+                                <a id="print-process" target="_blank" rel="noopener noreferrer" class="btn btn-inverse"  href="#" style="color: white;font-size: 14px;" title="Exportar PDF" > <i class="fa fa-file-pdf-o"></i></a>
                             </div>
-
                         </div>
-
                     </div>
 
-                <?php ActiveForm::end(); ?>
-
-                    <div class="col-md-12 col-sm-12">
-                        <?php
-                        if ($dataProvider != null)
-                        {
-                           echo GridView::widget([
-                                'dataProvider' => $dataProvider,
-                                'columns' => [
-
-                                    [
-                                        'class' => 'yii\grid\DataColumn',
-                                        'attribute' => 'bl',
-                                        'label' => 'BL'
-                                    ],
-                                    [
-                                        'class' => 'yii\grid\DataColumn',
-                                        'attribute' => 'id',
-                                        'label' => 'Número de recepción'
-                                    ],
-                                    [
-                                        'class' => 'yii\grid\DataColumn',
-                                        'attribute' => 'agency_id',
-                                        'value' => 'agency.name',
-                                    ],
-                                    [
-                                        'attribute' => 'delivery_date',
-                                        'format' => 'date',
-                                    ],
-                                    [
-                                        'class' => 'yii\grid\DataColumn',
-                                        'label' => "Contenedores",
-    //                                    'attribute' => 'containerAmount'
-                                        'value'=>function($model)
-                                        {
-                                            return count($model->getProcessTransactionsByUser());
-                                        }
-                                    ],
-                                    [
-                                        'class' => 'yii\grid\DataColumn', // can be omitted, as it is the default
-                                        'attribute' => 'type',
-                                        'value' => function ($data) {
-                                            return Process::PROCESS_LABEL[$data['type']];
-                                        },
-                                        'filter' => ['1' => 'Importación', '2' => 'Exportación',],
-                                    ],
-                                ],
-                                'options' => ['class' => 'table table-striped table-bordered']
-                            ]);
-                        }
-                        ?>
+                <div class="col-md-12 col-sm-12">
+                    <div class="table-responsive">
+                        <table id="data-table" class="table table-bordered nowrap" width="100%">
+                            <thead>
+                            <tr>
+                            </tr>
+                            </thead>
+                        </table>
                     </div>
-
+                </div>
             </div>
         </div>
     </div>
@@ -191,9 +126,10 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <script type="text/javascript">
     var role = '<?php echo $rol; ?>';
-    var data = <?php echo json_encode($asociatedEntity);?>;
+    var asociatedEntity = <?php echo json_encode($asociatedEntity);?>;
 </script>
 
-<?php $this->registerJsFile('@web/js/report.js', ['depends' => ['app\assets\FormAsset']]); ?>
+<?php $this->registerJsFile('@web/js/report.js', ['depends' => ['app\assets\FormAsset','app\assets\TableAsset' ]]); ?>
+<?php $this->registerJsFile('@web/js/utils.js'); ?>
 
 
