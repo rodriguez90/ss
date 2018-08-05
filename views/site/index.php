@@ -101,7 +101,7 @@ if($user)
             <div class="panel-heading">
                 <div class="panel-heading-btn">
                     <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
-                    <a id="print-process"  target="_blank" rel="noopener noreferrer" href="<?= Url::to(['/site/print']) ?>" style="color: white;font-size: 14px;" title="Exportar PDF" > <i class="fa fa-file-pdf-o"></i></a>
+                    <a id="print-process"  target="_blank" rel="noopener noreferrer" href="#" style="color: white;font-size: 14px;" title="Exportar PDF" > <i class="fa fa-file-pdf-o"></i></a>
                 </div>
                 <h4 class="panel-title">Solicitudes realizadas</h4>
             </div>

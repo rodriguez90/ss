@@ -164,13 +164,9 @@ var handleBootstrapWizardsValidation = function() {
                                 containers.push(value);
                             } );
 
-                        var blCode = $("#blCode").val();
-
-                        // set label text
-
                         var process = {
                             "Process[agency_id]": agency.id, // FIXME THIS DEFINE BY USER WITH ROLE IMPORTER/EXPORTER
-                            "Process[bl]":blCode,
+                            "Process[bl]":bl,
                             "Process[active]":1,
                             "Process[delivery_date]":processDeliveryDate,
                             "Process[type]":processType,

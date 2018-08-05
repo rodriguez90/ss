@@ -1035,7 +1035,7 @@ class ProcessController extends Controller
         if(!isset($bl))
         {
             $response['success'] = false;
-            $response['msg'] = "Debe especificar el BL y el tipo de trámite de búsqueda.";
+            $response['msg'] = "Debe especificar el BL.";
         }
 
         if($response['success'])
@@ -1048,7 +1048,7 @@ class ProcessController extends Controller
                                             ->innerJoin('process_transaction', 'process.id=process_transaction.process_id')
                                             ->select('bl')
                                             ->where(['like', 'bl', $bl])
-                                            ->andWhere($user->processCondition())
+                                            ->andFilterWhere($user->processCondition())
                                             ->groupBy(['bl'])
                                             ->all();
 

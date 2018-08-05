@@ -22,7 +22,10 @@ var hasErrorContainer = false;
 
 var systemMode = 1; // only for testing 0-offline  1-online
 
+var bl = null;
+
 var cleanUI = function () {
+    bl = null;
     selectedContainers = [];
     containertDataMap.clear();
 
@@ -439,10 +442,16 @@ $(document).ready(function () {
     TableManageTableSelect.init()
 
     $('#blCode').parsley().on('field:success', function() {
+        // alert('success');
         $('#search-container').prop('disabled', false)
     }).on('field:error', function () {
+        cleanUI();
         $('#search-container').prop('disabled', true)
     });
+
+    // $('#blCode').change(function() {
+    //     cleanUI();
+    // });
 
     // stop watch
     timerId = setInterval(handleStopWatch, 1000);
@@ -453,7 +462,7 @@ $(document).ready(function () {
     // search container
     $('#search-container').click( function() {
 
-        var bl = $('#blCode').val();
+        bl = $('#blCode').val();
         cleanUI();
 
         if(systemMode == 1)
