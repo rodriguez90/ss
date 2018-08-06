@@ -19,6 +19,8 @@ class CalendarAsset extends AssetBundle
 		'plugins/bootstrap-select/bootstrap-select.min.css',
     ];
     public $js = [
+//        'plugins/fullcalendar/lib/jquery.min.js',
+//        'plugins/fullcalendar/lib/jquery-ui.custom.min.js',
         'plugins/fullcalendar/lib/moment.min.js',
         'plugins/fullcalendar/fullcalendar.js',
         'plugins/fullcalendar/lang/es.js',

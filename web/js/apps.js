@@ -46,6 +46,54 @@ Website: http://www.seantheme.com/color-admin-v1.9/admin/
     <!-- ======== APPLICATION SETTING ======== -->
     Application Controller
 */
+/*
+Template Name: Color Admin - Responsive Admin Dashboard Template build with Twitter Bootstrap 3.3.5
+Version: 1.9.0
+Author: Sean Ngu
+Website: http://www.seantheme.com/color-admin-v1.9/admin/
+    ----------------------------
+        APPS CONTENT TABLE
+    ----------------------------
+
+    <!-- ======== GLOBAL SCRIPT SETTING ======== -->
+    01. Handle Scrollbar
+
+    02. Handle Sidebar - Menu
+    03. Handle Sidebar - Mobile View Toggle
+    04. Handle Sidebar - Minify / Expand
+    05. Handle Page Load - Fade in
+    06. Handle Panel - Remove / Reload / Collapse / Expand
+    07. Handle Panel - Draggable
+    08. Handle Tooltip & Popover Activation
+    09. Handle Scroll to Top Button Activation
+
+    <!-- ======== Added in V1.2 ======== -->
+    10. Handle Theme & Page Structure Configuration
+    11. Handle Theme Panel Expand
+    12. Handle After Page Load Add Class Function - added in V1.2
+
+    <!-- ======== Added in V1.5 ======== -->
+    13. Handle Save Panel Position Function - added in V1.5
+    14. Handle Draggable Panel Local Storage Function - added in V1.5
+    15. Handle Reset Local Storage - added in V1.5
+
+    <!-- ======== Added in V1.6 ======== -->
+    16. Handle IE Full Height Page Compatibility - added in V1.6
+    17. Handle Unlimited Nav Tabs - added in V1.6
+
+    <!-- ======== Added in V1.7 ======== -->
+    18. Handle Mobile Sidebar Scrolling Feature - added in V1.7
+
+    <!-- ======== Added in V1.9 ======== -->
+    19. Handle Top Menu - Unlimited Top Menu Render - added in V1.9
+    20. Handle Top Menu - Sub Menu Toggle - added in V1.9
+    21. Handle Top Menu - Mobile Sub Menu Toggle - added in V1.9
+    22. Handle Top Menu - Mobile Top Menu Toggle - added in V1.9
+    23. Handle Clear Sidebar Selection & Hide Mobile Menu - added in V1.9
+
+    <!-- ======== APPLICATION SETTING ======== -->
+    Application Controller
+*/
 
 
 

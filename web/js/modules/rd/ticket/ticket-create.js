@@ -1232,6 +1232,8 @@ var handleCheckSwitcher = function()
 
 $(document).ready(function () {
 
+    // var jq = jQuery.noConflict();
+
     // console.log(modelId);
     // console.log(transCompanyId);
     // console.log(transCompanyRuc);
@@ -1247,9 +1249,9 @@ $(document).ready(function () {
     handleTable3InWizar();
     handleCheckSwitcher();
     fetchProcessTransactions();
-    
 
-
+    // console.log($('td.fc-head-container.fc-widget-header'));
+    // $('td.fc-head-container.fc-widget-header').css('padding', 0);
     // stop watch
     timerId = setInterval(handleStopWatch, 1000);
 

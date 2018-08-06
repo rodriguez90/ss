@@ -55,6 +55,23 @@ else if ($intVal === Process::PROCESS_EXPORT)
     {
         margin: 0px 0px 0px 0px; !important;
     }
+    .fc-axis {
+        height: 30px; !important;
+    }
+
+    /*.fc-widget-header*/
+    /*{*/
+        /*margin: 0px 0px 0px 0px; !important;*/
+        /*padding: 0px 0px 0px 0px; !important;*/
+    /*}*/
+
+    /*table thead tr td.fc-head-container.fc-widget-header*/
+    /*{*/
+        /*!*display: none;: none; !important;*!*/
+
+        /*padding: 0px 0px 0px 0px; !important;*/
+    /*}*/
+
 </style>
 
 <div class="panel panel-inverse p-3">
