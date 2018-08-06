@@ -52,6 +52,7 @@ var handleDataTable = function ()
                 //     "data":null
                 // },
             ],
+            "order": [[ 3, 'des' ]],
             columnDefs: [
                 {
                     orderable: true,
@@ -64,7 +65,7 @@ var handleDataTable = function ()
                     render: function ( data, type, full, meta )
                     {
 
-                        return moment(data).format('DD-MM-YYYY');
+                        return moment(data).format('DD-MM-YYYY H:mm');
                     },
                 },
                 {

@@ -71,7 +71,7 @@ class LoginForm extends Model
         $customPassword = $this->makeTPGPassword($this->password);
         $response = $this->tpgLogin($this->username, $customPassword); // FIXME en produccion pasar el $customPassword
 //        $response = $this->tpgLoginOffLine($this->username, $customPassword);
-
+//
 		$userData = $response['user'];
 
 //		$transaction = Yii::$app->db->beginTransaction();
@@ -304,11 +304,11 @@ class LoginForm extends Model
             'email' => 'test@co.cu',
             'ruc_empresa'=> '1291750490001',
             'nombre_empresa'=>'trans prueba',
-//            'rol'=>'ADMINISTRADOR_DEPOSITO',
+            'rol'=>'ADMINISTRADOR_DEPOSITO',
 //            'rol'=>'DEPOSITO',
 //            'rol'=>'CIA_TRANSPORTE',
 //            'rol'=>'IMPORTADOR_EXPORTADOR',
-            'rol'=>'ADMINISTRADOR',
+//            'rol'=>'ADMINISTRADOR',
             'estado'=>'ACTIVO',
         ];
 

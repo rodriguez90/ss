@@ -653,6 +653,7 @@ class SiteController extends Controller
                     ->andFilterWhere(['agency_id'=>$this->agencyId])
                     ->andFilterWhere(['process_transaction.trans_company_id'=>$this->transCompanyId])
                     ->groupBy(['process.id', 'process.bl', 'process.delivery_date', 'process.type', 'agency.name'])
+                    ->orderBy(['process.delivery_date'=>SORT_DESC])
                     ->asArray()
                     ->all();
 

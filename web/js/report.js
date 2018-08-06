@@ -149,6 +149,7 @@ var handleDataTable = function ()
                     "data":"type",
                 },
             ],
+            "order": [[ 2, 'des' ]],
              columnDefs: [
                 {
                     orderable: true,
@@ -194,6 +195,8 @@ var handleDataTable = function ()
 
 $(function ()
 {
+    console.log(role);
+    console.log(asociatedEntity);
     if(asociatedEntity !== null)
     {
         if(role == 'Importador_Exportador')
@@ -209,7 +212,7 @@ $(function ()
     $("#bl").select2(
     {
         language: "es",
-        placeholder: 'Seleccione el BL',
+        placeholder: 'Seleccione el BL o Booking',
         width: '100%',
         closeOnSelect: true,
         allowClear:true,
@@ -254,10 +257,10 @@ $(function ()
         document.getElementById('agency_container').style.display = 'inline';
         handleSelectCompanies();
     }
-    else if( role == 'Administracion')
+    else if( role == 'Administracion' || role == 'Administrador_deposito' || role == 'Deposito')
     {
         document.getElementById('trans_company_container').style.display = 'inline';
-        document.getElementById('trans_company_container').style.display = 'inline';
+        document.getElementById('agency_container').style.display = 'inline';
         handleSelectCompanies();
         handleSelectTransCompanies();
     }
