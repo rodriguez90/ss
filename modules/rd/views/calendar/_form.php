@@ -162,6 +162,7 @@ CalendarAsset::register($this);
                                 <option value='21'>21:00</option>
                                 <option value='22'>22:00</option>
                                 <option value='23'>23:00</option>
+                                <option value='24'>23:59</option>
                             </select>
                         </div>
 

@@ -20,14 +20,11 @@ $(function (){
 		for(var i=0; i < events.length; i++)
 		{
 			var event = events[i];
-			// console.log(event.start);
-			// console.log(moment(event.start).format('YYYY-MM-DD HH:mm:ss Z'));
 			event.start = moment(event.start).format('YYYY-MM-DD HH:mm:ss Z');
 			event.end = moment(event.end).format('YYYY-MM-DD HH:mm:ss Z');
 			events2.push(event);
 		}
 
-        console.log(events2);
         $.ajax({
             url: homeUrl + "/rd/calendar/create",
             dataType: 'json',
@@ -37,14 +34,12 @@ $(function (){
                 $("#modal-select-bussy").modal("show");
             },
             success: function (response) {
-                // console.log(response);
                 $("#modal-select-bussy").modal("hide");
 
                 if(response['status'])
                 {
-
-
-                    $.each(response["events"],function (i) {
+                    $.each(response["events"],function (i)
+                    {
 
                         var response_start = response["events"][i].start.split(' ');
                         var response_end = response["events"][i].end.split(' ');
@@ -76,10 +71,8 @@ $(function (){
                             var event_end = events[j].end;
                             if (event_start.getTime() === start_event_db.getTime() && event_end.getTime() === end_event_db.getTime()) {
                                 events[j].title = response["events"][i].title;
-                                // console.log(" actualizado");
                             }
                         }
-
                     });
 
                   $('#calendar').fullCalendar('removeEvents');
@@ -92,9 +85,6 @@ $(function (){
                     text: response['msg'],
                     time:5000,
                 });
-
-                console.log("response :",response);
-
             },
             error: function (response) {
                 $("#modal-select-bussy").modal("hide");
@@ -105,15 +95,14 @@ $(function (){
         return false;
     });
 
-
     $("#add-cupos").click(function () {
 
         var evetsUpdate = false;
 
         if( $("#start").val() != "" && $("#end").val() != "" &&  $("#selectpicker-desde").val() != "" && $("#selectpicker-hasta").val() != "" && $("#amount").val() ){
 
-            if( parseInt($("#selectpicker-desde").val())  <= parseInt($("#selectpicker-hasta").val()) ){
-
+            if( parseInt($("#selectpicker-desde").val())  <= parseInt($("#selectpicker-hasta").val()) )
+            {
                 var start = $("#start").val().split("-");
                 var d_start = start[0];
                 var m_start = start[1];
@@ -135,11 +124,13 @@ $(function (){
                 ini = new Date(ini.getTime() +  parseInt(desde) * hora );
                 fin = new Date(fin.getTime() +  parseInt(desde) * hora );
 
-                while  ( ini <= fin){
+                while  ( ini <= fin)
+                {
                     var h_stard = ini;
                     var h_end = new Date( ini.getTime() - parseInt(desde) * hora+ parseInt(hasta) * hora);
 
-                    while (h_stard < h_end){
+                    while (h_stard < h_end)
+                    {
                         var h_end_aux =new Date( h_stard.getTime() + hora );
                         var event = {
                             update:false,
@@ -155,10 +146,12 @@ $(function (){
                         };
 
                         var pos = -1;
-                        for(var i = 0; i<events.length; i++){
+                        for(var i = 0; i<events.length; i++)
+                        {
                             var event_start = events[i].start;
                             var event_end = events[i].end;
-                            if( event_start.getTime() === h_stard.getTime() && event_end.getTime() === h_end_aux.getTime()){
+                            if( event_start.getTime() === h_stard.getTime() && event_end.getTime() === h_end_aux.getTime())
+                            {
                                 //pregnutar antes d grabar
                                 pos = i;
                                 evetsUpdate = true;
@@ -166,13 +159,16 @@ $(function (){
                             }
                         }
 
-                        if(pos == -1){
+                        if(pos == -1)
+                        {
                             events.push( event );
-                        }else{
+                        }
+                        else
+                        {
                             events[pos].title = event['title'];
                             events[pos].className = ['event_rd bg-purple'];
                             events[pos].update = true;
-                           }
+                        }
                         h_stard = new Date( h_stard.getTime() + hora );
                     }
                     var aux = ini.getTime();
@@ -182,8 +178,6 @@ $(function (){
                 $('#calendar').fullCalendar('removeEvents');
                 $('#calendar').fullCalendar('addEventSource',events);
                 $('#calendar').fullCalendar('refetchEvents');
-
-                // console.log("addEvens",events);
 
             }else{
                 alert("!Error. El campo 'Desde' tiene que ser menor que el campo 'Hasta'.")
@@ -442,7 +436,6 @@ $(function (){
         }
     });
 
-
     $('#range').datepicker({
         todayHighlight: true,
         format:'dd-mm-yyyy',
@@ -450,8 +443,6 @@ $(function (){
     });
 
     $('.selectpicker').selectpicker('render');
-
-
 });
 
 
