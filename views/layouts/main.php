@@ -69,10 +69,10 @@ $user = Yii::$app->user->identity;
                                     echo '</span> <b class="caret"></b>';
                                 echo '</a>';
                         echo '<ul class="dropdown-menu animated fadeInLeft">';
-                            echo '<li class="arrow"></li>';
-                            echo '<li><a href="'. Url::toRoute(['/administracion/user/update', 'id'=>$user->getId()]).'">Editar Perfil</a></li>';
-//                            echo '<li><a href="javascript:;">Configuraciones</a></li>';
-                            echo '<li class="divider"></li>';
+//                            echo '<li class="arrow"></li>';
+//                            echo '<li><a href="'. Url::toRoute(['/administracion/user/update', 'id'=>$user->getId()]).'">Editar Perfil</a></li>';
+////                            echo '<li><a href="javascript:;">Configuraciones</a></li>';
+//                            echo '<li class="divider"></li>';
 
 
                             if(!Yii::$app->user->isGuest ){

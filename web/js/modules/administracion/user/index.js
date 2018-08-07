@@ -91,7 +91,7 @@ var handleDataTable = function ()
                             selectHtml += "<a " + "href=\"" + homeUrl + "/administracion/user/view?id=" + elementId + "\" class=\"btn btn-info btn-icon btn-circle btn-sm\" title=\"Ver\"><i class=\"fa fa-eye\"></i></a>";
                             // selectHtml+= "</div>";
                             // selectHtml += "<div class=\"col col-md-3\">";
-                            selectHtml += "<a " + "href=\"" + homeUrl + "/administracion/user/update?id=" + elementId + "\" class=\"btn btn-success btn-icon btn-circle btn-sm\" title=\"Editar\"><i class=\"fa fa-edit\"></i></a>";
+                            // selectHtml += "<a " + "href=\"" + homeUrl + "/administracion/user/update?id=" + elementId + "\" class=\"btn btn-success btn-icon btn-circle btn-sm\" title=\"Editar\"><i class=\"fa fa-edit\"></i></a>";
                             // selectHtml+= "</div>";
                             // selectHtml += "<div class=\"col col-md-3\">";
                             selectHtml += "<a data-confirm=\"¿Está seguro de eliminar este usuario ?\" data-method=\"post\"" + " href=\"" + homeUrl + "/administracion/user/delete?id=" + elementId + "\" class=\"btn btn-danger btn-icon btn-circle btn-sm\" title=\"Eliminar\"><i class=\"fa fa-trash\"></i></a>";

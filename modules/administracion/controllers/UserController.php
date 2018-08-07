@@ -241,6 +241,7 @@ class UserController extends Controller
      */
     public function actionUpdate($id)
     {
+        throw new ForbiddenHttpException('Esta vista no esta disponible.');
 
         if ( \Yii::$app->user->can('user_update') || \Yii::$app->user->getId() == $id  ) {
 
