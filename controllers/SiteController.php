@@ -370,8 +370,8 @@ class SiteController extends Controller
                                 COUNT(ticket.id) as countTicket'
                     )
                     ->innerJoin('agency', 'agency.id = process.agency_id')
-                    ->innerJoin("process_transaction","process_transaction.process_id = process.id and 'process_transaction.active'=>1")
-                    ->leftJoin("ticket","process_transaction.id = ticket.process_transaction_id and 'ticket.active'=>1")
+                    ->innerJoin("process_transaction","process_transaction.process_id = process.id and process_transaction.active = 1")
+                    ->leftJoin("ticket","process_transaction.id = ticket.process_transaction_id and ticket.active = 1")
                     ->where(['process.active'=>1])
                     ->andFilterWhere(['process.bl'=>$bl])
                     ->andFilterWhere(['agency_id'=>$agencyId])
