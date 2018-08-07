@@ -52,7 +52,7 @@ var handleDataTable = function ()
                 //     "data":null
                 // },
             ],
-            "order": [[ 3, 'des' ]],
+            "order": [[ 3, 'des']],
             columnDefs: [
                 {
                     orderable: true,

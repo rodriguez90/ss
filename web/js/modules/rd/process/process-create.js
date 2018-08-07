@@ -461,9 +461,9 @@ $(document).ready(function () {
 
     // search container
     $('#search-container').click( function() {
+        cleanUI();
 
         bl = $('#blCode').val();
-        cleanUI();
 
         if(systemMode == 1)
         {

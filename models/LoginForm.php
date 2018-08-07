@@ -296,7 +296,6 @@ class LoginForm extends Model
         $response['user'] = null;
         $response['msg'] = '';
         $response['msg_dev'] = '';
-
         $response['user'] = [
             'user_id'=> $this->username,
             'nombre'=> $this->username,
@@ -305,10 +304,10 @@ class LoginForm extends Model
             'ruc_empresa'=> '1291750490001',
             'nombre_empresa'=>'trans prueba',
 //            'rol'=>'ADMINISTRADOR_DEPOSITO',
-            'rol'=>'DEPOSITO',
+//            'rol'=>'DEPOSITO',
 //            'rol'=>'CIA_TRANSPORTE',
 //            'rol'=>'IMPORTADOR_EXPORTADOR',
-//            'rol'=>'ADMINISTRADOR',
+            'rol'=>'ADMINISTRADOR',
             'estado'=>'ACTIVO',
         ];
 
