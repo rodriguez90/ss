@@ -41,8 +41,6 @@ use Da\QrCode\QrCode;
 
 class SiteController extends Controller
 {
-    protected  $agencyId = null;
-    protected  $transCompanyId = null;
     /**
      * {@inheritdoc}
      */
@@ -95,13 +93,14 @@ class SiteController extends Controller
         $user = Yii::$app->user->identity;
         $importCount = 0;
         $exportCount = 0;
+        $session = Yii::$app->session;
 
         if($user && ($user->hasRol('Importador')  ||  $user->hasRol('Exportador') ||  $user->hasRol('Importador_Exportador')))
         {
             $agency = $user->getAgency();
             if($agency)
             {
-                $this->agencyId = $agency->id;
+                $session->set('agencyId', $agency->id);
                 $importCount = Process::find()->where(['type'=>Process::PROCESS_IMPORT, 'agency_id'=>$agency->id])->count();
                 $exportCount = Process::find()->where(['type'=>Process::PROCESS_EXPORT, 'agency_id'=>$agency->id])->count();
             }
@@ -111,7 +110,7 @@ class SiteController extends Controller
             $transcompany = $user->getTransCompany();
             if($transcompany)
             {
-                $this->transCompanyId = $transcompany->id;
+                $session->set('transCompanyId', $transcompany->id);
             }
         }
 //        else if ($user && ($user->hasRol('Deposito') || $user->hasRol('Administrador_deposito')))
@@ -309,6 +308,7 @@ class SiteController extends Controller
     public function actionPrint()
     {
         $processId = Yii::$app->request->get('process');
+        $session = Yii::$app->session;
 
         $processExp = Process::find()
             ->innerJoin('agency','process.agency_id = agency.id')
@@ -316,8 +316,8 @@ class SiteController extends Controller
             ->innerJoin('container','process_transaction.container_id = container.id')
             ->where(['process.type'=>Process::PROCESS_EXPORT])
             ->andWhere(['process.id'=>$processId])
-            ->andFilterWhere(['agency_id'=>$this->agencyId])
-            ->andFilterWhere(['process_transaction.trans_company_id'=>$this->transCompanyId])
+            ->andFilterWhere(['agency_id'=>$session->get('agencyId')])
+            ->andFilterWhere(['process_transaction.trans_company_id'=>$session->get('transCompanyId')])
             ->all();
 
         $processImp = Process::find()
@@ -326,8 +326,8 @@ class SiteController extends Controller
             ->innerJoin('container','process_transaction.container_id = container.id')
             ->where(['process.type'=>Process::PROCESS_IMPORT])
             ->andWhere(['process.id'=>$processId])
-            ->andFilterWhere(['agency_id'=>$this->agencyId])
-            ->andFilterWhere(['process_transaction.trans_company_id'=>$this->transCompanyId])
+            ->andFilterWhere(['agency_id'=>$session->get('agencyId')])
+            ->andFilterWhere(['process_transaction.trans_company_id'=>$session->get('transCompanyId')])
             ->all();
 
         $body = $this->renderPartial('print', [
@@ -407,9 +407,6 @@ class SiteController extends Controller
             ->andWhere(['process.id'=>$processId])
             ->andWhere(['process.active'=>1])
             ->andWhere(["process_transaction.active"=>1])
-            ->andFilterWhere(['bl'=> $bl])
-            ->andFilterWhere(['agency_id'=> $agency_id])
-            ->andFilterWhere( ['process_transaction.trans_company_id'=>$trans_company_id])
             ->all();
 
         $result = [];
@@ -632,6 +629,7 @@ class SiteController extends Controller
         $response['data'] = [];
         $response['msg'] = '';
         $response['msg_dev'] = '';
+        $session = Yii::$app->session;
 
         if($response['success'])
         {
@@ -650,8 +648,8 @@ class SiteController extends Controller
                     ->innerJoin("process_transaction","process_transaction.process_id = process.id")
                     ->leftJoin("ticket","process_transaction.id = ticket.process_transaction_id")
                     ->where(['process.active'=>1, 'process_transaction.active'=>1])
-                    ->andFilterWhere(['agency_id'=>$this->agencyId])
-                    ->andFilterWhere(['process_transaction.trans_company_id'=>$this->transCompanyId])
+                    ->andFilterWhere(['agency_id'=>$session->get('agencyId')])
+                    ->andFilterWhere(['process_transaction.trans_company_id'=>$session->get('transCompanyId')])
                     ->groupBy(['process.id', 'process.bl', 'process.delivery_date', 'process.type', 'agency.name'])
                     ->orderBy(['process.delivery_date'=>SORT_DESC])
                     ->asArray()
