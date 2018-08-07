@@ -912,7 +912,7 @@ class TicketController extends Controller
 
                 foreach ($results as $result)
                 {
-                    $result['containerName'] = utf8_encode($result['containerName']);
+                    $result['nameDriver'] = utf8_encode($result['nameDriver']);
                     $response['data'][] = $result;
                 }
 
