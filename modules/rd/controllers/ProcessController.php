@@ -274,7 +274,6 @@ class ProcessController extends Controller
         $response['transactions'] = [];
         $id = Yii::$app->request->get('id');
         $transCompanyId = Yii::$app->request->get('transCompanyId');
-        $actived = Yii::$app->request->get('actived');
 
         if(isset($id) && isset($transCompanyId))
         {
