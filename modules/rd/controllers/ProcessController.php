@@ -561,23 +561,18 @@ class ProcessController extends Controller
         $result ['status'] = -1;
         $result ['msg'] = '';
 
-        $user = AdmUser::findOne(["id" => Yii::$app->user->getId()]);
+        $user = Yii::$app->user->identity;
 
-        $trans_company = TransCompany::find()
-            ->select("trans_company.name,trans_company.id,trans_company.ruc,adm_user.email")
-            ->innerJoin("user_transcompany", "user_transcompany.transcompany_id = trans_company.id")
-            ->innerJoin("adm_user", "user_transcompany.user_id = adm_user.id")
-            ->where(["user_transcompany.user_id" => $user->getId()])
-            ->asArray()
-            ->one();
+        $transCompany = $user->getTransCompany();
 
-        if ($trans_company !== null) {
+        if ($transCompany !== null) {
 
             if (Yii::$app->request->post()) {
                 $bl = Yii::$app->request->post("bl");
-                if ($bl !== null) {
-
-                    try {
+                if ($bl !== null)
+                {
+                    try
+                    {
                         $tickes = ProcessTransaction::find()
                             ->select("process_transaction.register_truck,
                                               process_transaction.register_driver,
@@ -604,7 +599,7 @@ class ProcessController extends Controller
                             ->innerJoin("warehouse", "warehouse.id = calendar.id_warehouse")
                             ->innerJoin("agency", "process.agency_id = agency.id")
                             ->where(["process.bl" => $bl])
-                            ->andWhere(["trans_company.id" => $trans_company["id"]])
+                            ->andWhere(["trans_company.id" => $transCompany->id])
                             ->andWhere(["ticket.active" =>1])
                             ->asArray()
                             ->all();
@@ -622,7 +617,7 @@ class ProcessController extends Controller
                                 $dateImp = $dateImp->format('d-m-Y H:i');
 
                                 $info = "";
-                                $info .= "EMP. TRANSPORTE: " . $trans_company["name"] . ' ';
+                                $info .= "EMP. TRANSPORTE: " . $transCompany->name . ' ';
                                 $info .= "TICKET NO: TI-" . $date . "-" . $ticket["id"] . ' ';
                                 $info .= "OPERACIÓN: " . $ticket["type"] == Process::PROCESS_IMPORT ? "IMPORTACIÓN":"EXPORTACIÓN" . '  ';
                                 $info .= "DEPÓSITO: " . $ticket["w_name"] . ' ';
@@ -646,7 +641,7 @@ class ProcessController extends Controller
 
 
                                 $bodypdf = $this->renderPartial('@app/mail/layouts/card.php',
-                                                                ["trans_company" => $trans_company,
+                                                                ["trans_company" => $transCompany,
                                                                  "ticket" => $ticket,
                                                                  "qr" => "data:image/png;base64, " . $imageString,
                                                                  'dateImp' => $dateImp,
@@ -660,7 +655,7 @@ class ProcessController extends Controller
                             $attach = $pdf->Output("", "S");
                             $email = Yii::$app->mailer->compose()
                                 ->setFrom(Yii::$app->params['adminEmail'])
-                                ->setTo($trans_company["email"])
+                                ->setTo($user->email)
                                 ->setBcc(Yii::$app->params['adminEmail'])
                                 ->setSubject("Cartas de Servicio")
                                 ->setHtmlBody("<h5>Se adjunta carta de servicio.</h5>")
