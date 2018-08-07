@@ -647,7 +647,7 @@ class SiteController extends Controller
                     ->innerJoin('agency', 'agency.id = process.agency_id')
                     ->innerJoin("process_transaction","process_transaction.process_id = process.id")
                     ->leftJoin("ticket","process_transaction.id = ticket.process_transaction_id")
-                    ->where(['process.active'=>1, 'process_transaction.active'=>1])
+                    ->where(['process.active'=>1, 'process_transaction.active'=>1,'ticket.active'=>1])
                     ->andFilterWhere(['agency_id'=>$session->get('agencyId')])
                     ->andFilterWhere(['process_transaction.trans_company_id'=>$session->get('transCompanyId')])
                     ->groupBy(['process.id', 'process.bl', 'process.delivery_date', 'process.type', 'agency.name'])
