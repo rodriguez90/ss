@@ -283,7 +283,6 @@ else if ($intVal === Process::PROCESS_EXPORT)
                         <div>
                             <div class="jumbotron m-b-0 text-center">
                                 <h1>Proceso Completado</h1>
-                                <p>Los datos han sido enviados al servidor.</p>
                             </div>
                         </div>
                         <!-- end wizard step-4 -->
