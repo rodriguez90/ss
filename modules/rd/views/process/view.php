@@ -51,7 +51,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         ],
                         [
                             'attribute'=>'bl',
-                            'label'=> $model->type === Process::PROCESS_IMPORT ? "BL":"Booking",
+                            'label'=> $model->type == Process::PROCESS_IMPORT ? "BL":"Booking",
                         ],
                     ],
                     'options'=>['class' => 'table table-bordered table-condensed detail-view m-1 p-1 detalle'],
