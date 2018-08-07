@@ -163,7 +163,7 @@ var handleDataTable = function () {
                     "data":null
                 },
             ],
-            "order": [[ 3, 'des'], [ 1, 'des'] ],
+            "order": [[ 3, 'des'], [ 0, 'des'] ],
             columnDefs: [
                 {
                     orderable: true,
