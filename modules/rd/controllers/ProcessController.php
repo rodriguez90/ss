@@ -843,11 +843,14 @@ class ProcessController extends Controller
                         $response['containers'][] = $container;
                     }
 
-                    if($deliveryDate < new DateTime())
+                    $now = new DateTime(new DateTimeZone("UTC"));
+
+                    if($deliveryDate < $now)
                     {
                         $response['success'] = false;
                         $response['msg'] = "Este bl expiró.";
                     }
+
                     $response['deliveryDate'] = $deliveryDate->format("d-m-Y");
                 }
             }
