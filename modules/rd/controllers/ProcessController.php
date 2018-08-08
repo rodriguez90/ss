@@ -831,7 +831,7 @@ class ProcessController extends Controller
                             $container['status'] = $data['status'];
                         }
 
-                        $now = new DateTime(new DateTimeZone("UTC"));
+                        $now = new DateTime('now', new DateTimeZone("UTC"));
                         $container['expired'] = 0;
                         if($currentDeliveryDate < $now)
                         {
@@ -843,7 +843,7 @@ class ProcessController extends Controller
                         $response['containers'][] = $container;
                     }
 
-                    $now = new DateTime(new DateTimeZone("UTC"));
+                    $now = new DateTime('now', new DateTimeZone("UTC"));
 
                     if($deliveryDate < $now)
                     {
