@@ -740,7 +740,7 @@ class ProcessController extends Controller
         {
             try
             {
-                $sql = "exec disv..sp_sgt_bl_cons " . $bl;
+                $sql = "exec disv..sp_sgt_bl_cons '" . $bl . "'";
                 $results = Yii::$app->db->createCommand($sql)->queryAll();
 
                 $line = null;
@@ -875,7 +875,7 @@ class ProcessController extends Controller
         {
             try
             {
-                $sql = "exec disv..sp_sgt_booking_cons " . $booking;
+                $sql = "exec disv..sp_sgt_booking_cons '" . $booking . "'";
                 $results = Yii::$app->db->createCommand($sql)->queryAll();
 
                 $line = null;
