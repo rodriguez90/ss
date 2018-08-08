@@ -391,6 +391,7 @@ var addContainer = function (table, dataContainer) {
         alias:dataContainer.alias,
         type: dataContainer.type,
         deliveryDate:dataContainer.deliveryDate,
+        expired:dataContainer.expired,
         transCompany:{name:'', id:-1, ruc:""},
         status:dataContainer.status,
         errCode:errCode,
@@ -413,7 +414,7 @@ var addContainer = function (table, dataContainer) {
     {
         container.selectable = true;
     }
-    console.log(container);
+    // console.log(container);
 
     table.row.add(
         container
@@ -423,8 +424,8 @@ var addContainer = function (table, dataContainer) {
 
 $(document).ready(function () {
 
-    console.log(agency);
-    console.log(processType);
+    // console.log(agency);
+    // console.log(processType);
 
     if(processType == 1)
     {

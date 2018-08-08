@@ -830,11 +830,24 @@ class ProcessController extends Controller
                             $container['type']->tonnage = $data['typeTonnage'];
                             $container['status'] = $data['status'];
                         }
+
+                        $now = new DateTime(new DateTimeZone("UTC"));
+                        $container['expired'] = 0;
+                        if($currentDeliveryDate < $now)
+                        {
+                            $container['expired'] = 1;
+                        }
+
                         $container['deliveryDate'] = $currentDeliveryDate->format("d-m-Y");
                         $container['errCode'] = $result['err_code'];
                         $response['containers'][] = $container;
                     }
 
+                    if($deliveryDate < new DateTime())
+                    {
+                        $response['success'] = false;
+                        $response['msg'] = "Este bl expiró.";
+                    }
                     $response['deliveryDate'] = $deliveryDate->format("d-m-Y");
                 }
             }
@@ -995,6 +1008,13 @@ class ProcessController extends Controller
                             $container['errCode'] = $result['err_code'];
                             $response['containers'][] = $container;
                         }
+                    }
+
+                    $now = new DateTime(new DateTimeZone("UTC"));
+                    if($deliveryDate < $now)
+                    {
+                        $response['success'] = false;
+                        $response['msg'] = "Este booking expiró.";
                     }
 
                     $response['deliveryDate'] = $deliveryDate->format("d-m-Y");
