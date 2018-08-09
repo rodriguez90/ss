@@ -1013,7 +1013,7 @@ class ProcessController extends Controller
                         }
                     }
 
-                    $now = new DateTime(new DateTimeZone("UTC"));
+                    $now = new DateTime('now', new DateTimeZone("UTC"));
                     if($deliveryDate < $now)
                     {
                         $response['success'] = false;
