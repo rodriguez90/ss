@@ -24,6 +24,8 @@ var systemMode = 1; // only for testing 0-offline  1-online
 
 var bl = null;
 
+var processTypeStr = '';
+
 var cleanUI = function () {
     bl = null;
     selectedContainers = [];
@@ -261,7 +263,7 @@ var fetchContainers = function (bl) {
                     }
                 }
                 else {
-                    alert("No hay contenedores asociado al BL especificado.");
+                    alert("No hay contenedores asociado al " + processTypeStr + " especificado.");
                 }
             }
             else {
@@ -430,9 +432,11 @@ $(document).ready(function () {
     if(processType == 1)
     {
         containerFetchUrl = homeUrl + "/rd/process/sgtblcons";
+        processTypeStr = 'BL';
     }
     else {
         containerFetchUrl = homeUrl + "/rd/process/sgtbookingcons";
+        processTypeStr = 'Booking';
 
     }
 

@@ -890,7 +890,7 @@ class ProcessController extends Controller
         if(!isset($booking) || !isset($processType))
         {
             $response['success'] = false;
-            $response['msg'] = "Debe especificar el Booking y el tipo de trámite de búsqueda.";
+            $response['msg'] = "Debe especificar el Booking.";
         }
 
         if($response['success'])
