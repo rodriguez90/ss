@@ -410,7 +410,7 @@ var addContainer = function (table, dataContainer) {
     if( (container.status == "PENDIENTE" ||
         container.status == "" ||
         statusIsDate == true )&&
-        errCode == 0)
+        errCode == 0 && container.expired == 0)
     {
         container.selectable = true;
     }

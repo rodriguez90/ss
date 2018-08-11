@@ -769,7 +769,6 @@ class ProcessController extends Controller
                     $response['line']= $line;
                     $deliveryDate = new DateTime($results[0]['fecha_limite'], new DateTimeZone("UTC"));
 
-
                     foreach ($results as $result)
                     {
 
@@ -832,8 +831,12 @@ class ProcessController extends Controller
                         }
 
                         $now = new DateTime('now', new DateTimeZone("UTC"));
+                        $now->modify('-1 day');
+                        $now->setTime(0,0);
+                        $currentDeliveryDate->setTime(0,0);
+
                         $container['expired'] = 0;
-                        if($currentDeliveryDate < $now)
+                        if($currentDeliveryDate <= $now)
                         {
                             $container['expired'] = 1;
                         }
@@ -844,8 +847,11 @@ class ProcessController extends Controller
                     }
 
                     $now = new DateTime('now', new DateTimeZone("UTC"));
+                    $now->modify('-1 day');
+                    $now->setTime(0,0);
+                    $deliveryDate->setTime(0,0);
 
-                    if($deliveryDate < $now)
+                    if($deliveryDate <= $now)
                     {
                         $response['success'] = false;
                         $response['msg'] = "Este bl expiró.";
@@ -1009,12 +1015,17 @@ class ProcessController extends Controller
 
                             $container['deliveryDate'] = $currentDeliveryDate->format("d-m-Y");
                             $container['errCode'] = $result['err_code'];
+                            $container['expired'] = 0;
                             $response['containers'][] = $container;
+
                         }
                     }
 
                     $now = new DateTime('now', new DateTimeZone("UTC"));
-                    if($deliveryDate < $now)
+                    $now->modify('-1 day');
+                    $now->setTime(0,0);
+                    $deliveryDate->setTime(0,0);
+                    if($deliveryDate <= $now)
                     {
                         $response['success'] = false;
                         $response['msg'] = "Este booking expiró.";

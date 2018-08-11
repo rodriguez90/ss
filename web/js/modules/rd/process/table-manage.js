@@ -181,6 +181,10 @@ var handleDataTable = function() {
             {
                 msg = 'Este contenedor no puede ser seleccionado su estado es: ' + status
             }
+            else if(dt.row(index.row, index.column).data().expired == 1)
+            {
+                msg = 'Este contenedor no puede ser seleccionado: ha expirado su fecha límite.';
+            }
             else {
                 msg = 'Este contenedor no puede ser seleccionado pendiente de facturación o crédito';
             }
