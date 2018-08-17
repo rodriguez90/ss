@@ -184,7 +184,7 @@ class AgencyController extends Controller
                 $user = Yii::$app->user->identity;
                 $response['companies'] = Agency::find()
                     ->select('id, name')
-                    ->where(['like', 'name', $term])
+                    ->where(['like', 'upper(name)', strtoupper($term)])
                     ->all();
             }
             catch (Exception $ex)
