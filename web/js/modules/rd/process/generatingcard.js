@@ -9,7 +9,7 @@ $(function () {
     $("#selectpicker-bl").select2(
         {
             language: "es",
-            placeholder: 'Seleccione el BL',
+            placeholder: 'Seleccione el BL o Booking',
             width: '100%',
             closeOnSelect: true,
             allowClear:true,

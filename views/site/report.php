@@ -28,7 +28,7 @@ if ($user)
     if($result !== null && $result !== true)
     {
         $asociatedEntity['id'] = $result->id;
-        $asociatedEntity['name'] = $result->name;
+        $asociatedEntity['name'] = utf8_encode($result->name);
     }
 }
 

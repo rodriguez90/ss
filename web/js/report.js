@@ -18,6 +18,7 @@ var handleSelectCompanies = function () {
             closeOnSelect: true,
             allowClear:true,
             minimumInputLength:1,
+            matcher:function(term, text) { return text.toUpperCase().indexOf(term.toUpperCase()) >= 0; },
             ajax: {
                 url: homeUrl + '/rd/agency/likeagency',
 
@@ -60,6 +61,7 @@ var handleSelectTransCompanies = function () {
             closeOnSelect: true,
             allowClear:true,
             minimumInputLength:5,
+            matcher:function(term, text) { return text.toUpperCase().indexOf(term.toUpperCase()) >= 0; },
             // disabled:role === 'Cia_transporte',
             ajax: {
                 url: homeUrl + (systemMode == 0 ? '/rd/api-trans-company': '/rd/trans-company/from-sp'),

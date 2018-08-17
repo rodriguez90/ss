@@ -503,7 +503,7 @@ class ProcessController extends Controller
                                                    //->attachContent($path,[ 'fileName'=> "Nueva Solicitud de RecepciÃ³n.pdf",'contentType'=>'application/pdf'])
                                                    ->send();
 
-                                   if($result === false)
+                                   if($result == false)
                                    {
                                        $response['success'] = true ;
                                        $response['warning'] ="Ah ocurrido un error al enviar la notificación vía email a la empresa de transporte.";

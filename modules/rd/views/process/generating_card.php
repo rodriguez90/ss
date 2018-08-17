@@ -101,9 +101,6 @@ FormAsset::register($this);
 
 </div>
 
-
-
-
 <?php $this->registerJsFile('@web/js/modules/rd/process/generatingcard.js',              ['depends' => ['app\assets\FormAsset']]);?>
 
 
