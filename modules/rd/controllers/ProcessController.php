@@ -1059,7 +1059,6 @@ class ProcessController extends Controller
         $response['msg_dev'] = '';
         $response['bls'] = [];
 
-//        if(!isset($bl) || !isset($processType))
         if(!isset($bl))
         {
             $response['success'] = false;
@@ -1076,7 +1075,6 @@ class ProcessController extends Controller
                                             ->innerJoin('process_transaction', 'process.id=process_transaction.process_id')
                                             ->select('bl')
                                             ->where(['like', 'upper(bl)', strtoupper($bl)])
-//                    ->where(['or', ['like','bl', $bl], ['like','bl', $bl]])
                                             ->andFilterWhere($user->processCondition())
                                             ->groupBy(['bl'])
                                             ->all();
