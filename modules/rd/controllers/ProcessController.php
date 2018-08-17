@@ -1075,7 +1075,7 @@ class ProcessController extends Controller
                 $response['bls'] = Process::find()
                                             ->innerJoin('process_transaction', 'process.id=process_transaction.process_id')
                                             ->select('bl')
-                                            ->where(['like', 'upper(bl)', $bl])
+                                            ->where(['like', 'upper(bl)', strtoupper($bl)])
 //                    ->where(['or', ['like','bl', $bl], ['like','bl', $bl]])
                                             ->andFilterWhere($user->processCondition())
                                             ->groupBy(['bl'])
