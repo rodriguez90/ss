@@ -224,6 +224,12 @@ $(function ()
         closeOnSelect: true,
         allowClear:true,
         minimumInputLength:1,
+        matcher:function(term, text) {
+            console.log(text.toUpperCase());
+            console.log(term.toUpperCase());
+            console.log(text.toUpperCase().indexOf(term.toUpperCase()));
+            return text.toUpperCase().indexOf(term.toUpperCase()) >= 0;
+        },
         ajax: {
             url: homeUrl + '/rd/process/likebl',
 
