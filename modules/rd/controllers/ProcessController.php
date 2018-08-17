@@ -1075,7 +1075,7 @@ class ProcessController extends Controller
                 $response['bls'] = Process::find()
                                             ->innerJoin('process_transaction', 'process.id=process_transaction.process_id')
                                             ->select('bl')
-                                            ->where(['like', 'bl', $bl])
+                                            ->where(['like binary', 'bl', $bl])
                                             ->andFilterWhere($user->processCondition())
                                             ->groupBy(['bl'])
                                             ->all();
