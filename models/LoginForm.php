@@ -83,7 +83,7 @@ class LoginForm extends Model
         }
         elseif ($userData == null)
         {
-            $this->addError('error', 'Usuario o Contraseña Incorrecta.');
+            $this->addError('error', 'Usuario o Contraseña Incorrecta. 1'. mb_convert_encoding ( $this->username, "UTF-8","ISO-8859-1" ));
             return false;
         }
         elseif ($userData !== null && $userData['estado'] !== "ACTIVO")
