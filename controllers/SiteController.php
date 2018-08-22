@@ -103,8 +103,14 @@ class SiteController extends Controller
             if($agency)
             {
                 $session->set('agencyId', $agency->id);
-                $importCount = Process::find()->where(['type'=>Process::PROCESS_IMPORT, 'agency_id'=>$agency->id, 'active'=>1])->count();
-                $exportCount = Process::find()->where(['type'=>Process::PROCESS_EXPORT, 'agency_id'=>$agency->id, 'active'=>1])->count();
+                $importCount = Process::find()
+                    ->innerJoin("process_transaction","process_transaction.process_id = process.id and process_transaction.active=1")
+                    ->where(['type'=>Process::PROCESS_IMPORT, 'agency_id'=>$agency->id, 'process.active'=>1])
+                    ->count();
+                $exportCount = Process::find()
+                    ->innerJoin("process_transaction","process_transaction.process_id = process.id and process_transaction.active=1")
+                    ->where(['type'=>Process::PROCESS_EXPORT, 'agency_id'=>$agency->id, 'active'=>1])
+                    ->count();
             }
         }
         else if ($user && $user->hasRol('Cia_transporte'))
@@ -116,6 +122,7 @@ class SiteController extends Controller
                 $ticketCount = Ticket::find()
                     ->innerJoin('process_transaction', 'process_transaction.id=ticket.process_transaction_id')
                     ->where(['ticket.active'=>1])
+                    ->andWhere(['process_transaction.active'=>1])
                     ->andFilterWhere(['process_transaction.trans_company_id'=>$transcompany->id])
                     ->count();
             }
