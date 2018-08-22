@@ -109,7 +109,7 @@ class SiteController extends Controller
                     ->count();
                 $exportCount = Process::find()
                     ->innerJoin("process_transaction","process_transaction.process_id = process.id and process_transaction.active=1")
-                    ->where(['type'=>Process::PROCESS_EXPORT, 'agency_id'=>$agency->id, 'active'=>1])
+                    ->where(['type'=>Process::PROCESS_EXPORT, 'agency_id'=>$agency->id, 'process.active'=>1])
                     ->count();
             }
         }
@@ -120,9 +120,8 @@ class SiteController extends Controller
             {
                 $session->set('transCompanyId', $transcompany->id);
                 $ticketCount = Ticket::find()
-                    ->innerJoin('process_transaction', 'process_transaction.id=ticket.process_transaction_id')
+                    ->innerJoin('process_transaction', 'process_transaction.id=ticket.process_transaction_id and process_transaction.active=1')
                     ->where(['ticket.active'=>1])
-                    ->andWhere(['process_transaction.active'=>1])
                     ->andFilterWhere(['process_transaction.trans_company_id'=>$transcompany->id])
                     ->count();
             }
