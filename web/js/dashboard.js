@@ -64,6 +64,7 @@ var handleWidgetOptions = function()
     }
     else if(role === 'Cia_transporte')
     {
+        document.getElementById('ticket').style.display = 'inline';
         document.getElementById('report').style.display = 'inline';
     }
     else if(role === 'Administrador_deposito' || role === 'Deposito')

@@ -3,6 +3,7 @@
 namespace app\modules\rd\controllers;
 
 use app\modules\rd\models\TransCompanyPhone;
+use function GuzzleHttp\Psr7\str;
 use Yii;
 use app\modules\rd\models\TransCompany;
 use app\modules\rd\models\TransCompanySearch;
@@ -305,7 +306,7 @@ class TransCompanyController extends Controller
 
                 for($i = 0; $i < 5; $i++)
                 {
-                   $trunk = ['placa'=>$i . $i . $i,
+                   $trunk = ['placa'=>'AbB' . $i . $i . $i,
                              'err_code'=>"0",
                              'err_msg'=>"error",
                              'rfid'=>$i . $i . $i];
@@ -318,7 +319,7 @@ class TransCompanyController extends Controller
             {
                 foreach ($trunks as $trunk)
                 {
-                    if (strpos($trunk['placa'], $term) !== false) {
+                    if (strpos(strtoupper($trunk['placa']), strtoupper($term)) !== false) {
                         $response['trunks'][]  = $trunk;
                     }
                 }
@@ -370,7 +371,7 @@ class TransCompanyController extends Controller
                 {
                     $driver = [
                         'chofer_ruc'=>$i . $i . $i,
-                        'chofer_nombre'=>$i . $i . $i,
+                        'chofer_nombre'=>'AbB' . $i . $i . $i,
                         'err_code'=>"0",
                         'err_msg'=>"error",
                         ];
@@ -383,7 +384,8 @@ class TransCompanyController extends Controller
             {
                 foreach ($drivers as $driver)
                 {
-                    if (strpos($driver['chofer_ruc'], $term) !== false || strpos($driver['chofer_nombre'], $term) !== false ) {
+                    $termUpper = strtoupper($term);
+                    if (strpos(strtoupper($driver['chofer_ruc']), $termUpper) !== false || strpos(strtoupper($driver['chofer_nombre']), $termUpper) !== false ) {
                         $response['drivers'] [] = $driver;
                     }
                 }

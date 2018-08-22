@@ -48,9 +48,9 @@ var handleDataTable = function ()
                 { "title": "Proceso",
                     "data":"processType",
                 },
-                // { "title": "Acciones",
-                //     "data":null
-                // },
+                { "title": "Acciones",
+                    "data":null
+                },
             ],
             "order": [[ 3, 'des']],
             columnDefs: [
@@ -91,32 +91,31 @@ var handleDataTable = function ()
                         return data == 1 ? 'Importación':'Exportación';
                     },
                 },
-                // {
-                //     targets: [9],
-                //     data:null,
-                //     render: function ( data, type, full, meta ) {
-                //         var elementId =  String(full.id);
-                //         if(type == 'display')
-                //         {
-                //             var ticketClass = full.countContainer == full.countTicket ? 'btn-default':'btn-success';
-                //
-                //             var selectHtml = "<div class=\"row row-space-2\">";
-                //             selectHtml += "<div class=\"col col-md-12\">" ;
-                //             selectHtml += "<a " + "href=\"" + homeUrl + "/rd/ticket/view?id=" + elementId + "\" class=\"btn btn-info btn-icon btn-circle btn-sm\" title=\"Ver\"><i class=\"fa fa-eye\"></i></a>";
-                //             selectHtml += "<a " + "href=\"" + homeUrl + "/rd/ticket/update?id=" + elementId + "\" class=\"btn btn-success btn-icon btn-circle btn-sm\" title=\"Editar\"><i class=\"fa fa-edit\"></i></a>";
-                //             selectHtml += "<a data-confirm=\"¿Está seguro de eliminar este turno ?\" data-method=\"post\"" + " href=\"" + homeUrl + "/rd/ticket/delete?id=" + elementId + "\" class=\"btn btn-danger btn-icon btn-circle btn-sm\" title=\"Eliminar\"><i class=\"fa fa-trash\"></i></a>";
-                //             selectHtml += "</div>";
-                //             selectHtml += "</div>";
-                //
-                //             return selectHtml;
-                //         }
-                //         return "-";
-                //     },
-                // },
+                {
+                    targets: [9],
+                    data:null,
+                    render: function ( data, type, full, meta ) {
+                        var elementId =  String(full.id);
+                        if(type == 'display')
+                        {
+                            var ticketClass = full.countContainer == full.countTicket ? 'btn-default':'btn-success';
+
+                            var selectHtml = "<div class=\"row row-space-2\">";
+                            selectHtml += "<div class=\"col col-md-12\">" ;
+                            // selectHtml += "<a " + "href=\"" + homeUrl + "/rd/ticket/view?id=" + elementId + "\" class=\"btn btn-info btn-icon btn-circle btn-sm\" title=\"Ver\"><i class=\"fa fa-eye\"></i></a>";
+                            // selectHtml += "<a " + "href=\"" + homeUrl + "/rd/ticket/update?id=" + elementId + "\" class=\"btn btn-success btn-icon btn-circle btn-sm\" title=\"Editar\"><i class=\"fa fa-edit\"></i></a>";
+                            selectHtml += "<a data-confirm=\"¿Está seguro de eliminar este turno ?\" data-method=\"post\"" + " href=\"" + homeUrl + "/rd/ticket/delete?id=" + elementId + "&from=1"+ "\" class=\"btn btn-danger btn-icon btn-circle btn-sm\" title=\"Eliminar\"><i class=\"fa fa-trash\"></i></a>";
+                            selectHtml += "</div>";
+                            selectHtml += "</div>";
+
+                            return selectHtml;
+                        }
+                        return "-";
+                    },
+                },
             ],
         });
-    }
-};
+    }};
 
 $(document).ready(function () {
     handleDataTable();

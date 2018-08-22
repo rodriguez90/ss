@@ -26,6 +26,7 @@ use PDO;
 use Mpdf\Mpdf;
 use Yii;
 use yii\db\Command;
+use yii\db\Exception;
 use yii\filters\AccessControl;
 use yii\helpers\Url;
 use yii\web\Controller;
@@ -93,6 +94,7 @@ class SiteController extends Controller
         $user = Yii::$app->user->identity;
         $importCount = 0;
         $exportCount = 0;
+        $ticketCount = 0;
         $session = Yii::$app->session;
 
         if($user && ($user->hasRol('Importador')  ||  $user->hasRol('Exportador') ||  $user->hasRol('Importador_Exportador')))
@@ -111,6 +113,11 @@ class SiteController extends Controller
             if($transcompany)
             {
                 $session->set('transCompanyId', $transcompany->id);
+                $ticketCount = Ticket::find()
+                    ->innerJoin('process_transaction', 'process_transaction.id=ticket.process_transaction_id')
+                    ->where(['ticket.active'=>1])
+                    ->andFilterWhere(['process_transaction.trans_company_id'=>$transcompany->id])
+                    ->count();
             }
         }
 //        else if ($user && ($user->hasRol('Deposito') || $user->hasRol('Administrador_deposito')))
@@ -125,12 +132,13 @@ class SiteController extends Controller
         {
             $importCount = Process::find()->where(['type'=>Process::PROCESS_IMPORT])->count();
             $exportCount = Process::find()->where(['type'=>Process::PROCESS_EXPORT])->count();
+            $ticketCount = Ticket::find()->where(['active'=>1])->count();
         }
 
         $myparams = array();
         $myparams['importCount'] = $importCount;
         $myparams['exportCount'] = $exportCount;
-        $ticketCount = TicketSearch::find()->count(); // FIXME: FILTER TICKET BY ROLE
+
         $myparams['ticketCount'] = $ticketCount;
 
         return $this->render('index', $myparams);
@@ -651,22 +659,23 @@ class SiteController extends Controller
                     ->andFilterWhere(['agency_id'=>$session->get('agencyId')])
                     ->andFilterWhere(['process_transaction.trans_company_id'=>$session->get('transCompanyId')])
                     ->groupBy(['process.id', 'agency.id'])
+//                    ->groupBy(['process.id', 'process.bl', 'process.delivery_date', 'process.type', 'agency.id', 'agency.name'])
                     ->asArray()
                     ->all();
 
             }
-            catch ( \PDOException $e)
+            catch ( Exception $e)
             {
                 if($e->getCode() !== '01000')
                 {
                     $response['success'] = false;
                     $response['msg'] = "Ah ocurrido al recuperar los procesos.";
                     $response['msg_dev'] = $e->getMessage();
+                    $response['data'] = [];
                 }
             }
         }
 
         return $response;
     }
-
 }

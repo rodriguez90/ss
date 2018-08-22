@@ -331,6 +331,7 @@ var fetchContainersOffLine = function (bl) {
             deliveryDate: processDeliveryDate,
             status: status,
             errCode:Math.round(Math.random()),
+            expired:0,
         };
         addContainer(table, dataContainer);
     }

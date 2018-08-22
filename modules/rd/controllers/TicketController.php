@@ -129,17 +129,29 @@ class TicketController extends Controller
      * Deletes an existing Ticket model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
+     * @param integer $from: delete from calendar (0) or table (1)
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionDelete($id)
+    public function actionDelete($id, $from=0)
     {
         if(!Yii::$app->user->can("ticket_delete"))
             throw new ForbiddenHttpException('Usted no tiene permiso para eliminar turnos');
 
         Yii::$app->response->format = Response::FORMAT_JSON;
 
-        return $this->delete($id);
+        $result = $this->delete($id);
+
+        if($from == 0)
+        {
+            return $result;
+        }
+        else
+        {
+            return $this->redirect(['index']);
+        }
+
+
     }
 
     public function actionReserve()
@@ -312,10 +324,15 @@ class TicketController extends Controller
                                         process_transaction.register_truck,
                                         process_transaction.register_driver,
                                         process_transaction.name_driver,
+                                        process_transaction.delivery_date,
                                         container.name,
                                         container.code,
-                                        container.tonnage')
+                                        container.tonnage,
+                                        agency.name as agencyName,
+                                        process.bl')
             ->innerJoin('process_transaction', 'process_transaction.id=ticket.process_transaction_id')
+            ->innerJoin('process', 'process_transaction.process_id=process.id')
+            ->innerJoin('agency', 'agency.id=process.agency_id')
             ->innerJoin('calendar', 'calendar.id=ticket.calendar_id')
             ->innerJoin('container', 'container.id=process_transaction.container_id')
             ->where(['ticket.active'=>1]);
@@ -906,9 +923,19 @@ class TicketController extends Controller
                     ->leftJoin('container', 'container.id=process_transaction.container_id')
                     ->leftJoin('container_type', 'container_type.id=container.type_id')
                     ->where(['process_transaction.active'=>1])
-                    ->andWhere(['ticket.active'=>1])
-                    ->asArray()
-                    ->all();
+                    ->andWhere(['ticket.active'=>1]);
+
+                    $user = Yii::$app->user->identity;
+                    $transCompany = $user->getTransCompany();
+
+                    if($transCompany)
+                    {
+                        $results->andFilterWhere(['process_transaction.trans_company_id'=>$transCompany->id]);
+                    }
+
+                    $results = $results->orderBy(['calendar.start_datetime'=>SORT_ASC])
+                        ->asArray()
+                        ->all();
 
                 foreach ($results as $result)
                 {
@@ -917,7 +944,7 @@ class TicketController extends Controller
                 }
 
             }
-            catch ( \PDOException $e)
+            catch ( Exception $e)
             {
                 if($e->getCode() !== '01000')
                 {

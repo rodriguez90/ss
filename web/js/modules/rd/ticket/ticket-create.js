@@ -990,7 +990,7 @@ var fetchCalendar = function (start, end, async) {
             end: end
         },
         success: function(response) {
-            console.log(response);
+            // console.log(response);
 
             $('#calendar').fullCalendar('removeEventSources', calendarSlotEvents.id);
             calendarSlotEvents.events = [];
@@ -1075,8 +1075,8 @@ var fetchProcessTransactions = function () {
                     //     }
                     // });
 
-                    console.log(minDeliveryDate.format('YYYY-MM-DD HH:mm:ss'));
-                    console.log(maxDeliveryDate.format('YYYY-MM-DD HH:mm:ss'));
+                    // console.log(minDeliveryDate.format('YYYY-MM-DD HH:mm:ss'));
+                    // console.log(maxDeliveryDate.format('YYYY-MM-DD HH:mm:ss'));
 
                     fetchCalendar(minDeliveryDate.format('YYYY-MM-DD HH:mm:ss'), maxDeliveryDate.format('YYYY-MM-DD HH:mm:ss'), false);
                     fetchTickets(modelId, false);
