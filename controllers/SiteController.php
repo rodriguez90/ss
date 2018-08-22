@@ -103,8 +103,8 @@ class SiteController extends Controller
             if($agency)
             {
                 $session->set('agencyId', $agency->id);
-                $importCount = Process::find()->where(['type'=>Process::PROCESS_IMPORT, 'agency_id'=>$agency->id])->count();
-                $exportCount = Process::find()->where(['type'=>Process::PROCESS_EXPORT, 'agency_id'=>$agency->id])->count();
+                $importCount = Process::find()->where(['type'=>Process::PROCESS_IMPORT, 'agency_id'=>$agency->id, 'active'=>1])->count();
+                $exportCount = Process::find()->where(['type'=>Process::PROCESS_EXPORT, 'agency_id'=>$agency->id, 'active'=>1])->count();
             }
         }
         else if ($user && $user->hasRol('Cia_transporte'))
@@ -130,8 +130,8 @@ class SiteController extends Controller
 //        }
         else if($user && $user->hasRol('Administracion'))
         {
-            $importCount = Process::find()->where(['type'=>Process::PROCESS_IMPORT])->count();
-            $exportCount = Process::find()->where(['type'=>Process::PROCESS_EXPORT])->count();
+            $importCount = Process::find()->where(['type'=>Process::PROCESS_IMPORT, 'active'=>1])->count();
+            $exportCount = Process::find()->where(['type'=>Process::PROCESS_EXPORT, 'active'=>1])->count();
             $ticketCount = Ticket::find()->where(['active'=>1])->count();
         }
 
