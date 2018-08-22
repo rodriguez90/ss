@@ -330,7 +330,7 @@ class TicketController extends Controller
                                         container.tonnage,
                                         agency.name as agencyName,
                                         process.bl')
-            ->innerJoin('process_transaction', 'process_transaction.id=ticket.process_transaction_id')
+            ->leftJoin('process_transaction', 'process_transaction.id=ticket.process_transaction_id')
             ->innerJoin('process', 'process_transaction.process_id=process.id')
             ->innerJoin('agency', 'agency.id=process.agency_id')
             ->innerJoin('calendar', 'calendar.id=ticket.calendar_id')
