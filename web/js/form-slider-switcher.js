@@ -51,14 +51,14 @@ var renderSwitcher = function() {
     }
 };
 
-var checkSwitcherState = function() {
-    $('[data-click="check-switchery-state"]').live('click', function() {
-        alert($('[data-id="switchery-state"]').prop('checked'));
-    });
-    $('[data-change="check-switchery-state-text"]').live('change', function() {
-        $('[data-id="switchery-state-text"]').text($(this).prop('checked'));
-    });
-};
+// var checkSwitcherState = function() {
+//     $('[data-click="check-switchery-state"]').live('click', function() {
+//         alert($('[data-id="switchery-state"]').prop('checked'));
+//     });
+//     $('[data-change="check-switchery-state-text"]').live('change', function() {
+//         $('[data-id="switchery-state-text"]').text($(this).prop('checked'));
+//     });
+// };
 
 var renderPowerRangeSlider = function() {
     if ($('[data-render="powerange-slider"]').length !== 0) {
@@ -90,8 +90,7 @@ var FormSliderSwitcher = function () {
         init: function () {
             // switchery
             renderSwitcher();
-            checkSwitcherState();
-            
+            // checkSwitcherState();
             // powerange slider
             renderPowerRangeSlider();
         }

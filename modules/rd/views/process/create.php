@@ -8,7 +8,7 @@ use app\modules\rd\models\Process;
 /* @var $model app\modules\rd\models\Process */
 
 $this->title = Yii::t('app', 'Nueva ' . Process::PROCESS_LABEL[$type]);
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Importaciones/Exportaciones'), 'url' => ['/site/index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Procesos'), 'url' => ['/site/index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="process-create">

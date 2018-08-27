@@ -20,6 +20,7 @@ FormAsset::register($this);
 TableAsset::register($this);
 
 $user = \app\modules\administracion\models\AdmUser::findOne(['id'=>Yii::$app->user->getId()]);
+
 $trasCompany = null;
 
 if($user)
@@ -31,10 +32,10 @@ if($user)
 <style>
     .fc-time-grid .fc-slats td
     {
-        height: 2.5em !important;
+        height: 2.0em !important;
     }
     .fc-title {
-        font-size: 14px !important;
+        font-size: 16px !important;
     }
     /*.bwizard .well*/
     /*{*/
@@ -44,6 +45,11 @@ if($user)
         border: 0px !important;
     }
 
+    #dialog-spinner
+    {
+        margin: 0px 0px 0px 0px; !important;
+    }
+
 </style>
 
 <div class="panel panel-inverse p-3"">
@@ -51,7 +57,7 @@ if($user)
         <div class="panel-heading-btn">
             <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
         </div>
-        <h4 class="panel-title">Asignación de Cupos</h4>
+        <h4 class="panel-title">Asignación de Cupos:  <?php echo $model->type == \app\modules\rd\models\Process::PROCESS_IMPORT ? "Importación" : "Exportación"?></h4>
     </div>
     <div class="panel-body">
 
@@ -60,7 +66,10 @@ if($user)
                <?= DetailView::widget([
                    'model' => $model,
                    'attributes' => [
-                       'bl',
+                       [
+                           'attribute'=>'bl',
+                           'label'=>$model->type == \app\modules\rd\models\Process::PROCESS_IMPORT ? "BL" : "Booking"
+                       ],
                        'delivery_date:date',
                    ],
                    'options'=>['class' => 'table table-condensed detail-view detalle'],
@@ -223,11 +232,8 @@ if($user)
                                 </div>
                                 <!-- end row -->
                                 <div class="row">
-                                    <div class="checkbox">
-                                        <label>
-                                            <input id="confirming" type="checkbox"> Confirmar Información
-                                        </label>
-                                    </div>
+                                    <input id="confirming" type="checkbox" data-render="switchery" data-size="small" data-click="check-switchery-state" data-id="switchery-state" data-theme="blue"/>
+                                    <span id="confLabel" class="label label-success f-s-12">Confirmar Información</span>
                                 </div>
                                 <!-- end row -->
                             </fieldset>
@@ -278,6 +284,23 @@ if($user)
                 <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Cancelar</a>
 <!--                <a id="aceptBtn" href="#;" class="btn btn-sm btn-success" disabled>Aceptar</a>-->
                 <a id="aceptBtn" href="#;" class="btn btn-sm btn-success" >Aceptar</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- #modal-containers -->
+<div class="modal fade" id="modal-select-bussy" role="dialog" data-backdrop='static'>
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 id="modalTitle" class="modal-title">Proceso Completado</h4>
+            </div>
+            <div class="modal-body p-15">
+                <div class="jumbotron m-b-0 text-center">
+                    <span id="dialog-spinner" class="spinner"></span>
+                    <p>Los datos de los nuevos turnos han sido enviados al TPG.</p>
+                </div>
             </div>
         </div>
     </div>

@@ -27,31 +27,42 @@ class AuthItem extends \yii\db\ActiveRecord
 
 //    const ROLE_ADMIN = 'Administrador';
     const ROLE_ADMIN = 'Administracion';
-    const ROLE_ADMIN_WHAREHOUSE = 'Administrador_depósito';
-    const ROLE_WHAREHOUSE = 'Depósito';
+    const ROLE_ADMIN_WHAREHOUSE = 'Administrador_deposito';
+    const ROLE_WHAREHOUSE = 'Deposito';
     const ROLE_AGENCY = 'Agencia';
     const ROLE_CIA_TRANS_COMPANY = 'Cia_transporte';
     const ROLE_IMPORTER = 'Importador';
     const ROLE_EXPORTER = 'Exportador';
     const ROLE_IMPORTER_EXPORTER = 'Importador_Exportador';
 
-    const ROL_LABEL = [ROL_ADMIN=>'Administrador',
-        ROL_ADMIN_WHAREHOUSE=>'Administrador de Depósito',
-        ROLE_WHAREHOUSE=>'Depósito',
-        ROL_AGENCY=>'Agencia',
-        ROLE_TRANS_COMPANY=>'Cia de Transporte',
-        ROLE_IMPORTER=>'Importador',
-        ROLE_EXPORTER=>'Exportador',
-        ROLE_IMPORTER_EXPORTER=>'Importador-Exportador',
-
+    const ROL_LABEL = [AuthItem::ROL_ADMIN=>'Administrador',
+        AuthItem::ROL_ADMIN_WHAREHOUSE=>'Administrador de Depósito',
+        AuthItem::ROLE_WHAREHOUSE=>'Depósito',
+        AuthItem::ROL_AGENCY=>'Agencia',
+        AuthItem::ROLE_TRANS_COMPANY=>'Cia de Transporte',
+        AuthItem::ROLE_IMPORTER=>'Importador',
+        AuthItem::ROLE_EXPORTER=>'Exportador',
+        AuthItem::ROLE_IMPORTER_EXPORTER=>'Importador-Exportador',
     ];
 
-    const DEFAULT_ROLES = [ROLE_ADMIN, ROLE_ADMIN_WHAREHOUSE,
-                           ROLE_WHAREHOUSE, ROLE_AGENCY,
-                           ROLE_CIA_TRANS_COMPANY,
-                           ROLE_IMPORTER,
-                           ROLE_EXPORTER,
-                           ROLE_IMPORTER_EXPORTER];
+    const DEFAULT_ROLES = [
+        AuthItem::ROLE_ADMIN,
+        AuthItem::ROLE_ADMIN_WHAREHOUSE,
+        AuthItem::ROLE_WHAREHOUSE,
+        AuthItem::ROLE_AGENCY,
+        AuthItem::ROLE_CIA_TRANS_COMPANY,
+        AuthItem::ROLE_IMPORTER,
+        AuthItem::ROLE_EXPORTER,
+        AuthItem::ROLE_IMPORTER_EXPORTER
+    ];
+
+    const MAP_TPG_ROLE_TO_SGT = [
+        'ADMINISTRADOR'=>AuthItem::ROLE_ADMIN,
+        'IMPORTADOR_EXPORTADOR'=>AuthItem::ROLE_IMPORTER_EXPORTER,
+        'CIA_TRANSPORTE'=>AuthItem::ROLE_CIA_TRANS_COMPANY,
+        'ADMINISTRADOR_DEPOSITO'=>AuthItem::ROLE_ADMIN_WHAREHOUSE,
+        'DEPOSITO'=>AuthItem::ROLE_WHAREHOUSE,
+    ];
 
     /**
      * {@inheritdoc}

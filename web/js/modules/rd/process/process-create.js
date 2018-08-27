@@ -2,37 +2,6 @@
  * Created by pedro on 30/05/2018.
  */
 
-var lan = {
-    "sProcessing":     "Procesando...",
-    "sLengthMenu":     "Mostrar _MENU_ registros",
-    "sZeroRecords":    "No se encontraron resultados",
-    "sEmptyTable":     "Ningún dato disponible en esta tabla",
-    "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
-    "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
-    "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
-    "sInfoPostFix":    "",
-    "select":{
-        _: "%d filas selecionadas",
-    },
-    "sSearch":         "Buscar:",
-    "sUrl":            "",
-    "sInfoThousands":  ",",
-    "sLoadingRecords": "Cargando...",
-    "oPaginate": {
-        // "sFirst":    "Primero",
-        "sFirst":    "<<",
-        // "sLast":     "Último",
-        "sLast":     ">>",
-        // "sNext":     "Siguiente",
-        "sNext":     ">",
-        // "sPrevious": "Anterior"
-        "sPrevious": "<"
-    },
-    "oAria": {
-        "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
-        "sSortDescending": ": Activar para ordenar la columna de manera descendente"
-    }
-};
 
 var selectedContainers = [];
 
@@ -49,13 +18,26 @@ var processDeliveryDate = null;
 
 var containerFetchUrl = '';
 
+var hasErrorContainer = false;
+
+var systemMode = 1; // only for testing 0-offline  1-online
+
+var bl = null;
+
+var processTypeStr = '';
+
 var cleanUI = function () {
+    bl = null;
     selectedContainers = [];
     containertDataMap.clear();
 
+    $('#selectTransCompany').val('').trigger("change.select2");
+    $("#wizard").bwizard("show",0);
+
     document.getElementById('oce').innerHTML = "OCE: -" ;
     document.getElementById('line').innerHTML = "LINEA: -";
-
+    document.getElementById('staticLinks').style.display = 'none';
+    hasErrorContainer = false;
 
     var table = $('#data-table').DataTable();
 
@@ -161,44 +143,44 @@ var handleSelectTransCompany = function () {
 
     $("#selectTransCompany").select2(
     {
-        language: "es",
+            language: "es",
 
-        placeholder: 'Seleccione la compañia de transporte',
-        width: '100%',
-        minimumInputLength:5,
-        // allowClear: true,
-        // tags: true,
-        closeOnSelect: true,
-        ajax: {
-            // url: homeUrl + '/rd/api-trans-company',
-            url: homeUrl + '/rd/trans-company/from-sp',
-            dataType: 'json',
-            // delay: 250,
-            cache: true,
-            data: function (params) {
-                var query = {
-                    code: params.term,
-                };
+            placeholder: 'Seleccione la compañia de transporte',
+            width: '100%',
+            minimumInputLength:5,
+            // allowClear: true,
+            // tags: true,
+            closeOnSelect: true,
+            ajax: {
+                url: homeUrl + (systemMode == 0 ? '/rd/api-trans-company': '/rd/trans-company/from-sp'),
 
-                return query;
-            },
-            processResults: function (data) {
-                // console.log(data);
-                var results  = [];
-                $.each(data.trans_companies, function (index, item) {
-                // $.each(data, function (index, item) {
-                    // console.log(item);
-                    results .push({
-                        id: item.id,
-                        text: item.name,
-                        ruc: item.ruc
+                dataType: 'json',
+                // delay: 250,
+                cache: true,
+                data: function (params) {
+                    var query = {
+                        code: params.term,
+                    };
+
+                    return query;
+                },
+                processResults: function (data) {
+                    // console.log(data);
+                    var results  = [];
+                    var trans_companies = systemMode == 0 ? data : data.trans_companies;
+
+                    $.each(trans_companies, function (index, item) {
+                        results .push({
+                            id: item.id,
+                            text: item.name,
+                            ruc: item.ruc
+                        });
                     });
-                });
-                return {
-                    results: results
-                };
+                    return {
+                        results: results
+                    };
+                },
             },
-        },
     }).on('select2:opening', function (e) {
         var table = $('#data-table3').DataTable();
         var count = table.rows( { selected: true } ).count();
@@ -241,7 +223,6 @@ var handleSelectTransCompany = function () {
             } );
 
         table.rows().deselect();
-        // table.draw();
     });
 };
 
@@ -272,6 +253,7 @@ var fetchContainers = function (bl) {
 
                     processDeliveryDate = response['deliveryDate'];
 
+
                     document.getElementById('oce').innerHTML = "OCE: " + lineNav.oce;
                     document.getElementById('line').innerHTML = "NOMBRE: " + lineNav.name;
 
@@ -281,7 +263,7 @@ var fetchContainers = function (bl) {
                     }
                 }
                 else {
-                    alert("No hay contenedores asociado al BL especificado.");
+                    alert("No hay contenedores asociado al " + processTypeStr + " especificado.");
                 }
             }
             else {
@@ -339,14 +321,17 @@ var fetchContainersOffLine = function (bl) {
         var status = statusArray[statusIndex];
         type = Array.from(containerTypeMap.values())[typeIndex];
 
+
         var dataContainer = {
             id:-1,
             name:"ContainerName"+i,
+            alias:"ContainerName"+i,
             ptId:-1,
             type: type,
             deliveryDate: processDeliveryDate,
             status: status,
             errCode:Math.round(Math.random()),
+            expired:0,
         };
         addContainer(table, dataContainer);
     }
@@ -396,12 +381,20 @@ var addContainer = function (table, dataContainer) {
     // console.log("Status Date Valid: " + statusIsDate);
     var errCode = parseInt(dataContainer.errCode);
 
+    if(!hasErrorContainer && errCode == 1)
+    {
+        hasErrorContainer = true;
+        document.getElementById('staticLinks').style.display = 'inline';
+    }
+
     var container =  {
         id:dataContainer.id,
         ptId:dataContainer.ptId,
         name:dataContainer.name,
+        alias:dataContainer.alias,
         type: dataContainer.type,
         deliveryDate:dataContainer.deliveryDate,
+        expired:dataContainer.expired,
         transCompany:{name:'', id:-1, ruc:""},
         status:dataContainer.status,
         errCode:errCode,
@@ -410,19 +403,21 @@ var addContainer = function (table, dataContainer) {
         selectable:false,
     };
 
+    containertDataMap.set(container.name, container.type);
+
     if(statusIsDate)
     {
-        container.status = moment(dataContainer.status).format("DD/MM/YYYY");
+        container.status = moment(dataContainer.status).format("DD/MM/YYYY HH:mm");
     }
 
     if( (container.status == "PENDIENTE" ||
         container.status == "" ||
         statusIsDate == true )&&
-        errCode == 0)
+        errCode == 0 && container.expired == 0)
     {
         container.selectable = true;
     }
-    console.log(container);
+    // console.log(container);
 
     table.row.add(
         container
@@ -432,15 +427,17 @@ var addContainer = function (table, dataContainer) {
 
 $(document).ready(function () {
 
-    console.log(agency);
-    console.log(processType);
+    // console.log(agency);
+    // console.log(processType);
 
     if(processType == 1)
     {
         containerFetchUrl = homeUrl + "/rd/process/sgtblcons";
+        processTypeStr = 'BL';
     }
     else {
         containerFetchUrl = homeUrl + "/rd/process/sgtbookingcons";
+        processTypeStr = 'Booking';
 
     }
 
@@ -451,10 +448,16 @@ $(document).ready(function () {
     TableManageTableSelect.init()
 
     $('#blCode').parsley().on('field:success', function() {
+        // alert('success');
         $('#search-container').prop('disabled', false)
     }).on('field:error', function () {
+        cleanUI();
         $('#search-container').prop('disabled', true)
     });
+
+    // $('#blCode').change(function() {
+    //     cleanUI();
+    // });
 
     // stop watch
     timerId = setInterval(handleStopWatch, 1000);
@@ -464,11 +467,18 @@ $(document).ready(function () {
 
     // search container
     $('#search-container').click( function() {
-        // $('#blCode').prop('disabled', true);
-        var bl = $('#blCode').val();
         cleanUI();
-        fetchContainers(bl);
-        // fetchContainersOffLine();
+
+        bl = $('#blCode').val();
+
+        if(systemMode == 1)
+        {
+            fetchContainers(bl);
+        }
+        else {
+            fetchContainersOffLine();
+        }
+
     //     return false;
     });
 

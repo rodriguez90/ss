@@ -86,7 +86,7 @@ use app\modules\rd\models\Process;
     <table id="datalle" width="100%">
         <thead>
         <tr>
-            <td class="title" > <?= ( $model->type === Process::PROCESS_IMPORT ? 'BL':'Booking' ) ?> </td>
+            <td class="title" > <?= ( $model->type == Process::PROCESS_IMPORT ? 'BL':'Booking' ) ?> </td>
             <td class="title">No.</td>
             <td class="title" >Tipo de trámite</td>
             <td class="title">Fecha de Creación</td>

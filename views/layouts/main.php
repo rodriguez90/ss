@@ -69,10 +69,10 @@ $user = Yii::$app->user->identity;
                                     echo '</span> <b class="caret"></b>';
                                 echo '</a>';
                         echo '<ul class="dropdown-menu animated fadeInLeft">';
-                            echo '<li class="arrow"></li>';
-                            echo '<li><a href="javascript:;">Editar Perficl</a></li>';
-                            echo '<li><a href="javascript:;">Configuraciones</a></li>';
-                            echo '<li class="divider"></li>';
+//                            echo '<li class="arrow"></li>';
+//                            echo '<li><a href="'. Url::toRoute(['/administracion/user/update', 'id'=>$user->getId()]).'">Editar Perfil</a></li>';
+////                            echo '<li><a href="javascript:;">Configuraciones</a></li>';
+//                            echo '<li class="divider"></li>';
 
 
                             if(!Yii::$app->user->isGuest ){
@@ -126,7 +126,7 @@ $user = Yii::$app->user->identity;
                     }
                     ?>
                     <?php
-                    if(Yii::$app->user->can("admin_mod") || Yii::$app->user->can("process_create")){
+                    if($user){
                         echo "<li class='has-sub'>";
                         echo "<a href=".Url::to(['/site/report'])."> <i class='fa fa-file-pdf-o'></i>";
                         echo  "<span> Reporte </span>";
@@ -136,7 +136,8 @@ $user = Yii::$app->user->identity;
                     ?>
 
                     <?php
-                    if(Yii::$app->user->can("ticket_create")){
+                    if(Yii::$app->user->can("ticket_create") || Yii::$app->user->can("calendar_create"))
+                    {
                         echo "<li class='has-sub'>";
                         echo "<a href=".Url::to(['/rd/ticket/my-calendar'])."> <i class='fa fa-calendar'></i>";
                         echo  "<span> Mi Calendario</span>";

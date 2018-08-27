@@ -119,55 +119,65 @@ class UserController extends Controller
         $model = new AdmUser();
         $rol = '';
         $type = -1;
+        $postData = Yii::$app->request->post();
+//        var_dump($postData);die;
 
-        if ($model->load(Yii::$app->request->post()) ) {
-
-        $rol = Yii::$app->request->post("rol");
-
-        if( $model->password==''){
-            $model->addError('error', 'La Contraseña no pueden ser vacía');
+        if(!isset($postData['status']))
+        {
+            $postData['status']= 0;
         }
 
-        if( $confirm!=null && $model->password != $confirm){
-            $model->addError('error', 'Las contraseñas no son iguales.');
-        }
+        if ($model->load($postData))
+        {
 
-        if( $rol==null ||  $auth->getRole($rol) ==null){
-            $model->addError('error', "Seleccione un rol válido." );
-        }else{
-            $type = Yii::$app->request->post("type");
-            switch($rol){
-                case 'Importador':
-                case 'Exportador':
-                case "Importador_Exportador":
-                case 'Agencia':
-                    if($type == '')
-                        $model->addError('error', "Seleccione una empresa." );
-                    break;
-                case 'Administrador_depósito':
-                case 'Depósito':
-                    if($type == '')
-                    $model->addError('error', "Seleccione un depósito." );
-                    break;
-                case 'Cia_transporte':
-                    if($type == '')
-                    $model->addError('error', "Seleccione una compañía de transporte." );
-                    break;
-                default :
-                    break;
+            $rol = Yii::$app->request->post("rol");
+
+            if( $model->password==''){
+                $model->addError('error', 'La Contraseña no pueden ser vacía');
             }
-        }
 
-        if(AdmUser::findOne(['username'=>$model->username])!=null){
-            $model->addError('error', "Ya existe el nombre de usuario." );
-        }
+            if( $confirm != null && $model->password != $confirm){
+                $model->addError('error', 'Las contraseñas no son iguales.');
+            }
 
-        if (AdmUser::findOne(['cedula' => $model->cedula]) != null)
+            if( $rol == null ||  $auth->getRole($rol) == null){
+                $model->addError('error', "Seleccione un rol válido." );
+            }
+            else{
+                $type = Yii::$app->request->post("type");
+                switch($rol){
+                    case 'Importador':
+                    case 'Exportador':
+                    case "Importador_Exportador":
+                    case 'Agencia':
+                        if($type == '')
+                            $model->addError('error', "Seleccione una empresa." );
+                        break;
+                    case 'Administrador_deposito':
+                    case 'Deposito':
+                        if($type == '')
+                        $model->addError('error', "Seleccione un depósito." );
+                        break;
+                    case 'Cia_transporte':
+                        if($type == '')
+                        $model->addError('error', "Seleccione una compañía de transporte." );
+                        break;
+                    default :
+                        break;
+                }
+            }
+
+            if(AdmUser::findOne(['username'=>$model->username]) != null){
+
+                $model->addError('error', "Ya existe el nombre de usuario." );
+            }
+
+            if (AdmUser::findOne(['cedula' => $model->cedula]) != null)
             {
                 $model->addError('error', "La cédula {$model->cedula} ya fue registrada en el sistema" );
             }
 
-        if (!$model->hasErrors())
+            if (!$model->hasErrors())
             {
                 $model->setPassword($model->password);
                 $model->created_at = time();
@@ -190,8 +200,8 @@ class UserController extends Controller
                             $userAgency->agency_id = $type;
                             $userAgency->save();
                             break;
-                        case 'Administrador_depósito':
-                        case 'Depósito':
+                        case 'Administrador_deposito':
+                        case 'Deposito':
                             $userWarehouse = new UserWarehouse();
                             $userWarehouse->user_id = $model->id;
                             $userWarehouse->warehouse_id = $type;
@@ -231,6 +241,7 @@ class UserController extends Controller
      */
     public function actionUpdate($id)
     {
+        throw new ForbiddenHttpException('Esta vista no esta disponible.');
 
         if ( \Yii::$app->user->can('user_update') || \Yii::$app->user->getId() == $id  ) {
 
@@ -238,7 +249,7 @@ class UserController extends Controller
 
             try{
                 $model = $this->findModel($id);
-                if($model != null){
+                if($model !== null){
 
                     $old_password = $model->password;
                     $auth =  Yii::$app->authManager;
@@ -271,8 +282,8 @@ class UserController extends Controller
                                 $modelAuxName = $modelAux->agency->name;
                             }
                             break;
-                        case 'Administrador_depósito':
-                        case 'Depósito':
+                        case 'Administrador_deposito':
+                        case 'Deposito':
                             $error  ="Seleccione un depósito." ;
                             $modelAux = UserWarehouse::findOne(['user_id'=>$model->id]);
                             if($modelAux)
@@ -305,23 +316,33 @@ class UserController extends Controller
                             $model->addError('error', "Seleccione un rol válido." );
                         }
 
-                        if($type =="" && $rol_actual->name!="Administracion" && $rol!="Administracion" ){
+                        if($type == "" && $rol_actual->name != "Administracion" && $rol != "Administracion" ){
                             $model->addError('error', $error );
                         }
 
                         if (!$model->hasErrors())
                         {
-                            if($model->password!=""){
+                            if($model->password !== '')
+                            {
                                 $model->setPassword($model->password);
-                            }else
+                            }
+                            else
                                 $model->password = $old_password;
 
                             $model->updated_at = time();
 
-                            if($status==null)
-                            $model->status = 0 ;
-                            else
+                            if(Yii::$app->user->getId() == $id )
+                            {
                                 $model->status = 1 ;
+                            }
+                            else
+                            {
+                                if($status == null)
+                                    $model->status = 0 ;
+                                else
+                                    $model->status = 1 ;
+                            }
+
 
                             if ($model->save())
                             {
@@ -355,8 +376,8 @@ class UserController extends Controller
                                             $ok = $ok && $userAgency->update();
                                         }
                                         break;
-                                    case "Administrador_depósito":
-                                    case "Depósito":
+                                    case "Administrador_deposito":
+                                    case "Deposito":
                                         if($change_rol){
                                             $userWarehouse = new UserWarehouse();
                                             $userWarehouse->warehouse_id = $type;
@@ -401,7 +422,8 @@ class UserController extends Controller
                         {
                             if($ok) {
                                 $transaction->commit();
-                                return $this->redirect(['index']);
+//                                return $this->redirect(['index']);
+                                return $this->redirect(Yii::$app->request->referrer ? Yii::$app->request->referrer: Yii::$app->homeUrl);
                             }else{
                                 $transaction->rollBack();
                             }
@@ -466,7 +488,7 @@ class UserController extends Controller
             //return $this->redirect(['create']);
             if($model)
             {
-                $model->status = 0;
+                $model->status = -1;
                 $model->save();
             }
         }
@@ -483,11 +505,16 @@ class UserController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = AdmUser::findOne(['id'=>$id])) !== null) {
+        $model = AdmUser::find()
+            ->where(['id'=>$id])
+            ->andWhere(['<>', 'status',-1])
+            ->one();
+
+        if ($model  !== null) {
             return $model;
         }
 
-        throw new NotFoundHttpException('The requested page does not exist.');
+        throw new NotFoundHttpException('El usuario no existe.');
     }
 
     public function actionGetagencias(){
@@ -558,7 +585,6 @@ class UserController extends Controller
             }
             catch ( \PDOException $e)
             {
-//                var_dump($e->getMessage());die;
                 if($e->getCode() !== '01000')
                 {
                     $response['success'] = false;
@@ -593,7 +619,7 @@ class UserController extends Controller
         {
             $response['objects'] = Warehouse::find()
                 ->where(['active'=>1])
-                ->andWhere(['like','name', $code])
+                ->andFilterWhere(['like','name', $code])
                 ->all();
         }
         catch (Exception $ex)
@@ -604,7 +630,7 @@ class UserController extends Controller
             $response['msg_dev'] = $ex->getMessage();
         }
 
-        $response;
+        return $response;
     }
 
     public function actionGetagenciastrans()
@@ -676,7 +702,6 @@ class UserController extends Controller
             }
             catch ( \PDOException $e)
             {
-//                var_dump($e->getMessage());die;
                 if($e->getCode() !== '01000')
                 {
                     $response['success'] = false;
@@ -687,5 +712,56 @@ class UserController extends Controller
             }
         }
         return $response;;
+    }
+
+    public function actionList()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $response = array();
+        $response['success'] = true;
+        $response['data'] = [];
+        $response['msg'] = '';
+        $response['msg_dev'] = '';
+
+        if($response['success'])
+        {
+            try
+            {
+                $results = AdmUser::find()
+                    ->select('adm_user.id, 
+                                    adm_user.username, 
+                                    adm_user.nombre, 
+                                    adm_user.apellidos, 
+                                    adm_user.email, 
+                                    adm_user.created_at, 
+                                    adm_user.status, 
+                                    auth_assignment.item_name as role')
+                    ->leftJoin('auth_assignment', 'auth_assignment.user_id=adm_user.id')
+                    ->where(['<>','status',-1])
+//                    ->groupBy(['adm_user.id']) // FIXME: CHECK THIS
+                    ->asArray()
+                    ->all();
+
+                foreach ($results as $result)
+                {
+                    $result['nombre'] = utf8_encode($result['nombre']);
+                    $result['apellidos'] = utf8_encode($result['apellidos']);
+                    $result['created_at'] = date('Y/m/d',$result['created_at']);
+                    $response['data'][] = $result;
+                }
+            }
+            catch ( \PDOException $e)
+            {
+                if($e->getCode() !== '01000')
+                {
+                    $response['success'] = false;
+                    $response['msg'] = "Ah ocurrido al recuperar las empresas.";
+                    $response['msg_dev'] = $e->getMessage();
+                }
+            }
+        }
+
+        return $response;
     }
 }

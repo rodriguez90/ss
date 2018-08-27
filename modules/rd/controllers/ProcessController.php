@@ -69,7 +69,7 @@ class ProcessController extends Controller
 //    public function actionIndex()
 //    {
 //        if(!Yii::$app->user->can("process_list"))
-//            throw new ForbiddenHttpException('Usted no tiene acceso a esta recepción');
+//            throw new ForbiddenHttpException('Usted no tiene acceso a este proceso');
 //
 //        $searchModel = new ProcessSearch();
 //        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
@@ -89,7 +89,7 @@ class ProcessController extends Controller
     public function actionView($id)
     {
         if(!Yii::$app->user->can("process_view")) // FIXME: change permission to process_view
-            throw new ForbiddenHttpException('Usted no tiene acceso a esta recepción');
+            throw new ForbiddenHttpException('Usted no tiene acceso a este proceso');
 
         $model = $this->findModel($id);
         $user = Yii::$app->user->identity;
@@ -197,13 +197,13 @@ class ProcessController extends Controller
     public function actionDelete($id)
     {
         if(!Yii::$app->user->can("process_delete"))
-            throw new ForbiddenHttpException('Usted no tiene permiso para eliminar esta recepción');
+            throw new ForbiddenHttpException('Usted no tiene permiso para eliminar este proceso');
 
         $model = $this->findModel($id);
 
         if($model)
         {
-            $model->active = 0;
+            $model->active = -1;
             $model->save();
         }
 
@@ -244,7 +244,9 @@ class ProcessController extends Controller
             $response['containers'] = Container::find()
                 ->innerJoin('process_transaction', 'process_transaction.container_id = container.id')
                 ->innerJoin('process', 'process_transaction.process_id = process.id')
-                ->where(['bl'=>$bl])
+                ->where(['process.bl'=>$bl])
+                ->andWhere(['process_transaction.active', 1])
+                ->orderBy(['process_transaction.delivery_date'])
                 ->all();
             $response['success'] = true;
         }
@@ -272,7 +274,6 @@ class ProcessController extends Controller
         $response['transactions'] = [];
         $id = Yii::$app->request->get('id');
         $transCompanyId = Yii::$app->request->get('transCompanyId');
-        $actived = Yii::$app->request->get('actived');
 
         if(isset($id) && isset($transCompanyId))
         {
@@ -290,6 +291,7 @@ class ProcessController extends Controller
             {
                 $transactions = ProcessTransaction::find()->where(['process_id'=>$id])
                                                           ->andWhere(['trans_company_id'=>$trans_company->id])
+                                                          ->andWhere(['process_transaction.active'=>1])
                     ->orderBy('delivery_date', SORT_ASC)
                     ->all();
 
@@ -431,6 +433,7 @@ class ProcessController extends Controller
                         $processTransModel->container_id = $containerModel->id;
                         $processTransModel->active = 1;
                         $processTransModel->trans_company_id = $transCompany->id;
+                        $processTransModel->container_alias = $container['alias'];
                         $processTransModel->status = 'PENDIENTE';
 
                         $aux = new DateTime($container['deliveryDate'], new DateTimeZone("UTC"));
@@ -492,14 +495,15 @@ class ProcessController extends Controller
 
                                    // TODO: send email user
                                    $result = Yii::$app->mailer->compose()
-                                                   ->setFrom($remitente->email)
+                                                   ->setFrom(Yii::$app->params['adminEmail'])
                                                    ->setTo($destinatario->email)
+                                                    ->setBcc(Yii::$app->params['adminEmail'])
                                                    ->setSubject("Notificación de nuevo Proceso.")
                                                    ->setHtmlBody($body)
                                                    //->attachContent($path,[ 'fileName'=> "Nueva Solicitud de RecepciÃ³n.pdf",'contentType'=>'application/pdf'])
                                                    ->send();
 
-                                   if($result === false)
+                                   if($result == false)
                                    {
                                        $response['success'] = true ;
                                        $response['warning'] ="Ah ocurrido un error al enviar la notificación vía email a la empresa de transporte.";
@@ -507,7 +511,7 @@ class ProcessController extends Controller
                                }
                            }
 
-                           $response['msg'] = Yii::t("app", "Recepción creada correctamente.");
+                           $response['msg'] = Yii::t("app", "Proceso creado correctamente.");
                            $response['url'] = Url::to(['/site/index']);
 
                            $transaction->commit();
@@ -553,34 +557,22 @@ class ProcessController extends Controller
 
     public function actionGeneratingcard()
     {
-
         $result = [];
-        $result ["status"] = -1;
-        $result ["msg"] = "";
+        $result ['status'] = -1;
+        $result ['msg'] = '';
 
-        $user = AdmUser::findOne(["id" => Yii::$app->user->getId()]);
+        $user = Yii::$app->user->identity;
 
-        $trans_company = TransCompany::find()
-            ->select("trans_company.name,trans_company.id,trans_company.ruc,adm_user.email")
-            ->innerJoin("user_transcompany", "user_transcompany.transcompany_id = trans_company.id")
-            ->innerJoin("adm_user", "user_transcompany.user_id = adm_user.id")
-            ->where(["user_transcompany.user_id" => $user->getId()])
-            ->asArray()
-            ->one();
+        $transCompany = $user->getTransCompany();
 
-        $procesos = Process::find()
-            ->innerJoin("process_transaction", "process_transaction.process_id = process.id")
-            ->where(['process_transaction.trans_company_id' => $trans_company["id"]])
-            ->orderBy("process.bl")
-            ->all();
-
-        if ($trans_company !== null) {
+        if ($transCompany !== null) {
 
             if (Yii::$app->request->post()) {
                 $bl = Yii::$app->request->post("bl");
-                if ($bl !== null) {
-
-                    try {
+                if ($bl !== null)
+                {
+                    try
+                    {
                         $tickes = ProcessTransaction::find()
                             ->select("process_transaction.register_truck,
                                               process_transaction.register_driver,
@@ -594,6 +586,7 @@ class ProcessController extends Controller
                                               trans_company.ruc,
                                               ticket.id,
                                               ticket.status,
+                                              ticket.created_at,
                                               calendar.start_datetime,
                                               calendar.end_datetime,
                                               warehouse.name as w_name, 
@@ -606,70 +599,70 @@ class ProcessController extends Controller
                             ->innerJoin("warehouse", "warehouse.id = calendar.id_warehouse")
                             ->innerJoin("agency", "process.agency_id = agency.id")
                             ->where(["process.bl" => $bl])
-                            ->andWhere(["trans_company.id" => $trans_company["id"]])
+                            ->andWhere(["trans_company.id" => $transCompany->id])
+                            ->andWhere(["ticket.active" =>1])
                             ->asArray()
                             ->all();
 
-                        $paths = [];
-                        $sendMail =true;
+                        if(count($tickes) > 0)
+                        {
+                            $pdf = new mPDF(['mode' => 'utf-8', 'format' => 'A4-L']);
 
-                        if(count($tickes)>0){
-                            foreach ($tickes as $ticket) {
-
+                            foreach ($tickes as $ticket)
+                            {
                                 $aux = new DateTime($ticket["start_datetime"]);
                                 $date = $aux->format("YmdHi");
-                                $dateImp = date('d/m/Y H:i');
+                                $ticket["start_datetime"] = $aux->format("d-m-Y H:i");
+                                $dateImp = new DateTime($ticket["created_at"]);
+                                $dateImp = $dateImp->format('d-m-Y H:i');
+
                                 $info = "";
-                                $info .= "EMP. TRANSPORTE: " . $trans_company["name"] . '-';
-                                $info .= "TICKET NO: TI-" . $date . "-" . $ticket["id"] . '-';
-                                $info .= "OPERACION: " . $ticket["type"] == Process::PROCESS_IMPORT ? "IMPORT" : "EXPOT" . '-';
-                                $info .= "DEPOSITO: " . $ticket["w_name"] . '-';
-                                $info .= "ECAS: " . $ticket["delivery_date"] . '-';
-                                $info .= "FECHA LIMITE: " . $ticket["delivery_date"] . '-';
-                                $info .= "CLIENTE: " . $ticket["a_name"] . '-';
-                                $info .= "RUC/CI: " . $ticket["ruc"] . "/" . $ticket["register_driver"] . '-';
-                                $info .= "CHOFER: " . $ticket["name_driver"] . '-';
-                                $info .= "PLACA: " . $ticket["register_truck"] . '-';
-                                $info .= "FECHA TURNO: " . substr($ticket["start_datetime"], 0, 16) . '-';
-                                $info .= "CANTIDAD: 1" . '-';
-                                $info .= "BOOKING: " . $ticket["bl"] . '-';
-                                $info .= "TIPO CONT: " . $ticket["tonnage"] . $ticket["code"] . '-';
-                                $info .= "GENERADO: " . $dateImp . '-';
+                                $info .= "EMP. TRANSPORTE: " . $transCompany->name . ' ';
+                                $info .= "TICKET NO: TI-" . $date . "-" . $ticket["id"] . ' ';
+                                $info .= "OPERACIÓN: " . $ticket["type"] == Process::PROCESS_IMPORT ? "IMPORTACIÓN":"EXPORTACIÓN" . '  ';
+                                $info .= "DEPÓSITO: " . $ticket["w_name"] . ' ';
+                                $info .= "ECAS: " . $ticket["delivery_date"] . ' ';
+                                $info .= "CLIENTE: " . $ticket["a_name"] . ' ';
+                                $info .= "CHOFER: " . $ticket["name_driver"] . "/" . $ticket["register_driver"] . ' ';
+                                $info .= "PLACA: " . $ticket["register_truck"] . ' ';
+                                $info .= "FECHA TURNO: " . $ticket["start_datetime"] . ' ';
+                                $info .= "CANTIDAD: 1" . ' ';
+                                $info .= ($ticket["type"] == Process::PROCESS_IMPORT ? "BL":"BOOKING") . ": ". $ticket["bl"] . ' ';
+                                $info .= "TIPO CONT: " . $ticket["tonnage"] . $ticket["code"] . ' ';
+                                $info .= "GENERADO: " . $dateImp . ' ';
                                 $info .= "ESTADO: " . $ticket["status"] == 1 ? "EMITIDO" : "---";
+
                                 $qrCode = new QrCode($info);
-                                //$qrpath =  Yii::getAlias("@webroot"). "/qrcodes/".$ticket["id"]."-".date('YmdHis').".png";
-                                ///sgt/web/qrcodes/3-qrcode.png
-                                //$qrCode->writeFile($qrpath);
-                                //$paths [] = $qrpath;
+
                                 ob_start();
                                 \QRcode::png($info, null);
                                 $imageString = base64_encode(ob_get_contents());
                                 ob_end_clean();
 
 
-
                                 $bodypdf = $this->renderPartial('@app/mail/layouts/card.php',
-                                                                ["trans_company" => $trans_company,
+                                                                ["trans_company" => $transCompany,
                                                                  "ticket" => $ticket,
                                                                  "qr" => "data:image/png;base64, " . $imageString,
-                                                                 'dateImp' => $dateImp]);
+                                                                 'dateImp' => $dateImp,
+                                                                 'date'=>$date]);
 
-                                $pdf = new mPDF(['mode' => 'utf-8', 'format' => 'A4-L']);
                                 //$pdf->SetHTMLHeader( "<div style='font-weight: bold; text-align: center;font-family: 'Helvetica', 'Arial', sans-serif;font-size: 14px;width: 100%> Carta de Servicio </div>");
+                                $pdf->AddPage();
                                 $pdf->WriteHTML($bodypdf);
-                                $path = $pdf->Output("", "S");
-
-                                $sendMail = $sendMail && Yii::$app->mailer->compose()
-                                    ->setFrom($user->email)
-                                    ->setTo($trans_company["email"])
-                                    ->setSubject("Carta de Servicio")
-                                    ->setHtmlBody("<h5>Se adjunta carta de servicio.</h5>")
-                                    ->attachContent($path, ['fileName' => "Carta de Servicio.pdf", 'contentType' => 'application/pdf'])
-                                    ->send();
-
-
                             }
-                            if($sendMail) {
+
+                            $attach = $pdf->Output("", "S");
+                            $email = Yii::$app->mailer->compose()
+                                ->setFrom(Yii::$app->params['adminEmail'])
+                                ->setTo($user->email)
+                                ->setBcc(Yii::$app->params['adminEmail'])
+                                ->setSubject("Cartas de Servicio")
+                                ->setHtmlBody("<h5>Se adjunta carta de servicio.</h5>")
+                                ->attachContent($attach, ['fileName' => "Carta de Servicio.pdf", 'contentType' => 'application/pdf']);
+
+                            if($email->send())
+                            {
                                 $result ["status"] = 1;
                                 $result ["msg"] .= "Cartas de servicio generadas correctamente.";
                             }else{
@@ -678,10 +671,8 @@ class ProcessController extends Controller
                             }
                         }else{
                             $result ["status"] = 0;//mejorar msj
-                            $result ["msg"] = "Error: No existen datos para generar cartas de servicio";
+                            $result ["msg"] = "No hay turnos para generar las cartas de servicio.";
                         }
-
-
                     } catch (\Exception $ex) {
                         $result ["status"] = 0;
                         $result ["msg"] = "Error: " . $ex->getMessage();
@@ -698,12 +689,12 @@ class ProcessController extends Controller
             $result ["msg"] .= "El usuario " . $user->username . " no está asociado a una compañía de transporte.";
         }
 
-        return $this->render('generating_card', ["result" => $result, 'procesos' => $procesos]);
+        return $this->render('generating_card', ["result" => $result]);
     }
 
     public function actionPrint($id){
-        if(!Yii::$app->user->can("process_view")) // FIXME: change permission to process_view
-            throw new ForbiddenHttpException('Usted no tiene acceso a esta recepción');
+        if(!Yii::$app->user->can('process_view'))
+            throw new ForbiddenHttpException('Usted no tiene acceso a este proceso');
 
         $model = $this->findModel($id);
 
@@ -719,12 +710,7 @@ class ProcessController extends Controller
         $pdf =  new mPDF(['mode'=>'utf-8' , 'format'=>'A4-L']);
         $pdf->SetTitle("Carta de Servicio");
         $pdf->WriteHTML($body);
-        $path= $pdf->Output("Detalles del Proceso.pdf","D");
-    }
-
-    protected function notifyEmail($process)
-    {
-
+        $path= $pdf->Output("Detalles del Proceso.pdf","I");
     }
 
     public function actionSgtblcons()
@@ -742,6 +728,7 @@ class ProcessController extends Controller
         $response['containers'] = [];
         $response['line'] = null;
         $response['deliveryDate'] = null;
+        $containersProcesed = [];
 
         if(!isset($bl) || !isset($processType))
         {
@@ -753,7 +740,7 @@ class ProcessController extends Controller
         {
             try
             {
-                $sql = "exec disv..sp_sgt_bl_cons " . $bl;
+                $sql = "exec disv..sp_sgt_bl_cons '" . $bl . "'";
                 $results = Yii::$app->db->createCommand($sql)->queryAll();
 
                 $line = null;
@@ -784,6 +771,12 @@ class ProcessController extends Controller
 
                     foreach ($results as $result)
                     {
+
+                        if(in_array($result['contenedor'], $containersProcesed))
+                            continue;
+
+                        $containersProcesed [] = $result['contenedor'];
+
                         $data = ProcessTransaction::find()
                             ->select('container.id, 
                                            container.name, 
@@ -836,16 +829,36 @@ class ProcessController extends Controller
                             $container['type']->tonnage = $data['typeTonnage'];
                             $container['status'] = $data['status'];
                         }
+
+                        $now = new DateTime('now', new DateTimeZone("UTC"));
+                        $now->modify('-1 day');
+                        $now->setTime(0,0);
+                        $currentDeliveryDate->setTime(0,0);
+
+                        $container['expired'] = 0;
+                        if($currentDeliveryDate <= $now)
+                        {
+                            $container['expired'] = 1;
+                        }
+
                         $container['deliveryDate'] = $currentDeliveryDate->format("d-m-Y");
                         $container['errCode'] = $result['err_code'];
                         $response['containers'][] = $container;
                     }
 
+                    $now = new DateTime('now', new DateTimeZone("UTC"));
+                    $now->modify('-1 day');
+                    $now->setTime(0,0);
+                    $deliveryDate->setTime(0,0);
+
+                    if($deliveryDate <= $now)
+                    {
+                        $response['success'] = false;
+                        $response['msg'] = "Este bl expiró.";
+                    }
+
                     $response['deliveryDate'] = $deliveryDate->format("d-m-Y");
                 }
-
-
-							
             }
             catch (Exception $ex)
             {
@@ -877,14 +890,14 @@ class ProcessController extends Controller
         if(!isset($booking) || !isset($processType))
         {
             $response['success'] = false;
-            $response['msg'] = "Debe especificar el Booking y el tipo de trámite de búsqueda.";
+            $response['msg'] = "Debe especificar el Booking.";
         }
 
         if($response['success'])
         {
             try
             {
-                $sql = "exec disv..sp_sgt_booking_cons " . $booking;
+                $sql = "exec disv..sp_sgt_booking_cons '" . $booking . "'";
                 $results = Yii::$app->db->createCommand($sql)->queryAll();
 
                 $line = null;
@@ -947,25 +960,25 @@ class ProcessController extends Controller
                             $containerName = $booking . $type->code . $type->tonnage . '-' . ($i + 1);
 
                             $data = ProcessTransaction::find()
-                                ->select('container.id, 
-                                           container.name, 
-                                           process_transaction.status, 
-                                           process_transaction.delivery_date as deliveryDate, 
-                                           process_transaction.id as ptId, 
-                                           container_type.id as typeId, 
-                                           container_type.name as typeName, 
-                                           container_type.code as typeCode, 
-                                           container_type.tonnage as typeTonnage')
-                                ->innerJoin('container', 'process_transaction.container_id=container.id')
-                                ->innerJoin('process', 'process.id=process_transaction.process_id')
-                                ->innerJoin('container_type', 'container_type.id=container.type_id')
-                                ->where(['process.bl' => $booking])
-                                ->andWhere(['process.type'=>$processType])
-                                ->andWhere(['process_transaction.active'=>1])
-                                ->andWhere(['container.name' => $containerName])
-                                ->orderBy(['process_transaction.id'=>SORT_DESC])
-                                ->asArray()
-                                ->one();
+                                                        ->select('container.id, 
+                                                                   container.name, 
+                                                                   process_transaction.status, 
+                                                                   process_transaction.delivery_date as deliveryDate, 
+                                                                   process_transaction.id as ptId, 
+                                                                   container_type.id as typeId, 
+                                                                   container_type.name as typeName, 
+                                                                   container_type.code as typeCode, 
+                                                                   container_type.tonnage as typeTonnage')
+                                                        ->innerJoin('container', 'process_transaction.container_id=container.id')
+                                                        ->innerJoin('process', 'process.id=process_transaction.process_id')
+                                                        ->innerJoin('container_type', 'container_type.id=container.type_id')
+                                                        ->where(['process.bl' => $booking])
+                                                        ->andWhere(['process.type'=>$processType])
+                                                        ->andWhere(['process_transaction.active'=>1])
+                                                        ->andWhere(['process_transaction.container_alias'=>$containerName])
+                                                        ->orderBy(['process_transaction.id'=>SORT_DESC])
+                                                        ->asArray()
+                                                        ->one();
 
                             $currentDeliveryDate = new DateTime($result['fecha_limite'], new DateTimeZone("UTC"));
 
@@ -980,6 +993,7 @@ class ProcessController extends Controller
                                 $container = [];
                                 $container['id'] = -1;
                                 $container['name'] = $containerName;
+                                $container['alias'] = $containerName;
                                 $container['ptId'] = -1;
                                 $container['type'] = $type;
                                 $container['status'] = '';
@@ -989,6 +1003,7 @@ class ProcessController extends Controller
                                 $container = [];
                                 $container['id'] = $data['id'];
                                 $container['name'] = $data['name'];
+                                $container['alias'] = $containerName;
                                 $container['ptId'] =  $data['ptId'];
                                 $container['type'] = new  ContainerType();
                                 $container['type']->id = $data['typeId'];
@@ -1000,8 +1015,20 @@ class ProcessController extends Controller
 
                             $container['deliveryDate'] = $currentDeliveryDate->format("d-m-Y");
                             $container['errCode'] = $result['err_code'];
+                            $container['expired'] = 0;
                             $response['containers'][] = $container;
+
                         }
+                    }
+
+                    $now = new DateTime('now', new DateTimeZone("UTC"));
+                    $now->modify('-1 day');
+                    $now->setTime(0,0);
+                    $deliveryDate->setTime(0,0);
+                    if($deliveryDate <= $now)
+                    {
+                        $response['success'] = false;
+                        $response['msg'] = "Este booking expiró.";
                     }
 
                     $response['deliveryDate'] = $deliveryDate->format("d-m-Y");
@@ -1011,6 +1038,52 @@ class ProcessController extends Controller
             {
                 $response['success'] = false;
                 $response['msg'] = 'Ah occurrido un error al buscar los contenedores.';
+                $response['msg_dev'] = $ex->getMessage();
+            }
+        }
+        return $response;
+    }
+
+
+    public function actionLikebl()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $bl = Yii::$app->request->get('bl');
+        $user = Yii::$app->user->identity;
+//        $processType = Yii::$app->request->get('type');
+
+        $response = array();
+        $response['success'] = true;
+        $response['msg'] = '';
+        $response['msg_dev'] = '';
+        $response['bls'] = [];
+
+        if(!isset($bl))
+        {
+            $response['success'] = false;
+            $response['msg'] = "Debe especificar el BL.";
+        }
+
+        if($response['success'])
+        {
+            try
+            {
+                $user = Yii::$app->user->identity;
+
+                $response['bls'] = Process::find()
+                                            ->innerJoin('process_transaction', 'process.id=process_transaction.process_id')
+                                            ->select('bl')
+                                            ->where(['like', 'upper(bl)', strtoupper($bl)])
+                                            ->andFilterWhere($user->processCondition())
+                                            ->groupBy(['bl'])
+                                            ->all();
+
+            }
+            catch (Exception $ex)
+            {
+                $response['success'] = false;
+                $response['msg'] = 'Ah occurrido un error al buscar los BL.';
                 $response['msg_dev'] = $ex->getMessage();
             }
         }

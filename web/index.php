@@ -1,6 +1,7 @@
 <?php
 
 error_reporting(E_ERROR);
+//ini_set('max_input_vars', 5000);
 // SET THE INTERNAL ENCODING
 //$charset = 'iso-8859-1';
 //$charset = 'latin1';

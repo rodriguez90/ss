@@ -81,7 +81,7 @@ class AdmUser extends ActiveRecord implements IdentityInterface
         ];
         */
         return [
-            [['username', 'password', 'email', 'nombre', 'apellidos', 'status', 'cedula'], 'required'],
+            [['username', 'password', 'email', 'nombre', 'status', 'cedula'], 'required'],
             [['username', 'auth_key', 'password', 'email','cedula', 'nombre', 'apellidos', 'creado_por', 'password_reset_token'], 'string'],
             [['status', 'created_at', 'updated_at'], 'integer']
 
@@ -170,7 +170,7 @@ class AdmUser extends ActiveRecord implements IdentityInterface
         try {
             return static::findOne(['username' => $username]);
         } catch (Exception $e) {
-            die("Error en el acceso a la base de datos.<br/> Database access error.");
+            die("Error en el acceso a la base de datos.<br/>");
         }
     }
 
@@ -376,5 +376,72 @@ class AdmUser extends ActiveRecord implements IdentityInterface
             return $userAgency->agency;
 
         return null;
+    }
+
+    public function getWhareHouse()
+    {
+        $userWhareHouse = \app\modules\rd\models\UserWarehouse::findOne(['user_id'=>$this->id]);
+
+        if($userWhareHouse)
+            return $userWhareHouse->warehouse;
+
+        return null;
+    }
+
+    public function processCondition()
+    {
+        $params = [];
+        if($this->hasRol('Importador_Exportador'))
+        {
+            $agency = $this->getAgency();
+            $params['agency_id'] = '';
+            if($agency)
+            {
+                $params['agency_id'] = $agency->id;
+            }
+        }
+        else if ($this->hasRol('Cia_transporte'))
+        {
+            $transcompany = $this->getTransCompany();
+            $params['trans_company_id'] = '';
+            if($transcompany)
+            {
+                $params['trans_company_id'] = $transcompany->id;
+            }
+        }
+        else if ($this->hasRol('Deposito') || $this->hasRol('Administrador_deposito') || $this->hasRol('Administracion') )
+        {
+            $params['trans_company_id'] = null;
+        }
+
+//        else if ($this->hasRol('Deposito') || $this->hasRol('Administrador_deposito'))
+//        {
+//            $wareHouse = $this->getWhareHouse();
+//            $params['id_warehouse'] = '';
+//            if($wareHouse)
+//            {
+//                $params['id_warehouse'] = $wareHouse->id;
+//            }
+//        }
+
+        return $params;
+    }
+
+    public function asociatedEntity()
+    {
+        $entity = null;
+        if($this->hasRol('Importador_Exportador'))
+        {
+            $entity = $this->getAgency();
+        }
+        else if ($this->hasRol('Cia_transporte')){
+            $entity = $this->getTransCompany();
+        }
+        else if($this->hasRol('Administracion'))
+        {
+            $entity =  true;
+        }
+
+        return $entity;
     }
 }

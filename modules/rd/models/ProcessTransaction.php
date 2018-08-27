@@ -17,6 +17,7 @@ use Yii;
  * @property string $name_driver
  * @property int $trans_company_id
  * @property string $status
+ * @property string $container_alias
  *
  * @property Container $container
  * @property Process $process
@@ -41,8 +42,8 @@ class ProcessTransaction extends \yii\db\ActiveRecord
         return [
             [['process_id', 'container_id', 'delivery_date', 'active', 'trans_company_id'], 'required'],
             [['process_id', 'container_id', 'active', 'trans_company_id'], 'integer'],
-            [['register_truck', 'register_driver', 'name_driver', 'status'], 'string'],
-            [['delivery_date'], 'safe'],
+            [['register_truck', 'register_driver', 'name_driver', 'status', 'container_alias'], 'string'],
+            [['delivery_date', 'container_alias'], 'safe'],
             [['container_id'], 'exist', 'skipOnError' => true, 'targetClass' => Container::class, 'targetAttribute' => ['container_id' => 'id']],
             [['process_id'], 'exist', 'skipOnError' => true, 'targetClass' => Process::class, 'targetAttribute' => ['process_id' => 'id']],
             [['trans_company_id'], 'exist', 'skipOnError' => true, 'targetClass' => TransCompany::class, 'targetAttribute' => ['trans_company_id' => 'id']],
@@ -65,6 +66,7 @@ class ProcessTransaction extends \yii\db\ActiveRecord
             'name_driver' => 'Nombre del Chofer',
             'trans_company_id' => 'Compañia de Transporte',
             'status' => 'Estado',
+            'container_alias'=>'Alias del Contenedor'
         ];
     }
 

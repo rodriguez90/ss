@@ -21,8 +21,8 @@ var handleJqueryAutocomplete2 = function(op,changeRol) {
     switch (op){
         case 1:
             action = "/administracion/user/getagencias";
-            option0 = "Seleccione la epmpresa";
-            validator = "data-parsley-type=\'digits\' data-parsley-length=\'[13, 13]\'";
+            option0 = "Seleccione la empresa";
+            // validator = "data-parsley-type=\'digits\' data-parsley-length=\'[13, 13]\'";
             min = 13;
             break;
         case 2:
@@ -123,12 +123,13 @@ var handleSelectpicker = function() {
         switch ($(this).val()){
             case 'Importador':
             case 'Exportador':
+            case 'Importador_Exportador':
             case 'Agencia':
                 label.text("Empresa*");
                 handleJqueryAutocomplete2(1,distint);
                 break;
-            case 'Administrador_depósito':
-            case 'Depósito':
+            case 'Administrador_deposito':
+            case 'Deposito':
                 label.text("Depósito*");
                 handleJqueryAutocomplete2(2,distint);
                 break;

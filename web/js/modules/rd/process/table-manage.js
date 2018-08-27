@@ -1,9 +1,13 @@
-/*   
+
+
+/*
 Template Name: Color Admin - Responsive Admin Dashboard Template build with Twitter Bootstrap 3.3.5
 Version: 1.9.0
 Author: Sean Ngu
 Website: http://www.seantheme.com/color-admin-v1.9/admin/
 */
+
+var colHeaderContainer = processType == 1 ? 'Contenedor' : 'Booking/Contenedor' ;
 
 var handleDataTable = function() {
 	"use strict";
@@ -35,44 +39,44 @@ var handleDataTable = function() {
                     $(row).addClass('text-danger');
                 }
                 else {
-                    var elementId =  String(data.name).replace(' ','');
-                    if(processType == 2)
-                    {
-                        // var  html = '<input type=\"text\" class=\"form-control\" id=\"' + elementId +  '\" placeholder=\"Seleccionar\"' + 'value=\"' + moment(data.deliveryDate).format('DD/MM/YYYY') + '\" >';
-
-                        // $('td', row).eq(3).html(html)
-
-                        $('td:eq(3)', row).datepicker({
-                            title:"Seleccione la Fecha Límite",
-                            language: 'es',
-                            autoclose: true,
-                            immediateUpdates:true,
-                            format:'dd/mm/yyyy'
-                        }).on('changeDate', function(event){
-                            // console.log(event.date);
-                            // console.log(dateValue);
-                            var dateValue = moment(event.date).utc().format('DD-MM-YYYY');
-                            var mDateValue = moment(event.date)
-                            var mProcessDD = moment(processDeliveryDate)
-                            console.log("Container deliveryDate: " + dateValue);
-                            console.log("Current deliveryDate: " + processDeliveryDate);
-                            var result = mDateValue.isAfter(mProcessDD);
-                            console.log(result);
-                            if(result)
-                            {
-                                console.log("Change processDeliveryDate: " + dateValue);
-                                processDeliveryDate = dateValue;
-                            }
-                            // data.deliveryDate = dateValue;
-                            table.cell(dataIndex, 3).data(dateValue)
-                        });
-                    }
+                    // var elementId =  String(data.name).replace(' ','');
+                    // if(processType == 2)
+                    // {
+                    //     // var  html = '<input type=\"text\" class=\"form-control\" id=\"' + elementId +  '\" placeholder=\"Seleccionar\"' + 'value=\"' + moment(data.deliveryDate).format('DD/MM/YYYY') + '\" >';
+                    //
+                    //     // $('td', row).eq(3).html(html)
+                    //
+                    //     $('td:eq(3)', row).datepicker({
+                    //         title:"Seleccione la Fecha Límite",
+                    //         language: 'es',
+                    //         autoclose: true,
+                    //         immediateUpdates:true,
+                    //         format:'dd-mm-yyyy'
+                    //     }).on('changeDate', function(event){
+                    //         // console.log(event.date);
+                    //         // console.log(dateValue);
+                    //         var dateValue = moment(event.date).utc().format('DD-MM-YYYY');
+                    //         var mDateValue = moment(event.date)
+                    //         var mProcessDD = moment(processDeliveryDate)
+                    //         console.log("Container deliveryDate: " + dateValue);
+                    //         console.log("Current deliveryDate: " + processDeliveryDate);
+                    //         var result = mDateValue.isAfter(mProcessDD);
+                    //         console.log(result);
+                    //         if(result)
+                    //         {
+                    //             console.log("Change processDeliveryDate: " + dateValue);
+                    //             processDeliveryDate = dateValue;
+                    //         }
+                    //         // data.deliveryDate = dateValue;
+                    //         table.cell(dataIndex, 3).data(dateValue)
+                    //     });
+                    // }
                     if(processType == 1)
                     {
                         // $('td:eq(2)', row).select2(
                         // $('td', row).eq(2).select2(
-                        console.log(data);
-                        console.log(data.type);
+                        // console.log(data);
+                        // console.log(data.type);
                         $('select', row).select2(
 						{
 							language: "es",
@@ -86,7 +90,7 @@ var handleDataTable = function() {
                                 id:type.id,
                                 name:type.text
                             };
-							console.log(containerType);
+							// console.log(containerType);
                             containertDataMap.set(data.name,containerType);
 
                             // $('#mySelect2').val(type.id); // Select the option with a value of '1'
@@ -104,7 +108,8 @@ var handleDataTable = function() {
                     // "title": "Selecionar",
                    "data":'checkbox', // FIXME CHECK THIS
                 },
-                { "title": "Contenedor",
+                {
+                    "title":colHeaderContainer,
                    "data":"name",
                 },
                 { "title": "Tipo/Tamaño",
@@ -139,25 +144,25 @@ var handleDataTable = function() {
                         return data.name;
                     },
                 },
-                {
-                    targets: [3],
-                    data:'deliveryDate',
-                    render: function ( data, type, full, meta )
-                    {
-                        var elementId =  String(full.name).trim();
-                        // console.log("render: " + elementId + " " + type);
-                        // console.log("data: ");
-                        // console.log(data);
-                        if(type == 'display' && full.selectable && processType == 2)
-                        {
-                            var  html = '<input type=\"text\" class=\"form-control\" id=\"' + elementId +  '\" placeholder=\"Seleccionar\"' + ' value=\"' + data + '\"' + ' data-date=\"' +  data + '\" >';
-                            console.log(html)
-                            return html;
-                        }
-
-                        return data;
-                    },
-                },
+                // {
+                //     targets: [3],
+                //     data:'deliveryDate',
+                //     render: function ( data, type, full, meta )
+                //     {
+                //         var elementId =  String(full.name).trim();
+                //         // console.log("render: " + elementId + " " + type);
+                //         // console.log("data: ");
+                //         // console.log(data);
+                //         if(type == 'display' && full.selectable && processType == 2)
+                //         {
+                //             var  html = '<input type=\"text\" class=\"form-control\" id=\"' + elementId +  '\" placeholder=\"Seleccionar\"' + ' value=\"' + data + '\"' + ' data-date=\"' +  data + '\" >';
+                //             console.log(html)
+                //             return html;
+                //         }
+                //
+                //         return data;
+                //     },
+                // },
             ],
         });
 
@@ -176,6 +181,10 @@ var handleDataTable = function() {
             {
                 msg = 'Este contenedor no puede ser seleccionado su estado es: ' + status
             }
+            else if(dt.row(index.row, index.column).data().expired == 1)
+            {
+                msg = 'Este contenedor no puede ser seleccionado: ha expirado su fecha límite.';
+            }
             else {
                 msg = 'Este contenedor no puede ser seleccionado pendiente de facturación o crédito';
             }
@@ -192,7 +201,7 @@ var handleDataTable = function() {
 
 var handleDataTable2 = function () {
     var columns = [
-        { "title": "Contenedor",
+        {  "title":colHeaderContainer,
             "data":"name",
         },
         { "title": "Tipo/Tamaño",
@@ -272,7 +281,7 @@ var handleDataTable3 = function () {
                     // "title": "Seleccione",
                     "data":'checkbox', // FIXME CHECK THIS
                 },
-                { "title": "Contenedor",
+                {   "title":colHeaderContainer,
                     "data":"name",
                 },
                 { "title": "Tipo/Tamaño",

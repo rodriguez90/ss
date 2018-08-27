@@ -11,6 +11,7 @@ use yii\web\NotFoundHttpException;
 use yii\web\ForbiddenHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+use yii\web\Response;
 
 /**
  * AgencyController implements the CRUD actions for Agency model.
@@ -135,7 +136,7 @@ class AgencyController extends Controller
 
         if($model)
         {
-            $model->active = 0;
+            $model->active = -1;
             $model->save();
         }
 
@@ -161,5 +162,71 @@ class AgencyController extends Controller
         }
 
         throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
+    }
+
+
+    public function actionLikeagency()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $term = Yii::$app->request->get('term');
+
+        $response = array();
+        $response['success'] = true;
+        $response['msg'] = '';
+        $response['msg_dev'] = '';
+        $response['companies'] = [];
+
+        if($response['success'])
+        {
+            try
+            {
+                $user = Yii::$app->user->identity;
+                $response['companies'] = Agency::find()
+                    ->select('id, name')
+                    ->where(['like', 'upper(name)', strtoupper($term)])
+                    ->all();
+            }
+            catch (Exception $ex)
+            {
+                $response['success'] = false;
+                $response['msg'] = 'Ah occurrido un error al buscar las empresas.';
+                $response['msg_dev'] = $ex->getMessage();
+            }
+        }
+        return $response;
+    }
+
+    public function actionList()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $response = array();
+        $response['success'] = true;
+        $response['data'] = [];
+        $response['msg'] = '';
+        $response['msg_dev'] = '';
+
+        if($response['success'])
+        {
+            try
+            {
+                $response['data'] = Agency::find()
+                    ->where(['<>','active',-1])
+                    ->asArray()
+                    ->all();
+            }
+            catch ( \PDOException $e)
+            {
+                if($e->getCode() !== '01000')
+                {
+                    $response['success'] = false;
+                    $response['msg'] = "Ah ocurrido al recuperar las empresas.";
+                    $response['msg_dev'] = $e->getMessage();
+                }
+            }
+        }
+
+        return $response;
     }
 }

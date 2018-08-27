@@ -16,8 +16,6 @@ use yii\helpers\Url;
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-
-
 <?php $form = ActiveForm::begin(
     [
         'id' => 'report-form',
@@ -31,46 +29,20 @@ use yii\helpers\Url;
     ]
 ); ?>
 
-
 <div class="col-md-4 col-sm-4">
-
     <div class="form-group">
         <div class="col-md-12 col-sm-12">
-            <select id="bl" name="bl" class="form-control selectpicker" data-size="10"
-                    data-live-search="true">
-                <?php
-
-                echo "<option  value=''>Seleccione BL o Booking</option>";
-
-
-                foreach ($process as $p) {
-                    $selected = $p->bl == $search_bl ? "selected=''": '';
-                    echo "<option ".$selected. " value='" . $p->bl . "'>" . $p->bl . "</option>";
-                }
-
-                ?>
-            </select>
+            <select id="bl" name="bl" class="form-control"></select>
         </div>
     </div>
 
 </div>
 
-
 <div class="col-md-4 col-sm-4">
     <div class="form-group">
         <div class="col-md-12 col-sm-12">
-            <select id="selectpicker-agency" name="agency_id" class="form-control selectpicker" data-size="10"
-                    data-live-search="true">
-                <?php
+            <select id="agency_id" name="agency_id" class="form-control">
 
-                echo "<option  value=''>Seleccione Agencia</option>";
-
-                foreach ($agency as $a) {
-                    $selected = $a->id == $search_agency_id ? "selected=''": '';
-                    echo "<option ".$selected. " value='" . $a->id . "'>" . $a->name . "</option>";
-                }
-
-                ?>
             </select>
         </div>
 
@@ -78,25 +50,12 @@ use yii\helpers\Url;
 </div>
 
 <div class="col-md-4 col-sm-4">
-
     <div class="form-group">
-
         <div class="col-md-12 col-sm-12">
-            <select id="selectpicker-bl" name="trans_company" class="form-control selectpicker" data-size="10"
-                    data-live-search="true">
-                <?php
+            <select  id="trans_company_id" name="trans_company_id" class="form-control">
 
-                echo "<option  value=''>Seleccione Compañía de Trabsporte</option>";
-
-                foreach ($trans_company as $t) {
-                    $selected = $t->id == $search_trans_company ? "selected=''": '';
-                    echo "<option ".$selected. " value='" . $t->id . "'>" . $t->name . "</option>";
-                }
-
-                ?>
             </select>
         </div>
-
     </div>
 </div>
 
@@ -107,7 +66,6 @@ use yii\helpers\Url;
 
     </div>
     <div class="col-md-4 col-sm-4">
-
 
     </div>
     <div class="col-md-4 col-sm-4">

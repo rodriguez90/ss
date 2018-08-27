@@ -3386,7 +3386,7 @@ ul.tagit.inverse li.tagit-choice .tagit-close:focus .ui-icon-close:before {
 .fc-widget-header {
     color: #242a30 !important;
     font-weight: 600 !important;
-    padding: 3px 15px !important;
+   /* padding: 3px 15px !important;*/
 }
 .fc-grid .fc-day-number {
     padding: 3px 5px !important;

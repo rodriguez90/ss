@@ -50,10 +50,42 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 </div>
 
+<!-- #modal-containers -->
+<div class="modal fade" id="modal-select-containers">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 id="modalTitle" class="modal-title"></h4>
+                <h5 id="modalTicket" class="modal-title"></h5>
+            </div>
+            <div class="modal-body p-15">
+                <div class="table-responsive">
+                    <table id="data-table-modal" class="table table-striped table-bordered table-condensed nowrap" width="100%">
+                        <thead>
+                        <tr>
+                            <th>Seleccione <input type="checkbox" name="select_all" value="1" id="select-all"></th>
+                            <th>Contenedor</th>
+                            <th>Tipo</th>
+                            <th>Fecha Límite</th>
+                            <th>Agencia</th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Cancelar</a>
+                <!--                <a id="aceptBtn" href="#;" class="btn btn-sm btn-success" disabled>Aceptar</a>-->
+                <a id="aceptBtn" href="#;" class="btn btn-sm btn-success" >Aceptar</a>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <script type="text/javascript">
     var userId = '<?php echo $user->id; ?>';
 </script>
 
-<?php $this->registerJsFile('@web/js/modules/rd/ticket/shedule.js', ['depends' => ['app\assets\CalendarAsset']]) ?>
+<?php $this->registerJsFile('@web/js/modules/rd/ticket/shedule.js', ['depends' => ['app\assets\CalendarAsset', 'app\assets\TableAsset']]) ?>
 

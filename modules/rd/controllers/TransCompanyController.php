@@ -3,6 +3,7 @@
 namespace app\modules\rd\controllers;
 
 use app\modules\rd\models\TransCompanyPhone;
+use function GuzzleHttp\Psr7\str;
 use Yii;
 use app\modules\rd\models\TransCompany;
 use app\modules\rd\models\TransCompanySearch;
@@ -181,7 +182,7 @@ class TransCompanyController extends Controller
 
         if($model)
         {
-            $model->active = 0;
+            $model->active = -1;
             $model->save();
         }
 
@@ -276,8 +277,11 @@ class TransCompanyController extends Controller
         $response['trunks'] = [];
         $response['msg'] = '';
         $response['msg_dev'] = '';
+        $trunks = [];
 
         $code = Yii::$app->request->get('code');
+        $mode = Yii::$app->request->get('mode');
+        $term = Yii::$app->request->get('term');
 
         if(!isset($code))
         {
@@ -287,12 +291,43 @@ class TransCompanyController extends Controller
 
         if($response['success'])
         {
-//            $sql = "exec sp_sgt_placa_cons " . $code;
-            $sql = "exec sp_sgt_placa_cons '" .$code ."'";
-            $response['trunks'] = Yii::$app->db2->createCommand($sql)->queryAll();
+            if($mode == 1)
+            {
+                $sql = "exec sp_sgt_placa_cons '" .$code ."'";
+                $trunks = Yii::$app->db2->createCommand($sql)->queryAll();
+            }
+            else
+            {
+//                id: item.placa,
+//                                    text: item.placa,
+//                                    err_code: item.err_code,
+//                                    err_msg: item.err_msg,
+//                                    rfid: item.rfid,
 
+                for($i = 0; $i < 5; $i++)
+                {
+                   $trunk = ['placa'=>'AbB' . $i . $i . $i,
+                             'err_code'=>"0",
+                             'err_msg'=>"error",
+                             'rfid'=>$i . $i . $i];
+
+                    $trunks[] = $trunk;
+                }
+            }
+
+            if(isset($term) && $term !== '')
+            {
+                foreach ($trunks as $trunk)
+                {
+                    if (strpos(strtoupper($trunk['placa']), strtoupper($term)) !== false) {
+                        $response['trunks'][]  = $trunk;
+                    }
+                }
+            }
+            else{
+                $response['trunks'] = $trunks;
+            }
         }
-
         return $response;
     }
 
@@ -305,8 +340,11 @@ class TransCompanyController extends Controller
         $response['drivers'] = [];
         $response['msg'] = '';
         $response['msg_dev'] = '';
+        $drivers = [];
 
         $code = Yii::$app->request->get('code');
+        $mode = Yii::$app->request->get('mode');
+        $term = Yii::$app->request->get('term');
 
         if(!isset($code))
         {
@@ -316,8 +354,45 @@ class TransCompanyController extends Controller
 
         if($response['success'])
         {
-            $sql = "exec sp_sgt_chofer_cons '" .$code ."'";
-            $response['drivers'] = Yii::$app->db2->createCommand($sql)->queryAll();
+            if($mode == 1)
+            {
+                $sql = "exec sp_sgt_chofer_cons '" .$code ."'";
+                $drivers = Yii::$app->db2->createCommand($sql)->queryAll();
+            }
+            else
+            {
+//                id: item.chofer_ruc,
+//                                        text: item.chofer_nombre,
+//                                        err_code: item.err_code,
+//                                        err_msg: item.err_msg,
+//                                        chofer_ruc: item.chofer_ruc,
+
+                for($i = 0; $i < 5; $i++)
+                {
+                    $driver = [
+                        'chofer_ruc'=>$i . $i . $i,
+                        'chofer_nombre'=>'AbB' . $i . $i . $i,
+                        'err_code'=>"0",
+                        'err_msg'=>"error",
+                        ];
+
+                    $drivers[] = $driver;
+                }
+            }
+
+            if(isset($term) && $term !== '')
+            {
+                foreach ($drivers as $driver)
+                {
+                    $termUpper = strtoupper($term);
+                    if (strpos(strtoupper($driver['chofer_ruc']), $termUpper) !== false || strpos(strtoupper($driver['chofer_nombre']), $termUpper) !== false ) {
+                        $response['drivers'] [] = $driver;
+                    }
+                }
+            }
+            else{
+                $response['drivers'] = $drivers;
+            }
         }
         return $response;
     }
@@ -342,6 +417,45 @@ class TransCompanyController extends Controller
         }
 
 
-        throw new NotFoundHttpException('The requested page does not exist.');
+        throw new NotFoundHttpException('Esta empresa de transporte ya no existe');
+    }
+
+    public function actionList()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $response = array();
+        $response['success'] = true;
+        $response['data'] = [];
+        $response['msg'] = '';
+        $response['msg_dev'] = '';
+
+        if($response['success'])
+        {
+            try
+            {
+                $results = TransCompany::find()
+                    ->where(['<>','active',-1])
+                    ->asArray()
+                    ->all();
+
+                foreach ($results as $result)
+                {
+                    $result['name'] = utf8_encode($result['name']);
+                    $response['data'][] = $result;
+                }
+            }
+            catch ( \PDOException $e)
+            {
+                if($e->getCode() !== '01000')
+                {
+                    $response['success'] = false;
+                    $response['msg'] = "Ah ocurrido al recuperar las empresas.";
+                    $response['msg_dev'] = $e->getMessage();
+                }
+            }
+        }
+
+        return $response;
     }
 }

@@ -119,15 +119,14 @@ class CalendarController extends Controller
                         $aux = new DateTime($event['start']);
                         $aux->setTimezone(new DateTimeZone("UTC"));
                         $model->start_datetime = $aux->format("Y-m-d H:i:s");  //date_format( new \DateTime($event['start'],new DateTimeZone("UTC")),"Y-m-d G:i:s");
-//                        var_dump($model->start_datetime);
 
                         $aux1 = new DateTime($event['end']);
                         $aux1->setTimezone(new DateTimeZone("UTC"));
                         $model->end_datetime = $aux1->format("Y-m-d H:i:s");// date_format(new \DateTime($event['end'],new DateTimeZone("UTC")),"Y-m-d G:i:s");
-//                        var_dump($model->end_datetime);
-//                        die;
+
                         $model->amount = $event['title'];
                         $model->id_warehouse =  1;
+                        $model->active =  1;
 
                         if($ok && !$model->save())
                         {
@@ -258,32 +257,30 @@ class CalendarController extends Controller
             $model = $this->findModel($id);
             $amount = $model->amount;
 
-            $reservados = Calendar::find()
-                ->innerJoin("ticket","calendar.id = ticket.calendar_id")
-                ->where(["calendar.id"=>$model->id])
-                ->count();
+            $reservados = Ticket::find()
+                          ->where(["calendar_id"=>$model->id])
+                          ->andWhere(['active'=>1])
+                          ->count();
 
-            if($reservados == 0){
-                $model = $this->findModel($id);
-                $result = 0;
-
+            if($reservados == 0)
+            {
                 if($model)
                 {
-                    $model->active = 0;
-                    $result = $model->update();
-                }
-                {
-                    $result ['status']= 0;
-                    $result['msg'] = "El calendario no existe.";
+                    $model->active = -1;
+
+                    if($model->save())
+                    {
+                        $result ['status'] = 1;
+                        $result['msg'] = "Disponibilidad eliminadas: ". $amount;
+                    }
+                    else
+                    {
+                        $result ['status']= 0;
+                        $result['msg'] = "No fue posible eliminar la disponibilidad.";
+                    }
                 }
 
-                if($result > 0){
-                    $result ['status']= 1;
-                    $result['msg'] = "Disponibilidad eliminadas: ".$amount;
-                }else{
-                    $result ['status']= 0;
-                    $result['msg'] = "No se pudieron eliminar la disponibilidad.";
-                }
+
             }else{
                 $result ['status']= 0;
                 $result['msg'] = "No se pueden eliminar el calendario porque hay turnos reservados.";
@@ -294,8 +291,6 @@ class CalendarController extends Controller
         else{
             throw new ForbiddenHttpException('Acceso denegado');
         }
-
-        // return $this->redirect(['index']);
     }
 
     /**
@@ -330,24 +325,29 @@ class CalendarController extends Controller
              * Order By start, ASC
              */
 
-            $query =  Calendar::find();
+            $query =  Calendar::find()->where(['active'=>1]);
 
-            if(isset($startDate) && $startDate !== "")
-            {
-                $aux = new \DateTime($startDate);
-                $aux->setTimezone(new DateTimeZone("UTC"));
-                $datetimeFormated = $aux->format("Y-m-d G:i:s");
-//                var_dump($datetimeFormated);
-                $query->andWhere(['>=','start_datetime', $datetimeFormated]);
-            }
-            if (isset($endDate) && $endDate !== "")
-            {
-                $aux = new \DateTime($endDate);
-                $aux->setTimezone(new DateTimeZone("UTC"));
-                $datetimeFormated = $aux->format("Y-m-d G:i:s");
-//                var_dump($datetimeFormated);die;
-                $query->andWhere(['<=','end_datetime', $datetimeFormated]);
-            }
+            $query->andFilterWhere(['>=','start_datetime', $startDate]);
+            $query->andFilterWhere(['<=','end_datetime', $endDate]);
+
+//            if(isset($startDate) && $startDate !== "")
+//            {
+//                $aux = new \DateTime($startDate);
+//                $aux->setTimezone(new DateTimeZone("UTC"));
+//                $datetimeFormated = $aux->format("Y-m-d G:i:s");
+////                var_dump($datetimeFormated);
+////                $query->andWhere(['>=','start_datetime', $datetimeFormated]);
+//
+//            }
+//            if (isset($endDate) && $endDate !== "")
+//            {
+//                $aux = new \DateTime($endDate);
+//                $aux->setTimezone(new DateTimeZone("UTC"));
+//                $datetimeFormated = $aux->format("Y-m-d G:i:s");
+////                var_dump($datetimeFormated);die;
+//                $query->andWhere(['<=','end_datetime', $datetimeFormated]);
+//
+//            }
 
             $calendars= $query
                         ->orderBy("start_datetime",SORT_ASC)

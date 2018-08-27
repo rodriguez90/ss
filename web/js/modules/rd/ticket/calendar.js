@@ -110,7 +110,6 @@ var handleCalendarDemo = function () {
 
 		},
         eventClick: function(calEvent, jsEvent, view) {
-
             if(calEvent.type === 'D')
             {
                 // var result = findSlotEvent(calEvent.start, calEvent.end);
@@ -127,17 +126,20 @@ var handleCalendarDemo = function () {
                     var table = $('#data-table-modal').DataTable();
 
                     var count = 0;
+                    var count2 = 0;
                     table
                         .clear()
                         .draw();
 
-                    transactions.forEach(function(transaction, key) {
+                    transactions.forEach(function(transaction, key)
+                    {
 
                         var container = containers.get(transaction.container_id);
 
                         var indexSelected = selectedTransactions.indexOf(transaction.id);
                         var indexTicket = transactionWithTicket.indexOf(transaction.id);
-                        var deliveryDate = moment(transaction.delivery_date);
+                        var deliveryDate = moment(transaction.delivery_date).format('YYYY/MM/DD');
+                        var calendarDeliveryDate = moment(currentCalendarEvent.end).format('YYYY/MM/DD');
 
                         // var now = moment();
                         // var then = moment(date);
@@ -148,20 +150,29 @@ var handleCalendarDemo = function () {
                         //     $('.result').text('Date is future');
                         // }
 
-                        if(indexSelected === -1 && indexTicket === -1 && currentCalendarEvent.end  > deliveryDate )
+                        var result = moment(calendarDeliveryDate) <= moment(deliveryDate);
+
+                        if(indexSelected === -1 && indexTicket === -1)
                         {
-                            table.row.add(
-                                {
-                                    checkbox:"",
-                                    name: container.name,
-                                    type: container.code,
-                                    tonnage: container.tonnage,
-                                    deliveryDate:transaction.delivery_date,
-                                    agency:agency.name,
-                                    transactionId:transaction.id
-                                }
-                            ).draw();
-                            count++;
+                            if(result)
+                            {
+                                table.row.add(
+                                    {
+                                        checkbox:"",
+                                        name: container.name,
+                                        type: container.code,
+                                        tonnage: container.tonnage,
+                                        deliveryDate:transaction.delivery_date,
+                                        agency:agency.name,
+                                        transactionId:transaction.id
+                                    }
+                                ).draw();
+                                count++;
+                            }
+                            else
+                            {
+                                count2++;
+                            }
                         }
                     });
 
@@ -170,14 +181,22 @@ var handleCalendarDemo = function () {
                         mode = 'create';
                         $('#select-all')[0].checked = false;
                         $("#modalTitle").get(0).textContent = 'Cupos disponibles: ' + currentCalendarEvent.title;
-                        $("#modalTicket").get(0).textContent = moment(currentCalendarEvent.start).format("dddd, MMMM YYYY H:mm");
+                        $("#modalTicket").get(0).textContent = moment(currentCalendarEvent.start).format("DD-MM-YYYY H:mm");
                         $("#aceptBtn").removeClass("btn-danger").addClass("btn-success");
                         $("#aceptBtn").text("Aceptar");
                         $("#modal-select-containers").modal("show");
                     }
-                    else {
-                        alert('Ya todas los contenedores de esta recepción tienen cupos');
-                        return false;
+                    else
+                    {
+                        if(count2 > 0)
+                        {
+                            alert('La fecha seleccionada en el calendario es mayor que la fecha límite de los contenedores.');
+                            return false;
+                        }
+                        {
+                            alert('Ya todas los contenedores de este proceso tienen turnos.');
+                            return false;
+                        }
                     }
                 }
                 else {
@@ -185,9 +204,10 @@ var handleCalendarDemo = function () {
                     return false;
                 }
             }
-            else {
+            else
+            {
                 var id = calEvent.calendarId; //calEvent.type === "T20"  ? calEvent.calendarId + "T20" : calEvent.calendarId + "T40" ;
-                console.log(id);
+                //console.log(id);
                 currentCalendarEvent = calendarEventMap.get(id) ;
 
                 if(!currentCalendarEvent)
@@ -236,7 +256,7 @@ var handleCalendarDemo = function () {
                     mode = 'delete';
                     $('#select-all')[0].checked = false;
                     $("#modalTitle").get(0).textContent = 'Eliminar Cupos';
-                    $("#modalTicket").get(0).textContent = moment(currentCalendarEvent.start).format("dddd, MMMM YYYY H:mm");
+                    $("#modalTicket").get(0).textContent = moment(currentCalendarEvent.start).format("DD-MM-YYYY H:mm");
                     $("#aceptBtn").removeClass("btn-success").addClass("btn-danger");
                     $("#aceptBtn").text("Eliminar");
                     $("#modal-select-containers").modal("show");

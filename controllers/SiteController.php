@@ -26,6 +26,7 @@ use PDO;
 use Mpdf\Mpdf;
 use Yii;
 use yii\db\Command;
+use yii\db\Exception;
 use yii\filters\AccessControl;
 use yii\helpers\Url;
 use yii\web\Controller;
@@ -52,7 +53,7 @@ class SiteController extends Controller
                 'only' => ['logout'],
                 'rules' => [
                     [
-                        'actions' => ['logout', 'contact', 'about', 'index','register'],
+                        'actions' => ['logout', 'contact', 'about', 'index','register', 'print', 'report', 'printreport'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -90,113 +91,62 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-//
-//        $sql =  '{ CALL  disv..sp_sgt_bl_cons (@BL =:BL)}' ;
-//
-//        $command = \Yii::app()->db->createCommand($sql);
-//        $command->bindParam(":BL", 'HLCUMTR180305591', PDO::PARAM_STR);
-//        $list = $command->queryAll();
-//
-//        var_dump($list);die;
+        $user = Yii::$app->user->identity;
+        $importCount = 0;
+        $exportCount = 0;
+        $ticketCount = 0;
+        $session = Yii::$app->session;
 
-
-//        $sql = "exec disv.sp_sgt_bl_cons 'HLCUMTR180305591";
-//        $params = [':BL'=>'HLCUMTR180305591'];
-
-        // sql query for calling the procedure
-//        $sql = "exec disv..sp_sgt_bl_cons HLCUMTR180305591";
-//        $sql = "exec sp_sgt_companias_cons 12917504";
-//        $sql = "exec sp_sgt_placa_cons 12917504";
-//        $result = Yii::$app->db2->createCommand($sql)->queryAll();
-//        var_dump($result);die;
-//
-//        $result = \Yii::$app->db->createCommand($sql, $params)
-//            ->execute();
-//
-//        var_dump($result);die;
-
-//        $connection = Yii::$app->db;
-//        $command = $connection->createCommand($sql);
-//        $result = $command->execute();
-//        var_dump($result);die;
-
-//        $w = Warehouse::find()->all();
-//        var_dump($w);die;
-//        $w = new Warehouse();
-//
-//        $w->name = 'Test';
-//        $w->code_oce = 'aaaa';
-//        $w->ruc = '1111111111111';
-//        $w->active = 1;
-//        if (!$w->save())
-//        {
-//            var_dump($w->getFirstErrors());
-//        }
-//        else
-//        {
-//            var_dump($w->id);
-//        }
-//        die;
-//
-//        $agencia = new Agency();
-//        $agencia->name = 'Test';
-//        $agencia->code_oce = 'aaaa';
-//        $agencia->ruc = 'adsasdasdasdasd';
-//        $agencia->active = 1;
-//        if (!$agencia->save())
-//        {
-//            var_dump($agencia->getFirstErrors());
-//        }
-//        else
-//        {
-//            var_dump($agencia->id);
-//        }
-//
-////        $agencia = Agency::findOne(['id'=>new Expression("CONVERT(integer, 1)")]);
-//        $agencia = Agency::findOne(['name'=>new Expression("CONVERT(varchar, 'aaaa')")]);
-//        var_dump($agencia);die;
-//        $agencia->name = 'YEESSSSS!!!!';
-//        if ($agencia->save())
-//        {
-//            die('YESSS!!!');
-//        }
-//        else
-//        {
-//            var_dump($agencia->getFirstErrors());die;
-//        }
-//        return $this->render('index');
-
-        $user = AdmUser::findOne(['id'=>Yii::$app->user->getId()]);
-        $params = Yii::$app->request->queryParams;
         if($user && ($user->hasRol('Importador')  ||  $user->hasRol('Exportador') ||  $user->hasRol('Importador_Exportador')))
         {
             $agency = $user->getAgency();
-            $params['agency_id'] = '';
             if($agency)
             {
-                $params['agency_id'] = $agency->name;
+                $session->set('agencyId', $agency->id);
+                $importCount = Process::find()
+                    ->innerJoin("process_transaction","process_transaction.process_id = process.id and process_transaction.active=1")
+                    ->where(['type'=>Process::PROCESS_IMPORT, 'agency_id'=>$agency->id, 'process.active'=>1])
+                    ->count();
+                $exportCount = Process::find()
+                    ->innerJoin("process_transaction","process_transaction.process_id = process.id and process_transaction.active=1")
+                    ->where(['type'=>Process::PROCESS_EXPORT, 'agency_id'=>$agency->id, 'process.active'=>1])
+                    ->count();
             }
         }
-        else if ($user && $user->hasRol('Cia_transporte')){
+        else if ($user && $user->hasRol('Cia_transporte'))
+        {
             $transcompany = $user->getTransCompany();
-            $params['trans_company_id'] = '';
             if($transcompany)
             {
-                $params['trans_company_id'] = $transcompany->name;
+                $session->set('transCompanyId', $transcompany->id);
+                $ticketCount = Ticket::find()
+                    ->innerJoin('process_transaction', 'process_transaction.id=ticket.process_transaction_id and process_transaction.active=1')
+                    ->where(['ticket.active'=>1])
+                    ->andFilterWhere(['process_transaction.trans_company_id'=>$transcompany->id])
+                    ->count();
             }
         }
+//        else if ($user && ($user->hasRol('Deposito') || $user->hasRol('Administrador_deposito')))
+//        {
+//            $warehouse = $user->getWhareHouse();
+//            if($warehouse)
+//            {
+//                $searchModel->warehouseCompanyId = $warehouse->id;
+//            }
+//        }
+        else if($user && $user->hasRol('Administracion'))
+        {
+            $importCount = Process::find()->where(['type'=>Process::PROCESS_IMPORT, 'active'=>1])->count();
+            $exportCount = Process::find()->where(['type'=>Process::PROCESS_EXPORT, 'active'=>1])->count();
+            $ticketCount = Ticket::find()->where(['active'=>1])->count();
+        }
 
-        $searchModel = new ProcessSearch();
-        $dataProvider = $searchModel->search($params);
-        $importCount = Process::find()->where(['type'=>Process::PROCESS_IMPORT])->count();
-        $exportCount = Process::find()->where(['type'=>Process::PROCESS_EXPORT])->count();
-        $ticketCount = TicketSearch::find()->count();
         $myparams = array();
-        $myparams['searchModel'] = $searchModel;
-        $myparams['dataProvider'] = $dataProvider;
         $myparams['importCount'] = $importCount;
         $myparams['exportCount'] = $exportCount;
+
         $myparams['ticketCount'] = $ticketCount;
+
         return $this->render('index', $myparams);
     }
 
@@ -214,32 +164,28 @@ class SiteController extends Controller
         }
 
         $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()))
+        if ($model->load(Yii::$app->request->post()) && $model->validate())
         {
             if ($model->login())
             {
                 $session = Yii::$app->session;
                 $session->open();
 
-                $user = AdmUser::findOne(['id'=>Yii::$app->user->getId(),'status'=>1]);
-                if($user!=null){
-                    $session->set('user',$user);
-                    return $this->redirect(Url::toRoute('/site/index'));
-                }else{
-                    return $this->render('login', ['model' => $model,'msg'=>'Usuario inactivo, contacte al administrador.']);
-                }
+                $user = Yii::$app->user->identity;
+				
+				$session->set('user', $user);
+                return $this->redirect(Url::toRoute('/site/index'));
             }
             else
             {
-                return $this->render('login', ['model' => $model,'msg'=>'Usuario o contraseña incorrecta.']);
+                return $this->render('login', ['model' => $model,'msg'=>implode('', $model->getErrorSummary(false))]);
             }
-
-        }else{
-            $msg = Yii::$app->request->get('msg');
-            return $this->render('login', ['model' => $model,'msg'=>$msg]);
+        }
+        else{
+            $msg = 'Debe ingresar el usurio y la contraseña.';
+            return $this->render('login', ['model' => $model,'msg'=>implode('', $model->getErrorSummary(false))]);
         }
     }
-
 
     public function actionRegister()
     {
@@ -278,7 +224,7 @@ class SiteController extends Controller
                 $model->created_at = time();
                 $model->updated_at = time();
                 $model->creado_por = Yii::$app->user->identity->username;
-                $model->status =0;
+                $model->status = 0;
 
                 $auth =  Yii::$app->authManager;
                 $new_rol = null;
@@ -338,8 +284,6 @@ class SiteController extends Controller
         return $this->render('register', ['model'=>$model,'agencias'=>$agencias,'trans_comp'=>$trans_comp]);
     }
 
-
-
     /**
      * Logout action.
      *
@@ -370,53 +314,24 @@ class SiteController extends Controller
         ]);
     }
 
-    /**                */
     public function actionAbout()
     {
-        $containers = Container::find()
-            ->all();
-
-
-        return $this->render('about',['containers'=>$containers]);
+        return $this->render('about');
     }
 
-    public function actionQr(){
-
-//    var_dump(date('YmdHis'));die;
-       return $this->render('about', [
-                "path"=> Yii::$app->request->baseUrl."/qrcodes/1-qrcode.png"
-            ]);
-
-    }
-
-
-    public function actionPrint(){
-        $user = AdmUser::findOne(['id'=>Yii::$app->user->getId()]);
-        $params = Yii::$app->request->queryParams;
-        if($user && $user->hasRol('Agencia'))
-        {
-            $userAgency = UserAgency::findOne(['user_id'=>$user->id]);
-            $params['agency_id'] = '';
-//            if($userAgency)
-//            {
-//                $params['agency_id'] = $userAgency->agency->name;
-//            }
-        }
-        else if ($user && $user->hasRol('Cia_transporte')){
-            $userCiaTrans = UserTranscompany::findOne(['user_id'=>$user->id]);
-            $params['trans_company_id'] = '';
-            if($userCiaTrans)
-            {
-                $params['trans_company_id'] = $userCiaTrans->transcompany->name;
-            }
-        }
+    public function actionPrint()
+    {
+        $processId = Yii::$app->request->get('process');
+        $session = Yii::$app->session;
 
         $processExp = Process::find()
             ->innerJoin('agency','process.agency_id = agency.id')
             ->innerJoin('process_transaction','process_transaction.process_id = process.id')
             ->innerJoin('container','process_transaction.container_id = container.id')
             ->where(['process.type'=>Process::PROCESS_EXPORT])
-
+            ->andWhere(['process.id'=>$processId])
+            ->andFilterWhere(['agency_id'=>$session->get('agencyId')])
+            ->andFilterWhere(['process_transaction.trans_company_id'=>$session->get('transCompanyId')])
             ->all();
 
         $processImp = Process::find()
@@ -424,7 +339,9 @@ class SiteController extends Controller
             ->innerJoin('process_transaction','process_transaction.process_id = process.id')
             ->innerJoin('container','process_transaction.container_id = container.id')
             ->where(['process.type'=>Process::PROCESS_IMPORT])
-
+            ->andWhere(['process.id'=>$processId])
+            ->andFilterWhere(['agency_id'=>$session->get('agencyId')])
+            ->andFilterWhere(['process_transaction.trans_company_id'=>$session->get('transCompanyId')])
             ->all();
 
         $body = $this->renderPartial('print', [
@@ -435,94 +352,101 @@ class SiteController extends Controller
         $pdf =  new mPDF(['mode'=>'utf-8' , 'format'=>'A4-L']);
         $pdf->SetTitle("Solicitudes Realizadas");
         $pdf->WriteHTML($body);
-        $path= $pdf->Output("Solicitudes Realizadas.pdf","D");
+        $path= $pdf->Output("Solicitudes Realizadas.pdf","I");
 
     }
 
     public function actionReport()
     {
+        if(Yii::$app->request->post())
+        {
+            Yii::$app->response->format = Response::FORMAT_JSON;
 
-//        if(!Yii::$app->user->can("admin_mod") && Yii::$app->user->can("process_create")) {
-//            throw new ForbiddenHttpException('Usted no tiene permiso para crear una recepción');
-//        }
+            $bl = Yii::$app->request->post("bl");
+            $agencyId =  Yii::$app->request->post("agencyId");
+            $transCompanyId =  Yii::$app->request->post("transCompanyId");
 
-        $trans_company = TransCompany::findAll(["active"=>1]);
-        $agency = Agency::findAll(["active"=>1]);
-        $process = Process::find()
-            ->all();
+            $response = array();
+            $response['success'] = true;
+            $response['data'] = [];
+            $response['msg'] = '';
+            $response['msg_dev'] = '';
 
-        $searchModel = null;
-        $dataProvider = null;
+            try{
 
-        if(Yii::$app->request->isPost){
+                $response['data'] = Process::find()
+                    ->select('process.id, 
+                                process.bl, 
+                                process.delivery_date, 
+                                process.type, 
+                                agency.name as agencyName,
+                                COUNT(process_transaction.id) as containerAmount,			 
+                                COUNT(ticket.id) as countTicket'
+                    )
+                    ->innerJoin('agency', 'agency.id = process.agency_id')
+                    ->innerJoin("process_transaction","process_transaction.process_id = process.id and process_transaction.active = 1")
+                    ->leftJoin("ticket","process_transaction.id = ticket.process_transaction_id and ticket.active = 1")
+                    ->where(['process.active'=>1])
+                    ->andFilterWhere(['process.bl'=>$bl])
+                    ->andFilterWhere(['agency_id'=>$agencyId])
+                    ->andFilterWhere(['process_transaction.trans_company_id'=>$transCompanyId])
+                    ->groupBy(['process.id', 'agency.id'])
+                    ->asArray()
+                    ->all();
 
-            $params = Yii::$app->request->queryParams;
-            $searchModel = new ProcessSearch();
-            $dataProvider = $searchModel->search($params);
-
-            $search_bl = Yii::$app->request->post("bl");
-            $search_agency_id =  Yii::$app->request->post("agency_id");
-            $search_trans_company =  Yii::$app->request->post("trans_company");
-
-            if(isset($search_bl)) {
-                $dataProvider->query->andFilterWhere(['like', 'bl', $search_bl]);
+            }
+            catch ( \PDOException $e)
+            {
+                if($e->getCode() !== '01000')
+                {
+                    $response['success'] = false;
+                    $response['msg'] = "Ah ocurrido al recuperar los procesos.";
+                    $response['msg_dev'] = $e->getMessage();
+                }
             }
 
-            if(isset($search_agency_id)) {
-                $dataProvider->query->andFilterWhere(['like', 'agency_id', $search_agency_id]);
-            }
-
-            if(isset($search_trans_company)) {
-                    $filter = ProcessTransaction::find()->select('process_id')->where(['like','trans_company_id', $search_trans_company]);
-                    $dataProvider->query->andFilterWhere(['process.id'=>$filter]);
-            }
+            return $response;
         }
 
-        return $this->render('report', [
-            'searchModel'=>$searchModel,
-            'dataProvider'=>$dataProvider,
-            'trans_company'=>$trans_company,
-            'agency'=>$agency,
-             'process'=>$process,
-             'search_bl'=>$search_bl,
-            'search_agency_id'=>$search_agency_id,
-            'search_trans_company'=>$search_trans_company,
-
-        ]);
+        return $this->render('report');
     }
 
-    public function actionPrintreport($bl,$agency_id,$trans_company_id){
+    public function actionPrintreport()
+    {
+        $processId = Yii::$app->request->get('process');
 
         $process = Process::find()->innerJoin('agency', 'agency.id = process.agency_id')
             ->innerJoin("process_transaction","process_transaction.process_id = process.id")
-            ->where(['like', 'bl', $bl])
-            ->andWhere(['like', 'agency_id', $agency_id])
-            ->andWhere( ['like','process_transaction.trans_company_id',$trans_company_id])
+            ->where(['process_transaction.active'=>1])
+            ->andWhere(['process.id'=>$processId])
+            ->andWhere(['process.active'=>1])
+            ->andWhere(["process_transaction.active"=>1])
             ->all();
 
         $result = [];
 
-        foreach ($process as $p){
-
+        foreach ($process as $p)
+        {
             $row = [];
             $row["process"] = $p;
             $containers = Container::find()
-                ->select('container.id,container.status,container.name,container.tonnage,process_transaction.id as process_trans_id')
+                ->select('container.id,process_transaction.status,container.name,container.tonnage,process_transaction.id as process_trans_id')
                 ->innerJoin("process_transaction","process_transaction.container_id = container.id")
                 ->innerJoin("process","process_transaction.process_id = process.id")
                 ->where(["process.id"=>$p->id])
+                ->andWhere(["process_transaction.active"=>1])
                 ->asArray()
                 ->all();
 
-
-
             $contickes = [];
-            foreach ($containers as $container){
+            foreach ($containers as $container)
+            {
                $start_datetime  = ProcessTransaction::find()
                     ->select('calendar.start_datetime')
                     ->innerJoin("ticket","ticket.process_transaction_id = process_transaction.id")
                     ->innerJoin("calendar","calendar.id = ticket.calendar_id")
                     ->where(["process_transaction.id"=> $container['process_trans_id']])
+                    ->andWhere(["process_transaction.active"=>1])
                     ->asArray()
                     ->one();
 
@@ -545,7 +469,7 @@ class SiteController extends Controller
         $pdf =  new mPDF(['mode'=>'utf-8' , 'format'=>'A4-L']);
         $pdf->SetTitle("Solicitudes Realizadas");
         $pdf->WriteHTML($body);
-        $path= $pdf->Output("Solicitudes Realizadas.pdf","D");
+        $path= $pdf->Output("Solicitudes Realizadas.pdf","I");
 
     }
 
@@ -707,6 +631,57 @@ class SiteController extends Controller
                 }
             }
         }
+        return $response;
+    }
+
+    public function actionDashboardata()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $response = array();
+        $response['success'] = true;
+        $response['data'] = [];
+        $response['msg'] = '';
+        $response['msg_dev'] = '';
+        $session = Yii::$app->session;
+
+        if($response['success'])
+        {
+            try{
+
+                $response['data'] = Process::find()
+                    ->select('process.id, 
+                                    process.bl, 
+                                    process.delivery_date, 
+                                    process.type, 
+                                    agency.name as agency_name,
+                                    COUNT(process_transaction.id) as countContainer,			 
+                                    COUNT(ticket.id) as countTicket'
+                                )
+                    ->innerJoin('agency', 'agency.id = process.agency_id')
+                    ->innerJoin("process_transaction","process_transaction.process_id = process.id and process_transaction.active=1")
+                    ->leftJoin("ticket","process_transaction.id = ticket.process_transaction_id and ticket.active=1")
+                    ->where(['process.active'=>1])
+                    ->andFilterWhere(['agency_id'=>$session->get('agencyId')])
+                    ->andFilterWhere(['process_transaction.trans_company_id'=>$session->get('transCompanyId')])
+                    ->groupBy(['process.id', 'agency.id'])
+//                    ->groupBy(['process.id', 'process.bl', 'process.delivery_date', 'process.type', 'agency.id', 'agency.name'])
+                    ->asArray()
+                    ->all();
+
+            }
+            catch ( Exception $e)
+            {
+                if($e->getCode() !== '01000')
+                {
+                    $response['success'] = false;
+                    $response['msg'] = "Ah ocurrido al recuperar los procesos.";
+                    $response['msg_dev'] = $e->getMessage();
+                    $response['data'] = [];
+                }
+            }
+        }
+
         return $response;
     }
 }

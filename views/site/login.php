@@ -12,19 +12,12 @@ $this->title = 'Login';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
-
-
-
-
-
-
-
 <!-- begin #page-loader -->
 <div id="page-loader" class="fade in"><span class="spinner"></span></div>
 <!-- end #page-loader -->
 
 <div class="login-cover">
-    <div class="login-cover-image"><img width="100%px" height="100%px" src=<?php echo \yii\helpers\Url::to("@web/img/login-bg/tpg-2.jpeg");?> data-id="login-cover-image" alt="" /></div>
+    <div class="login-cover-image"><img width="100%px" height="100%px" src=<?php echo \yii\helpers\Url::to("@web/img/login-bg/tpg-3.jpeg");?> data-id="login-cover-image" alt="" /></div>
     <div class="login-cover-bg"></div>
 </div>
 
@@ -66,7 +59,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 </div>
 
             <div class="m-t-20">
-              Regístrate <a href=" <?= Url::to(['/site/register']) ?>" class="text-success">aquí</a>
+              Regístrese <a href="http://www.tpg.com.ec/webtpg/webpages/wpg_preregistro.php" class="text-success">aquí</a>
             </div>
 
 
@@ -74,11 +67,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <li class="parsley-required"> <?php if(isset($msg)){ echo $msg; } ?></li>
             </ul>
 
-
-
-
             <?php ActiveForm::end(); ?>
-
 
         </div>
     </div>
