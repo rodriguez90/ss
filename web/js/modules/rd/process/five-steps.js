@@ -20,7 +20,7 @@ var bl = null;
 
 var processTypeStr = '';
 
-var colHeaderContainer = processType == 1 ? 'Contenedor' : 'Booking/Contenedor' ;
+var colHeaderContainer = processType === 1 ? 'Contenedor' : 'Booking/Contenedor' ;
 
 // el calendario se acota x la fecha de devolución d los contenedores relacionados en la recepcion
 var minDeliveryDate = null;
@@ -40,9 +40,9 @@ var ticketEvents = {
 var calendarEventMap = new Map(); // calendar event id - key
 var ticketEventMap =  new Map(); // ticket event id - key
 var containersMap = new Map();
-var driverDataMap = new Map();
 var dateTicketMap = new Map(); // to validate transportation data
 var ticketDataMap = new Map();
+var transportationDataMap = new Map();
 
 // current calendar event click
 var currentCalendarEvent = null;
@@ -51,6 +51,8 @@ var currentCalendarEvent = null;
 var selectedContainers = [];
 
 var mode = '';
+
+var toBack = false;
 
 var cleanUI = function () {
     bl = null;
@@ -338,11 +340,7 @@ var handleDataTableStep1 = function() {
                                 data:containerTypeArray,
                             }).on('select2:select', function (e) {
                             var type = e.params.data;
-                            var containerType = {
-                                id:type.id,
-                                name:type.text
-                            };
-                            // console.log(containerType);
+                            var containerType = containerTypeMap.get(parseInt(type.id));
                             containertDataMap.set(data.name,containerType);
 
                             // $('#mySelect2').val(type.id); // Select the option with a value of '1'
@@ -540,7 +538,7 @@ var handleDataTableStep4 = function() {
             pageLength: 10,
             order: [[1, "asc"]],
             columns: [
-                { title: "Contenedor",
+                { title: colHeaderContainer,
                     "data":"name"
                 },
                 { title: "Tipo",
@@ -549,11 +547,14 @@ var handleDataTableStep4 = function() {
                 { title: "Fecha Límite",
                     data:"deliveryDate"
                 },
-                { title: "Agencia",
-                    data:"agency"
+                { "title": "Estado",
+                    "data":"status"
                 },
                 { title: "Fecha del Cupo",
                     "data":"dateTicket"
+                },
+                { "title": "Empresa de Transporte",
+                    "data":"transCompany"
                 },
                 { title: "Placa del Carro",
                     "data":"registerTrunk",
@@ -568,222 +569,225 @@ var handleDataTableStep4 = function() {
             "language": lan,
             "createdRow": function( row, data, dataIndex ) {
                 // console.log('init select2: ' + data.name);
-
-                $('td select', row).eq(0).select2(
-                    {
-                        language: "es",
-                        placeholder: 'Seleccione la Placa',
-                        // allowClear: true,
-                        width: '100%',
-                        closeOnSelect: true,
-                        ajax:{
-                            url: homeUrl + '/rd/trans-company/trunks',
-                            type: "GET",
-                            dataType: "json",
-                            cache: true,
-                            data: function (params) {
-                                var query = {
-                                    term: params.term,
-                                    code: transCompanyRuc,
-                                    mode:systemMode
-                                }
-                                return query;
-                            },
-                            processResults: function (response) {
-                                // console.log(response);
-                                var results  = [];
-                                $.each(response.trunks, function (index, item) {
-                                    // console.log(item);
-                                    // [err_code], [err_msg], [placa], [rfid]
-                                    results.push({
-                                        id: item.placa,
-                                        text: item.placa,
-                                        err_code: item.err_code,
-                                        err_msg: item.err_msg,
-                                        rfid: item.rfid,
+                if(ticketDataMap.has(data.name))
+                {
+                    $('td select', row).eq(0).select2(
+                        {
+                            language: "es",
+                            placeholder: 'Seleccione la Placa',
+                            // allowClear: true,
+                            width: '100%',
+                            closeOnSelect: true,
+                            ajax:{
+                                url: homeUrl + '/rd/trans-company/trunks',
+                                type: "GET",
+                                dataType: "json",
+                                cache: true,
+                                data: function (params) {
+                                    // var transCompanyRuc = data.transCompany.ruc;
+                                    var query = {
+                                        term: params.term,
+                                        code: data.transCompany.ruc,
+                                        mode:systemMode
+                                    }
+                                    return query;
+                                },
+                                processResults: function (response) {
+                                    // console.log(response);
+                                    var results  = [];
+                                    $.each(response.trunks, function (index, item) {
+                                        // console.log(item);
+                                        // [err_code], [err_msg], [placa], [rfid]
+                                        results.push({
+                                            id: item.placa,
+                                            text: item.placa,
+                                            err_code: item.err_code,
+                                            err_msg: item.err_msg,
+                                            rfid: item.rfid,
+                                        });
                                     });
-                                });
-                                return {
-                                    results: results
-                                };
+                                    return {
+                                        results: results
+                                    };
+                                },
                             },
-                        },
-                    }).on('select2:select', function (e) {
-                    // alert(e.params.data);
-                    var trunk = e.params.data;
-                    var transactionData = transactionDataMap.get(data.name);
+                        }).on('select2:select', function (e) {
+                        // alert(e.params.data);
+                        var trunk = e.params.data;
+                        var transactionData = transportationDataMap.get(data.name);
 
-                    if(trunk.err_code !== "0")
-                    {
-                        e.preventDefault();
-                        transactionData.registerTrunk = "";
-                        alert("Esta placa no puede ser seleccionada: " + trunk.err_msg);
-                        $('td select', row).eq(0).val('').trigger("change.select2");
-                    }
-                    else
-                    {
-                        var valid = true;
-                        var msg = '';
-                        var containersArray = dateTicketMap.get(data.calendarId);
-                        var containersByTrunk20= 0;
-                        var containersByTrunk40 = 0;
-
-                        for(var i=0, count = containersArray.length; i < count; i++)
+                        if(trunk.err_code !== "0")
                         {
-                            var container = containers.get(containersArray[i]);
-                            var cTransactionData = transactionDataMap.get(container.name);
-
-                            if(cTransactionData.registerTrunk == trunk.id)
-                            {
-                                if(container.tonnage == 20)
-                                {
-                                    containersByTrunk20++;
-                                }
-                                else if(container.tonnage == 40)
-                                {
-                                    containersByTrunk40++;
-                                }
-                            }
-                        }
-
-                        if(containersByTrunk40 == 1) // ya la placa esta asignada en un contenedor de 40 para la misma fecha
-                        {
-                            valid = false;
-                            msg = 'Esta placa esta asiganda a un contenedor de 40 toneladas en esta fecha.'
-                        }
-                        else if(containersByTrunk20 == 2) // ya la placa esta asignada a 2 contenedores de 20 para la misma fecha
-                        {
-                            valid = false;
-                            msg = 'Esta placa esta asiganda a dos contenedores de 20 toneladas en esta fecha.'
-                        }
-                        else if(containersByTrunk20 == 1 && data.tonnage == 40) // no puede asiganr un contenedor de 40 toneladas
-                        {
-                            valid = false;
-                            msg = 'Esta placa esta asiganda a un contenedor de 20 toneladas en esta fecha.'
-                        }
-
-                        if(valid)
-                            transactionData.registerTrunk = trunk.id;
-                        else
-                        {
+                            e.preventDefault();
                             transactionData.registerTrunk = "";
-                            alert(msg);
+                            alert("Esta placa no puede ser seleccionada: " + trunk.err_msg);
                             $('td select', row).eq(0).val('').trigger("change.select2");
                         }
-                    }
-
-                    transactionDataMap.set(data.name, transactionData);
-                    // api.cell({row: meta.row, column: 5}).data(trunk.id);
-                    // table.row(index).data(data)
-                });
-
-                $('td select', row).eq(1).select2(
-                    {
-                        language: "es",
-                        placeholder: 'Seleccione el Chofer',
-                        width: '100%',
-                        closeOnSelect: true,
-                        matcher: matchCustom,
-                        ajax:{
-                            url: homeUrl + '/rd/trans-company/drivers',
-                            type: "GET",
-                            dataType: "json",
-                            cache: true,
-                            data: function (params) {
-                                var query = {
-                                    term: params.term,
-                                    code: transCompanyRuc,
-                                    mode:systemMode
-                                }
-                                return query;
-                            },
-                            processResults: function (response) {
-                                // console.log(response);
-                                var results  = [];
-                                $.each(response.drivers, function (index, item) {
-                                    results.push({
-                                        id: item.chofer_ruc,
-                                        text: item.chofer_nombre,
-                                        err_code: item.err_code,
-                                        err_msg: item.err_msg,
-                                        chofer_ruc: item.chofer_ruc,
-                                    });
-                                });
-                                return {
-                                    results: results
-                                };
-                            },
-                        },
-                    }).on('select2:select', function (e) {
-                    var driver = e.params.data;
-                    var transactionData = transactionDataMap.get(data.name);
-                    if(driver.err_code !== "0")
-                    {
-                        e.preventDefault();
-                        alert("Este Chofer no puede ser seleccionado: " + driver.err_msg);
-                        transactionData.registerDriver = "";
-                        transactionData.nameDriver = "";
-                        table.cell({row: dataIndex, column: 7}).data("");
-                        $('td select', row).eq(1).val('').trigger("change.select2");
-                    }
-                    else
-                    {
-                        var valid = true;
-                        var msg = '';
-                        var containersArray = dateTicketMap.get(data.calendarId);
-                        var containersByTrunk20= 0;
-                        var containersByTrunk40 = 0;
-                        for(var i=0, count = containersArray.length; i < count; i++)
+                        else
                         {
-                            var container = containers.get(containersArray[i]);
-                            var cTransactionData = transactionDataMap.get(container.name);
+                            var valid = true;
+                            var msg = '';
+                            var containersArray = dateTicketMap.get(data.calendarId);
+                            var containersByTrunk20= 0;
+                            var containersByTrunk40 = 0;
 
-                            if(cTransactionData.registerDriver == driver.id)
+                            for(var i=0, count = containersArray.length; i < count; i++)
                             {
-                                if(container.tonnage == 20)
+                                var container = containersMap.get(containersArray[i]);
+                                var cTransactionData = transportationDataMap.get(container.name);
+
+                                if(cTransactionData.registerTrunk == trunk.id)
                                 {
-                                    containersByTrunk20++;
+                                    if(container.type.tonnage == 20)
+                                    {
+                                        containersByTrunk20++;
+                                    }
+                                    else if(container.type.tonnage == 40)
+                                    {
+                                        containersByTrunk40++;
+                                    }
                                 }
-                                else if(container.tonnage == 40)
-                                {
-                                    containersByTrunk40++;
-                                }
+                            }
+
+                            if(containersByTrunk40 == 1) // ya la placa esta asignada en un contenedor de 40 para la misma fecha
+                            {
+                                valid = false;
+                                msg = 'Esta placa esta asiganda a un contenedor de 40 toneladas en esta fecha.'
+                            }
+                            else if(containersByTrunk20 == 2) // ya la placa esta asignada a 2 contenedores de 20 para la misma fecha
+                            {
+                                valid = false;
+                                msg = 'Esta placa esta asiganda a dos contenedores de 20 toneladas en esta fecha.'
+                            }
+                            else if(containersByTrunk20 == 1 && data.type.tonnage == 40) // no puede asiganr un contenedor de 40 toneladas
+                            {
+                                valid = false;
+                                msg = 'Esta placa esta asiganda a un contenedor de 20 toneladas en esta fecha.'
+                            }
+
+                            if(valid)
+                                transactionData.registerTrunk = trunk.id;
+                            else
+                            {
+                                transactionData.registerTrunk = "";
+                                alert(msg);
+                                $('td select', row).eq(0).val('').trigger("change.select2");
                             }
                         }
 
-                        if(containersByTrunk40 == 1) // ya el chofer esta asociado a un contenedor de 40 para la misma fecha
-                        {
-                            valid = false;
-                            msg = 'Esta chofer esta asociado a un contenedor de 40 toneladas en esta fecha.'
-                        }
-                        else if(containersByTrunk20 == 2) // ya la placa esta asignada a 2 contenedores de 20 para la misma fecha
-                        {
-                            valid = false;
-                            msg = 'Este chofer esta asociado a dos contenedores de 20 toneladas en esta fecha.'
-                        }
-                        else if(containersByTrunk20 == 1 && data.tonnage == 40) // no puede asiganr un contenedor de 40 toneladas
-                        {
-                            valid = false;
-                            msg = 'Este chofer ya esta asociado a un contenedor de 20 toneladas en esta fecha.'
-                        }
+                        transportationDataMap.set(data.name, transactionData);
+                        // api.cell({row: meta.row, column: 5}).data(trunk.id);
+                        // table.row(index).data(data)
+                    });
 
-                        if(valid)
+                    $('td select', row).eq(1).select2(
                         {
-                            transactionData.registerDriver = driver.id;
-                            transactionData.nameDriver = driver.text;
-                            table.cell({row: dataIndex, column: 7}).data(driver.id);
+                            language: "es",
+                            placeholder: 'Seleccione el Chofer',
+                            width: '100%',
+                            closeOnSelect: true,
+                            // matcher: matchCustom,
+                            ajax:{
+                                url: homeUrl + '/rd/trans-company/drivers',
+                                type: "GET",
+                                dataType: "json",
+                                cache: true,
+                                data: function (params) {
+                                    var query = {
+                                        term: params.term,
+                                        code: data.transCompany.ruc,
+                                        mode:systemMode
+                                    }
+                                    return query;
+                                },
+                                processResults: function (response) {
+                                    // console.log(response);
+                                    var results  = [];
+                                    $.each(response.drivers, function (index, item) {
+                                        results.push({
+                                            id: item.chofer_ruc,
+                                            text: item.chofer_nombre,
+                                            err_code: item.err_code,
+                                            err_msg: item.err_msg,
+                                            chofer_ruc: item.chofer_ruc,
+                                        });
+                                    });
+                                    return {
+                                        results: results
+                                    };
+                                },
+                            },
+                        }).on('select2:select', function (e) {
+                        var driver = e.params.data;
+                        var transactionData = transportationDataMap.get(data.name);
+                        if(driver.err_code !== "0")
+                        {
+                            e.preventDefault();
+                            alert("Este Chofer no puede ser seleccionado: " + driver.err_msg);
+                            transactionData.registerDriver = "";
+                            transactionData.nameDriver = "";
+                            table.cell({row: dataIndex, column: 8}).data("");
+                            $('td select', row).eq(1).val('').trigger("change.select2");
                         }
                         else
                         {
-                            transactionData.registerDriver = "";
-                            transactionData.nameDriver = "";
-                            alert(msg);
-                            $('td select', row).eq(1).val('').trigger("change.select2");
-                            table.cell({row: dataIndex, column: 7}).data("");
+                            var valid = true;
+                            var msg = '';
+                            var containersArray = dateTicketMap.get(data.calendarId);
+                            var containersByTrunk20= 0;
+                            var containersByTrunk40 = 0;
+                            for(var i=0, count = containersArray.length; i < count; i++)
+                            {
+                                var container = containersMap.get(containersArray[i]);
+                                var cTransactionData = transportationDataMap.get(container.name);
+
+                                if(cTransactionData.registerDriver == driver.id)
+                                {
+                                    if(container.type.tonnage == 20)
+                                    {
+                                        containersByTrunk20++;
+                                    }
+                                    else if(container.type.tonnage == 40)
+                                    {
+                                        containersByTrunk40++;
+                                    }
+                                }
+                            }
+
+                            if(containersByTrunk40 == 1) // ya el chofer esta asociado a un contenedor de 40 para la misma fecha
+                            {
+                                valid = false;
+                                msg = 'Esta chofer esta asociado a un contenedor de 40 toneladas en esta fecha.'
+                            }
+                            else if(containersByTrunk20 == 2) // ya la placa esta asignada a 2 contenedores de 20 para la misma fecha
+                            {
+                                valid = false;
+                                msg = 'Este chofer esta asociado a dos contenedores de 20 toneladas en esta fecha.'
+                            }
+                            else if(containersByTrunk20 == 1 && data.type.tonnage == 40) // no puede asiganr un contenedor de 40 toneladas
+                            {
+                                valid = false;
+                                msg = 'Este chofer ya esta asociado a un contenedor de 20 toneladas en esta fecha.'
+                            }
+
+                            if(valid)
+                            {
+                                transactionData.registerDriver = driver.id;
+                                transactionData.nameDriver = driver.text;
+                                table.cell({row: dataIndex, column: 8}).data(driver.id);
+                            }
+                            else
+                            {
+                                transactionData.registerDriver = "";
+                                transactionData.nameDriver = "";
+                                alert(msg);
+                                $('td select', row).eq(1).val('').trigger("change.select2");
+                                table.cell({row: dataIndex, column: 8}).data("");
+                            }
                         }
-                    }
-                    transactionDataMap.set(data.name,transactionData);
-                });
+                        transportationDataMap.set(data.name,transactionData);
+                    });
+                }
             },
             columnDefs: [
                 {
@@ -791,36 +795,45 @@ var handleDataTableStep4 = function() {
                     title:"Tipo",
                     data:null,
                     render: function ( data, type, full, meta ) {
-                        return data.type+ data.tonnage;
+                        return data.type.code + data.type.tonnage;
                     }
                 },
                 {
                     targets: [2],
                     data:'deliveryDate',
                     render: function ( data, type, full, meta ) {
-                        return moment(data).format("DD/MM/YYYY");
+                        return moment(data, "DD-MM-YYYY").format("DD/MM/YYYY");
                     },
                 },
                 {
                     targets: [4],
                     data:'dateTicket',
                     render: function ( data, type, full, meta ) {
-                        var dateFormated =  moment(data).format("DD/MM/YYYY HH:mm");
+                        var dateFormated = '-';
+                        if(ticketDataMap.has(full.name))
+                            dateFormated =  moment(data).format("DD/MM/YYYY HH:mm");
                         return dateFormated;
                     },
                 },
                 {
                     targets: [5],
+                    render: function ( data, type, full, meta ) {
+                        return data.name
+                    },
+                },
+                {
+                    targets: [6],
                     data:'registerTrunk',
                     render: function ( data, type, full, meta ) {
                         var elementId =  String(full.name).trim();
                         if(type == 'display')
                         {
-                            var selectHtml = "";
-
                             if($("#selectTrunk"+elementId).length === 0)
                             {
-                                selectHtml = "<select class=\"form-control\" id=\"selectTrunk" +elementId + "\"></select>";
+                                var selectHtml = "-";
+                                if(ticketDataMap.has(full.name)) {
+                                    selectHtml = "<select class=\"form-control\" id=\"selectTrunk" + elementId + "\"></select>";
+                                }
                             }
                             return selectHtml;
                         }
@@ -828,13 +841,18 @@ var handleDataTableStep4 = function() {
                     },
                 },
                 {
-                    targets: [6],
+                    targets: [7],
                     data:'nameDriver',
                     render: function ( data, type, full, meta ) {
                         var elementId =  String(full.name).trim();
+
                         if(type == 'display')
                         {
-                            var selectHtml = "<select class=\"form-control\" id=\"selectDriver" +elementId + "\"></select>";
+                            var selectHtml = "-";
+                            if(ticketDataMap.has(full.name))
+                            {
+                                selectHtml = "<select class=\"form-control\" id=\"selectDriver" +elementId + "\"></select>";
+                            }
 
                             return selectHtml;
                         }
@@ -860,9 +878,21 @@ var handleDataTableStep5 = function () {
         { "title": "Estado",
             "data":"status"
         },
+        { title: "Fecha del Cupo",
+            "data":"dateTicket"
+        },
         { "title": "Empresa de Transporte",
-            // "data":"transCompany"
-        }
+            "data":"transCompany"
+        },
+        { title: "Placa del Carro",
+            "data":"registerTrunk",
+        },
+        { title: "Nombre del Chofer",
+            "data":"nameDriver"
+        },
+        { title: "Cédula del Chofer",
+            "data":"registerDriver",
+        },
     ];
     if ($('#data-table-step5').length !== 0) {
 
@@ -896,9 +926,20 @@ var handleDataTableStep5 = function () {
                 },
                 {
                     targets: [4],
-                    data:null,
+                    data:'dateTicket',
+                    render: function ( data, type, full, meta )
+                    {
+                        var dateFormated = '-';
+                        if(ticketDataMap.has(full.name))
+                            dateFormated =  moment(data).format("DD/MM/YYYY HH:mm");
+                        return dateFormated;
+                    },
+                },
+                {
+                    targets: [5],
+                    data:'transCompany',
                     render: function ( data, type, full, meta ) {
-                        return data.transCompany.name
+                        return data.name
                     },
                 },
             ],
@@ -1110,26 +1151,37 @@ var handleBootstrapWizardsValidation = function() {
                 {
                     $('ul.bwizard-buttons li.next a').text('Siguiente');
 
-                    var table2 = $('#data-table-step2').DataTable();
+                    /* TODO: reset data related:
+                     calendar events
+                     ticket events (transportation data*)
+                     */
 
                     containersMap.clear();
+                    ticketEventMap.clear();
+                    ticketEvents.events = [];
                     ticketDataMap.clear();
+                    transportationDataMap.clear();
+                    selectedContainers = [];
 
+                    var table2 = $('#data-table-step2').DataTable();
                     table2
                         .rows( )
                         .data()
-                        .each( function ( value, index ) {
+                        .each( function ( value, index )
+                        {
+                           var transData = {
+                               registerTrunk:'',
+                               registerDriver:'',
+                               nameDriver:''
+                           };
                             containersMap.set(value.name, value);
+                            transportationDataMap.set(value.name, transData);
                         });
 
                     // init calendar
                     $('.calendar').fullCalendar('destroy');
                     calendarSlotEvents.events = [];
 
-                    /* FIXME: reset data related:
-                        calendar events
-                        ticket events (transportation data*)
-                     */
                     Calendar.init();
 
                     minDeliveryDate = moment();
@@ -1139,12 +1191,88 @@ var handleBootstrapWizardsValidation = function() {
 
                     fetchCalendar(minDeliveryDate.format('YYYY-MM-DD HH:mm:ss'),
                                   maxDeliveryDate.format('YYYY-MM-DD HH:mm:ss'),
-                                  false);
+                                  true);
                 }
                 else if(ui.index == 3)
                 {
+
                     $('ul.bwizard-buttons li.next a').text('Siguiente');
 
+
+
+                    if(selectedContainers.length == 0)
+                    {
+                        if(toBack)
+                        {
+                            $("#wizard").bwizard("show","2");
+                        }
+                        else
+                        {
+                            $("#wizard").bwizard("show","4");
+                        }
+                    }
+                    else {
+
+                        if(!toBack)
+                        {
+                            var table4 = $('#data-table-step4').DataTable();
+
+                            table4
+                                .clear()
+                                .draw();
+
+                            transportationDataMap.clear();
+                            dateTicketMap.clear();
+
+                            containersMap.forEach(function(value, key)
+                            {
+                                var ticketData = ticketDataMap.has(key)? ticketDataMap.get(key): null;
+
+                                var dateTicket = '';
+                                var calendarId = '';
+
+                                transportationDataMap.set(value.name, {
+                                    registerTrunk: '',
+                                    registerDriver: '',
+                                    nameDriver: '',
+                                });
+
+                                if(selectedContainers.indexOf(key) != -1 && ticketData)
+                                {
+                                    dateTicket = ticketData.dateTicket;
+                                    calendarId = ticketData.calendarId;
+
+                                    var containersArray = [];
+
+                                    if(dateTicketMap.has(ticketData.calendarId))
+                                    {
+                                        containersArray = dateTicketMap.get(ticketData.calendarId);
+                                    }
+
+                                    containersArray.push(value.name);
+                                    dateTicketMap.set(ticketData.calendarId, containersArray);
+                                }
+
+                                var data = {
+                                    name: value.name,
+                                    type: value.type,
+                                    deliveryDate: value.deliveryDate,
+                                    dateTicket:dateTicket,
+                                    calendarId:calendarId,
+                                    registerTrunk: '',
+                                    registerDriver: '',
+                                    nameDriver: '',
+                                    transCompany:value.transCompany,
+                                    status:value.status,
+                                    id:value.name
+                                };
+
+                                table4.row.add(
+                                    data
+                                ).draw();
+                            });
+                        }
+                    }
                 }
                 else if(ui.index == 4)
                 {
@@ -1152,19 +1280,26 @@ var handleBootstrapWizardsValidation = function() {
 
                     $('#confirming').prop('checked', false);
 
-                    var sourceTable = $('#data-table-step2').DataTable();
+                    // TODO: check if has ticket copy from data-table-step4
+                    var sourceTable = selectedContainers.length > 0 ? $('#data-table-step4').DataTable(): $('#data-table-step2').DataTable();
 
-                    var table2 = $('#data-table-step5').DataTable();
+                    var table5 = $('#data-table-step5').DataTable();
 
-                    table2
+                    table5
                         .clear()
                         .draw();
 
                     sourceTable
                         .rows( )
                         .data()
-                        .each( function ( value, index ) {
-                            table2.row.add(
+                        .each( function ( value, index )
+                        {
+                            var transportationData = transportationDataMap.get(value.name);
+                            value.registerTrunk = transportationData.registerTrunk;
+                            value.nameDriver = transportationData.nameDriver;
+                            value.registerDriver = transportationData.registerDriver;
+
+                            table5.row.add(
                                 value
                             ).draw();
                         });
@@ -1185,8 +1320,12 @@ var handleBootstrapWizardsValidation = function() {
 
                 if(index >= nextIndex)
                 {
+                    toBack = true;
                     // console.log("back o same");
                     return result;
+                }
+                else {
+                    toBack = false;
                 }
 
                 if (index == 0)
@@ -1245,10 +1384,50 @@ var handleBootstrapWizardsValidation = function() {
 
                     return result
                 }
-                else if (index == 2) {
+                else if (index == 2)
+                {
+                    // var table = $('#data-table-step2').DataTable();
+                    // var count = table.rows().count();
+                    //
+                    // if(selectedContainers.length == count)
+                    // {
+                    //     alert("Debe reservar cupos para todos los contenedores seleccionados.");
+                    //     return false
+                    // }
 
-                    // step-2 validation
-                    // alert($("#confirming").prop('checked'));
+                    return true;
+                }
+                else if (ui.index == 3) { // paso 2: cedula, nombre del chofer, placa del carro
+
+                    var table = $('#data-table-step4').DataTable();
+
+                    table
+                        .rows( )
+                        .data()
+                        .each( function ( value, index ) {
+
+                            if(!result) return false;
+
+                            if(selectedContainers.indexOf(value.name) != -1)
+                            {
+                                var transactionData = transportationDataMap.get(value.name);
+
+                                if(!transactionData ||
+                                    (transactionData.registerTrunk.length === 0 ||
+                                    transactionData.registerDriver.length === 0 ||
+                                    transactionData.nameDriver.length === 0))
+                                {
+                                    result = false;
+                                    alert("Debe introducir la \"Placa del Carro\", \"Cédula\" y \"Nombre del Chofer\" para todo los contenedores.");
+                                    return false;
+                                }
+                            }
+                        });
+
+                    return result;
+                }
+                else if (index == 4) {
+
 
                     if($("#confirming").prop('checked'))
                     {
@@ -1260,8 +1439,25 @@ var handleBootstrapWizardsValidation = function() {
                         table
                             .rows( )
                             .data()
-                            .each( function ( value, index ) {
-                                containers.push(value);
+                            .each( function ( value, index )
+                            {
+
+                                var container = {
+                                    'calendarId':-1,
+                                    'name':value.name,
+                                    'transCompanyId':value.transCompany.id,
+                                    'typeId':value.type.id,
+                                    'nameDriver':value.nameDriver,
+                                    'registerDriver':value.registerDriver,
+                                    'registerTrunk':value.registerTrunk,
+                                };
+
+                                if(ticketDataMap.has(value.name))
+                                {
+                                    container.calendarId = ticketDataMap.get(value.name).calendarId;
+                                }
+
+                                containers.push(container);
                             } );
 
                         var process = {
@@ -1274,10 +1470,10 @@ var handleBootstrapWizardsValidation = function() {
                             "containers":containers
                         };
 
-                        // console.log(process);
+                        console.log(process);
                         $.ajax({
                             // async:false,
-                            url: homeUrl + "/rd/process/create?type="+processType,
+                            url: homeUrl + "/rd/process/createfivesteps?type="+processType,
                             type: "POST",
                             dataType: "json",
                             data:  process,
@@ -1289,7 +1485,7 @@ var handleBootstrapWizardsValidation = function() {
 
                                 $("#modal-select-bussy").modal("hide");
                                 // you will get response from your php page (what you echo or print)
-                                console.log(response);
+                                // console.log(response);
 
                                 if(response['success'])
                                 {
@@ -1305,7 +1501,7 @@ var handleBootstrapWizardsValidation = function() {
                             error: function(data) {
                                 $("#modal-select-bussy").modal("hide");
                                 // console.log(data);
-                                console.log(data.responseText);
+                                // console.log(data.responseText);
                                 result = false;
                                 // return false;
                             },
@@ -1469,7 +1665,7 @@ var handleModal = function () {
                 .data()
                 .each( function ( value, index ) {
 
-                    var ticket = ticketDataMap.get(value.transactionId, null);
+                    var ticket = ticketDataMap.get(value.name, null);
 
                     if(ticket === null) //  ticket bug error
                     {
@@ -1493,8 +1689,8 @@ var handleModal = function () {
                         {
                             result.event.count = result.event.count - 1;
                             result.event.title = String(result.event.count);
-                            var indexRT = result.event.containers.indexOf(value.transactionId)
-                            result.event.containers.splice(indexRT, 1);
+                            var index = result.event.containers.indexOf(value.name)
+                            result.event.containers.splice(index, 1);
 
                             if(result.event.count == 0)
                             {
@@ -1502,25 +1698,20 @@ var handleModal = function () {
                             }
                             else {
                                 ticketEvents[result.index] = result.event;
-                                // ticketEvents.events[result.index] = result.event; //TODO check this
                             }
-                            var indexSelected = selectedContainers.indexOf(value.transactionId);
+                            var indexSelected = selectedContainers.indexOf(value.name);
                             selectedContainers.splice(indexSelected,1);
 
-                            ticketDataMap.delete(value.transactionId);
+                            ticketDataMap.delete(value.name);
                             currentCalendarEvent.count = currentCalendarEvent.count + 1;
                         }
                     }
                 });
 
-            // currentCalendarEvent.title = currentCalendarEvent.count;
             currentCalendarEvent.title = String(currentCalendarEvent.count);
             calendarEventMap.set(currentCalendarEvent.id, currentCalendarEvent);
             calendarSlotEvents.events = Array.from(calendarEventMap.values());
         }
-
-        // console.log(ticketEvents);
-        // console.log(currentCalendarEvent);
 
         $('#calendar').fullCalendar('addEventSource',calendarSlotEvents);
         $('#calendar').fullCalendar('addEventSource',ticketEvents);
@@ -1712,24 +1903,20 @@ var handleCalendar = function () {
 
                 for(var i = 0, length = calEvent.containers.length ; i < length; i++) {
 
-                    var tId = calEvent.containers[i];
-                    var transaction = transactions.get(tId);
-                    var container = containers.get(transaction.container_id);
+                    var cName = calEvent.containers[i];
+                    var container = containersMap.get(cName);
 
-                    var indexSelected = selectedTransactions.indexOf(transaction.id);
-                    var indexTicket = transactionWithTicket.indexOf(transaction.id);
+                    var indexSelected = selectedContainers.indexOf(cName);
 
-                    if(indexSelected !== -1 || indexTicket !== -1)
+                    if(indexSelected !== -1)
                     {
                         table.row.add(
                             {
                                 checkbox:"",
                                 name: container.name,
-                                type: container.code,
-                                tonnage: container.tonnage,
-                                deliveryDate:transaction.delivery_date,
-                                agency:agency.name,
-                                transactionId:transaction.id
+                                type: container.type.code,
+                                tonnage: container.type.tonnage,
+                                deliveryDate:container.deliveryDate,
                             }
                         ).draw();
                         count++;

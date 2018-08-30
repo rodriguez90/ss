@@ -131,7 +131,7 @@ $user = Yii::$app->user->identity;
                     if(Yii::$app->user->can("process_five_steps")){
                         echo "<li class='has-sub'>";
                         echo "<a href=".Url::to(['/rd/process/createfivesteps','type'=>Process::PROCESS_IMPORT])."> <i class='fa fa-rotate-90 fa-sign-in'></i>";
-                        echo  "<span> Importación en 5 Pasos</span>";
+                        echo  "<span> Importación 5 Pasos</span>";
                         echo "</a>";
                         echo "</li>";
                     }
@@ -151,7 +151,7 @@ $user = Yii::$app->user->identity;
                     if(Yii::$app->user->can("process_five_steps")){
                         echo "<li class='has-sub'>";
                         echo "<a href=".Url::to(['/rd/process/createfivesteps','type'=>Process::PROCESS_EXPORT])."> <i class='fa fa-rotate-90 fa-sign-out'></i>";
-                        echo  "<span> Exportación en 5 Pasos</span>";
+                        echo  "<span> Exportación 5 Pasos</span>";
                         echo "</a>";
                         echo "</li>";
                     }
