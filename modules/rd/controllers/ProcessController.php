@@ -144,14 +144,9 @@ class ProcessController extends Controller
            throw new ForbiddenHttpException('Usted no tiene permiso para crear un proceso');
 
         $model = new Process();
-        $user = AdmUser::findOne(['id'=>Yii::$app->user->getId()]);
-        $userAgency = UserAgency::findOne(['user_id'=>$user->id]);
+        $user = Yii::$app->user->identity;
+        $agency = $user->getAgency();
 
-        $agency = null;
-        if($userAgency)
-        {
-            $agency = $userAgency->agency;
-        }
 //        var_dump(Yii::$app->request->post());
         if ($model->load(Yii::$app->request->post())) {
             return $this->createProcess($model);
@@ -553,7 +548,6 @@ class ProcessController extends Controller
 
         return $response;
     }
-
 
     public function actionGeneratingcard()
     {
@@ -1044,7 +1038,6 @@ class ProcessController extends Controller
         return $response;
     }
 
-
     public function actionLikebl()
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
@@ -1088,5 +1081,41 @@ class ProcessController extends Controller
             }
         }
         return $response;
+    }
+
+    public function actionCreatefivesteps($type)
+    {
+
+        if(!Yii::$app->user->can("process_five_steps"))
+            throw new ForbiddenHttpException('Usted no tiene permiso para crear un proceso');
+
+        if((int)$type !== Process::PROCESS_IMPORT && (int)$type  !== Process::PROCESS_EXPORT)
+            throw new ForbiddenHttpException('Error en el tipo de solicitud.');
+
+        $model = new Process();
+
+        if ($model->load(Yii::$app->request->post()))
+        {
+            return $this->createProcessFiveSteps(Yii::$app->request->post());
+        }
+
+        $user = Yii::$app->user->identity;
+        $agency = $user->getAgency();
+
+        if(!$agency)
+        {
+            throw new ForbiddenHttpException('El usuario actual no tiene una empresa asociada.');
+        }
+
+        return $this->render('create_five_steps', [
+            'model' => $model,
+            'type'=>$type,
+            'agencyId'=>$agency->id
+        ]);
+    }
+
+    protected function createProcessFiveSteps($data)
+    {
+
     }
 }

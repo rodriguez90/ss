@@ -18,6 +18,11 @@ $this->params['breadcrumbs'][] = $this->title;
     .fc-title {
         font-size: 16px !important;
     }
+
+    .fc-scroller.fc-time-grid-container{
+        overflow:scroll scroll !important;
+    }
+    /*.fc-scroller.fc-time­grid-container { box-sizing: border-box !importan;}*/
     .detalle td, .detalle th, .detalle tr, .detalle tbody, table.detalle{
         border: 0px !important;
     }

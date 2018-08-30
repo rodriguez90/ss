@@ -305,8 +305,9 @@ class LoginForm extends Model
             'nombre_empresa'=>'trans prueba',
 //            'rol'=>'ADMINISTRADOR_DEPOSITO',
 //            'rol'=>'DEPOSITO',
-            'rol'=>'CIA_TRANSPORTE',
+//            'rol'=>'CIA_TRANSPORTE',
 //            'rol'=>'IMPORTADOR_EXPORTADOR',
+            'rol'=>'IMPORTADOR_EXPORTADOR_ESPECIAL',
 //            'rol'=>'ADMINISTRADOR',
             'estado'=>'ACTIVO',
         ];
@@ -346,6 +347,7 @@ class LoginForm extends Model
                 case 'Importador':
                 case 'Exportador':
                 case "Importador_Exportador":
+                case AuthItem::ROLE_SPECIAL_IMPORTER_EXPORTER:
                 case 'Agencia':
                     $entity = UserAgency::findOne(['user_id'=>$user->id]);
                     break;
@@ -388,6 +390,7 @@ class LoginForm extends Model
            switch ($roleName)
            {
                case 'IMPORTADOR_EXPORTADOR':
+               case 'IMPORTADOR_EXPORTADOR_ESPECIAL':
                    $agency = Agency::findOne(['ruc'=>$entityData['ruc_empresa']]);
                    if($agency == null)
                    {

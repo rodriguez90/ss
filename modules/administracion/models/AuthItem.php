@@ -34,15 +34,17 @@ class AuthItem extends \yii\db\ActiveRecord
     const ROLE_IMPORTER = 'Importador';
     const ROLE_EXPORTER = 'Exportador';
     const ROLE_IMPORTER_EXPORTER = 'Importador_Exportador';
+    const ROLE_SPECIAL_IMPORTER_EXPORTER = 'Importador_Exportador_Especial';
 
-    const ROL_LABEL = [AuthItem::ROL_ADMIN=>'Administrador',
-        AuthItem::ROL_ADMIN_WHAREHOUSE=>'Administrador de Depósito',
+    const ROL_LABEL = [AuthItem::ROLE_ADMIN=>'Administrador',
+        AuthItem::ROLE_ADMIN_WHAREHOUSE=>'Administrador de Depósito',
         AuthItem::ROLE_WHAREHOUSE=>'Depósito',
-        AuthItem::ROL_AGENCY=>'Agencia',
-        AuthItem::ROLE_TRANS_COMPANY=>'Cia de Transporte',
+        AuthItem::ROLE_AGENCY=>'Agencia',
+        AuthItem::ROLE_CIA_TRANS_COMPANY=>'Cia de Transporte',
         AuthItem::ROLE_IMPORTER=>'Importador',
         AuthItem::ROLE_EXPORTER=>'Exportador',
         AuthItem::ROLE_IMPORTER_EXPORTER=>'Importador-Exportador',
+        AuthItem::ROLE_SPECIAL_IMPORTER_EXPORTER=>'Importador-Exportador-Especial',
     ];
 
     const DEFAULT_ROLES = [
@@ -53,12 +55,14 @@ class AuthItem extends \yii\db\ActiveRecord
         AuthItem::ROLE_CIA_TRANS_COMPANY,
         AuthItem::ROLE_IMPORTER,
         AuthItem::ROLE_EXPORTER,
-        AuthItem::ROLE_IMPORTER_EXPORTER
+        AuthItem::ROLE_IMPORTER_EXPORTER,
+        AuthItem::ROLE_SPECIAL_IMPORTER_EXPORTER
     ];
 
     const MAP_TPG_ROLE_TO_SGT = [
         'ADMINISTRADOR'=>AuthItem::ROLE_ADMIN,
         'IMPORTADOR_EXPORTADOR'=>AuthItem::ROLE_IMPORTER_EXPORTER,
+        'IMPORTADOR_EXPORTADOR_ESPECIAL'=>AuthItem::ROLE_SPECIAL_IMPORTER_EXPORTER,
         'CIA_TRANSPORTE'=>AuthItem::ROLE_CIA_TRANS_COMPANY,
         'ADMINISTRADOR_DEPOSITO'=>AuthItem::ROLE_ADMIN_WHAREHOUSE,
         'DEPOSITO'=>AuthItem::ROLE_WHAREHOUSE,

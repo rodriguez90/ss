@@ -33,52 +33,22 @@ var handleWidgetOptions = function()
     // element.style.display = 'inline';         // Show
     // element.style.display = 'inline-block';   // Show
 
-    // element.style.visibility = 'hidden';      // Hide
-    // element.style.visibility = 'visible';     // Show
+    console.log(permissions);
 
-    console.log(role);
+    for(var i=0, count = permissions.length; i< count; i++)
+    {
+        if(permissions[i] == 'process_create')
+        {
+            document.getElementById('import').style.display = 'inline';
+            document.getElementById('export').style.display = 'inline';
+        }
+        else if(permissions[i] == 'ticket_create' || permissions[i] == 'ticket_list')
+        {
+            document.getElementById('ticket').style.display = 'inline';
+        }
+    }
 
-	if(role === 'Agencia')
-    {
-        document.getElementById('import').style.display = 'inline';
-        document.getElementById('export').style.display = 'inline';
-        document.getElementById('report').style.display = 'inline';
-    }
-    else if(role === 'Importador')
-    {
-        document.getElementById('import').style.display = 'inline';
-        // document.getElementById('export').style.display = 'inline';
-        document.getElementById('report').style.display = 'inline';
-    }
-    else if( role === 'Exportador')
-    {
-        // document.getElementById('import').style.display = 'inline';
-        document.getElementById('export').style.display = 'inline';
-        document.getElementById('report').style.display = 'inline';
-    }
-    else if( role === 'Importador_Exportador')
-    {
-        document.getElementById('import').style.display = 'inline';
-        document.getElementById('export').style.display = 'inline';
-        document.getElementById('report').style.display = 'inline';
-    }
-    else if(role === 'Cia_transporte')
-    {
-        document.getElementById('ticket').style.display = 'inline';
-        document.getElementById('report').style.display = 'inline';
-    }
-    else if(role === 'Administrador_deposito' || role === 'Deposito')
-    {
-        document.getElementById('ticket').style.display = 'inline';
-        document.getElementById('report').style.display = 'inline';
-    }
-    else if(role === 'Administracion')
-    {
-        document.getElementById('ticket').style.display = 'inline';
-        document.getElementById('import').style.display = 'inline';
-        document.getElementById('export').style.display = 'inline';
-        document.getElementById('report').style.display = 'inline';
-    }
+    document.getElementById('report').style.display = 'inline';
 };
 
 var Dashboard = function () {
@@ -200,13 +170,13 @@ var handleDataTable = function () {
                             selectHtml += "<div class=\"col col-md-12\">" ;
                             selectHtml += "<div class=\"col col-md-5\">";
 
-                            if(role == 'Importador_Exportador' || role == 'Administracion')
+                            if(permissions.indexOf('process_create') >= 0)
                             {
                                 selectHtml += "<a " + "href=\"" + homeUrl + "/rd/process/view?id=" + elementId + "\" class=\"btn btn-info btn-xs\">Ver</a>";
                             }
                             selectHtml+= "</div>";
                             selectHtml += "<div class=\"col col-md-5\">";
-                            if(role == 'Cia_transporte' || role == 'Administracion')
+                            if(permissions.indexOf('ticket_create') >= 0)
                             {
                                 selectHtml += "<a " + "href=\"" + homeUrl + "/rd/ticket/create?id=" + elementId + "\" class=\"btn " + ticketClass + " btn-xs\">Turnos</a>";
                             }
@@ -233,9 +203,7 @@ var handleDataTable = function () {
                 process += separator + "process[]=" + value.id;
                 flag++;
             });
-
             $('#print-process').attr('href', homeUrl + '/site/print' + process);
-            console.log($('print-process').attr('href'));
         });
     }
 };

@@ -123,6 +123,7 @@ if($user)
 
 <script type="text/javascript">
     var role = '<?php echo $rol; ?>';
+    var permissions = <?php echo json_encode($permissions); ?>;
 </script>
 
 <?php

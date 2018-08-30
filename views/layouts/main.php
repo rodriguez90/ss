@@ -107,6 +107,17 @@ $user = Yii::$app->user->identity;
                     ?>
 
                     <?php
+                    if(Yii::$app->user->can("ticket_list"))
+                    {
+                        echo "<li class='has-sub'>";
+                        echo "<a href=".Url::to(['/rd/ticket'])."> <i class='fa fa-ticket'></i>";
+                        echo  "<span> Turnos </span>";
+                        echo "</a>";
+                        echo "</li>";
+                    }
+                    ?>
+
+                    <?php
                     if(Yii::$app->user->can("admin_mod") || Yii::$app->user->can("process_create")){
                         echo "<li class='has-sub'>";
                         echo "<a href=".Url::to(['/rd/process/create','type'=>Process::PROCESS_IMPORT])."> <i class='fa fa-rotate-90 fa-sign-in'></i>";
@@ -117,14 +128,35 @@ $user = Yii::$app->user->identity;
                     ?>
 
                     <?php
+                    if(Yii::$app->user->can("process_five_steps")){
+                        echo "<li class='has-sub'>";
+                        echo "<a href=".Url::to(['/rd/process/createfivesteps','type'=>Process::PROCESS_IMPORT])."> <i class='fa fa-rotate-90 fa-sign-in'></i>";
+                        echo  "<span> Importación en 5 Pasos</span>";
+                        echo "</a>";
+                        echo "</li>";
+                    }
+                    ?>
+
+                    <?php
                     if(Yii::$app->user->can("admin_mod") || Yii::$app->user->can("process_create")){
                         echo "<li class='has-sub'>";
-                        echo "<a href=".Url::to(['/rd/process/create','type'=>Process::PROCESS_EXPORT])."> <i class='fa fa-rotate-90 fa-sign-in'></i>";
+                        echo "<a href=".Url::to(['/rd/process/create','type'=>Process::PROCESS_EXPORT])."> <i class='fa fa-rotate-90 fa-sign-out'></i>";
                         echo  "<span> Exportación</span>";
                         echo "</a>";
                         echo "</li>";
                     }
                     ?>
+
+                    <?php
+                    if(Yii::$app->user->can("process_five_steps")){
+                        echo "<li class='has-sub'>";
+                        echo "<a href=".Url::to(['/rd/process/createfivesteps','type'=>Process::PROCESS_EXPORT])."> <i class='fa fa-rotate-90 fa-sign-out'></i>";
+                        echo  "<span> Exportación en 5 Pasos</span>";
+                        echo "</a>";
+                        echo "</li>";
+                    }
+                    ?>
+
                     <?php
                     if($user){
                         echo "<li class='has-sub'>";
