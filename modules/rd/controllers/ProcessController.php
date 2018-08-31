@@ -3,6 +3,7 @@
 namespace app\modules\rd\controllers;
 
 
+use app\modules\rd\models\Calendar;
 use app\modules\rd\models\ContainerType;
 use app\modules\rd\models\Line;
 use app\modules\rd\models\TransCompany;
@@ -1096,7 +1097,7 @@ class ProcessController extends Controller
 
         if ($model->load(Yii::$app->request->post()))
         {
-            return $this->createProcessFiveSteps(Yii::$app->request->post());
+            return $this->createProcessFiveSteps($model, Yii::$app->request->post());
         }
 
         $user = Yii::$app->user->identity;
@@ -1114,8 +1115,325 @@ class ProcessController extends Controller
         ]);
     }
 
-    protected function createProcessFiveSteps($data)
+    protected function createProcessFiveSteps($model, $data)
     {
-        var_dump($data);die;
+        $response = array();
+
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $response['success'] = false;
+
+        if($model)
+        {
+            $transaction = Process::getDb()->beginTransaction();
+            $containersByTransCompany = [];
+            $ticketByTransCompany = [];
+
+            try {
+                $aux = new DateTime($model->delivery_date, new DateTimeZone("UTC"));
+                $model->delivery_date = $aux->format("Y-m-d");
+
+                if($model->save())
+                {
+                    $containers = $data["containers"];
+                    $tmpResult = true;
+                    foreach ($containers as $container)
+                    {
+                        $containerModel = Container::findOne(['name'=>$container['name']]);
+                        $type = ContainerType::findOne(['id'=>$container['typeId']]);
+                        if($containerModel !== null)
+                        {
+                            $containerModel->code = $type->code;
+                            $containerModel->tonnage = $type->tonnage;
+                            $containerModel->type_id = $type->id;
+                            $result = $containerModel->update();
+                            if($result === false)
+                            {
+                                $tmpResult = false;
+                                $response['msg'] = "Ah ocurrido un error al actualizar el estado del contenedor.";
+                                $response['msg_dev'] = implode(", ", $containerModel->getErrorSummary(false));
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            $containerModel = new Container();
+                            $containerModel->name = $container['name'];
+                            $containerModel->code = $type->code;
+                            $containerModel->tonnage = $type->tonnage;
+                            $containerModel->type_id = $type->id;
+                            $containerModel->active = 1;
+                        }
+
+                        if(!$containerModel->save())
+                        {
+                            $tmpResult = false;
+                            $response['msg'] = "Ah ocurrido un error al guardar los datos de los contenedores.";
+                            $response['msg_dev'] = implode(", ", $containerModel->getErrorSummary(false));
+                            break;
+                        }
+                        $transCompany = TransCompany::findOne(['id'=>$container['transCompanyId']]);
+                        if($transCompany === null) // new trans company
+                        {
+                            $tmpResult = false;
+                            $response['msg'] = "Compañia de Transporte desconocida.";
+                            break;
+                        }
+
+                        $processTransModelOld = ProcessTransaction::findOne(['id'=>$container['ptId']]);
+
+                        if($processTransModelOld !== null)
+                        {
+                            $processTransModelOld->active = 0;
+                            if(!$processTransModelOld->save())
+                            {
+                                $tmpResult = false;
+                                $response['msg'] = "Ah ocurrido un error al actualizar los datos del proceso.";
+                                $response['msg_dev'] = implode(" ", $processTransModelOld->getErrorSummary(false));
+                                break;
+                            }
+
+                            // FIXME soft delete of asociated ticket
+                            $ticket = Ticket::findOne(['process_transaction_id'=>$processTransModelOld->id, 'active'=>1]);
+                            if($ticket)
+                            {
+                                $ticket->active = 0;
+                                if(!$ticket->save())
+                                {
+                                    $tmpResult = false;
+                                    $response['msg'] = "Ah ocurrido un error al actualizar los datos del proceso.";
+                                    $response['msg_dev'] = implode(" ", $processTransModelOld->getErrorSummary(false));
+                                    break;
+                                }
+                            }
+                        }
+
+                        $processTransModel = new ProcessTransaction();
+                        $processTransModel->process_id = $model->id;
+                        $processTransModel->container_id = $containerModel->id;
+                        $processTransModel->active = 1;
+                        $processTransModel->trans_company_id = $transCompany->id;
+                        $processTransModel->container_alias = $container['alias'];
+                        $processTransModel->status = 'PENDIENTE';
+
+                        $calendarSlot = Calendar::findOne(['id'=>$container['calendarId']]);
+
+                        if($container['calendarId'] != -1)
+                        {
+                            $processTransModel->register_truck = $container['registerTrunk'];
+                            $processTransModel->register_driver = $container['registerDriver'];
+                            $processTransModel->name_driver = $container['nameDriver'];
+                            $dateStatus = new DateTime($calendarSlot->start_datetime, new DateTimeZone('UTC'));
+                            $processTransModel->status = $dateStatus->format("Y-m-d H:i:s");
+                        }
+
+                        $aux = new DateTime($container['deliveryDate'], new DateTimeZone("UTC"));
+//                        $aux->setTimezone(new DateTimeZone("UTC"));
+                        $processTransModel->delivery_date = $aux->format("Y-m-d");
+
+                        if(!$processTransModel->save()) {
+                            $tmpResult = false;
+                            $response['msg'] = "Ah ocurrido un error al salvar los datos de los contenedores.";
+                            $response['msg_dev'] = implode(" ", $processTransModel->getErrorSummary(false));
+                            $transaction->rollBack();
+                            break;
+                        }
+
+                        if($tmpResult && $container['calendarId'] != -1) // TODO create ticket
+                        {
+                            $ticket = new Ticket();
+                            $ticket->calendar_id = $container['calendarId'];
+                            $ticket->process_transaction_id = $processTransModel->id;
+                            $ticket->status = 1;
+                            $ticket->active = 1;
+
+                            if(!$ticket->save()) {
+                                $tmpResult = false;
+                                $response['msg'] = "Ah ocurrido un error al salvar los nuevos turnos.";
+                                $response['msg_dev'] = implode(" ", $ticket->getErrorSummary(false));
+                                $transaction->rollBack();
+                                break;
+                            }
+
+                            $calendarSlot->amount = $calendarSlot->amount - 1;
+                            if(!$calendarSlot->save())
+                            {
+                                $tmpResult = false;
+                                $response['msg'] = "Ah ocurrido un error al actualizar los cupos del calendario.";
+                                $response['msg_dev'] = implode(" ", $calendarSlot->getErrorSummary(false));
+                                $transaction->rollBack();
+                                break;
+                            }
+
+                            $cardServiceData = [
+                                'register_truck'=>$container['registerTruck'],
+                                'register_driver'=>$container['registerDriver'],
+                                'name_driver'=>$container['nameDriver'],
+                                'type'=>$model->type,
+                                'bl'=>$model->bl,
+                                'delivery_date'=>$model->delivery_date,
+                                'code'=>$processTransModel->container->code,
+                                'tonnage'=>$processTransModel->container->tonnage,
+                                'name'=>$processTransModel->transCompany->name,
+                                'ruc'=>$processTransModel->transCompany->ruc,
+                                'id'=>$ticket->id,
+                                'status'=>$ticket->status,
+                                'created_at'=>$ticket->created_at,
+                                'start_datetime'=>$calendarSlot->start_datetime,
+                                'end_datetime'=>$calendarSlot->end_datetime,
+                                'w_name'=>$calendarSlot->warehouse->name,
+                                'a_name'=>$model->agency->name,
+                            ];
+
+                            if(isset($ticketByTransCompany[$transCompany->id]))
+                            {
+                                array_push($ticketByTransCompany[$transCompany->id], $cardServiceData);
+                            }
+                            else {
+                                $ticketByTransCompany[$transCompany->id]=[];
+                                array_push($ticketByTransCompany[ $transCompany->id], $cardServiceData);
+                            }
+                        }
+
+                        if(isset($containersByTransCompany[$transCompany->id]))
+                        {
+                            array_push($containersByTransCompany[$transCompany->id], $containerModel);
+                        }
+                        else {
+                            $containersByTransCompany[$transCompany->id]=[];
+                            array_push($containersByTransCompany[ $transCompany->id], $containerModel);
+                        }
+                    }
+
+                    try
+                    {
+                        if($tmpResult)
+                        {
+                            $response['success'] = true;
+//                            $remitente = AdmUser::findOne(['id'=>\Yii::$app->user->getId()]);
+
+                            foreach($containersByTransCompany as $t=>$c) {
+
+                                $cardsServiceData = $ticketByTransCompany[$t];
+
+                                $pdf = new mPDF(['mode' => 'utf-8', 'format' => 'A4-L']);
+
+                                foreach ($cardsServiceData as $ticket)
+                                {
+                                    if($ticket !== null)
+                                    {
+                                        $aux = new DateTime( $ticket["start_datetime"] );
+                                        $date = $aux->format("YmdHi");
+                                        $ticket["start_datetime"] = $aux->format("d-m-Y H:i");
+                                        $dateImp = new DateTime($ticket["created_at"]);
+                                        $dateImp = $dateImp->format('d-m-Y H:i');
+
+                                        $info .= "EMP. TRANSPORTE: " . $trans_company["name"] . ' ';
+                                        $info .= "TICKET NO: TI-" . $date . "-" . $ticket["id"] . ' ';
+                                        $info .= "OPERACIÓN: " . $ticket["type"] == Process::PROCESS_IMPORT ? "IMPORTACIÓN":"EXPORTACIÓN" . '  ';
+                                        $info .= "DEPÓSITO: " . $ticket["w_name"] . ' ';
+                                        $info .= "ECAS: " . $ticket["delivery_date"] . ' ';
+                                        $info .= "CLIENTE: " . $ticket["a_name"] . ' ';
+                                        $info .= "CHOFER: " . $ticket["name_driver"] . "/" . $ticket["register_driver"] . ' ';
+                                        $info .= "PLACA: " . $ticket["register_truck"] . ' ';
+                                        $info .= "FECHA TURNO: " . $ticket["start_datetime"] . ' ';
+                                        $info .= "CANTIDAD: 1" . ' ';
+                                        $info .= ($ticket["type"] == Process::PROCESS_IMPORT ? "BL":"BOOKING") . ": ". $ticket["bl"] . ' ';
+                                        $info .= "TIPO CONT: " . $ticket["tonnage"] . $ticket["code"] . ' ';
+                                        $info .= "GENERADO: " . $dateImp . ' ';
+                                        $info .= "ESTADO: " . $ticket["status"] == 1 ? "EMITIDO" : "---";
+
+                                        $qrCode = new QrCode($info);
+
+                                        ob_start();
+                                        \QRcode::png($info,null);
+                                        $imageString = base64_encode(ob_get_contents());
+                                        ob_end_clean();
+
+                                        $bodypdf = $this->renderPartial('@app/mail/layouts/card.php',
+                                            ['trans_company'=> $trans_company,
+                                                'ticket'=>$ticket,
+                                                'qr'=>"data:image/png;base64, ".$imageString,
+                                                'dateImp'=>$dateImp,
+                                                'date'=>$date]);
+
+                                        $pdf->AddPage();
+                                        $pdf->WriteHTML($bodypdf);
+                                    }
+                                }
+
+                                $attach = $pdf->Output("", "S");
+
+                                $destinatario = AdmUser::find()
+                                    ->innerJoin("user_transcompany","user_transcompany.user_id = adm_user.id ")
+                                    ->where(["user_transcompany.transcompany_id"=>$t])
+                                    ->one();
+
+                                if($destinatario)
+                                {
+
+                                    $body = Yii::$app->controller->renderPartial('notification.php', ['model' => $model,
+                                        'containers'=>$c]);
+
+                                    // TODO: send email user
+                                    $email = Yii::$app->mailer->compose()
+                                        ->setFrom(Yii::$app->params['adminEmail'])
+                                        ->setTo($destinatario->email)
+                                        ->setBcc(Yii::$app->params['adminEmail'])
+                                        ->setSubject("Notificación de nuevo Proceso.")
+                                        ->setHtmlBody($body);
+
+                                    if($attach)
+                                        $email->attachContent($attach, ['fileName' => "Carta de Servicio.pdf", 'contentType' => 'application/pdf']);
+
+                                    if($email->send() == false)
+                                    {
+                                        $response['success'] = true ;
+                                        $response['warning'] ="Ah ocurrido un error al enviar la notificación vía email a la empresa de transporte.";
+                                    }
+                                }
+                            }
+
+                            $response['msg'] = Yii::t("app", "Proceso creado correctamente.");
+                            $response['url'] = Url::to(['/site/index']);
+
+                            $transaction->commit();
+                        }
+                        else {
+                            $transaction->rollBack();
+                        }
+                    }
+                    catch (\PDOException $ePDO)
+                    {
+                        if($ePDO->getCode() !== '01000')
+                        {
+                            $response['success'] = false;
+                            $response['msg'] = "Ah ocurrido un error al salvar los datos en el servidor.";
+                            $response['msg_dev'] = $ePDO->getMessage();
+                        }
+                    }
+                }
+                else {
+                    $response['success'] = false;
+                    $response['msg'] =  "No fue posible crear la solicitud" ;
+                }
+            }
+            catch (Exception $e)
+            {
+                if($e->getCode() !== '01000')
+                {
+                    $response['success'] = false;
+                    $response['msg'] = "Ah ocurrido un error al salvar los datos en el servidor.";
+                    $response['msg_dev'] = $e->getMessage();
+                    $transaction->rollBack();
+                }
+            }
+        }
+        else {
+            $response['success'] = false;
+            $response['msg'] = Yii::t("app", "No fue posible procesar los datos.");
+        }
+
+        return $response;
     }
 }

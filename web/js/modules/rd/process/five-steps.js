@@ -1198,8 +1198,6 @@ var handleBootstrapWizardsValidation = function() {
 
                     $('ul.bwizard-buttons li.next a').text('Siguiente');
 
-
-
                     if(selectedContainers.length == 0)
                     {
                         if(toBack)
@@ -1263,7 +1261,9 @@ var handleBootstrapWizardsValidation = function() {
                                     registerDriver: '',
                                     nameDriver: '',
                                     transCompany:value.transCompany,
+                                    ptId:value.ptId,
                                     status:value.status,
+                                    alias:value.alias,
                                     id:value.name
                                 };
 
@@ -1450,6 +1450,8 @@ var handleBootstrapWizardsValidation = function() {
                                     'nameDriver':value.nameDriver,
                                     'registerDriver':value.registerDriver,
                                     'registerTrunk':value.registerTrunk,
+                                    'alias':value.alias,
+                                    'ptId':value.ptId,
                                 };
 
                                 if(ticketDataMap.has(value.name))
