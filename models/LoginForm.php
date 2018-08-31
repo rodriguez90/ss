@@ -74,8 +74,6 @@ class LoginForm extends Model
         
 		$userData = $response['user'];
 
-//		$transaction = Yii::$app->db->beginTransaction();
-
         if(!$response['success'])
         {
             $this->addError('error', 'Ah ocurrido un error al realizar la autenticación con TPG.');
@@ -83,7 +81,7 @@ class LoginForm extends Model
         }
         elseif ($userData == null)
         {
-            $this->addError('error', 'Usuario o Contraseña Incorrecta. 1'. mb_convert_encoding ( $this->username, "UTF-8","ISO-8859-1" ));
+            $this->addError('error', 'Usuario o Contraseña Incorrecta.');// 1'. mb_convert_encoding ( $this->username, "UTF-8","ISO-8859-1" ));
             return false;
         }
         elseif ($userData !== null && $userData['estado'] !== "ACTIVO")
@@ -92,108 +90,141 @@ class LoginForm extends Model
             return false;
         }
 
-        $newUser = AdmUser::findOne(['username'=>$this->username]); // find user in sgt
-        $auth =  Yii::$app->authManager;
+        $transaction = Yii::$app->db->beginTransaction();
 
-        if($newUser == null) // user no exit in sgt
-        {
-            $newUser = new AdmUser();
-            $newUser->username = $userData['user_id'];
-            $newUser->nombre = $userData['nombre'];
-            $newUser->apellidos = '';
-            $newUser->cedula = $userData['ruc'];
-            $newUser->email = $userData['email'];
-            $newUser->status = $userData['estado'] == "ACTIVO" ? 1:0;
-            $newUser->created_at = time();
-            $newUser->updated_at = time();
-            $newUser->creado_por = 'login';
-            $newUser->setPassword($this->password);
+        try {
 
-            $new_rol = null;
+            $newUser = AdmUser::findOne(['username'=>$this->username]); // find user in sgt
+            $auth =  Yii::$app->authManager;
+            $resultLogin = true;
 
-            if ($newUser->save())
+            if($newUser == null) // user no exit in sgt
             {
-                $roleName = $userData['rol'];
-                $rol = AuthItem::MAP_TPG_ROLE_TO_SGT[$roleName];
-                $result = $this->registerUserEntity($newUser, $userData, $roleName);
+                $newUser = new AdmUser();
+                $newUser->username = $userData['user_id'];
+                $newUser->nombre = $userData['nombre'];
+                $newUser->apellidos = '';
+                $newUser->cedula = $userData['ruc'];
+                $newUser->email = $userData['email'];
+                $newUser->status = $userData['estado'] == "ACTIVO" ? 1:0;
+                $newUser->created_at = time();
+                $newUser->updated_at = time();
+                $newUser->creado_por = 'login';
+                $newUser->setPassword($this->password);
 
-                if(!$result['success'])
+                $new_rol = null;
+
+                if ($newUser->save())
                 {
-                    $this->addError('error', $result['msg']);
-                    return false;
+                    $roleName = $userData['rol'];
+                    $rol = AuthItem::MAP_TPG_ROLE_TO_SGT[$roleName];
+
+                    $result = $this->registerUserEntity($newUser, $userData, $roleName);
+
+                    if(!$result['success'])
+                    {
+                        $this->addError('error', $result['msg']);
+                        $resultLogin = false;
+                    }
+
+                    if($resultLogin)
+                    {
+                        $new_rol = $auth->getRole($rol);
+
+                        if(!$auth->assign($new_rol, $newUser->id))
+                        {
+                            $msg = "Ah ocurrido un error al registar el rol del usuario.";
+                            $this->addError('error', $msg);
+                            $resultLogin = false;
+                        }
+                    }
                 }
-
-                $new_rol = $auth->getRole($rol);
-
-                if(!$auth->assign($new_rol, $newUser->id))
+                else
                 {
-                    $msg = "Ah ocurrido un error al registar el rol del usuario.";
+
+                    $msg = "Ah ocurrido un error al registrar el usuario.";
                     $this->addError('error', $msg);
-                    return false;
+                    $resultLogin = false;
                 }
             }
-			else
-			{
-				 $msg = "Ah ocurrido un error al registrar el usuario.";
-				 $this->addError('error', $msg);
-				 return false;
-			}
+            else // the user exist in sgt
+            {
+                $currentRolName = $newUser->getRole();
+                $newRolName = AuthItem::MAP_TPG_ROLE_TO_SGT[$userData['rol']];
+
+                $newUser->nombre = $userData['nombre'];
+                $newUser->apellidos = '';
+                $newUser->cedula = $userData['ruc'];
+                $newUser->email = $userData['email'];
+                $newUser->status = $userData['estado'] == "ACTIVO" ? 1:0;
+                $newUser->created_at = time();
+                $newUser->updated_at = time();
+                $newUser->creado_por = 'login';
+                $newUser->setPassword($this->password);
+
+                if(!$newUser->save())
+                {
+                    $this->addError('error', 'Ah ocurrido un error al actualziar los datos del usuario.');
+                    $resultLogin = false;
+                }
+
+                if($resultLogin && $currentRolName != $newRolName)
+                {
+                    if($currentRolName != null)
+                    {
+                        $currentRol = $auth->getRole($currentRolName);
+
+                        if(!$auth->revoke($currentRol, $newUser->id))
+                        {
+                            $msg = "Ah ocurrido un error al revocar el rol del usuario.";
+                            $this->addError('error', $msg);
+                            $resultLogin = false;
+                        }
+                    }
+
+                    $newRol = $auth->getRole($newRolName);
+
+                    if($resultLogin && !$auth->assign($newRol, $newUser->id))
+                    {
+                        $msg = "Ah ocurrido un error al acutalizar el rol del usuario.";
+                        $this->addError('error', $msg);
+                        $resultLogin = false;
+                    }
+                }
+
+                if($resultLogin)
+                {
+                    $result = $this->unregisterUserEntity($newUser);
+
+                    if(!$result['success'])
+                    {
+                        $this->addError('error', $result['msg']);
+                        return false;
+                    }
+                }
+
+                if($resultLogin)
+                {
+                    $result = $this->registerUserEntity($newUser, $userData, $userData['rol']);
+
+                    if(!$result['success'])
+                    {
+                        $this->addError('error', $result['msg']);
+                        return false;
+                    }
+                }
+            }
+            if($resultLogin)
+                $transaction->commit();
+            else
+                $transaction->rollBack();
         }
-        else // the user exist in sgt
+        catch (Exception $e)
         {
-            $currentRolName = $newUser->getRole();
-            $newRolName = AuthItem::MAP_TPG_ROLE_TO_SGT[$userData['rol']];
-
-            $newUser->nombre = $userData['nombre'];
-            $newUser->apellidos = '';
-            $newUser->cedula = $userData['ruc'];
-            $newUser->email = $userData['email'];
-            $newUser->status = $userData['estado'] == "ACTIVO" ? 1:0;
-            $newUser->created_at = time();
-            $newUser->updated_at = time();
-            $newUser->creado_por = 'login';
-            $newUser->setPassword($this->password);
-
-            if(!$newUser->save())
+            if($e->getCode() !== '01000')
             {
-                $this->addError('error', 'Ah ocurrido un error al actualziar los datos del usuario.');
-                return false;
-            }
-
-            if($currentRolName != $newRolName)
-            {
-                $currentRol = $auth->getRole($currentRolName);
-
-                if(!$auth->revoke($currentRol, $newUser->id))
-                {
-                    $msg = "Ah ocurrido un error al revocar el rol del usuario.";
-                    $this->addError('error', $msg);
-                    return false;
-                }
-
-                $newRol = $auth->getRole($newRolName);
-
-                if(!$auth->assign($newRol, $newUser->id))
-                {
-                    $msg = "Ah ocurrido un error al acutalizar el rol del usuario.";
-                    $this->addError('error', $msg);
-                    return false;
-                }
-            }
-
-            $result = $this->unregisterUserEntity($newUser);
-
-            if(!$result['success'])
-            {
-                $this->addError('error', $result['msg']);
-                return false;
-            }
-
-            $result = $this->registerUserEntity($newUser, $userData, $userData['rol']);
-
-            if(!$result['success'])
-            {
-                $this->addError('error', $result['msg']);
+                $this->addError('error', "Ah ocurrido un error al relizar la autenticación.");
+                $transaction->rollBack();
                 return false;
             }
         }
