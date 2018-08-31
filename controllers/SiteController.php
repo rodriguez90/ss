@@ -672,8 +672,8 @@ class SiteController extends Controller
                     ->where(['process.active'=>1])
                     ->andFilterWhere(['agency_id'=>$session->get('agencyId')])
                     ->andFilterWhere(['process_transaction.trans_company_id'=>$session->get('transCompanyId')])
-//                    ->groupBy(['process.id', 'agency.id'])
-                    ->groupBy(['process.id', 'process.bl', 'process.delivery_date', 'process.type', 'agency.id', 'agency.name'])
+                    ->groupBy(['process.id', 'agency.id'])
+//                    ->groupBy(['process.id', 'process.bl', 'process.delivery_date', 'process.type', 'agency.id', 'agency.name'])
                     ->asArray()
                     ->all();
 
