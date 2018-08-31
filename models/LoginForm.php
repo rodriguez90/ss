@@ -219,7 +219,7 @@ class LoginForm extends Model
             else
                 $transaction->rollBack();
         }
-        catch (Exception $e)
+        catch (\PDOException $e)
         {
             if($e->getCode() !== '01000')
             {
