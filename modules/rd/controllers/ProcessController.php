@@ -28,6 +28,9 @@ use yii\filters\VerbFilter;
 use yii\helpers\Url;
 use Mpdf\Mpdf;
 
+use app\tools\Utils;
+
+
 use yii\web\Response;
 
 /**
@@ -1401,9 +1404,9 @@ class ProcessController extends Controller
                             $processType = $model->type == 1 ? 'IMPO':'EXPO';
                             $user = Yii::$app->user->identity;
 
-                            $result = \Utils::notifyDeletedTickets($ticketsDeleted, $user->username);
+                            $result = Utils::notifyDeletedTickets($ticketsDeleted, $user->username);
 
-                            $result = \Utils::notifyNewTickets($processType, $model->bl, $user->username, $tickets);
+                            $result = Utils::notifyNewTickets($processType, $model->bl, $user->username, $tickets);
 
 
                             if(!$result['success'])

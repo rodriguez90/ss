@@ -7,6 +7,8 @@
  * Time: 15:30
  */
 
+namespace app\tools;
+
 use app\modules\rd\models\ProcessTransaction;
 use app\modules\rd\models\Ticket;
 
