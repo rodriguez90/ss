@@ -107,6 +107,7 @@ $user = Yii::$app->user->identity;
                     ?>
 
                     <?php
+//                    if(Yii::$app->user->can("ticket_list") || Yii::$app->user->can("process_five_steps"))
                     if(Yii::$app->user->can("ticket_list"))
                     {
                         echo "<li class='has-sub'>";
@@ -168,7 +169,8 @@ $user = Yii::$app->user->identity;
                     ?>
 
                     <?php
-                    if(Yii::$app->user->can("ticket_create") || Yii::$app->user->can("calendar_create"))
+                    if(Yii::$app->user->can("ticket_create") ||
+                        Yii::$app->user->can("calendar_create"))
                     {
                         echo "<li class='has-sub'>";
                         echo "<a href=".Url::to(['/rd/ticket/my-calendar'])."> <i class='fa fa-calendar'></i>";
@@ -199,7 +201,8 @@ $user = Yii::$app->user->identity;
                     ?>
 
                     <?php
-                    if(Yii::$app->user->can("admin_mod") || Yii::$app->user->can("container_list")){
+                    if(Yii::$app->user->can("admin_mod") ||
+                        Yii::$app->user->can("container_list")){
                         echo "<li class='has-sub'>";
                         echo "<a href=". Url::to(['/rd/container-type'])."> <i class='fa fa-cubes'></i>";
                         echo "<span> Tipos Contenedores</span>";
@@ -209,7 +212,8 @@ $user = Yii::$app->user->identity;
                     ?>
 
                     <?php
-                    if(Yii::$app->user->can("admin_mod") || Yii::$app->user->can("trans-company_list")){
+                    if(Yii::$app->user->can("admin_mod") ||
+                        Yii::$app->user->can("trans-company_list")){
                         echo "<li class='has-sub'>";
                         echo "<a href=" . Url::to(['/rd/trans-company'])."> <i class='fa fa-truck'></i>";
                         echo "<span> Transporte</span>";
@@ -219,7 +223,8 @@ $user = Yii::$app->user->identity;
                     ?>
 
                     <?php
-                    if (Yii::$app->user->can("admin_mod") || Yii::$app->user->can("calendar_list")) {
+                    if (Yii::$app->user->can("admin_mod") ||
+                        Yii::$app->user->can("calendar_list")) {
                         echo "<li class='has-sub'>";
                         echo "<a href=" . Url::to(['/rd/calendar']) . "> <i class='fa fa-calendar'></i>";
                         echo "<span> Calendario</span>";
@@ -230,7 +235,9 @@ $user = Yii::$app->user->identity;
 
                     <?php
 
-                    if (Yii::$app->user->can("admin_mod") || Yii::$app->user->can("generating_card")) {
+                    if (Yii::$app->user->can("admin_mod") ||
+                        Yii::$app->user->can("generating_card")) {
+
                         echo "<li class='has-sub'>";
                         echo "<a href=" . Url::to(['/rd/process/generatingcard']) . "> <i class='fa fa-credit-card'></i>";
                         echo "<span> Carta de Servicio</span>";

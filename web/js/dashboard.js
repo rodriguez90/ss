@@ -33,7 +33,7 @@ var handleWidgetOptions = function()
     // element.style.display = 'inline';         // Show
     // element.style.display = 'inline-block';   // Show
 
-    console.log(permissions);
+    // console.log(permissions);
 
     for(var i=0, count = permissions.length; i< count; i++)
     {

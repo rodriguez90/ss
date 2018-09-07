@@ -74,7 +74,7 @@ class TicketController extends Controller
      */
     public function actionView($id)
     {
-        if(!Yii::$app->user->can("ticket_view"))
+        if(Yii::$app->user->can("ticket_view"))
             throw new ForbiddenHttpException('Usted no tiene permiso para ver turnos.');
 
         return $this->render('view', [
@@ -91,8 +91,6 @@ class TicketController extends Controller
     {
         if(!Yii::$app->user->can("ticket_create"))
             throw new ForbiddenHttpException('Usted no tiene permiso para resevar turnos.');
-
-        $user = AdmUser::findOne(['id'=>Yii::$app->user->id]);
 
         $model = Process::findOne(['id'=>$id]);
 
@@ -135,7 +133,7 @@ class TicketController extends Controller
      */
     public function actionDelete($id, $from=0)
     {
-        if(!Yii::$app->user->can("ticket_delete"))
+        if(Yii::$app->user->can("ticket_delete"))
             throw new ForbiddenHttpException('Usted no tiene permiso para eliminar turnos');
 
         Yii::$app->response->format = Response::FORMAT_JSON;
@@ -283,7 +281,8 @@ class TicketController extends Controller
 	
 	public function actionMyCalendar()
     {
-        if(!(Yii::$app->user->can('ticket_create') ||  Yii::$app->user->can("calendar_create")))
+        if(!(Yii::$app->user->can('ticket_create') ||
+             Yii::$app->user->can("calendar_create")))
             throw new ForbiddenHttpException('Usted no tiene permiso a esta página');
 
         $user = Yii::$app->user->identity; // AdmUser::findOne(['id'=>Yii::$app->user->getId()]);
@@ -302,7 +301,8 @@ class TicketController extends Controller
         $response['success'] = true;
         $response['tickets'] = [];
 
-        if(!(Yii::$app->user->can('ticket_create') ||  Yii::$app->user->can("calendar_list")))
+        if(!(Yii::$app->user->can('ticket_create') ||
+            Yii::$app->user->can('calendar_list')))
         {
             $response['sucess'] = false;
             $response['msg'] = 'Usted no tiene permiso para acceder a estos datos.';
@@ -337,7 +337,7 @@ class TicketController extends Controller
             ->innerJoin('container', 'container.id=process_transaction.container_id')
             ->where(['ticket.active'=>1]);
 
-        if($transCompany)
+        if($transCompany) // user with trans company (cia_transporte role)
         {
             $results->andFilterWhere(['process_transaction.trans_company_id'=>$transCompany->id]);
         }
@@ -375,7 +375,7 @@ class TicketController extends Controller
      private function delete($id)
     {
         $model = Ticket::findOne(['id'=>$id]);
-        $user = AdmUser::findOne(['id'=>Yii::$app->user->getId()]);
+        $user = Yii::$app->user->identity;
         $response['success'] = true;
 
         if($model)

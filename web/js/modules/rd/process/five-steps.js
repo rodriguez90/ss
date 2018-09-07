@@ -1472,7 +1472,7 @@ var handleBootstrapWizardsValidation = function() {
                             "containers":containers
                         };
 
-                        console.log(process);
+                        // console.log(process);
                         $.ajax({
                             // async:false,
                             url: homeUrl + "/rd/process/createfivesteps?type="+processType,
@@ -1493,6 +1493,7 @@ var handleBootstrapWizardsValidation = function() {
                                 {
                                     result = true;
                                     window.location.href = response['url'];
+                                    // document.location.replace(response['url']);
                                 }
                                 else
                                 {
@@ -1969,7 +1970,7 @@ var fetchContainers = function (bl) {
             'type': processType,
         },
         success: function(response) {
-            console.log(response);
+            // console.log(response);
 
             if(response.success)
             {
@@ -2101,7 +2102,7 @@ var fetchContainerTypes = function (async) {
             }
         },
         error: function(data) {
-            console.log(data);
+            // console.log(data);
             alert(data['msg']);
             result = false;
         }

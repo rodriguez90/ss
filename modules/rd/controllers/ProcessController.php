@@ -1128,6 +1128,8 @@ class ProcessController extends Controller
             $transaction = Process::getDb()->beginTransaction();
             $containersByTransCompany = [];
             $ticketByTransCompany = [];
+            $tickets = [];
+            $ticketsDeleted = [];
 
             try {
                 $aux = new DateTime($model->delivery_date, new DateTimeZone("UTC"));
@@ -1205,6 +1207,7 @@ class ProcessController extends Controller
                                     $response['msg_dev'] = implode(" ", $processTransModelOld->getErrorSummary(false));
                                     break;
                                 }
+                                $ticketsDeleted[] = $ticket;
                             }
                         }
 
@@ -1251,7 +1254,6 @@ class ProcessController extends Controller
                                 $tmpResult = false;
                                 $response['msg'] = "Ah ocurrido un error al salvar los nuevos turnos.";
                                 $response['msg_dev'] = implode(" ", $ticket->getErrorSummary(false));
-                                $transaction->rollBack();
                                 break;
                             }
 
@@ -1261,9 +1263,10 @@ class ProcessController extends Controller
                                 $tmpResult = false;
                                 $response['msg'] = "Ah ocurrido un error al actualizar los cupos del calendario.";
                                 $response['msg_dev'] = implode(" ", $calendarSlot->getErrorSummary(false));
-                                $transaction->rollBack();
                                 break;
                             }
+
+                            $tickets[]=$ticket;
 
                             $cardServiceData = [
                                 'register_truck'=>$container['registerTruck'],
@@ -1392,6 +1395,21 @@ class ProcessController extends Controller
                                         $response['warning'] ="Ah ocurrido un error al enviar la notificación vía email a la empresa de transporte.";
                                     }
                                 }
+                            }
+
+                            // TPG NOTTFIE
+                            $processType = $model->type == 1 ? 'IMPO':'EXPO';
+                            $user = Yii::$app->user->identity;
+
+                            $result = \Utils::notifyDeletedTickets($ticketsDeleted, $user->username);
+
+                            $result = \Utils::notifyNewTickets($processType, $model->bl, $user->username, $tickets);
+
+
+                            if(!$result['success'])
+                            {
+                                $response['warning'] = $result['msg'];
+                                $response['msg_dev'] = $result['msg_dev'];
                             }
 
                             $response['msg'] = Yii::t("app", "Proceso creado correctamente.");

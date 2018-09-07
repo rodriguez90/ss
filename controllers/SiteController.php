@@ -180,8 +180,19 @@ class SiteController extends Controller
                 $session->open();
 
                 $user = Yii::$app->user->identity;
-				
 				$session->set('user', $user);
+
+                $permissions = Yii::$app->authManager->getPermissionsByUser(Yii::$app->user->getId());
+
+                $permissionsNames = [];
+
+                foreach ($permissions as $permission)
+                {
+                    $permissionsNames[] = $permission->name;
+                }
+
+                $session->set('permissions', $permissionsNames);
+
                 return $this->redirect(Url::toRoute('/site/index'));
             }
             else
@@ -662,9 +673,10 @@ class SiteController extends Controller
                                     process.bl, 
                                     process.delivery_date, 
                                     process.type, 
+                                    process.created_at, 
                                     agency.name as agency_name,
                                     COUNT(process_transaction.id) as countContainer,			 
-                                    COUNT(ticket.id) as countTicket'
+                                    COUNT(ticket.id) as countTicket,'
                                 )
                     ->innerJoin('agency', 'agency.id = process.agency_id')
                     ->innerJoin("process_transaction","process_transaction.process_id = process.id and process_transaction.active=1")
@@ -673,7 +685,9 @@ class SiteController extends Controller
                     ->andFilterWhere(['agency_id'=>$session->get('agencyId')])
                     ->andFilterWhere(['process_transaction.trans_company_id'=>$session->get('transCompanyId')])
                     ->groupBy(['process.id', 'agency.id'])
-//                    ->groupBy(['process.id', 'process.bl', 'process.delivery_date', 'process.type', 'agency.id', 'agency.name'])
+//                    ->groupBy(['process.id', 'process.bl', 'process.delivery_date', 'process.type', 'agency.id', 'agency.name', 'process.created_at'])
+                    ->orderBy(['process.created_at'=>SORT_DESC])
+
                     ->asArray()
                     ->all();
 

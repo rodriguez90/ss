@@ -308,8 +308,9 @@ if($user)
 
 <script type="text/javascript">
     var modelId = '<?php echo $model->id; ?>';
-    var transCompanyId = '<?php echo $trasCompany->id; ?>';
-    var transCompanyRuc = '<?php echo $trasCompany->ruc; ?>';
+    var transCompanyId = '<?php echo $trasCompany == null ? -1: $trasCompany->id; ?>';
+    var transCompanyRuc = '<?php echo $trasCompany == null ? '': $trasCompany->ruc; ?>';
+    var permissions = '<?php echo Yii::$app->session->get('permissions') ?>';
 </script>
 
 <!---->
