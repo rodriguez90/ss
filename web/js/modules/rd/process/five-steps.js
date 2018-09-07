@@ -340,7 +340,7 @@ var handleDataTableStep1 = function() {
                                 data:containerTypeArray,
                             }).on('select2:select', function (e) {
                             var type = e.params.data;
-                            var containerType = containerTypeMap.get(parseInt(type.id));
+                            var containerType = containerTypeMap.get(type.id);
                             containertDataMap.set(data.name,containerType);
 
                             // $('#mySelect2').val(type.id); // Select the option with a value of '1'
