@@ -1210,6 +1210,20 @@ class ProcessController extends Controller
                                     $response['msg_dev'] = implode(" ", $processTransModelOld->getErrorSummary(false));
                                     break;
                                 }
+
+                                $calendarSlot = Calendar::findOne(['id'=>$ticket->calendar_id]);
+
+                                if($tmpResult && $calendarSlot != null)
+                                {
+                                    $calendarSlot->amount = $calendarSlot->amount - 1;
+                                    if(!$calendarSlot->save())
+                                    {
+                                        $tmpResult = false;
+                                        $response['msg'] = "Ah ocurrido un error al actualizar los cupos del calendario.";
+                                        $response['msg_dev'] = implode(" ", $calendarSlot->getErrorSummary(false));
+                                        break;
+                                    }
+                                }
                                 $ticketsDeleted[] = $ticket;
                             }
                         }
@@ -1320,56 +1334,6 @@ class ProcessController extends Controller
 
                             foreach($containersByTransCompany as $t=>$c) {
 
-                                $cardsServiceData = $ticketByTransCompany[$t];
-
-                                $pdf = new mPDF(['mode' => 'utf-8', 'format' => 'A4-L']);
-
-                                foreach ($cardsServiceData as $ticket)
-                                {
-                                    if($ticket !== null)
-                                    {
-                                        $aux = new DateTime( $ticket["start_datetime"] );
-                                        $date = $aux->format("YmdHi");
-                                        $ticket["start_datetime"] = $aux->format("d-m-Y H:i");
-                                        $dateImp = new DateTime($ticket["created_at"]);
-                                        $dateImp = $dateImp->format('d-m-Y H:i');
-
-                                        $info .= "EMP. TRANSPORTE: " . $trans_company["name"] . ' ';
-                                        $info .= "TICKET NO: TI-" . $date . "-" . $ticket["id"] . ' ';
-                                        $info .= "OPERACIÓN: " . $ticket["type"] == Process::PROCESS_IMPORT ? "IMPORTACIÓN":"EXPORTACIÓN" . '  ';
-                                        $info .= "DEPÓSITO: " . $ticket["w_name"] . ' ';
-                                        $info .= "ECAS: " . $ticket["delivery_date"] . ' ';
-                                        $info .= "CLIENTE: " . $ticket["a_name"] . ' ';
-                                        $info .= "CHOFER: " . $ticket["name_driver"] . "/" . $ticket["register_driver"] . ' ';
-                                        $info .= "PLACA: " . $ticket["register_truck"] . ' ';
-                                        $info .= "FECHA TURNO: " . $ticket["start_datetime"] . ' ';
-                                        $info .= "CANTIDAD: 1" . ' ';
-                                        $info .= ($ticket["type"] == Process::PROCESS_IMPORT ? "BL":"BOOKING") . ": ". $ticket["bl"] . ' ';
-                                        $info .= "TIPO CONT: " . $ticket["tonnage"] . $ticket["code"] . ' ';
-                                        $info .= "GENERADO: " . $dateImp . ' ';
-                                        $info .= "ESTADO: " . $ticket["status"] == 1 ? "EMITIDO" : "---";
-
-                                        $qrCode = new QrCode($info);
-
-                                        ob_start();
-                                        \QRcode::png($info,null);
-                                        $imageString = base64_encode(ob_get_contents());
-                                        ob_end_clean();
-
-                                        $bodypdf = $this->renderPartial('@app/mail/layouts/card.php',
-                                            ['trans_company'=> $trans_company,
-                                                'ticket'=>$ticket,
-                                                'qr'=>"data:image/png;base64, ".$imageString,
-                                                'dateImp'=>$dateImp,
-                                                'date'=>$date]);
-
-                                        $pdf->AddPage();
-                                        $pdf->WriteHTML($bodypdf);
-                                    }
-                                }
-
-                                $attach = $pdf->Output("", "S");
-
                                 $destinatario = AdmUser::find()
                                     ->innerJoin("user_transcompany","user_transcompany.user_id = adm_user.id ")
                                     ->where(["user_transcompany.transcompany_id"=>$t])
@@ -1389,8 +1353,58 @@ class ProcessController extends Controller
                                         ->setSubject("Notificación de nuevo Proceso.")
                                         ->setHtmlBody($body);
 
-                                    if($attach)
+                                    if($cardsServiceData != null)
+                                    {
+                                        $pdf = new mPDF(['mode' => 'utf-8', 'format' => 'A4-L']);
+
+                                        foreach ($cardsServiceData as $ticket)
+                                        {
+                                            if($ticket !== null)
+                                            {
+                                                $aux = new DateTime( $ticket["start_datetime"] );
+                                                $date = $aux->format("YmdHi");
+                                                $ticket["start_datetime"] = $aux->format("d-m-Y H:i");
+                                                $dateImp = new DateTime($ticket["created_at"]);
+                                                $dateImp = $dateImp->format('d-m-Y H:i');
+
+                                                $info .= "EMP. TRANSPORTE: " . $trans_company["name"] . ' ';
+                                                $info .= "TICKET NO: TI-" . $date . "-" . $ticket["id"] . ' ';
+                                                $info .= "OPERACIÓN: " . $ticket["type"] == Process::PROCESS_IMPORT ? "IMPORTACIÓN":"EXPORTACIÓN" . '  ';
+                                                $info .= "DEPÓSITO: " . $ticket["w_name"] . ' ';
+                                                $info .= "ECAS: " . $ticket["delivery_date"] . ' ';
+                                                $info .= "CLIENTE: " . $ticket["a_name"] . ' ';
+                                                $info .= "CHOFER: " . $ticket["name_driver"] . "/" . $ticket["register_driver"] . ' ';
+                                                $info .= "PLACA: " . $ticket["register_truck"] . ' ';
+                                                $info .= "FECHA TURNO: " . $ticket["start_datetime"] . ' ';
+                                                $info .= "CANTIDAD: 1" . ' ';
+                                                $info .= ($ticket["type"] == Process::PROCESS_IMPORT ? "BL":"BOOKING") . ": ". $ticket["bl"] . ' ';
+                                                $info .= "TIPO CONT: " . $ticket["tonnage"] . $ticket["code"] . ' ';
+                                                $info .= "GENERADO: " . $dateImp . ' ';
+                                                $info .= "ESTADO: " . $ticket["status"] == 1 ? "EMITIDO" : "---";
+
+                                                $qrCode = new QrCode($info);
+
+                                                ob_start();
+                                                \QRcode::png($info,null);
+                                                $imageString = base64_encode(ob_get_contents());
+                                                ob_end_clean();
+
+                                                $bodypdf = $this->renderPartial('@app/mail/layouts/card.php',
+                                                    ['trans_company'=> $trans_company,
+                                                        'ticket'=>$ticket,
+                                                        'qr'=>"data:image/png;base64, ".$imageString,
+                                                        'dateImp'=>$dateImp,
+                                                        'date'=>$date]);
+
+                                                $pdf->AddPage();
+                                                $pdf->WriteHTML($bodypdf);
+                                            }
+                                        }
+
+                                        $attach = $pdf->Output("", "S");
+
                                         $email->attachContent($attach, ['fileName' => "Carta de Servicio.pdf", 'contentType' => 'application/pdf']);
+                                    }
 
                                     if($email->send() == false)
                                     {
