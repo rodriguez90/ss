@@ -131,6 +131,13 @@ class LoginForm extends Model
                     {
                         $new_rol = $auth->getRole($rol);
 
+                        if($new_rol == null)
+                        {
+                            $msg = "Ah ocurrido un error al buscar el rol asigando al usuario.";
+                            $this->addError('error', $msg);
+                            $resultLogin = false;
+                        }
+
                         if(!$auth->assign($new_rol, $newUser->id))
                         {
                             $msg = "Ah ocurrido un error al registar el rol del usuario.";
@@ -183,6 +190,13 @@ class LoginForm extends Model
                     }
 
                     $newRol = $auth->getRole($newRolName);
+
+                    if($newRol == null)
+                    {
+                        $msg = "Ah ocurrido un error al buscar el rol asigando al usuario.";
+                        $this->addError('error', $msg);
+                        $resultLogin = false;
+                    }
 
                     if($resultLogin && !$auth->assign($newRol, $newUser->id))
                     {
