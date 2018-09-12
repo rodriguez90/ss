@@ -1831,10 +1831,12 @@ var handleCalendar = function () {
                             var deliveryDate = moment(value.delivery_date).format('YYYY/MM/DD');
                             var calendarDeliveryDate = moment(currentCalendarEvent.end).format('YYYY/MM/DD');
 
+                            console.log(deliveryDate);
+                            console.log(calendarDeliveryDate);
                             var result = moment(calendarDeliveryDate) <= moment(deliveryDate);
 
                             if(indexSelected === -1)
-                            {
+                            {pera
                                 if(result)
                                 {
                                     table.row.add(
