@@ -1829,7 +1829,7 @@ var handleCalendar = function () {
                             // var container = containers.get(transaction.container_id);
                             var indexSelected = selectedContainers.indexOf(value.name);
 
-                            var deliveryDate = moment(data, "DD-MM-YYYY").format("DD/MM/YYYY");
+                            var deliveryDate = moment(value.deliveryDate, "DD-MM-YYYY").format("DD/MM/YYYY");
                             var calendarDeliveryDate = moment(currentCalendarEvent.end).format('DD/MM/YYYY');
 
                             console.log(deliveryDate);
