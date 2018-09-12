@@ -1834,7 +1834,7 @@ var handleCalendar = function () {
 
                             console.log(deliveryDate);
                             console.log(calendarDeliveryDate);
-                            var result = moment(calendarDeliveryDate) <= moment(deliveryDate);
+                            var result =  moment(deliveryDate) <= moment(calendarDeliveryDate);
 
                             if(indexSelected === -1)
                             {
