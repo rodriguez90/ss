@@ -1829,16 +1829,16 @@ var handleCalendar = function () {
                             // var container = containers.get(transaction.container_id);
                             var indexSelected = selectedContainers.indexOf(value.name);
 
-                            var deliveryDate = moment(value.deliveryDate, "DD-MM-YYYY").format("DD/MM/YYYY");
+                            var deliveryDate = moment(value.deliveryDate, 'DD-MM-YYYY').format('DD/MM/YYYY');
                             var calendarDeliveryDate = moment(currentCalendarEvent.end).format('DD/MM/YYYY');
 
                             console.log(deliveryDate);
                             console.log(calendarDeliveryDate);
                             console.log(moment(deliveryDate));
                             console.log(moment(calendarDeliveryDate));
-                            console.log(moment(calendarDeliveryDate).isValid());
-                            console.log(moment(calendarDeliveryDate).isValid());
-                            var result =   moment(calendarDeliveryDate) <= moment(deliveryDate);
+                            console.log(moment(deliveryDate,'DD-MM-YYYY').isValid());
+                            console.log(moment(calendarDeliveryDate, 'DD-MM-YYYY').isValid());
+                            var result =   moment(calendarDeliveryDate, 'DD-MM-YYYY') <= moment(deliveryDate, 'DD-MM-YYYY');
                             console.log(result);
 
                             if(indexSelected === -1)
