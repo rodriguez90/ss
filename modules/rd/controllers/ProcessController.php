@@ -1339,7 +1339,11 @@ class ProcessController extends Controller
                                     ->where(["user_transcompany.transcompany_id"=>$t])
                                     ->one();
 
-                                if($destinatario)
+                                $emailList = [];
+                                array_push($emailList, $remitente->email);
+                                if($destinatario) array_push($emailList, $destinatario->email);
+
+                                if(count($emailList) > 0)
                                 {
 
                                     $body = Yii::$app->controller->renderPartial('notification.php', ['model' => $model,
@@ -1348,10 +1352,12 @@ class ProcessController extends Controller
                                     // TODO: send email user
                                     $email = Yii::$app->mailer->compose()
                                         ->setFrom(Yii::$app->params['adminEmail'])
-                                        ->setTo([$destinatario->email, $remitente->email])
+                                        ->setTo($emailList)
                                         ->setBcc(Yii::$app->params['adminEmail'])
                                         ->setSubject("Notificación de nuevo Proceso.")
                                         ->setHtmlBody($body);
+
+                                    $cardsServiceData = $ticketByTransCompany[$t];
 
                                     if($cardsServiceData != null)
                                     {
@@ -1367,7 +1373,7 @@ class ProcessController extends Controller
                                                 $dateImp = new DateTime($ticket["created_at"]);
                                                 $dateImp = $dateImp->format('d-m-Y H:i');
 
-                                                $info .= "EMP. TRANSPORTE: " . $trans_company["name"] . ' ';
+                                                $info .= "EMP. TRANSPORTE: " . $ticket["name"] . ' ';
                                                 $info .= "TICKET NO: TI-" . $date . "-" . $ticket["id"] . ' ';
                                                 $info .= "OPERACIÓN: " . $ticket["type"] == Process::PROCESS_IMPORT ? "IMPORTACIÓN":"EXPORTACIÓN" . '  ';
                                                 $info .= "DEPÓSITO: " . $ticket["w_name"] . ' ';
