@@ -1316,7 +1316,7 @@ class ProcessController extends Controller
                         if($tmpResult)
                         {
                             $response['success'] = true;
-//                            $remitente = AdmUser::findOne(['id'=>\Yii::$app->user->getId()]);
+                            $remitente = Yii::$app->user->identity;
 
                             foreach($containersByTransCompany as $t=>$c) {
 
@@ -1384,7 +1384,7 @@ class ProcessController extends Controller
                                     // TODO: send email user
                                     $email = Yii::$app->mailer->compose()
                                         ->setFrom(Yii::$app->params['adminEmail'])
-                                        ->setTo($destinatario->email)
+                                        ->setTo([$destinatario->email, $remitente->email])
                                         ->setBcc(Yii::$app->params['adminEmail'])
                                         ->setSubject("Notificación de nuevo Proceso.")
                                         ->setHtmlBody($body);
