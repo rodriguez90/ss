@@ -1837,7 +1837,7 @@ var handleCalendar = function () {
                             var result = moment(calendarDeliveryDate) <= moment(deliveryDate);
 
                             if(indexSelected === -1)
-                            {pera
+                            {
                                 if(result)
                                 {
                                     table.row.add(
