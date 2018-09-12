@@ -1828,8 +1828,9 @@ var handleCalendar = function () {
 
                             // var container = containers.get(transaction.container_id);
                             var indexSelected = selectedContainers.indexOf(value.name);
-                            var deliveryDate = moment(value.delivery_date).format('YYYY/MM/DD');
-                            var calendarDeliveryDate = moment(currentCalendarEvent.end).format('YYYY/MM/DD');
+
+                            var deliveryDate = moment(data, "DD-MM-YYYY").format("DD/MM/YYYY");
+                            var calendarDeliveryDate = moment(currentCalendarEvent.end).format('DD/MM/YYYY');
 
                             console.log(deliveryDate);
                             console.log(calendarDeliveryDate);
