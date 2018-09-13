@@ -7,7 +7,11 @@ use yii\widgets\DetailView;
 /* @var $model app\modules\administracion\models\User */
 
 $this->title = $model->username;
-$this->params['breadcrumbs'][] = ['label' => 'Usuarios', 'url' => ['index']];
+if(Yii::$app->user->can('user_update') )
+{
+    $this->params['breadcrumbs'][] = ['label' => 'Usuarios', 'url' => ['index']];
+}
+
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
@@ -27,14 +31,24 @@ $this->params['breadcrumbs'][] = $this->title;
 
 
                 <p>
-                    <?= Html::a('Actualizar', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-                    <?= Html::a('Eliminar', ['delete', 'id' => $model->id], [
+
+                    <?php if ( Yii::$app->user->can('user_update')) {
+                        Html::a('Actualizar', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']);
+                    }
+                    ?>
+
+                    <?php if ( Yii::$app->user->can('user_update')) {
+                        Html::a('Eliminar', ['delete', 'id' => $model->id], [
                         'class' => 'btn btn-danger',
                         'data' => [
-                            'confirm' => 'Are you sure you want to delete this item?',
+                            'confirm' => 'Está seguro que desea eliminar el usuario?',
                             'method' => 'post',
                         ],
-                    ]) ?>
+                        ]);
+                    }
+                    ?>
+
+
                 </p>
 
                 <?= DetailView::widget([
@@ -48,6 +62,16 @@ $this->params['breadcrumbs'][] = $this->title;
                         'email:email',
                         // 'password',
                         //'authKey',
+                        [
+                            'label'=>'Rol',
+                            'attribute'=>'username',
+                            'value'=>$model->getRole()
+                        ],
+                        [
+                            'label'=>'Entidad asociada',
+                            'attribute'=>'username',
+                            'value'=>$model->asociatedEntity() ? $model->asociatedEntity()->name:''
+                        ],
 
                         [
                             'attribute' => 'status',

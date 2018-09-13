@@ -391,7 +391,7 @@ class AdmUser extends ActiveRecord implements IdentityInterface
     public function processCondition()
     {
         $params = [];
-        if($this->hasRol('Importador_Exportador'))
+        if($this->hasRol('Importador_Exportador') || $this->hasRol('Importador_Exportador_Especial'))
         {
             $agency = $this->getAgency();
             $params['agency_id'] = '';
@@ -430,7 +430,7 @@ class AdmUser extends ActiveRecord implements IdentityInterface
     public function asociatedEntity()
     {
         $entity = null;
-        if($this->hasRol('Importador_Exportador'))
+        if($this->hasRol('Importador_Exportador') || $this->hasRol('Importador_Exportador_Especial'))
         {
             $entity = $this->getAgency();
         }
