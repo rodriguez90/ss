@@ -43,5 +43,8 @@ $(function () {
                     };
                 },
             },
+        }).on('select2:select', function (e) {
+            var data = e.params.data;
+            $('#generateSrvCard').attr('href', homeUrl + '/rd/process/generatingcard?bl=' + data.id + '&from=' + 1);
         });
 });

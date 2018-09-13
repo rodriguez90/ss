@@ -554,8 +554,13 @@ class ProcessController extends Controller
         return $response;
     }
 
-    public function actionGeneratingcard()
+    public function actionGeneratingcard($bl='', $from=0)
     {
+        if(!Yii::$app->user->can("generating_card"))
+        {
+            throw new ForbiddenHttpException('Usted no tiene permiso para generar cartas de servicio.');
+        }
+
         $result = [];
         $result ['status'] = -1;
         $result ['msg'] = '';
@@ -563,17 +568,13 @@ class ProcessController extends Controller
         $user = Yii::$app->user->identity;
 
         $transCompany = $user->getTransCompany();
+        $agency = $user->getTransCompany();
 
-        if ($transCompany !== null) {
-
-            if (Yii::$app->request->post()) {
-                $bl = Yii::$app->request->post("bl");
-                if ($bl !== null)
-                {
-                    try
-                    {
-                        $tickes = ProcessTransaction::find()
-                            ->select("process_transaction.register_truck as registerTruck,
+        if ($bl != '') {
+            try
+            {
+                $query = ProcessTransaction::find()
+                    ->select("process_transaction.register_truck as registerTruck,
                                               process_transaction.register_driver as registerDriver,
                                               process_transaction.name_driver as nameDriver,
                                               process.type as processType,
@@ -589,82 +590,95 @@ class ProcessController extends Controller
                                               calendar.start_datetime as startDatetime,                                              
                                               warehouse.name as warehouseName, 
                                               agency.name as agencyName")
-                            ->innerJoin("process", "process_transaction.process_id = process.id ")
-                            ->innerJoin("container", "container.id = process_transaction.container_id")
-                            ->innerJoin("trans_company", "trans_company.id = process_transaction.trans_company_id")
-                            ->innerJoin("ticket", "ticket.process_transaction_id = process_transaction.id")
-                            ->innerJoin("calendar", "ticket.calendar_id = calendar.id")
-                            ->innerJoin("warehouse", "warehouse.id = calendar.id_warehouse")
-                            ->innerJoin("agency", "process.agency_id = agency.id")
-                            ->where(['=','UPPER(process.bl)',strtoupper($bl)])
-                            ->andWhere(["trans_company.id" => $transCompany->id])
-                            ->andWhere(["ticket.active" =>1])
-                            ->asArray()
-                            ->all();
+                    ->innerJoin("process", "process_transaction.process_id = process.id ")
+                    ->innerJoin("container", "container.id = process_transaction.container_id")
+                    ->innerJoin("trans_company", "trans_company.id = process_transaction.trans_company_id")
+                    ->innerJoin("ticket", "ticket.process_transaction_id = process_transaction.id")
+                    ->innerJoin("calendar", "ticket.calendar_id = calendar.id")
+                    ->innerJoin("warehouse", "warehouse.id = calendar.id_warehouse")
+                    ->innerJoin("agency", "process.agency_id = agency.id")
+                    ->where(['=','UPPER(process.bl)',strtoupper($bl)])
+                    ->andWhere(["ticket.active" =>1]);
 
-                        if(count($tickes) > 0)
-                        {
-                            $pdf = new mPDF(['mode' => 'utf-8', 'format' => 'A4-L']);
 
-                            foreach ($tickes as $ticket)
-                            {
-                                $aux = new DateTime($ticket["startDatetime"]);
-                                $date = $aux->format("YmdHi");
-                                $ticket["startDatetime"] = $aux->format("d-m-Y H:i");
-                                $dateImp = new DateTime($ticket["createdAt"]);
-                                $dateImp = $dateImp->format('d-m-Y H:i');
+                if($transCompany)
+                    $query = $query->andFilterWhere(["trans_company.id" => $transCompany->id]);
 
-                                $imageString = Utils::generateServiceCardQr($ticket);
+                if($agency)
+                    $query = $query->andFilterWhere(["agency.id" => $agency->id]);
 
-                                $bodypdf = $this->renderPartial('@app/mail/layouts/card.php',
-                                                                ["ticket" => $ticket,
-                                                                 "qr" => "data:image/png;base64, " . $imageString,
-                                                                 'dateImp' => $dateImp,
-                                                                 'date'=>$date]);
+                $tickes = $query->asArray()
+                    ->all();
 
-                                //$pdf->SetHTMLHeader( "<div style='font-weight: bold; text-align: center;font-family: 'Helvetica', 'Arial', sans-serif;font-size: 14px;width: 100%> Carta de Servicio </div>");
-                                $pdf->AddPage();
-                                $pdf->WriteHTML($bodypdf);
-                            }
+                if(count($tickes) > 0)
+                {
+                    $pdf = new mPDF(['mode' => 'utf-8', 'format' => 'A4-L']);
 
-                            $attach = $pdf->Output("", "S");
-                            $email = Yii::$app->mailer->compose()
-                                ->setFrom(Yii::$app->params['adminEmail'])
-                                ->setTo($user->email)
-                                ->setBcc(Yii::$app->params['adminEmail'])
-                                ->setSubject("Cartas de Servicio")
-                                ->setHtmlBody("<h5>Se adjunta carta de servicio.</h5>")
-                                ->attachContent($attach, ['fileName' => "Carta de Servicio.pdf", 'contentType' => 'application/pdf']);
+                    foreach ($tickes as $ticket)
+                    {
+                        $aux = new DateTime($ticket["startDatetime"]);
+                        $date = $aux->format("YmdHi");
+                        $ticket["startDatetime"] = $aux->format("d-m-Y H:i");
+                        $dateImp = new DateTime($ticket["createdAt"]);
+                        $dateImp = $dateImp->format('d-m-Y H:i');
 
-                            if($email->send())
-                            {
-                                $result ["status"] = 1;
-                                $result ["msg"] .= "Cartas de servicio generadas correctamente.";
-                            }else{
-                                $result ["status"] = 0;
-                                $result ["msg"] .= "Existieron errores al enviar las cartas de servicio.";
-                            }
-                        }else{
-                            $result ["status"] = 0;//mejorar msj
-                            $result ["msg"] = "No hay turnos para generar las cartas de servicio.";
-                        }
-                    } catch (\Exception $ex) {
-                        $result ["status"] = 0;
-                        $result ["msg"] = "Error: " . $ex->getMessage();
+                        $imageString = Utils::generateServiceCardQr($ticket);
+
+                        $bodypdf = $this->renderPartial('@app/mail/layouts/card.php',
+                            ["ticket" => $ticket,
+                                "qr" => "data:image/png;base64, " . $imageString,
+                                'dateImp' => $dateImp,
+                                'date'=>$date]);
+
+                        //$pdf->SetHTMLHeader( "<div style='font-weight: bold; text-align: center;font-family: 'Helvetica', 'Arial', sans-serif;font-size: 14px;width: 100%> Carta de Servicio </div>");
+                        $pdf->AddPage();
+                        $pdf->WriteHTML($bodypdf);
                     }
 
+                    $attach = $pdf->Output("", "S");
+                    $email = Yii::$app->mailer->compose()
+                        ->setFrom(Yii::$app->params['adminEmail'])
+                        ->setTo($user->email)
+                        ->setBcc(Yii::$app->params['adminEmail'])
+                        ->setSubject("Cartas de Servicio")
+                        ->setHtmlBody("<h5>Se adjunta carta de servicio.</h5>")
+                        ->attachContent($attach, ['fileName' => "Carta de Servicio.pdf", 'contentType' => 'application/pdf']);
 
-                } else {
-                    $result ["status"] = 0;
-                    $result ["msg"] = "BL es requerido";
+                    $email->send();
+
+//                        if($email->send())
+//                        {
+//                            $result ["status"] = 1;
+//                            $result ["msg"] .= "Cartas de servicio generadas correctamente.";
+//                        }else{
+//                            $result ["status"] = 0;
+//                            $result ["msg"] .= "Existieron errores al enviar las cartas de servicio.";
+//                        }
+
+                    $result ["status"] = 1;
+                    $result ["msg"] .= "Cartas de servicio generadas correctamente.";
+
+                    $path= $pdf->Output("Solicitudes Realizadas.pdf","I");
+
+                }else{
+                    $result ["status"] = 0;//mejorar msj
+                    $result ["msg"] = "No hay turnos para generar las cartas de servicio.";
                 }
+            } catch (\Exception $ex) {
+                $result ["status"] = 0;
+                $result ["msg"] = "Error: " . $ex->getMessage();
             }
-        } else {
+        }
+        else if($bl == '' && $from == 1)
+        {
             $result ["status"] = 0;
-            $result ["msg"] .= "El usuario " . $user->username . " no está asociado a una compañía de transporte.";
+            $result ["msg"] = "BL es requerido";
         }
 
-        return $this->render('generating_card', ["result" => $result]);
+        if($result ["status"] == 0 || $result ["status"] == -1)
+        {
+            return $this->render('generating_card', ["result" => $result]);
+        }
     }
 
     public function actionPrint($id){
