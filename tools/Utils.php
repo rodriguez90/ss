@@ -186,7 +186,7 @@ class Utils
             isset($serviceCardData['status']) &&
             isset($serviceCardData['bl']))
         {
-            $aux = new DateTime( $serviceCardData["startDatetime"] );
+            $aux = new DateTime( $serviceCardData["startDatetime"]);
             $date = $aux->format("YmdHi");
             $serviceCardData["startDatetime"] = $aux->format("d-m-Y H:i");
             $dateImp = new DateTime($serviceCardData["createdAt"]);
@@ -209,8 +209,6 @@ class Utils
             $info .= "GENERADO: " . $dateImp . ' ';
             $info .= "ESTADO: " . $serviceCardData["status"] == 1 ? "EMITIDO" : "---";
 
-            $qrCode = new QrCode($info);
-
             ob_start();
             \QRcode::png($info,null);
             $imageString = base64_encode(ob_get_contents());
@@ -219,5 +217,4 @@ class Utils
 
         return $imageString;
     }
-
 }

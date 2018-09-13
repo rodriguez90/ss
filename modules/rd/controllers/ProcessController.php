@@ -1175,11 +1175,11 @@ class ProcessController extends Controller
                             }
 
                             // FIXME soft delete of asociated ticket
-                            $ticket = Ticket::findOne(['process_transaction_id'=>$processTransModelOld->id, 'active'=>1]);
-                            if($ticket)
+                            $oldTicket = Ticket::findOne(['process_transaction_id'=>$processTransModelOld->id, 'active'=>1]);
+                            if($oldTicket)
                             {
-                                $ticket->active = 0;
-                                if(!$ticket->save())
+                                $oldTicket->active = 0;
+                                if(!$oldTicket->save())
                                 {
                                     $tmpResult = false;
                                     $response['msg'] = "Ah ocurrido un error al actualizar los datos del proceso.";
@@ -1200,7 +1200,7 @@ class ProcessController extends Controller
                                         break;
                                     }
                                 }
-                                $ticketsDeleted[] = $ticket;
+                                $ticketsDeleted[] = $oldTicket;
                             }
                         }
 
@@ -1242,6 +1242,7 @@ class ProcessController extends Controller
                             $ticket->process_transaction_id = $processTransModel->id;
                             $ticket->status = 1;
                             $ticket->active = 1;
+                            $ticket->created_at = date('Y-m-d H:i:s');
 
                             if(!$ticket->save()) {
                                 $tmpResult = false;
@@ -1262,7 +1263,7 @@ class ProcessController extends Controller
                             $tickets[]=$ticket;
 
                             $cardServiceData = [
-                                'registerTruck'=>$container['registerTruck'],
+                                'registerTruck'=>$container['registerTrunk'],
                                 'registerDriver'=>$container['registerDriver'],
                                 'nameDriver'=>$container['nameDriver'],
                                 'processType'=>$model->type,
@@ -1279,6 +1280,7 @@ class ProcessController extends Controller
                                 'warehouseName'=>$calendarSlot->warehouse->name,
                                 'agencyName'=>$model->agency->name,
                             ];
+
 
                             if(isset($ticketByTransCompany[$transCompany->id]))
                             {
@@ -1338,11 +1340,11 @@ class ProcessController extends Controller
                                     {
                                         $pdf = new mPDF(['mode' => 'utf-8', 'format' => 'A4-L']);
 
-                                        foreach ($cardsServiceData as $ticket)
+                                        foreach ($cardsServiceData as $serviceCardData)
                                         {
                                             if($ticket !== null)
                                             {
-                                                $imageString = Utils::generateServiceCardQr($ticket);
+                                                $imageString = Utils::generateServiceCardQr($serviceCardData);
 
                                                 $aux = new DateTime( $serviceCardData["startDatetime"] );
                                                 $date = $aux->format("YmdHi");
@@ -1351,7 +1353,7 @@ class ProcessController extends Controller
                                                 $dateImp = $dateImp->format('d-m-Y H:i');
 
                                                 $bodypdf = $this->renderPartial('@app/mail/layouts/card.php',
-                                                    ['ticket'=>$ticket,
+                                                    ['ticket'=>$serviceCardData,
                                                     'qr'=>"data:image/png;base64, ".$imageString,
                                                     'dateImp'=>$dateImp,
                                                     'date'=>$date]);
@@ -1378,9 +1380,11 @@ class ProcessController extends Controller
                             $processType = $model->type == 1 ? 'IMPO':'EXPO';
                             $user = Yii::$app->user->identity;
 
-                            $result = Utils::notifyDeletedTickets($ticketsDeleted, $user->username);
-
-                            $result = Utils::notifyNewTickets($processType, $model->bl, $user->username, $tickets);
+//                            $result = Utils::notifyDeletedTickets($ticketsDeleted, $user->username);
+//
+//                            $result = Utils::notifyNewTickets($processType, $model->bl, $user->username, $tickets);
+                            $result = [];
+                            $result['success'] = true;
 
 
                             if(!$result['success'])

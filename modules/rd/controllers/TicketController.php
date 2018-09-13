@@ -217,14 +217,20 @@ class TicketController extends Controller
 
                 $pdf = new mPDF(['mode' => 'utf-8', 'format' => 'A4-L']);
 
-                foreach ($cardsServiceData as $ticket)
+                foreach ($cardsServiceData as $serviceCardData)
                 {
-                    if($ticket !== null)
+                    if($serviceCardData !== null)
                     {
-                        $imageString = Utils::generateServiceCardQr($ticket);
+                        $imageString = Utils::generateServiceCardQr($serviceCardData);
+
+                        $aux = new DateTime( $serviceCardData["startDatetime"] );
+                        $date = $aux->format("YmdHi");
+                        $serviceCardData["startDatetime"] = $aux->format("d-m-Y H:i");
+                        $dateImp = new DateTime($serviceCardData["createdAt"]);
+                        $dateImp = $dateImp->format('d-m-Y H:i');
 
                         $bodypdf = $this->renderPartial('@app/mail/layouts/card.php',
-                            ['ticket'=>$ticket,
+                            ['ticket'=>$serviceCardData,
                                 'qr'=>"data:image/png;base64, ".$imageString,
                                 'dateImp'=>$dateImp,
                                 'date'=>$date]);
@@ -604,7 +610,7 @@ class TicketController extends Controller
                                 'code'=>$processTransaction->container->code,
                                 'tonnage'=>$processTransaction->container->tonnage,
                                 'name'=>$processTransaction->container->name,
-                                'transCompanyName'=>$processTransModel->transCompany->name,
+                                'transCompanyName'=>$processTransaction->transCompany->name,
                                 'id'=>$model->id,
                                 'status'=>$model->status,
                                 'createdAt'=>$model->created_at,

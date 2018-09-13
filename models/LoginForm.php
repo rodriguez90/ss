@@ -345,7 +345,7 @@ class LoginForm extends Model
             'user_id'=> $this->username,
             'nombre'=> $this->username,
             'ruc' => '8769543201',
-            'email' => 'test@co.cu',
+            'email' => 'agency@test.co',
             'ruc_empresa'=> '1291750490001',
             'nombre_empresa'=>'trans prueba',
 //            'rol'=>'ADMINISTRADOR_DEPOSITO',
