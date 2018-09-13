@@ -158,6 +158,14 @@ var handleDataTable = function ()
                     targets:   [0,1,2,3,4]
                 },
                  {
+                     targets: [0],
+                     data:'bl',
+                     render: function (data, type, full, meta )
+                     {
+                         return String(data).toUpperCase();
+                     },
+                 },
+                 {
                      targets: [2],
                      data:'delivery_date',
                      render: function (data, type, full, meta )

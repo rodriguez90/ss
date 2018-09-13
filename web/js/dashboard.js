@@ -142,6 +142,13 @@ var handleDataTable = function () {
                     targets:   [0,1,2,3,4,5]
                 },
                 {
+                    targets: [1],
+                    data:'delivery_date',
+                    render: function ( data, type, full, meta ) {
+                        return String(data).toUpperCase();
+                    },
+                },
+                {
                     targets: [3],
                     data:'delivery_date',
                     render: function ( data, type, full, meta ) {
