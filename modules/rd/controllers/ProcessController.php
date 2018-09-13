@@ -765,7 +765,7 @@ class ProcessController extends Controller
                             ->innerJoin('container', 'process_transaction.container_id=container.id')
                             ->innerJoin('process', 'process.id=process_transaction.process_id')
                             ->innerJoin('container_type', 'container_type.id=container.type_id')
-                            ->where([['=','UPPER(process.bl)',strtoupper($bl)]])
+                            ->where(['=','UPPER(process.bl)',strtoupper($bl)])
                             ->andWhere(['process.type'=>$processType])
                             ->andWhere(['process_transaction.active'=>1])
                             ->andWhere(['container.name' => $result['contenedor']])
