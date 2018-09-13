@@ -134,7 +134,7 @@ class TicketController extends Controller
      */
     public function actionDelete($id, $from=0)
     {
-        if(Yii::$app->user->can("ticket_delete"))
+        if(!Yii::$app->user->can("ticket_delete"))
             throw new ForbiddenHttpException('Usted no tiene permiso para eliminar turnos');
 
         Yii::$app->response->format = Response::FORMAT_JSON;
