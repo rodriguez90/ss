@@ -51,6 +51,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         ],
                         [
                             'attribute'=>'bl',
+                            'value'=> strtoupper($model->bl),
                             'label'=> $model->type == Process::PROCESS_IMPORT ? "BL":"Booking",
                         ],
                     ],
