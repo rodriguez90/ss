@@ -2,6 +2,7 @@
 
 namespace app\modules\rd\controllers;
 
+use app\tools\Utils;
 use DateTime;
 use DateTimeZone;
 use app\modules\rd\models\Process;
@@ -220,37 +221,10 @@ class TicketController extends Controller
                 {
                     if($ticket !== null)
                     {
-                        $aux = new DateTime( $ticket["start_datetime"] );
-                        $date = $aux->format("YmdHi");
-                        $ticket["start_datetime"] = $aux->format("d-m-Y H:i");
-                        $dateImp = new DateTime($ticket["created_at"]);
-                        $dateImp = $dateImp->format('d-m-Y H:i');
-
-                        $info .= "EMP. TRANSPORTE: " . $trans_company["name"] . ' ';
-                        $info .= "TICKET NO: TI-" . $date . "-" . $ticket["id"] . ' ';
-                        $info .= "OPERACIÓN: " . $ticket["type"] == Process::PROCESS_IMPORT ? "IMPORTACIÓN":"EXPORTACIÓN" . '  ';
-                        $info .= "DEPÓSITO: " . $ticket["w_name"] . ' ';
-                        $info .= "ECAS: " . $ticket["delivery_date"] . ' ';
-                        $info .= "CLIENTE: " . $ticket["a_name"] . ' ';
-                        $info .= "CHOFER: " . $ticket["name_driver"] . "/" . $ticket["register_driver"] . ' ';
-                        $info .= "PLACA: " . $ticket["register_truck"] . ' ';
-                        $info .= "FECHA TURNO: " . $ticket["start_datetime"] . ' ';
-                        $info .= "CANTIDAD: 1" . ' ';
-                        $info .= ($ticket["type"] == Process::PROCESS_IMPORT ? "BL":"BOOKING") . ": ". $ticket["bl"] . ' ';
-                        $info .= "TIPO CONT: " . $ticket["tonnage"] . $ticket["code"] . ' ';
-                        $info .= "GENERADO: " . $dateImp . ' ';
-                        $info .= "ESTADO: " . $ticket["status"] == 1 ? "EMITIDO" : "---";
-
-                        $qrCode = new QrCode($info);
-
-                        ob_start();
-                        \QRcode::png($info,null);
-                        $imageString = base64_encode(ob_get_contents());
-                        ob_end_clean();
+                        $imageString = Utils::generateServiceCardQr($ticket);
 
                         $bodypdf = $this->renderPartial('@app/mail/layouts/card.php',
-                            ['trans_company'=> $trans_company,
-                                'ticket'=>$ticket,
+                            ['ticket'=>$ticket,
                                 'qr'=>"data:image/png;base64, ".$imageString,
                                 'dateImp'=>$dateImp,
                                 'date'=>$date]);
@@ -621,23 +595,22 @@ class TicketController extends Controller
                         if ($processStatus) {
                             $newTickets[] = $model;
                             $cardsServiceData [] = [
-                                'register_truck'=>$data['registerTruck'],
-                                'register_driver'=>$data['registerDriver'],
-                                'name_driver'=>$data['nameDriver'],
-                                'type'=>$processModel->type,
+                                'registerTruck'=>$data['registerTruck'],
+                                'registerDriver'=>$data['registerDriver'],
+                                'nameDriver'=>$data['nameDriver'],
+                                'processType'=>$processModel->type,
                                 'bl'=>$processModel->bl,
-                                'delivery_date'=>$processModel->delivery_date,
+                                'deliveryDate'=>$processModel->delivery_date,
                                 'code'=>$processTransaction->container->code,
                                 'tonnage'=>$processTransaction->container->tonnage,
-                                'name'=>$processTransaction->transCompany->name,
-                                'ruc'=>$processTransaction->transCompany->ruc,
+                                'name'=>$processTransaction->container->name,
+                                'transCompanyName'=>$processTransModel->transCompany->name,
                                 'id'=>$model->id,
                                 'status'=>$model->status,
-                                'created_at'=>$model->created_at,
-                                'start_datetime'=>$calendarSlot->start_datetime,
-                                'end_datetime'=>$calendarSlot->end_datetime,
-                                'w_name'=>$calendarSlot->warehouse->name,
-                                'a_name'=>$processModel->agency->name,
+                                'createdAt'=>$model->created_at,
+                                'startDatetime'=>$calendarSlot->start_datetime,
+                                'warehouseName'=>$calendarSlot->warehouse->name,
+                                'agencyName'=>$processModel->agency->name,
                             ];
 
                         }
