@@ -932,7 +932,7 @@ class ProcessController extends Controller
 
                         for($i = 0; $i < $count; $i++)
                         {
-                            $containerName = $booking . $type->code . $type->tonnage . '-' . ($i + 1);
+                            $containerName =  strtoupper($booking) . $type->code . $type->tonnage . '-' . ($i + 1);
 
                             $data = ProcessTransaction::find()
                                                         ->select('container.id, 
