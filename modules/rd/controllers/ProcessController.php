@@ -658,7 +658,7 @@ class ProcessController extends Controller
                     $result ["status"] = 1;
                     $result ["msg"] .= "Cartas de servicio generadas correctamente.";
 
-                    $path= $pdf->Output("Solicitudes Realizadas.pdf","I");
+                    $path= $pdf->Output("Cartas de Servicio - " . $bl .".pdf","I");
 
                 }else{
                     $result ["status"] = 0;//mejorar msj
