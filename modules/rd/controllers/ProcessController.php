@@ -1224,7 +1224,6 @@ class ProcessController extends Controller
                         }
 
                         $aux = new DateTime($container['deliveryDate'], new DateTimeZone("UTC"));
-//                        $aux->setTimezone(new DateTimeZone("UTC"));
                         $processTransModel->delivery_date = $aux->format("Y-m-d");
 
                         if(!$processTransModel->save()) {
@@ -1380,9 +1379,8 @@ class ProcessController extends Controller
                             $processType = $model->type == 1 ? 'IMPO':'EXPO';
                             $user = Yii::$app->user->identity;
 
-//                            $result = Utils::notifyDeletedTickets($ticketsDeleted, $user->username);
-//
-//                            $result = Utils::notifyNewTickets($processType, $model->bl, $user->username, $tickets);
+                            $result = Utils::notifyDeletedTickets($ticketsDeleted, $user->username);
+                            $result = Utils::notifyNewTickets($processType, $model->bl, $user->username, $tickets);
                             $result = [];
                             $result['success'] = true;
 
