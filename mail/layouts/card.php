@@ -56,42 +56,44 @@ use app\modules\rd\models\Process;
 		<tbody>
 			<tr>
 				<td class="title" > EMP. TRANSPORTE </td>
-				<td class="data" > <?php echo utf8_encode($trans_company["name"]) ?> </td>
+				<td class="data" > <?php echo utf8_encode($ticket["transCompanyName"]) ?> </td>
 				<td class="title">TICKET NO.</td>
 				<td class="data" > <?php  echo  "TI-" . $date . "-".$ticket["id"] ?></td>
 			</tr>
 
 			<tr>
 				<td class="title" >OPERACIÓN</td>
-				<td class="data"  > <?php echo $ticket["type"] ==Process::PROCESS_IMPORT ? "IMPORTACIÓN":"EXPORTACIÓN" ?></td>
+				<td class="data"  > <?php echo $ticket["processType"] ==Process::PROCESS_IMPORT ? "IMPORTACIÓN":"EXPORTACIÓN" ?></td>
 				<td class="title" >DEPÓSITO</td>
-				<td class="data"  > <?php echo $ticket["w_name"] ?></td>
+				<td class="data"  > <?php echo $ticket["warehouseName"] ?></td>
 			</tr>
 
 			<tr>
 				<td class="title" >ECAS</td>
-				<td class="data"  ><?php echo (new \yii\i18n\Formatter())->asDate($ticket["delivery_date"], 'dd/M/yyyy') ?></td>
+				<td class="data"  ><?php echo (new \yii\i18n\Formatter())->asDate($ticket["deliveryDate"], 'dd/M/yyyy') ?></td>
                 <td class="title" >CLIENTE</td>
-                <td class="data"  ><?php echo utf8_encode($ticket["a_name"] )?></td>
+                <td class="data"  ><?php echo utf8_encode($ticket["agencyName"] )?></td>
 			</tr>
 
 			<tr>
 				<td class="title" >CHOFER</td>
-				<td class="data"  ><?php echo utf8_encode($ticket["name_driver"]) . "/" .$ticket["register_driver"]?></td>
+				<td class="data"  ><?php echo utf8_encode($ticket["nameDriver"]) . "/" .$ticket["registerDriver"]?></td>
 				<td class="title" >PLACA</td>
-				<td class="data"  > <?php echo $ticket["register_truck"] ?></td>
+				<td class="data"  > <?php echo $ticket["registerTruck"] ?></td>
 			</tr>
 
 			<tr>
 				<td class="title" >FECHA TURNO</td>
-				<td class="data"  > <?php echo $ticket["start_datetime"] ?></td>
+				<td class="data"  > <?php echo $ticket["startDatetime"] ?></td>
 				<td class="title" >CANTIDAD</td>
 				<td class="data"  >1</td>
 			</tr>
 
 			<tr>
-				<td class="title" ><?php echo $ticket["type"] ==Process::PROCESS_IMPORT ? "BL":"BOOKING" ?></td>
+				<td class="title" ><?php echo $ticket["processType"] == Process::PROCESS_IMPORT ? "BL":"BOOKING" ?></td>
 				<td class="data"  ><?php echo $ticket["bl"] ?></td>
+                <td class="title" >CONTENEDOR</td>
+                <td class="data"  > <?php echo $ticket["name"]?> </td>
 				<td class="title" >TIPO CONT</td>
 				<td class="data"  > <?php echo $ticket["tonnage"] .$ticket["code"] ?> </td>
 			</tr>

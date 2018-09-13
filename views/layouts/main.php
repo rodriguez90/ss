@@ -69,8 +69,8 @@ $user = Yii::$app->user->identity;
                                     echo '</span> <b class="caret"></b>';
                                 echo '</a>';
                         echo '<ul class="dropdown-menu animated fadeInLeft">';
-//                            echo '<li class="arrow"></li>';
-//                            echo '<li><a href="'. Url::toRoute(['/administracion/user/update', 'id'=>$user->getId()]).'">Editar Perfil</a></li>';
+                            echo '<li class="arrow"></li>';
+                            echo '<li><a href="'. Url::toRoute(['/administracion/user/view', 'id'=>$user->getId()]).'">Ver Perfil</a></li>';
 ////                            echo '<li><a href="javascript:;">Configuraciones</a></li>';
 //                            echo '<li class="divider"></li>';
 
@@ -107,6 +107,18 @@ $user = Yii::$app->user->identity;
                     ?>
 
                     <?php
+//                    if(Yii::$app->user->can("ticket_list") || Yii::$app->user->can("process_five_steps"))
+                    if(Yii::$app->user->can("ticket_list"))
+                    {
+                        echo "<li class='has-sub'>";
+                        echo "<a href=".Url::to(['/rd/ticket'])."> <i class='fa fa-ticket'></i>";
+                        echo  "<span> Turnos </span>";
+                        echo "</a>";
+                        echo "</li>";
+                    }
+                    ?>
+
+                    <?php
                     if(Yii::$app->user->can("admin_mod") || Yii::$app->user->can("process_create")){
                         echo "<li class='has-sub'>";
                         echo "<a href=".Url::to(['/rd/process/create','type'=>Process::PROCESS_IMPORT])."> <i class='fa fa-rotate-90 fa-sign-in'></i>";
@@ -117,14 +129,35 @@ $user = Yii::$app->user->identity;
                     ?>
 
                     <?php
+                    if(Yii::$app->user->can("process_five_steps")){
+                        echo "<li class='has-sub'>";
+                        echo "<a href=".Url::to(['/rd/process/createfivesteps','type'=>Process::PROCESS_IMPORT])."> <i class='fa fa-rotate-90 fa-sign-in'></i>";
+                        echo  "<span> Importación 5 Pasos</span>";
+                        echo "</a>";
+                        echo "</li>";
+                    }
+                    ?>
+
+                    <?php
                     if(Yii::$app->user->can("admin_mod") || Yii::$app->user->can("process_create")){
                         echo "<li class='has-sub'>";
-                        echo "<a href=".Url::to(['/rd/process/create','type'=>Process::PROCESS_EXPORT])."> <i class='fa fa-rotate-90 fa-sign-in'></i>";
+                        echo "<a href=".Url::to(['/rd/process/create','type'=>Process::PROCESS_EXPORT])."> <i class='fa fa-rotate-90 fa-sign-out'></i>";
                         echo  "<span> Exportación</span>";
                         echo "</a>";
                         echo "</li>";
                     }
                     ?>
+
+                    <?php
+                    if(Yii::$app->user->can("process_five_steps")){
+                        echo "<li class='has-sub'>";
+                        echo "<a href=".Url::to(['/rd/process/createfivesteps','type'=>Process::PROCESS_EXPORT])."> <i class='fa fa-rotate-90 fa-sign-out'></i>";
+                        echo  "<span> Exportación 5 Pasos</span>";
+                        echo "</a>";
+                        echo "</li>";
+                    }
+                    ?>
+
                     <?php
                     if($user){
                         echo "<li class='has-sub'>";
@@ -136,7 +169,8 @@ $user = Yii::$app->user->identity;
                     ?>
 
                     <?php
-                    if(Yii::$app->user->can("ticket_create") || Yii::$app->user->can("calendar_create"))
+                    if(Yii::$app->user->can("ticket_create") ||
+                        Yii::$app->user->can("calendar_create"))
                     {
                         echo "<li class='has-sub'>";
                         echo "<a href=".Url::to(['/rd/ticket/my-calendar'])."> <i class='fa fa-calendar'></i>";
@@ -167,7 +201,8 @@ $user = Yii::$app->user->identity;
                     ?>
 
                     <?php
-                    if(Yii::$app->user->can("admin_mod") || Yii::$app->user->can("container_list")){
+                    if(Yii::$app->user->can("admin_mod") ||
+                        Yii::$app->user->can("container_list")){
                         echo "<li class='has-sub'>";
                         echo "<a href=". Url::to(['/rd/container-type'])."> <i class='fa fa-cubes'></i>";
                         echo "<span> Tipos Contenedores</span>";
@@ -177,7 +212,8 @@ $user = Yii::$app->user->identity;
                     ?>
 
                     <?php
-                    if(Yii::$app->user->can("admin_mod") || Yii::$app->user->can("trans-company_list")){
+                    if(Yii::$app->user->can("admin_mod") ||
+                        Yii::$app->user->can("trans-company_list")){
                         echo "<li class='has-sub'>";
                         echo "<a href=" . Url::to(['/rd/trans-company'])."> <i class='fa fa-truck'></i>";
                         echo "<span> Transporte</span>";
@@ -187,7 +223,8 @@ $user = Yii::$app->user->identity;
                     ?>
 
                     <?php
-                    if (Yii::$app->user->can("admin_mod") || Yii::$app->user->can("calendar_list")) {
+                    if (Yii::$app->user->can("admin_mod") ||
+                        Yii::$app->user->can("calendar_list")) {
                         echo "<li class='has-sub'>";
                         echo "<a href=" . Url::to(['/rd/calendar']) . "> <i class='fa fa-calendar'></i>";
                         echo "<span> Calendario</span>";
@@ -198,7 +235,9 @@ $user = Yii::$app->user->identity;
 
                     <?php
 
-                    if (Yii::$app->user->can("admin_mod") || Yii::$app->user->can("generating_card")) {
+                    if (Yii::$app->user->can("admin_mod") ||
+                        Yii::$app->user->can("generating_card")) {
+
                         echo "<li class='has-sub'>";
                         echo "<a href=" . Url::to(['/rd/process/generatingcard']) . "> <i class='fa fa-credit-card'></i>";
                         echo "<span> Carta de Servicio</span>";

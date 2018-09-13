@@ -38,7 +38,7 @@ use yii\db\Expression;
 
 use Da\QrCode\QrCode;
 
-
+use yii\web\ForbiddenHttpException;
 
 class SiteController extends Controller
 {
@@ -92,12 +92,24 @@ class SiteController extends Controller
     public function actionIndex()
     {
         $user = Yii::$app->user->identity;
+
+//        if(!$user) throw new ForbiddenHttpException('Usuario desconocido.');
+
         $importCount = 0;
         $exportCount = 0;
         $ticketCount = 0;
         $session = Yii::$app->session;
 
-        if($user && ($user->hasRol('Importador')  ||  $user->hasRol('Exportador') ||  $user->hasRol('Importador_Exportador')))
+        $permissions = Yii::$app->authManager->getPermissionsByUser(Yii::$app->user->getId());
+
+        $permissionsNames = [];
+
+        foreach ($permissions as $permission)
+        {
+            $permissionsNames[] = $permission->name;
+        }
+
+        if(Yii::$app->user->can("process_create"))
         {
             $agency = $user->getAgency();
             if($agency)
@@ -113,7 +125,7 @@ class SiteController extends Controller
                     ->count();
             }
         }
-        else if ($user && $user->hasRol('Cia_transporte'))
+        else if (Yii::$app->user->can("ticket_create"))
         {
             $transcompany = $user->getTransCompany();
             if($transcompany)
@@ -126,15 +138,11 @@ class SiteController extends Controller
                     ->count();
             }
         }
-//        else if ($user && ($user->hasRol('Deposito') || $user->hasRol('Administrador_deposito')))
-//        {
-//            $warehouse = $user->getWhareHouse();
-//            if($warehouse)
-//            {
-//                $searchModel->warehouseCompanyId = $warehouse->id;
-//            }
-//        }
-        else if($user && $user->hasRol('Administracion'))
+        else if (Yii::$app->user->can("ticket_list") && !Yii::$app->user->can("ticket_create"))
+        {
+            $ticketCount = Ticket::find()->where(['active'=>1])->count();
+        }
+        else if(Yii::$app->user->can("admin_mod"))
         {
             $importCount = Process::find()->where(['type'=>Process::PROCESS_IMPORT, 'active'=>1])->count();
             $exportCount = Process::find()->where(['type'=>Process::PROCESS_EXPORT, 'active'=>1])->count();
@@ -144,8 +152,8 @@ class SiteController extends Controller
         $myparams = array();
         $myparams['importCount'] = $importCount;
         $myparams['exportCount'] = $exportCount;
-
         $myparams['ticketCount'] = $ticketCount;
+        $myparams['permissions'] = $permissionsNames;
 
         return $this->render('index', $myparams);
     }
@@ -172,8 +180,19 @@ class SiteController extends Controller
                 $session->open();
 
                 $user = Yii::$app->user->identity;
-				
 				$session->set('user', $user);
+
+                $permissions = Yii::$app->authManager->getPermissionsByUser(Yii::$app->user->getId());
+
+                $permissionsNames = [];
+
+                foreach ($permissions as $permission)
+                {
+                    $permissionsNames[] = $permission->name;
+                }
+
+                $session->set('permissions', $permissionsNames);
+
                 return $this->redirect(Url::toRoute('/site/index'));
             }
             else
@@ -387,7 +406,7 @@ class SiteController extends Controller
                     ->innerJoin("process_transaction","process_transaction.process_id = process.id and process_transaction.active = 1")
                     ->leftJoin("ticket","process_transaction.id = ticket.process_transaction_id and ticket.active = 1")
                     ->where(['process.active'=>1])
-                    ->andFilterWhere(['process.bl'=>$bl])
+                    ->andFilterWhere(['==','UPPER(process.bl)',strtoupper($bl)])
                     ->andFilterWhere(['agency_id'=>$agencyId])
                     ->andFilterWhere(['process_transaction.trans_company_id'=>$transCompanyId])
                     ->groupBy(['process.id', 'agency.id'])
@@ -654,9 +673,10 @@ class SiteController extends Controller
                                     process.bl, 
                                     process.delivery_date, 
                                     process.type, 
+                                    process.created_at, 
                                     agency.name as agency_name,
                                     COUNT(process_transaction.id) as countContainer,			 
-                                    COUNT(ticket.id) as countTicket'
+                                    COUNT(ticket.id) as countTicket,'
                                 )
                     ->innerJoin('agency', 'agency.id = process.agency_id')
                     ->innerJoin("process_transaction","process_transaction.process_id = process.id and process_transaction.active=1")
@@ -665,10 +685,10 @@ class SiteController extends Controller
                     ->andFilterWhere(['agency_id'=>$session->get('agencyId')])
                     ->andFilterWhere(['process_transaction.trans_company_id'=>$session->get('transCompanyId')])
                     ->groupBy(['process.id', 'agency.id'])
-//                    ->groupBy(['process.id', 'process.bl', 'process.delivery_date', 'process.type', 'agency.id', 'agency.name'])
+//                    ->groupBy(['process.id', 'process.bl', 'process.delivery_date', 'process.type', 'agency.id', 'agency.name', 'process.created_at'])
+//                    ->orderBy(['process.id'=>SORT_DESC])
                     ->asArray()
                     ->all();
-
             }
             catch ( Exception $e)
             {

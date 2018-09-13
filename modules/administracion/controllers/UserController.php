@@ -96,6 +96,7 @@ class UserController extends Controller
     public function actionView($id)
     {
         if (\Yii::$app->user->can('user_view') || \Yii::$app->user->getId() == $id ) {
+
             return $this->render('view', [
                 'model' => $this->findModel($id),
             ]);

@@ -445,7 +445,7 @@ $(document).ready(function () {
     FormWizardValidation.init();
 
     // init tables
-    TableManageTableSelect.init()
+    TableManageTableSelect.init();
 
     $('#blCode').parsley().on('field:success', function() {
         // alert('success');

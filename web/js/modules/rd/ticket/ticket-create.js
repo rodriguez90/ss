@@ -1237,7 +1237,11 @@ $(document).ready(function () {
     // console.log(modelId);
     // console.log(transCompanyId);
     // console.log(transCompanyRuc);
+
+    console.log(permissions);
+
     // moment.locale('es');
+
     // init wizar
     FormWizardValidation.init();
 
