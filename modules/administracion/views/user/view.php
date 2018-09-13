@@ -68,7 +68,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'value'=>$model->getRole()
                         ],
                         [
-                            'label'=>'Entidad asociada',
+                            'label'=>'Empresa',
                             'attribute'=>'username',
                             'value'=>$model->asociatedEntity() ? $model->asociatedEntity()->name:''
                         ],
