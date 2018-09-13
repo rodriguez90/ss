@@ -68,7 +68,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                     <select id="agency_id" name="agency_id" class="form-control">
 
                                         <?php
-                                        if($rol == 'Importador_Exportador')
+                                        if($rol == 'Importador_Exportador' || $rol == 'Importador_Exportador_Especial')
                                         {
                                             echo "<option selected value='" . $asociatedEntity['id'] . "'>" . $asociatedEntity['name'] . "</option>";
                                         }

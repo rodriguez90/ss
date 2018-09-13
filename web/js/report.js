@@ -208,7 +208,7 @@ $(function ()
     console.log(asociatedEntity);
     if(asociatedEntity !== null)
     {
-        if(role == 'Importador_Exportador')
+        if(role == 'Importador_Exportador' || role == 'Importador_Exportador_Especial')
         {
             agencyId = asociatedEntity.id;
         }
@@ -262,7 +262,7 @@ $(function ()
         },
     });
 
-    if( role === 'Importador_Exportador')
+    if( role === 'Importador_Exportador' || role == 'Importador_Exportador_Especial')
     {
         document.getElementById('trans_company_container').style.display = 'inline';
         handleSelectTransCompanies();
@@ -292,7 +292,7 @@ $(function ()
             bl = null;
         }
 
-        if( role !== 'Importador_Exportador')
+        if( role !== 'Importador_Exportador' && role !== 'Importador_Exportador_Especial')
         {
             if($('#agency_id').select2('data').length > 0 )
             {
