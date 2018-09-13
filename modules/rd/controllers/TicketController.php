@@ -532,6 +532,7 @@ class TicketController extends Controller
                     $model->active = $data['active'];
                     $model->status = $data['status'];
                     $model->acc_id = 0;
+                    $model->created_at = date('Y-m-d H:i:s');
 
                     $calendarSlot = Calendar::findOne(['id' => $model->calendar_id]);
 
