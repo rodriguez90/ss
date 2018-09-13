@@ -243,7 +243,7 @@ class ProcessController extends Controller
             $response['containers'] = Container::find()
                 ->innerJoin('process_transaction', 'process_transaction.container_id = container.id')
                 ->innerJoin('process', 'process_transaction.process_id = process.id')
-                ->where(['process.bl'=>$bl])
+                ->where(['==','UPPER(process.bl)',strtoupper($bl)])
                 ->andWhere(['process_transaction.active', 1])
                 ->orderBy(['process_transaction.delivery_date'])
                 ->all();
@@ -341,6 +341,7 @@ class ProcessController extends Controller
             try {
                 $aux = new DateTime($model->delivery_date, new DateTimeZone("UTC"));
                 $model->delivery_date = $aux->format("Y-m-d");
+                $model->bl = strtoupper($model->bl);
 
                 if($model->save())
                 {
@@ -595,7 +596,7 @@ class ProcessController extends Controller
                             ->innerJoin("calendar", "ticket.calendar_id = calendar.id")
                             ->innerJoin("warehouse", "warehouse.id = calendar.id_warehouse")
                             ->innerJoin("agency", "process.agency_id = agency.id")
-                            ->where(["process.bl" => $bl])
+                            ->where(['==','UPPER(process.bl)',strtoupper($bl)])
                             ->andWhere(["trans_company.id" => $transCompany->id])
                             ->andWhere(["ticket.active" =>1])
                             ->asArray()
@@ -764,7 +765,7 @@ class ProcessController extends Controller
                             ->innerJoin('container', 'process_transaction.container_id=container.id')
                             ->innerJoin('process', 'process.id=process_transaction.process_id')
                             ->innerJoin('container_type', 'container_type.id=container.type_id')
-                            ->where(['process.bl' => $bl])
+                            ->where([['==','UPPER(process.bl)',strtoupper($bl)]])
                             ->andWhere(['process.type'=>$processType])
                             ->andWhere(['process_transaction.active'=>1])
                             ->andWhere(['container.name' => $result['contenedor']])
@@ -946,7 +947,7 @@ class ProcessController extends Controller
                                                         ->innerJoin('container', 'process_transaction.container_id=container.id')
                                                         ->innerJoin('process', 'process.id=process_transaction.process_id')
                                                         ->innerJoin('container_type', 'container_type.id=container.type_id')
-                                                        ->where(['process.bl' => $booking])
+                                                        ->where(['==','UPPER(process.bl)',strtoupper($booking)])
                                                         ->andWhere(['process.type'=>$processType])
                                                         ->andWhere(['process_transaction.active'=>1])
                                                         ->andWhere(['process_transaction.container_alias'=>$containerName])
@@ -1113,6 +1114,7 @@ class ProcessController extends Controller
             try {
                 $aux = new DateTime($model->delivery_date, new DateTimeZone("UTC"));
                 $model->delivery_date = $aux->format("Y-m-d");
+                $model->bl = strtoupper($model->bl);
 
                 if($model->save())
                 {

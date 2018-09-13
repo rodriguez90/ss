@@ -406,7 +406,7 @@ class SiteController extends Controller
                     ->innerJoin("process_transaction","process_transaction.process_id = process.id and process_transaction.active = 1")
                     ->leftJoin("ticket","process_transaction.id = ticket.process_transaction_id and ticket.active = 1")
                     ->where(['process.active'=>1])
-                    ->andFilterWhere(['process.bl'=>$bl])
+                    ->andFilterWhere(['==','UPPER(process.bl)',strtoupper($bl)])
                     ->andFilterWhere(['agency_id'=>$agencyId])
                     ->andFilterWhere(['process_transaction.trans_company_id'=>$transCompanyId])
                     ->groupBy(['process.id', 'agency.id'])
