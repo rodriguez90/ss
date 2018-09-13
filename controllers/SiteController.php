@@ -686,11 +686,9 @@ class SiteController extends Controller
                     ->andFilterWhere(['process_transaction.trans_company_id'=>$session->get('transCompanyId')])
                     ->groupBy(['process.id', 'agency.id'])
 //                    ->groupBy(['process.id', 'process.bl', 'process.delivery_date', 'process.type', 'agency.id', 'agency.name', 'process.created_at'])
-                    ->orderBy(['process.created_at'=>SORT_DESC])
-
+//                    ->orderBy(['process.id'=>SORT_DESC])
                     ->asArray()
                     ->all();
-
             }
             catch ( Exception $e)
             {
