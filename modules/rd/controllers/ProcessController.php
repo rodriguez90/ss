@@ -572,23 +572,22 @@ class ProcessController extends Controller
                     try
                     {
                         $tickes = ProcessTransaction::find()
-                            ->select("process_transaction.register_truck,
-                                              process_transaction.register_driver,
-                                              process_transaction.name_driver,
-                                              process.type,
+                            ->select("process_transaction.register_truck as registerTruck,
+                                              process_transaction.register_driver as registerDriver,
+                                              process_transaction.name_driver as nameDriver,
+                                              process.type as processType,
                                               process.bl,
-                                              process.delivery_date,
+                                              process.delivery_date as deliveryDate,
                                               container.code,
                                               container.tonnage,
-                                              trans_company.name,
-                                              trans_company.ruc,
+                                              container.name,
+                                              trans_company.name as transCompanyName,                                              
                                               ticket.id,
                                               ticket.status,
-                                              ticket.created_at,
-                                              calendar.start_datetime,
-                                              calendar.end_datetime,
-                                              warehouse.name as w_name, 
-                                              agency.name as a_name")
+                                              ticket.created_at as createdAt,
+                                              calendar.start_datetime as startDatetime,                                              
+                                              warehouse.name as warehouseName, 
+                                              agency.name as agencyName")
                             ->innerJoin("process", "process_transaction.process_id = process.id ")
                             ->innerJoin("container", "container.id = process_transaction.container_id")
                             ->innerJoin("trans_company", "trans_company.id = process_transaction.trans_company_id")
@@ -608,39 +607,16 @@ class ProcessController extends Controller
 
                             foreach ($tickes as $ticket)
                             {
-                                $aux = new DateTime($ticket["start_datetime"]);
+                                $aux = new DateTime($ticket["startDatetime"]);
                                 $date = $aux->format("YmdHi");
-                                $ticket["start_datetime"] = $aux->format("d-m-Y H:i");
-                                $dateImp = new DateTime($ticket["created_at"]);
+                                $ticket["startDatetime"] = $aux->format("d-m-Y H:i");
+                                $dateImp = new DateTime($ticket["createdAt"]);
                                 $dateImp = $dateImp->format('d-m-Y H:i');
 
-                                $info = "";
-                                $info .= "EMP. TRANSPORTE: " . $transCompany->name . ' ';
-                                $info .= "TICKET NO: TI-" . $date . "-" . $ticket["id"] . ' ';
-                                $info .= "OPERACIÓN: " . $ticket["type"] == Process::PROCESS_IMPORT ? "IMPORTACIÓN":"EXPORTACIÓN" . '  ';
-                                $info .= "DEPÓSITO: " . $ticket["w_name"] . ' ';
-                                $info .= "ECAS: " . $ticket["delivery_date"] . ' ';
-                                $info .= "CLIENTE: " . $ticket["a_name"] . ' ';
-                                $info .= "CHOFER: " . $ticket["name_driver"] . "/" . $ticket["register_driver"] . ' ';
-                                $info .= "PLACA: " . $ticket["register_truck"] . ' ';
-                                $info .= "FECHA TURNO: " . $ticket["start_datetime"] . ' ';
-                                $info .= "CANTIDAD: 1" . ' ';
-                                $info .= ($ticket["type"] == Process::PROCESS_IMPORT ? "BL":"BOOKING") . ": ". $ticket["bl"] . ' ';
-                                $info .= "TIPO CONT: " . $ticket["tonnage"] . $ticket["code"] . ' ';
-                                $info .= "GENERADO: " . $dateImp . ' ';
-                                $info .= "ESTADO: " . $ticket["status"] == 1 ? "EMITIDO" : "---";
-
-                                $qrCode = new QrCode($info);
-
-                                ob_start();
-                                \QRcode::png($info, null);
-                                $imageString = base64_encode(ob_get_contents());
-                                ob_end_clean();
-
+                                $imageString = Utils::generateServiceCardQr($ticket);
 
                                 $bodypdf = $this->renderPartial('@app/mail/layouts/card.php',
-                                                                ["trans_company" => $transCompany,
-                                                                 "ticket" => $ticket,
+                                                                ["ticket" => $ticket,
                                                                  "qr" => "data:image/png;base64, " . $imageString,
                                                                  'dateImp' => $dateImp,
                                                                  'date'=>$date]);
@@ -1286,23 +1262,22 @@ class ProcessController extends Controller
                             $tickets[]=$ticket;
 
                             $cardServiceData = [
-                                'register_truck'=>$container['registerTruck'],
-                                'register_driver'=>$container['registerDriver'],
-                                'name_driver'=>$container['nameDriver'],
-                                'type'=>$model->type,
+                                'registerTruck'=>$container['registerTruck'],
+                                'registerDriver'=>$container['registerDriver'],
+                                'nameDriver'=>$container['nameDriver'],
+                                'processType'=>$model->type,
                                 'bl'=>$model->bl,
-                                'delivery_date'=>$model->delivery_date,
+                                'deliveryDate'=>$model->delivery_date,
                                 'code'=>$processTransModel->container->code,
                                 'tonnage'=>$processTransModel->container->tonnage,
-                                'name'=>$processTransModel->transCompany->name,
-                                'ruc'=>$processTransModel->transCompany->ruc,
+                                'name'=>$processTransModel->container->name,
+                                'transCompanyName'=>$processTransModel->transCompany->name,
                                 'id'=>$ticket->id,
                                 'status'=>$ticket->status,
-                                'created_at'=>$ticket->created_at,
-                                'start_datetime'=>$calendarSlot->start_datetime,
-                                'end_datetime'=>$calendarSlot->end_datetime,
-                                'w_name'=>$calendarSlot->warehouse->name,
-                                'a_name'=>$model->agency->name,
+                                'createdAt'=>$ticket->created_at,
+                                'startDatetime'=>$calendarSlot->start_datetime,
+                                'warehouseName'=>$calendarSlot->warehouse->name,
+                                'agencyName'=>$model->agency->name,
                             ];
 
                             if(isset($ticketByTransCompany[$transCompany->id]))
@@ -1367,40 +1342,19 @@ class ProcessController extends Controller
                                         {
                                             if($ticket !== null)
                                             {
-                                                $aux = new DateTime( $ticket["start_datetime"] );
+                                                $imageString = Utils::generateServiceCardQr($ticket);
+
+                                                $aux = new DateTime( $serviceCardData["startDatetime"] );
                                                 $date = $aux->format("YmdHi");
-                                                $ticket["start_datetime"] = $aux->format("d-m-Y H:i");
-                                                $dateImp = new DateTime($ticket["created_at"]);
+                                                $serviceCardData["startDatetime"] = $aux->format("d-m-Y H:i");
+                                                $dateImp = new DateTime($serviceCardData["createdAt"]);
                                                 $dateImp = $dateImp->format('d-m-Y H:i');
 
-                                                $info .= "EMP. TRANSPORTE: " . $ticket["name"] . ' ';
-                                                $info .= "TICKET NO: TI-" . $date . "-" . $ticket["id"] . ' ';
-                                                $info .= "OPERACIÓN: " . $ticket["type"] == Process::PROCESS_IMPORT ? "IMPORTACIÓN":"EXPORTACIÓN" . '  ';
-                                                $info .= "DEPÓSITO: " . $ticket["w_name"] . ' ';
-                                                $info .= "ECAS: " . $ticket["delivery_date"] . ' ';
-                                                $info .= "CLIENTE: " . $ticket["a_name"] . ' ';
-                                                $info .= "CHOFER: " . $ticket["name_driver"] . "/" . $ticket["register_driver"] . ' ';
-                                                $info .= "PLACA: " . $ticket["register_truck"] . ' ';
-                                                $info .= "FECHA TURNO: " . $ticket["start_datetime"] . ' ';
-                                                $info .= "CANTIDAD: 1" . ' ';
-                                                $info .= ($ticket["type"] == Process::PROCESS_IMPORT ? "BL":"BOOKING") . ": ". $ticket["bl"] . ' ';
-                                                $info .= "TIPO CONT: " . $ticket["tonnage"] . $ticket["code"] . ' ';
-                                                $info .= "GENERADO: " . $dateImp . ' ';
-                                                $info .= "ESTADO: " . $ticket["status"] == 1 ? "EMITIDO" : "---";
-
-                                                $qrCode = new QrCode($info);
-
-                                                ob_start();
-                                                \QRcode::png($info,null);
-                                                $imageString = base64_encode(ob_get_contents());
-                                                ob_end_clean();
-
                                                 $bodypdf = $this->renderPartial('@app/mail/layouts/card.php',
-                                                    ['trans_company'=> $trans_company,
-                                                        'ticket'=>$ticket,
-                                                        'qr'=>"data:image/png;base64, ".$imageString,
-                                                        'dateImp'=>$dateImp,
-                                                        'date'=>$date]);
+                                                    ['ticket'=>$ticket,
+                                                    'qr'=>"data:image/png;base64, ".$imageString,
+                                                    'dateImp'=>$dateImp,
+                                                    'date'=>$date]);
 
                                                 $pdf->AddPage();
                                                 $pdf->WriteHTML($bodypdf);

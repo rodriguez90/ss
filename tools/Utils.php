@@ -9,8 +9,13 @@
 
 namespace app\tools;
 
+use DateTime;
+use DateTimeZone;
+use app\modules\rd\models\Process;
 use app\modules\rd\models\ProcessTransaction;
 use app\modules\rd\models\Ticket;
+use Da\QrCode\QrCode;
+use Yii;
 
 
 class Utils
@@ -24,6 +29,7 @@ class Utils
      *      bolean success
      *      string msg
      *      string msg_dev
+     * This function update the acc_id for tickets
      */
     static function notifyNewTickets($processType,
                                         $bl,
@@ -109,6 +115,11 @@ class Utils
         return $response;
     }
 
+    /**
+     * @param $tickets
+     * @param $user
+     * @return array
+     */
     static function notifyDeletedTickets($tickets, $user)
     {
 
@@ -150,4 +161,63 @@ class Utils
 
         return $response;
     }
+
+    /**
+     * @param $serviceCardData
+     */
+    static function generateServiceCardQr($serviceCardData)
+    {
+        $imageString = '';
+
+        if(isset($serviceCardData['startDatetime']) &&
+            isset($serviceCardData['createdAt']) &&
+            isset($serviceCardData['transCompanyName']) &&
+            isset($serviceCardData['id']) &&
+            isset($serviceCardData['processType']) &&
+            isset($serviceCardData['warehouseName']) &&
+            isset($serviceCardData['deliveryDate']) &&
+            isset($serviceCardData['agencyName']) &&
+            isset($serviceCardData['nameDriver']) &&
+            isset($serviceCardData['registerDriver']) &&
+            isset($serviceCardData['registerTruck']) &&
+            isset($serviceCardData['tonnage']) &&
+            isset($serviceCardData['code']) &&
+            isset($serviceCardData['name']) &&
+            isset($serviceCardData['status']) &&
+            isset($serviceCardData['bl']))
+        {
+            $aux = new DateTime( $serviceCardData["startDatetime"] );
+            $date = $aux->format("YmdHi");
+            $serviceCardData["startDatetime"] = $aux->format("d-m-Y H:i");
+            $dateImp = new DateTime($serviceCardData["createdAt"]);
+            $dateImp = $dateImp->format('d-m-Y H:i');
+
+            $info = '';
+            $info .= "EMP. TRANSPORTE: " . $serviceCardData["transCompanyName"] . ' ';
+            $info .= "TICKET NO: TI-" . $date . "-" . $serviceCardData["id"] . ' ';
+            $info .= "OPERACIÓN: " . $serviceCardData["processType"] == Process::PROCESS_IMPORT ? "IMPORTACIÓN":"EXPORTACIÓN" . '  ';
+            $info .= "DEPÓSITO: " . $serviceCardData["warehouseName"] . ' ';
+            $info .= "ECAS: " . $serviceCardData["deliveryDate"] . ' ';
+            $info .= "CLIENTE: " . $serviceCardData["agencyName"] . ' ';
+            $info .= "CHOFER: " . $serviceCardData["nameDriver"] . "/" . $serviceCardData["registerDriver"] . ' ';
+            $info .= "PLACA: " . $serviceCardData["registerTruck"] . ' ';
+            $info .= "FECHA TURNO: " . $serviceCardData["startDatetime"] . ' ';
+            $info .= "CANTIDAD: 1" . ' ';
+            $info .= ($serviceCardData["processType"] == Process::PROCESS_IMPORT ? "BL":"BOOKING") . ": ". $serviceCardData["bl"] . ' ';
+            $info .= "CONT: " . $serviceCardData["name"];
+            $info .= "TIPO CONT: " . $serviceCardData["tonnage"] . $serviceCardData["code"] . ' ';
+            $info .= "GENERADO: " . $dateImp . ' ';
+            $info .= "ESTADO: " . $serviceCardData["status"] == 1 ? "EMITIDO" : "---";
+
+            $qrCode = new QrCode($info);
+
+            ob_start();
+            \QRcode::png($info,null);
+            $imageString = base64_encode(ob_get_contents());
+            ob_end_clean();
+        }
+
+        return $imageString;
+    }
+
 }
