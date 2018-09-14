@@ -135,12 +135,17 @@ var handleDataTable = function () {
                 },
             ],
             "order": [[ 0, 'des'] ],
+            // autoWidth: false,
             columnDefs: [
                 {
                     orderable: true,
                     searchable: true,
                     targets:   [0,1,2,3,4,5]
                 },
+                // {
+                //     targets: 0,
+                //     "width": "5%",
+                // },
                 {
                     targets: [1],
                     data:'delivery_date',
@@ -163,6 +168,7 @@ var handleDataTable = function () {
                         return data == 1 ?'Importación':'Exportación';
                     },
                 },
+
                 {
                     targets: [6],
                     // title:"Tipo",

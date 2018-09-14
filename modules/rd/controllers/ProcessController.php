@@ -608,7 +608,7 @@ class ProcessController extends Controller
                     $query = $query->andFilterWhere(["agency.id" => $agency->id]);
 
                 $tickes = $query->asArray()
-                    ->all();
+                          ->all();
 
                 if(count($tickes) > 0)
                 {
@@ -660,7 +660,8 @@ class ProcessController extends Controller
 
                     $path= $pdf->Output("Cartas de Servicio - " . $bl .".pdf","I");
 
-                }else{
+                }
+                else{
                     $result ["status"] = 0;//mejorar msj
                     $result ["msg"] = "No hay turnos para generar las cartas de servicio.";
                 }
