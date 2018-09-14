@@ -109,7 +109,13 @@ class SiteController extends Controller
             $permissionsNames[] = $permission->name;
         }
 
-        if(Yii::$app->user->can("process_create"))
+        if(Yii::$app->user->can("admin_mod"))
+        {
+            $importCount = Process::find()->where(['type'=>Process::PROCESS_IMPORT, 'active'=>1])->count();
+            $exportCount = Process::find()->where(['type'=>Process::PROCESS_EXPORT, 'active'=>1])->count();
+            $ticketCount = Ticket::find()->where(['active'=>1])->count();
+        }
+        else if(Yii::$app->user->can("process_create"))
         {
             $agency = $user->getAgency();
             if($agency)
@@ -140,12 +146,6 @@ class SiteController extends Controller
         }
         else if (Yii::$app->user->can("ticket_list") && !Yii::$app->user->can("ticket_create"))
         {
-            $ticketCount = Ticket::find()->where(['active'=>1])->count();
-        }
-        else if(Yii::$app->user->can("admin_mod"))
-        {
-            $importCount = Process::find()->where(['type'=>Process::PROCESS_IMPORT, 'active'=>1])->count();
-            $exportCount = Process::find()->where(['type'=>Process::PROCESS_EXPORT, 'active'=>1])->count();
             $ticketCount = Ticket::find()->where(['active'=>1])->count();
         }
 
@@ -685,7 +685,7 @@ class SiteController extends Controller
                     ->andFilterWhere(['agency_id'=>$session->get('agencyId')])
                     ->andFilterWhere(['process_transaction.trans_company_id'=>$session->get('transCompanyId')])
                     ->groupBy(['process.id', 'agency.id'])
-//                    ->groupBy(['process.id', 'process.bl', 'process.delivery_date', 'process.type', 'agency.id', 'agency.name', 'process.created_at'])
+                    ->groupBy(['process.id', 'process.bl', 'process.delivery_date', 'process.type', 'agency.id', 'agency.name', 'process.created_at'])
 //                    ->orderBy(['process.id'=>SORT_DESC])
                     ->asArray()
                     ->all();
