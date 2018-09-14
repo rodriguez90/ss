@@ -568,7 +568,7 @@ class ProcessController extends Controller
         $user = Yii::$app->user->identity;
 
         $transCompany = $user->getTransCompany();
-        $agency = $user->getTransCompany();
+        $agency = $user->getAgency();
 
         if ($bl != '') {
             try
