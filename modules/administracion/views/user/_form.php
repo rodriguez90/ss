@@ -8,7 +8,6 @@ use yii\widgets\ActiveForm;
 /* @var $model app\modules\administracion\models\User */
 /* @var $form yii\widgets\ActiveForm */
 /* @var $roles */
-/* @var $modelAux */
 
 use app\assets\FormAsset;
 FormAsset::register($this);
@@ -138,7 +137,7 @@ FormAsset::register($this);
 
 
 
-                        <div class="form-group">
+                        <div class="form-group" <?= \Yii::$app->user->can('admin_mod') ? "": "style='visibility: hidden'"?>>
                             <label class="control-label col-md-4 col-sm-4">Rol</label>
 
 
@@ -160,7 +159,7 @@ FormAsset::register($this);
                         </div>
 
 
-                        <div class="form-group" id="div-type">
+                        <div class="form-group" id="div-type" <?= \Yii::$app->user->can('admin_mod') ? "": "style='visibility: hidden'"?>>
                             <label class="control-label col-md-4 col-sm-4" id="label-type">---</label>
 
                             <div class="col-md-8 col-sm-8" id="select-conten"  <?= \Yii::$app->user->can('admin_mod') ? "": "style='visibility: hidden'"?>>
@@ -168,11 +167,15 @@ FormAsset::register($this);
                             </div>
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group" <?= \Yii::$app->user->can('admin_mod') ? "": "style='visibility: hidden'"?>>
                             <label class="control-label col-md-4 col-sm-4">Activo</label>
                             <div class="col-md-8 col-sm-8"  <?= \Yii::$app->user->can('admin_mod') ? "": "style='visibility: hidden'"?>>
 
-                                <input data-switchery="true"    id="admuser-status" name="AdmUser[status]" value="1" data-render="switchery" type="checkbox" <?= $model->isNewRecord || $model->status  ? 'checked=""' : '' ?> >
+                                <?= $form->field($model, 'status')
+                                                ->checkbox(['data-render'=>"switchery",
+                                                            'data-switchery'=>"true",
+                                                            'value' => '1'],
+                                                    false)->label(false) ?>
 
                             </div>
                         </div>
@@ -205,12 +208,6 @@ FormAsset::register($this);
 
 
 </div>
-
-<script type="text/javascript">
-    var modelAux = <?php echo json_encode(['name'=>$modelAux['name'],
-                                        'id'=>$modelAux['id']]);
-                    ?>;
-</script>
 
 <?php
 $this->registerJsFile('@web/js/modules/utiles.js',              ['depends' => ['app\assets\FormAsset']]);

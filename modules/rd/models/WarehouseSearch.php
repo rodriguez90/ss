@@ -41,7 +41,7 @@ class WarehouseSearch extends Warehouse
      */
     public function search($params)
     {
-        $query = Warehouse::find()->where(['active'=>1]);
+        $query = Warehouse::find()->where(['<>', 'active',-1]);
 
         // add conditions that should always apply here
 

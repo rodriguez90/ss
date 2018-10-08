@@ -9,13 +9,17 @@ var handleBootstrapWizardsValidation = function() {
     "use strict";
     $("#wizard").bwizard(
         {
-            clickableSteps: true,
+            clickableSteps: false,
             activeIndexChanged:  function (e, ui) {
 
-                // alert("UI index: " + ui.index);
-
-                if(ui.index == 1)
+                if(ui.index == 0)
                 {
+                    $('ul.bwizard-buttons li.next a').text('Siguiente');
+                }
+                else if(ui.index == 1)
+                {
+                    $('ul.bwizard-buttons li.next a').text('Siguiente');
+
                     // hace prereservas
                     var table2 = $('#data-table2').DataTable();
 
@@ -23,44 +27,84 @@ var handleBootstrapWizardsValidation = function() {
                         .clear()
                         .draw();
                     transactionDataMap.clear();
+                    dateTicketMap.clear();
 
-                    //clone to table 2
-
-                    $.each(selectedTransactions, function (i) {
-
-                        var tId = selectedTransactions[i];
-                        var t = transactions.get(tId);
+                    transactions.forEach(function(value, key)
+                    {
+                        var t = transactions.get(key);
                         var c = containers.get(t.container_id);
-                        var ticketData = ticketDataMap.get(tId);
 
-                        if(ticketData)
+                        var ticketData = ticketDataMap.has(key)? ticketDataMap.get(key): null;
+
+                        if(ticketData !== null)
                         {
-                            var data = {
-                                name: c.name,
-                                type: c.code,
-                                tonnage: c.tonnage,
-                                deliveryDate: t.delivery_date,
-                                agency: agency.name,
-                                dateTicket:ticketData.dateTicket,
-                                registerTrunk: '',
-                                registerDriver: '',
-                                nameDriver: '',
-                                transactionId:tId
-                            };
-                            transactionDataMap.set(c.name, {
-                                registerTrunk: '',
-                                registerDriver: '',
-                                nameDriver: '',
-                            });
+                            if(selectedTransactions.indexOf(key) != -1)
+                            {
+                                var data = {
+                                    name: c.name,
+                                    type: c.code,
+                                    tonnage: c.tonnage,
+                                    deliveryDate: t.delivery_date,
+                                    agency: agency.name,
+                                    dateTicket:ticketData.dateTicket,
+                                    calendarId:ticketData.calendarId,
+                                    registerTrunk: '',
+                                    registerDriver: '',
+                                    nameDriver: '',
+                                    transactionId:key,
+                                    id:c.id
+                                };
 
-                            table2.row.add(
-                                data
-                            ).draw();
+                                table2.row.add(
+                                    data
+                                ).draw();
+
+                                transactionDataMap.set(c.name, {
+                                    registerTrunk: '',
+                                    registerDriver: '',
+                                    nameDriver: '',
+                                });
+                            }
+                            else
+                            {
+                                transactionDataMap.set(c.name, {
+                                    registerTrunk: t.register_truck,
+                                    registerDriver:t.register_driver,
+                                    nameDriver: t.name_driver,
+                                });
+                            }
+
+                            var containersArray = [];
+
+                            if(dateTicketMap.has(ticketData.calendarId))
+                            {
+                                containersArray = dateTicketMap.get(ticketData.calendarId);
+                            }
+
+                            containersArray.push(c.id);
+                            dateTicketMap.set(ticketData.calendarId, containersArray);
                         }
+
+
                     });
+
+                    // FIXME: validation server side
+                    // add dateTicket map the ticket that exist
+                    // ticketDataMap.forEach(function(valor, clave) {
+                    //
+                    //     var transaction =  transactions.get(clave);
+                    //     var container = containers.get(transaction.container_id);
+                    //     var containersArray = dateTicketMap.get(transaction.delivery_date);
+                    //     containersArray.push(container.name);
+                    //     dateTicketMap.set(transaction.delivery_date, containersArray);
+                    // });
+
+                    // console.log(dateTicketMap);
                 }
                 else if(ui.index==2)
                 {
+                    $('ul.bwizard-buttons li.next a').text('Finalizar');
+
                     var table = $('#data-table2').DataTable();
                     var table3 = $('#data-table3').DataTable();
                     var error = false;
@@ -196,7 +240,11 @@ var handleBootstrapWizardsValidation = function() {
                                 reception:reception,
                                 tickets:tickets
                             },
+                            beforeSend:function () {
+                                $("#modal-select-bussy").modal("show");
+                            },
                             success: function (response) {
+                                $("#modal-select-bussy").modal("hide");
                                 // you will get response from your php page (what you echo or print)
                                 console.log(response);
                                 // var obj = response;
@@ -215,6 +263,7 @@ var handleBootstrapWizardsValidation = function() {
                                 return valid;
                             },
                             error: function(data) {
+                                $("#modal-select-bussy").modal("hide");
                                 console.log(data);
                                 alert(data['msg']);
                                 valid = false;

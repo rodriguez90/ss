@@ -38,3 +38,9 @@ SystemAsset::register($this)
 </body>
 </html>
 <?php $this->endPage() ?>
+
+
+
+<script type="text/javascript">
+    var homeUrl = '<?php echo Yii::$app->homeUrl; ?>';
+</script>

@@ -28,6 +28,10 @@ CalendarAsset::register($this);
         width: 100% !important;
     }
 
+    #dialog-spinner
+    {
+        margin: 0px 0px 0px 0px; !important;
+    }
 
 </style>
 <!--div class="calendar-form">
@@ -158,6 +162,7 @@ CalendarAsset::register($this);
                                 <option value='21'>21:00</option>
                                 <option value='22'>22:00</option>
                                 <option value='23'>23:00</option>
+                                <option value='24'>23:59</option>
                             </select>
                         </div>
 
@@ -228,6 +233,24 @@ CalendarAsset::register($this);
 
     </div>
 </div>
+
+<!-- #modal-containers -->
+<div class="modal fade" id="modal-select-bussy" role="dialog" data-backdrop='static'>
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 id="modalTitle" class="modal-title">Proceso Completado</h4>
+            </div>
+            <div class="modal-body p-15">
+                <div class="jumbotron m-b-0 text-center">
+                    <span id="dialog-spinner" class="spinner"></span>
+                    <p>Los datos de las capacidades en el calendario han sido enviadas al TPG.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <?php
 $this->registerJsFile('@web/js/modules/rd/calendar/calendar.js', ['depends' => ['app\assets\CalendarAsset']]);
 ?>

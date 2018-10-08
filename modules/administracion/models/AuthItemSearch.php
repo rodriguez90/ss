@@ -7,6 +7,7 @@ use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\modules\administracion\models\AuthItem;
 
+
 /**
  * AuthItemSearch represents the model behind the search form of `app\modules\administracion\models\AuthItem`.
  */

@@ -3,11 +3,14 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
+use app\modules\rd\models\Process;
+use kartik\datetime\DateTimePicker;
+
 /* @var $this yii\web\View */
 /* @var $searchModel app\modules\rd\models\TicketSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('app', 'Cupos');
+$this->title = Yii::t('app', 'Turnos');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="ticket-index">
@@ -24,51 +27,18 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="panel-body">
 
             <?php Pjax::begin(); ?>
-            <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
-            <?= GridView::widget([
-                'dataProvider' => $dataProvider,
-                'filterModel' => $searchModel,
-                'columns' => [
-                    ['class' => 'yii\grid\SerialColumn'],
-
-                    'id',
-                    [
-                        'class' => 'yii\grid\DataColumn',
-                        'attribute' => 'process_transaction_id',
-                        'value' => 'processTransaction.container.name',
-                    ],
-                    [
-                        'class' => 'yii\grid\DataColumn',
-                        'attribute' => 'calendar_id',
-                        'format' => 'datetime',
-                        'value' => 'calendar.start_datetime',
-                    ],
-//                    [
-//                        'class' => 'yii\grid\DataColumn',
-//                        'attribute' => 'status',
-//                        'value' => 'calendar.start_datetime',
-//                    ],
-                    [
-                        'attribute' => 'status',
-                        'format' => 'text',
-                        'content' => function ($data)
-                        {
-                            return $data['status'] ? '<span class="label label-success">Activo</span>' : '<span class="label label-danger">Consumido</span>';
-                        },
-                        'filter' => Html::activeDropDownList($searchModel, 'active', [
-                            '1' => 'Activo', '0' => 'Consumido',
-                        ], ['class' => 'form-control', 'prompt'=>''])
-                    ],
-//                    'status',
-                    'created_at',
-                    //'active',
-
-//                    ['class' => 'yii\grid\ActionColumn'],
-                ],
-            ]); ?>
+                <div class="table-responsive">
+                    <table id="data-table" class="table table-bordered nowrap" width="100%">
+                        <thead>
+                        <tr>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
             <?php Pjax::end(); ?>
 
         </div>
     </div>
 </div>
+
+<?php $this->registerJsFile('@web/js/modules/rd/ticket/index.js', ['depends' => ['app\assets\TableAsset']]); ?>

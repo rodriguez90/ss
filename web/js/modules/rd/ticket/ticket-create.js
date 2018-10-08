@@ -45,6 +45,9 @@ var calendarEventMap = new Map(); // calendar id - key
 
 var transactionDataMap = new Map();
 
+var driverDataMap = new Map();
+var dateTicketMap = new Map(); // map key: date ticket, value: array of containers with at date
+
 var calendarSlotEvents = {
     id:'calendarSlotEvents',
     events:[]
@@ -57,7 +60,7 @@ var ticketEvents = {
 
 var currentCalendarEvent = null;
 
-// el calendario se acota x la fecha de devolución de los contenedores relacionados en la recepcion
+// el calendario se acota x la fecha de devolución d los contenedores relacionados en la recepcion
 var minDeliveryDate = null;
 var maxDeliveryDate = null;
 
@@ -65,6 +68,8 @@ var selectedTransactions = [];
 var transactionWithTicket = [];
 
 var mode = null; // create and delete
+
+var systemMode = 1; // only for testing 0-offline  1-online
 
 // functions
 
@@ -137,12 +142,17 @@ var makePopoverContent = function (event) {
     else if(event.type === 'T20' || event.type === 'T40')
     {
         var rts = event.rt;
-        result.title = 'Cupos para contenedores de ' +   event.type.replace('T','') + ' toneladas: ' + event.title;
+        result.title = 'Turnos para contenedores de ' +   event.type.replace('T','') + ' toneladas: ' + event.title;
         var containersConten  = '';
         $.each(rts, function (i) {
             var t = transactions.get(rts[i]);
             var c = containers.get(t.container_id);
-            containersConten += "<h5>" + c.name + " " + c.code + c.tonnage + "<h5>";
+            if(ticketDataMap.has(rts[i]) && ticketDataMap.get(rts[i]).id != -1)
+            {
+                containersConten += "<h5>" + c.name + " " + c.code + c.tonnage + " " + t.register_truck + "/" + t.name_driver+"<h5>";
+            }
+            else
+                containersConten += "<h5>" + c.name + " " + c.code + c.tonnage + "<h5>";
         });
 
         result.conten = containersConten;
@@ -150,6 +160,32 @@ var makePopoverContent = function (event) {
 
     return result;
 };
+
+function matchCustom(params, data) {
+    // If there are no search terms, return all of the data
+    if ($.trim(params.term) === '') {
+        return data;
+    }
+
+    // Do not display the item if there is no 'text' property
+    if (typeof data.text === 'undefined') {
+        return null;
+    }
+
+    // `params.term` should be the term that is used for searching
+    // `data.text` is the text that is displayed for the data object
+    if (data.text.indexOf(params.term) > -1) {
+        var modifiedData = $.extend({}, data, true);
+        modifiedData.text += ' (matched)';
+
+        // You can return modified objects from here
+        // This includes matching the `children` how you want in nested data sets
+        return modifiedData;
+    }
+
+    // Return `null` if the term should not be displayed
+    return null;
+}
 
 // init table in modal dialog
 var handleTableInModal = function () {
@@ -177,7 +213,7 @@ var handleTableInModal = function () {
             ],
             processing:true,
             lengthMenu: [5, 10, 15],
-            "pageLength": 5,
+            "pageLength": 10,
             "language": lan,
             // select: true,
             responsive: true,
@@ -308,7 +344,7 @@ var handleTableInWizar = function() {
             info: true,
             processing:true,
             lengthMenu: [5, 10, 15],
-            pageLength: 5,
+            pageLength: 10,
             order: [[1, "asc"]],
             columns: [
                 { title: "Contenedor",
@@ -338,7 +374,7 @@ var handleTableInWizar = function() {
             ],
             "language": lan,
             "createdRow": function( row, data, dataIndex ) {
-                console.log('init select2: ' + data.name);
+                // console.log('init select2: ' + data.name);
 
                 $('td select', row).eq(0).select2(
                 {
@@ -347,8 +383,6 @@ var handleTableInWizar = function() {
                     // allowClear: true,
                     width: '100%',
                     closeOnSelect: true,
-                    // minimumInputLength:5,
-                    minimumResultsForSearch:-1,
                     ajax:{
                         url: homeUrl + '/rd/trans-company/trunks',
                         type: "GET",
@@ -356,13 +390,14 @@ var handleTableInWizar = function() {
                         cache: true,
                         data: function (params) {
                             var query = {
-                                // code: params.term,
+                                term: params.term,
                                 code: transCompanyRuc,
+                                mode:systemMode
                             }
                             return query;
                         },
                         processResults: function (response) {
-                            console.log(response);
+                            // console.log(response);
                             var results  = [];
                             $.each(response.trunks, function (index, item) {
                                 // console.log(item);
@@ -384,22 +419,67 @@ var handleTableInWizar = function() {
                     // alert(e.params.data);
                     var trunk = e.params.data;
                     var transactionData = transactionDataMap.get(data.name);
+
                     if(trunk.err_code !== "0")
                     {
                         e.preventDefault();
                         transactionData.registerTrunk = "";
-                        alert("Este Chofer no puede ser seleccionado: " + driver.err_msg);
-                        $("#selectTrunk" +elementId).val("").trigger("change.select2");
-
-
+                        alert("Esta placa no puede ser seleccionada: " + trunk.err_msg);
+                        $('td select', row).eq(0).val('').trigger("change.select2");
                     }
                     else
                     {
-                        transactionData.registerTrunk = trunk.id;
+                        var valid = true;
+                        var msg = '';
+                        var containersArray = dateTicketMap.get(data.calendarId);
+                        var containersByTrunk20= 0;
+                        var containersByTrunk40 = 0;
+
+                        for(var i=0, count = containersArray.length; i < count; i++)
+                        {
+                            var container = containers.get(containersArray[i]);
+                            var cTransactionData = transactionDataMap.get(container.name);
+
+                            if(cTransactionData.registerTrunk == trunk.id)
+                            {
+                                if(container.tonnage == 20)
+                                {
+                                    containersByTrunk20++;
+                                }
+                                else if(container.tonnage == 40)
+                                {
+                                    containersByTrunk40++;
+                                }
+                            }
+                        }
+
+                        if(containersByTrunk40 == 1) // ya la placa esta asignada en un contenedor de 40 para la misma fecha
+                        {
+                            valid = false;
+                            msg = 'Esta placa esta asiganda a un contenedor de 40 toneladas en esta fecha.'
+                        }
+                        else if(containersByTrunk20 == 2) // ya la placa esta asignada a 2 contenedores de 20 para la misma fecha
+                        {
+                            valid = false;
+                            msg = 'Esta placa esta asiganda a dos contenedores de 20 toneladas en esta fecha.'
+                        }
+                        else if(containersByTrunk20 == 1 && data.tonnage == 40) // no puede asiganr un contenedor de 40 toneladas
+                        {
+                            valid = false;
+                            msg = 'Esta placa esta asiganda a un contenedor de 20 toneladas en esta fecha.'
+                        }
+
+                        if(valid)
+                            transactionData.registerTrunk = trunk.id;
+                        else
+                        {
+                            transactionData.registerTrunk = "";
+                            alert(msg);
+                            $('td select', row).eq(0).val('').trigger("change.select2");
+                        }
                     }
 
-                    transactionDataMap.set(data.name,transactionData);
-
+                    transactionDataMap.set(data.name, transactionData);
                     // api.cell({row: meta.row, column: 5}).data(trunk.id);
                     // table.row(index).data(data)
                 });
@@ -408,11 +488,9 @@ var handleTableInWizar = function() {
                     {
                         language: "es",
                         placeholder: 'Seleccione el Chofer',
-                        // allowClear: true,
                         width: '100%',
                         closeOnSelect: true,
-                        // minimumInputLength:5,
-                        minimumResultsForSearch:-1,
+                        matcher: matchCustom,
                         ajax:{
                             url: homeUrl + '/rd/trans-company/drivers',
                             type: "GET",
@@ -420,17 +498,16 @@ var handleTableInWizar = function() {
                             cache: true,
                             data: function (params) {
                                 var query = {
-                                    // code: params.term,
+                                    term: params.term,
                                     code: transCompanyRuc,
+                                    mode:systemMode
                                 }
                                 return query;
                             },
                             processResults: function (response) {
-                                console.log(response);
+                                // console.log(response);
                                 var results  = [];
                                 $.each(response.drivers, function (index, item) {
-                                    // console.log(item);
-                                    // [err_code], [err_msg], [placa], [rfid]
                                     results.push({
                                         id: item.chofer_ruc,
                                         text: item.chofer_nombre,
@@ -454,14 +531,63 @@ var handleTableInWizar = function() {
                             transactionData.registerDriver = "";
                             transactionData.nameDriver = "";
                             table.cell({row: dataIndex, column: 7}).data("");
-
+                            $('td select', row).eq(1).val('').trigger("change.select2");
                         }
                         else
                         {
-                            transactionData.registerDriver = driver.id;
-                            transactionData.nameDriver = driver.text;
-                            // api.cell({row: meta.row, column: 6}).data(driver.id);
-                            table.cell({row: dataIndex, column: 7}).data(driver.id);
+                            var valid = true;
+                            var msg = '';
+                            var containersArray = dateTicketMap.get(data.calendarId);
+                            var containersByTrunk20= 0;
+                            var containersByTrunk40 = 0;
+                            for(var i=0, count = containersArray.length; i < count; i++)
+                            {
+                                var container = containers.get(containersArray[i]);
+                                var cTransactionData = transactionDataMap.get(container.name);
+
+                                if(cTransactionData.registerDriver == driver.id)
+                                {
+                                    if(container.tonnage == 20)
+                                    {
+                                        containersByTrunk20++;
+                                    }
+                                    else if(container.tonnage == 40)
+                                    {
+                                        containersByTrunk40++;
+                                    }
+                                }
+                            }
+
+                            if(containersByTrunk40 == 1) // ya el chofer esta asociado a un contenedor de 40 para la misma fecha
+                            {
+                                valid = false;
+                                msg = 'Esta chofer esta asociado a un contenedor de 40 toneladas en esta fecha.'
+                            }
+                            else if(containersByTrunk20 == 2) // ya la placa esta asignada a 2 contenedores de 20 para la misma fecha
+                            {
+                                valid = false;
+                                msg = 'Este chofer esta asociado a dos contenedores de 20 toneladas en esta fecha.'
+                            }
+                            else if(containersByTrunk20 == 1 && data.tonnage == 40) // no puede asiganr un contenedor de 40 toneladas
+                            {
+                                valid = false;
+                                msg = 'Este chofer ya esta asociado a un contenedor de 20 toneladas en esta fecha.'
+                            }
+
+                            if(valid)
+                            {
+                                transactionData.registerDriver = driver.id;
+                                transactionData.nameDriver = driver.text;
+                                table.cell({row: dataIndex, column: 7}).data(driver.id);
+                            }
+                            else
+                            {
+                                transactionData.registerDriver = "";
+                                transactionData.nameDriver = "";
+                                alert(msg);
+                                $('td select', row).eq(1).val('').trigger("change.select2");
+                                table.cell({row: dataIndex, column: 7}).data("");
+                            }
                         }
                         transactionDataMap.set(data.name,transactionData);
                 });
@@ -479,8 +605,6 @@ var handleTableInWizar = function() {
                     targets: [2],
                     data:'deliveryDate',
                     render: function ( data, type, full, meta ) {
-                        // console.log("In render: " + data);
-                        // console.log("In render format: " + moment(data).format("DD/MM/YYYY"));
                         return moment(data).format("DD/MM/YYYY");
                     },
                 },
@@ -488,9 +612,7 @@ var handleTableInWizar = function() {
                     targets: [4],
                     data:'dateTicket',
                     render: function ( data, type, full, meta ) {
-                        // console.log("In render: " + data);
-                        var dateFormated =  moment(data).format("DD/MM/YYYY");
-                        // console.log("In render format: " + dateFormated);
+                        var dateFormated =  moment(data).format("DD/MM/YYYY HH:mm");
                         return dateFormated;
                     },
                 },
@@ -534,9 +656,6 @@ var handleTableInWizar = function() {
 var handleTable3InWizar = function() {
     if ($('#data-table3').length !== 0) {
 
-        // var table = $('#data-table3').DataTable();
-        // table.destroy();
-
         $('#data-table3').DataTable({
             dom: '<"top"iflp<"clear">>rt',
             pagingType: "full_numbers",
@@ -544,7 +663,7 @@ var handleTable3InWizar = function() {
             info: true,
             // processing:true,
             lengthMenu: [5, 10, 15],
-            pageLength: 5,
+            pageLength: 10,
             order: [[1, "asc"]],
             columns: [
                 { title: "Contenedor",
@@ -585,9 +704,8 @@ var handleTable3InWizar = function() {
                     targets: [2],
                     data:'deliveryDate',
                     render: function ( data, type, full, meta ) {
-                        console.log("In render: " + data);
+                        // console.log("In render: " + data);
                         var dateFormated =  moment(data).format("DD/MM/YYYY");
-                        console.log("In render format: " + dateFormated);
                         return dateFormated;
                     },
                 },
@@ -595,9 +713,7 @@ var handleTable3InWizar = function() {
                     targets: [4],
                     data:'dateTicket',
                     render: function ( data, type, full, meta ) {
-                        console.log("In render: " + data);
-                        var dateFormated =  moment(data).format("DD/MM/YYYY");
-                        console.log("In render format: " + dateFormated);
+                        var dateFormated =  moment(data).format("DD/MM/YYYY HH:mm");
                         return dateFormated;
                     },
                 },
@@ -766,7 +882,7 @@ var handleModal = function () {
                         if(result.event) // always
                         {
                             result.event.count = result.event.count - 1;
-                            result.event.title = result.event.count;
+                            result.event.title = String(result.event.count);
                             var indexRT = result.event.rt.indexOf(value.transactionId)
                             result.event.rt.splice(indexRT, 1);
 
@@ -874,7 +990,7 @@ var fetchCalendar = function (start, end, async) {
             end: end
         },
         success: function(response) {
-            console.log(response);
+            // console.log(response);
 
             $('#calendar').fullCalendar('removeEventSources', calendarSlotEvents.id);
             calendarSlotEvents.events = [];
@@ -910,15 +1026,16 @@ var fetchCalendar = function (start, end, async) {
             $('#calendar').fullCalendar('gotoDate', moment(minDeliveryDate) );
         },
         error: function(response) {
-            console.log(response);
-            console.log(response.responseText);
+            //console.log(response);
+            //console.log(response.responseText);
+            alert("Ah ocurrido un error.");
             result = false;
             // return false;
         }
     });
 };
 
-var fetchReceptionTransactions = function () {
+var fetchProcessTransactions = function () {
 
     $.ajax({
         // async:false,
@@ -928,7 +1045,6 @@ var fetchReceptionTransactions = function () {
         data:  {
             id:modelId,
             transCompanyId:transCompanyId,
-                actived:1, // 1 or 0 TODO no work
         },
         success: function (response) {
             // console.log(response);
@@ -947,14 +1063,10 @@ var fetchReceptionTransactions = function () {
             if(firstRun)
             {
                 var count =  response['transactions'].length;
-                console.log(count);
                 if(count > 0)
                 {
-                    // minDeliveryDate = moment(response['transactions'][0].delivery_date).utc().toDate();
-                    // maxDeliveryDate = moment(response['transactions'][count - 1].delivery_date).utc().add(1, 'days');
-                    minDeliveryDate = moment(response['transactions'][0].delivery_date).utc().set({'hours': 0, 'minutes': 0, 'seconds':0});
-                    currentDate = moment().set({'hours': 0, 'minutes': 0}).utc().set({'hours': 0, 'minutes': 0, 'seconds':0});
-                    maxDeliveryDate = moment(response['transactions'][count - 1].delivery_date).utc().set({'hours': 23, 'minutes': 59, 'seconds':59});
+                    minDeliveryDate = moment();
+                    maxDeliveryDate = moment(reception.delivery_date).utc().set({'hours': 23, 'minutes': 59, 'seconds':59});
 
                     // $('#calendar').fullCalendar({
                     //     visibleRange: {
@@ -963,18 +1075,10 @@ var fetchReceptionTransactions = function () {
                     //     }
                     // });
 
-                    // var view = $('#calendar').fullCalendar('getView');
-                    // view.start = minDeliveryDate;
-                    // view.end = maxDeliveryDate;
-
-                    console.log(minDeliveryDate.toISOString());
-                    console.log(maxDeliveryDate.toISOString());
-                    console.log(minDeliveryDate.format('YYYY-MM-DD'));
-                    console.log(maxDeliveryDate.format('YYYY-MM-DD'));
+                    // console.log(minDeliveryDate.format('YYYY-MM-DD HH:mm:ss'));
+                    // console.log(maxDeliveryDate.format('YYYY-MM-DD HH:mm:ss'));
 
                     fetchCalendar(minDeliveryDate.format('YYYY-MM-DD HH:mm:ss'), maxDeliveryDate.format('YYYY-MM-DD HH:mm:ss'), false);
-                    // fetchCalendar(minDeliveryDate.toISOString(), maxDeliveryDate.toISOString(), false);
-
                     fetchTickets(modelId, false);
                 }
 
@@ -985,6 +1089,7 @@ var fetchReceptionTransactions = function () {
         },
         error: function(response) {
             console.log(response);
+            alert("Ah ocurrido un error");
             return false;
         }
     });
@@ -1000,8 +1105,6 @@ var fetchTickets = function (processId, async) {
             processId: processId,
         },
         success: function(response) {
-            // console.log("success");
-            // console.log(response);
 
             $('#calendar').fullCalendar('removeEventSources', ticketEvents.id);
             ticketEvents.events = [];
@@ -1014,23 +1117,22 @@ var fetchTickets = function (processId, async) {
                 var id = response['tickets'][i].calendar_id ;
                 var tId = response['tickets'][i].process_transaction_id;
                 var t = transactions.get(tId);
-                // console.log(t);
+
                 if(t)
                 {
                     var container = containers.get(t.container_id);
                     var calendar = calendarEventMap.get(id);
 
+                    transactionWithTicket.push(tId);
+
                     if(calendar)
                     {
-                        transactionWithTicket.push(tId);
                         ticketDataMap.set(tId, {
                             id:response['tickets'][i].id,
                             dateTicket:calendar.start,
                             dateEndTicket:calendar.end,
                             calendarId:id,
                         });
-
-                        // console.log(c);
 
                         if(String(container.tonnage) === "20")
                         {
@@ -1052,7 +1154,6 @@ var fetchTickets = function (processId, async) {
                             result.event.title = String(result.event.count);
                             ticketEvents[result.index]= result.event;
                             result.event.rt.push(tId);
-                            // $('#calendar').fullCalendar( 'updateEvent', oldEvent);
                         }
                         else
                         {
@@ -1076,7 +1177,6 @@ var fetchTickets = function (processId, async) {
                     }
                 }
             });
-            // console.log(calendarSlotEvents);
 
             $('#calendar').fullCalendar('addEventSource',ticketEvents);
             $('#calendar').fullCalendar('refetchEventSources');
@@ -1114,13 +1214,34 @@ var handleStopWatch = function()
 
 };
 
+var handleCheckSwitcher = function()
+{
+    // console.log($('[data-click="check-switchery-state"]'));
+    //
+    // $('[data-click="check-switchery-state"]').live('click', function() {
+    //     alert("click");
+    //     if ($('[data-id="switchery-state"]').prop('checked')) {
+    //         $("#confLabel").removeClass('label-default').addClass('label-success');
+    //     }
+    //     else {
+    //         $("#confLabel").removeClass('label-success').addClass('label-default');
+    //
+    //     }
+    // });
+};
+
 $(document).ready(function () {
 
-    console.log(modelId);
-    console.log(transCompanyId);
-    console.log(transCompanyRuc);
-    // transCompanyRuc = '0992125861001';
+    // var jq = jQuery.noConflict();
+
+    // console.log(modelId);
+    // console.log(transCompanyId);
+    // console.log(transCompanyRuc);
+
+    console.log(permissions);
+
     // moment.locale('es');
+
     // init wizar
     FormWizardValidation.init();
 
@@ -1130,8 +1251,11 @@ $(document).ready(function () {
     handleTableInModal();
     handleTableInWizar();
     handleTable3InWizar();
-    fetchReceptionTransactions();
+    handleCheckSwitcher();
+    fetchProcessTransactions();
 
+    // console.log($('td.fc-head-container.fc-widget-header'));
+    // $('td.fc-head-container.fc-widget-header').css('padding', 0);
     // stop watch
     timerId = setInterval(handleStopWatch, 1000);
 

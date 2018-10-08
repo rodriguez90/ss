@@ -44,7 +44,13 @@ class UserController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::class,
+//                'only' => ['Getagencias', 'Getdeposito', 'Getagenciastrans'],
+//                'except' => ['getagencias','getdeposito','getagenciastrans',],
                 'rules' => [
+//                    [
+//                        'allow' => true,
+//                        'actions' => ['Getagencias','Getdeposito','Getagenciastrans',],
+//                    ],
                     [
                         'allow' => true,
                         'roles' => ['@'],
@@ -90,6 +96,7 @@ class UserController extends Controller
     public function actionView($id)
     {
         if (\Yii::$app->user->can('user_view') || \Yii::$app->user->getId() == $id ) {
+
             return $this->render('view', [
                 'model' => $this->findModel($id),
             ]);
@@ -113,57 +120,65 @@ class UserController extends Controller
         $model = new AdmUser();
         $rol = '';
         $type = -1;
+        $postData = Yii::$app->request->post();
+//        var_dump($postData);die;
 
-        if ($model->load(Yii::$app->request->post()) ) {
-
-        $rol = Yii::$app->request->post("rol");
-
-        if( $model->password==''){
-            $model->addError('error', 'La Contraseña no pueden ser vacía');
+        if(!isset($postData['status']))
+        {
+            $postData['status']= 0;
         }
 
-        if( $confirm!=null && $model->password != $confirm){
-            $model->addError('error', 'Las contraseñas no son iguales.');
-        }
+        if ($model->load($postData))
+        {
 
-        if( $rol==null ||  $auth->getRole($rol) ==null){
-            $model->addError('error', "Seleccione un rol válido." );
-        }else{
-            $type = Yii::$app->request->post("type");
-            switch($rol){
-                case 'Importador':
-                case 'Exportador':
-                case 'Agencia':
-                    if($type == '')
-                        $model->addError('error', "Seleccione una agencia." );
-                    break;
-                case 'Administrador_depósito':
-                    if($type == '')
-                    $model->addError('error', "Seleccione un depósito." );
-                    break;
-                case 'Depósito':
-                    if($type == '')
-                        $model->addError('error', "Seleccione un depósito." );
-                    break;
-                case 'Cia_transporte':
-                    if($type == '')
-                    $model->addError('error', "Seleccione una compañía de transporte." );
-                    break;
-                default :
-                    break;
+            $rol = Yii::$app->request->post("rol");
+
+            if( $model->password==''){
+                $model->addError('error', 'La Contraseña no pueden ser vacía');
             }
-        }
 
-        if(AdmUser::findOne(['username'=>$model->username])!=null){
-            $model->addError('error', "Ya existe el nombre de usuario." );
-        }
+            if( $confirm != null && $model->password != $confirm){
+                $model->addError('error', 'Las contraseñas no son iguales.');
+            }
 
-        if (AdmUser::findOne(['cedula' => $model->cedula]) != null)
+            if( $rol == null ||  $auth->getRole($rol) == null){
+                $model->addError('error', "Seleccione un rol válido." );
+            }
+            else{
+                $type = Yii::$app->request->post("type");
+                switch($rol){
+                    case 'Importador':
+                    case 'Exportador':
+                    case "Importador_Exportador":
+                    case 'Agencia':
+                        if($type == '')
+                            $model->addError('error', "Seleccione una empresa." );
+                        break;
+                    case 'Administrador_deposito':
+                    case 'Deposito':
+                        if($type == '')
+                        $model->addError('error', "Seleccione un depósito." );
+                        break;
+                    case 'Cia_transporte':
+                        if($type == '')
+                        $model->addError('error', "Seleccione una compañía de transporte." );
+                        break;
+                    default :
+                        break;
+                }
+            }
+
+            if(AdmUser::findOne(['username'=>$model->username]) != null){
+
+                $model->addError('error', "Ya existe el nombre de usuario." );
+            }
+
+            if (AdmUser::findOne(['cedula' => $model->cedula]) != null)
             {
                 $model->addError('error', "La cédula {$model->cedula} ya fue registrada en el sistema" );
             }
 
-        if (!$model->hasErrors())
+            if (!$model->hasErrors())
             {
                 $model->setPassword($model->password);
                 $model->created_at = time();
@@ -179,19 +194,15 @@ class UserController extends Controller
                     switch($rol){
                         case 'Importador':
                         case 'Exportador':
+                        case "Importador_Exportador":
                         case 'Agencia':
                             $userAgency = new UserAgency();
                             $userAgency->user_id = $model->id;
                             $userAgency->agency_id = $type;
                             $userAgency->save();
                             break;
-                        case 'Administrador_depósito':
-                            $userWarehouse = new UserWarehouse();
-                            $userWarehouse->user_id = $model->id;
-                            $userWarehouse->warehouse_id = $type;
-                            $userWarehouse->save();
-                            break;
-                        case 'Depósito':
+                        case 'Administrador_deposito':
+                        case 'Deposito':
                             $userWarehouse = new UserWarehouse();
                             $userWarehouse->user_id = $model->id;
                             $userWarehouse->warehouse_id = $type;
@@ -231,6 +242,7 @@ class UserController extends Controller
      */
     public function actionUpdate($id)
     {
+        throw new ForbiddenHttpException('Esta vista no esta disponible.');
 
         if ( \Yii::$app->user->can('user_update') || \Yii::$app->user->getId() == $id  ) {
 
@@ -238,11 +250,13 @@ class UserController extends Controller
 
             try{
                 $model = $this->findModel($id);
-                if($model != null){
+                if($model !== null){
 
                     $old_password = $model->password;
                     $auth =  Yii::$app->authManager;
                     $confirm = Yii::$app->request->post('AdmUser')["passwordConfirm"];
+                    $status = Yii::$app->request->post('status');
+
                     $rol = '';
                     $type = -1;
                     $error = '';
@@ -252,12 +266,13 @@ class UserController extends Controller
 
                     $rol_actual = $auth->getRole($model->getRole());
 
-                    $modelAux=null;
+                    $modelAux = null;
                     $modelAuxId = '';
                     $modelAuxName = '';
                     switch($rol_actual->name){
                         case 'Importador':
                         case 'Exportador':
+                        case "Importador_Exportador":
                         case 'Agencia':
                             $error  = "Seleccione una agencia.";
                             $modelAux = UserAgency::findOne(['user_id'=>$model->id]);
@@ -268,8 +283,8 @@ class UserController extends Controller
                                 $modelAuxName = $modelAux->agency->name;
                             }
                             break;
-                        case 'Administrador_depósito':
-                        case 'Depósito':
+                        case 'Administrador_deposito':
+                        case 'Deposito':
                             $error  ="Seleccione un depósito." ;
                             $modelAux = UserWarehouse::findOne(['user_id'=>$model->id]);
                             if($modelAux)
@@ -302,24 +317,41 @@ class UserController extends Controller
                             $model->addError('error', "Seleccione un rol válido." );
                         }
 
-                        if($type =="" && $rol_actual->name!="Administracion" && $rol!="Administracion" ){
+                        if($type == "" && $rol_actual->name != "Administracion" && $rol != "Administracion" ){
                             $model->addError('error', $error );
                         }
 
                         if (!$model->hasErrors())
                         {
-                            if($model->password!=""){
+                            if($model->password !== '')
+                            {
                                 $model->setPassword($model->password);
-                            }else
+                            }
+                            else
                                 $model->password = $old_password;
 
                             $model->updated_at = time();
+
+                            if(Yii::$app->user->getId() == $id )
+                            {
+                                $model->status = 1 ;
+                            }
+                            else
+                            {
+                                if($status == null)
+                                    $model->status = 0 ;
+                                else
+                                    $model->status = 1 ;
+                            }
+
 
                             if ($model->save())
                             {
                                 $new_rol = $auth->createRole($rol);
 
-                                if(  $new_rol->name != $rol_actual->name ){
+                                if($rol_actual == null){
+                                    $ok = $ok && $auth->assign($new_rol,$model->id);
+                                }else if(  $new_rol->name != $rol_actual->name ){
                                     $ok = $ok && $auth->revoke($rol_actual,$model->id);
                                     if($ok)
                                         $ok = $ok && $auth->assign($new_rol,$model->id);
@@ -329,6 +361,7 @@ class UserController extends Controller
                                 switch($rol){
                                     case "Importador":
                                     case "Exportador":
+                                    case "Importador_Exportador":
                                     case "Agencia":
                                         if($change_rol){
                                             $userAgency = new UserAgency();
@@ -336,7 +369,7 @@ class UserController extends Controller
                                             $userAgency->user_id = $model->id;
 
                                             $ok = $ok && $userAgency->save();
-                                            if($modelAux!=null)
+                                            if($modelAux != null)
                                                 $modelAux->delete();
                                         }else{
                                             $userAgency = UserAgency::findOne(['user_id'=>$model->id]);
@@ -344,8 +377,8 @@ class UserController extends Controller
                                             $ok = $ok && $userAgency->update();
                                         }
                                         break;
-                                    case "Administrador_depósito":
-                                    case "Depósito":
+                                    case "Administrador_deposito":
+                                    case "Deposito":
                                         if($change_rol){
                                             $userWarehouse = new UserWarehouse();
                                             $userWarehouse->warehouse_id = $type;
@@ -379,7 +412,7 @@ class UserController extends Controller
                                         }
                                         break;
                                     default :
-                                        if($modelAux!=null){
+                                        if($modelAux != null){
                                             $modelAux->delete();
                                         }
                                         break;
@@ -390,7 +423,8 @@ class UserController extends Controller
                         {
                             if($ok) {
                                 $transaction->commit();
-                                return $this->redirect(['index']);
+//                                return $this->redirect(['index']);
+                                return $this->redirect(Yii::$app->request->referrer ? Yii::$app->request->referrer: Yii::$app->homeUrl);
                             }else{
                                 $transaction->rollBack();
                             }
@@ -432,7 +466,7 @@ class UserController extends Controller
                 'rol_actual'=>$rol_actual->name,
                 'roles'=>$roles,
                 'type'=>$type_actual,
-                'modelAux'=>['id'=>$modelAuxId,  'name'=>$modelAuxName]
+                'modelAux'=>['id'=>$modelAuxId,  'name'=>utf8_encode($modelAuxName)]
             ]);
 
         }else{
@@ -455,7 +489,7 @@ class UserController extends Controller
             //return $this->redirect(['create']);
             if($model)
             {
-                $model->status = 0;
+                $model->status = -1;
                 $model->save();
             }
         }
@@ -472,11 +506,16 @@ class UserController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = AdmUser::findOne(['id'=>$id, 'status'=>1])) !== null) {
+        $model = AdmUser::find()
+            ->where(['id'=>$id])
+            ->andWhere(['<>', 'status',-1])
+            ->one();
+
+        if ($model  !== null) {
             return $model;
         }
 
-        throw new NotFoundHttpException('The requested page does not exist.');
+        throw new NotFoundHttpException('El usuario no existe.');
     }
 
     public function actionGetagencias(){
@@ -485,7 +524,7 @@ class UserController extends Controller
 
         $response = array();
         $response['success'] = true;
-        $response['companies'] = [];
+        $response['objects'] = [];
         $response['msg'] = '';
         $response['msg_dev'] = '';
 
@@ -500,7 +539,7 @@ class UserController extends Controller
         if($response['success'])
         {
             $sql = "exec sp_sgt_empresa_cons '" . $code . "'";
-            $results = Yii::$app->db2->createCommand($sql)->queryAll();
+            $results = Yii::$app->db3->createCommand($sql)->queryAll();
 
             try{
                 $trasaction = Yii::$app->db->beginTransaction();
@@ -532,7 +571,7 @@ class UserController extends Controller
                         $str = utf8_encode($agency->name);
                         $agency->name = $str;
                     }
-                    $response['companies'][] = $agency;
+                    $response['objects'][] = $agency;
                 }
 
                 if($response['success'])
@@ -547,7 +586,6 @@ class UserController extends Controller
             }
             catch ( \PDOException $e)
             {
-//                var_dump($e->getMessage());die;
                 if($e->getCode() !== '01000')
                 {
                     $response['success'] = false;
@@ -557,21 +595,43 @@ class UserController extends Controller
                 }
             }
         }
-        return $response['companies'];
+        return $response;
     }
 
     public function actionGetdeposito(){
 
         Yii::$app->response->format = Response::FORMAT_JSON;
 
-        $result = Warehouse::find()
-                            ->where(['active'=>1])
-                            ->all();
+        $response = array();
+        $response['success'] = true;
+        $response['objects'] = [];
+        $response['msg'] = '';
+        $response['msg_dev'] = '';
 
-        if($result!=null)
-            return $result;
+        $code = Yii::$app->request->get('code');
 
-        return [];
+        if(!isset($code))
+        {
+            $response['success'] = false;
+            $response['msg'] = "Debe especificar el nombre.";
+        }
+
+        try
+        {
+            $response['objects'] = Warehouse::find()
+                ->where(['active'=>1])
+                ->andFilterWhere(['like','name', $code])
+                ->all();
+        }
+        catch (Exception $ex)
+        {
+            $response['success'] = false;
+            $response['objects'] = [];
+            $response['msg'] = 'Ah ocurrido un error al buscar los depositos';
+            $response['msg_dev'] = $ex->getMessage();
+        }
+
+        return $response;
     }
 
     public function actionGetagenciastrans()
@@ -581,7 +641,7 @@ class UserController extends Controller
 
         $response = array();
         $response['success'] = true;
-        $response['trans_companies'] = [];
+        $response['objects'] = [];
         $response['msg'] = '';
         $response['msg_dev'] = '';
 
@@ -628,7 +688,7 @@ class UserController extends Controller
                         $str = utf8_encode($t->name);
                         $t->name = $str;
                     }
-                    $response['trans_companies'][] = $t;
+                    $response['objects'][] = $t;
                 }
 
                 if($response['success'])
@@ -643,7 +703,6 @@ class UserController extends Controller
             }
             catch ( \PDOException $e)
             {
-//                var_dump($e->getMessage());die;
                 if($e->getCode() !== '01000')
                 {
                     $response['success'] = false;
@@ -653,6 +712,57 @@ class UserController extends Controller
                 }
             }
         }
-        return $response['trans_companies'];
+        return $response;;
+    }
+
+    public function actionList()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $response = array();
+        $response['success'] = true;
+        $response['data'] = [];
+        $response['msg'] = '';
+        $response['msg_dev'] = '';
+
+        if($response['success'])
+        {
+            try
+            {
+                $results = AdmUser::find()
+                    ->select('adm_user.id, 
+                                    adm_user.username, 
+                                    adm_user.nombre, 
+                                    adm_user.apellidos, 
+                                    adm_user.email, 
+                                    adm_user.created_at, 
+                                    adm_user.status, 
+                                    auth_assignment.item_name as role')
+                    ->leftJoin('auth_assignment', 'auth_assignment.user_id=adm_user.id')
+                    ->where(['<>','status',-1])
+//                    ->groupBy(['adm_user.id']) // FIXME: CHECK THIS
+                    ->asArray()
+                    ->all();
+
+                foreach ($results as $result)
+                {
+                    $result['nombre'] = utf8_encode($result['nombre']);
+                    $result['apellidos'] = utf8_encode($result['apellidos']);
+                    $result['created_at'] = date('Y/m/d',$result['created_at']);
+                    $response['data'][] = $result;
+                }
+            }
+            catch ( \PDOException $e)
+            {
+                if($e->getCode() !== '01000')
+                {
+                    $response['success'] = false;
+                    $response['msg'] = "Ah ocurrido al recuperar las empresas.";
+                    $response['msg_dev'] = $e->getMessage();
+                }
+            }
+        }
+
+        return $response;
     }
 }

@@ -12,7 +12,6 @@ use Yii;
  * @property string $code Código
  * @property int $tonnage Toneladas
  * @property int $active Activo
- * @property string $status Estado
  * @property int $type_id Tipo
  *
  * @property ContainerType $type
@@ -34,8 +33,8 @@ class Container extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'code', 'tonnage', 'status'], 'required'],
-            [['name', 'code', 'status'], 'string'],
+            [['name', 'code', 'tonnage'], 'required'],
+            [['name', 'code'], 'string'],
             [['tonnage', 'active', 'type_id'], 'integer'],
             [['type_id'], 'exist', 'skipOnError' => true, 'targetClass' => ContainerType::className(), 'targetAttribute' => ['type_id' => 'id']],
         ];
@@ -52,7 +51,6 @@ class Container extends \yii\db\ActiveRecord
             'code' => 'Código',
             'tonnage' => 'Toneladas',
             'active' => 'Activo',
-            'status' => 'Estado',
             'type_id' => 'Tipo',
         ];
     }

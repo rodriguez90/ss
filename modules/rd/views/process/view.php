@@ -35,9 +35,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="panel panel-inverse m-1" data-sortable-id="ui-widget-1">
     <div class="panel-heading">
         <div class="panel-heading-btn">
-            <a id="print-process" href="<?= Url::to(['/rd/process/print?id='.$model->id]) ?>" style="color: white;font-size: 14px;" title="Exportar PDF" > <i class="fa fa-file-pdf-o"></i></a>
-<!--            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fa fa-repeat"></i></a>-->
-<!--            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>-->
+            <a id="print-process"  target="_blank" rel="noopener noreferrer" href="<?= Url::to(['/rd/process/print?id='.$model->id]) ?>" style="color: white;font-size: 14px;" title="Exportar PDF" > <i class="fa fa-file-pdf-o"></i></a>
         </div>
         <h4 class="panel-title">Detalles del Proceso</h4>
     </div>
@@ -53,7 +51,8 @@ $this->params['breadcrumbs'][] = $this->title;
                         ],
                         [
                             'attribute'=>'bl',
-                            'label'=> $model->type === Process::PROCESS_IMPORT ? "BL":"Booking",
+                            'value'=> strtoupper($model->bl),
+                            'label'=> $model->type == Process::PROCESS_IMPORT ? "BL":"Booking",
                         ],
                     ],
                     'options'=>['class' => 'table table-bordered table-condensed detail-view m-1 p-1 detalle'],
@@ -104,18 +103,23 @@ $this->params['breadcrumbs'][] = $this->title;
                 <?=
                 GridView::widget([
                     'dataProvider' => $dataProvider,
-                    'filterModel' => $searchModel,
+//                    'filterModel' => $searchModel,
                     'columns' => [
-                        'name',
                         [
-                            'label' => "Tipo/Tamaño",
-                            value  => function($data)
-                            {
-                                return $data['code'] . $data['tonnage'];
-                            }
+                            'class' => 'yii\grid\DataColumn',
+                            'label' => "Nombre",
+                            'attribute' => 'container_id',
+                            'value' => 'container.name',
                         ],
-                        //                                    'code',
-                        //                                    'tonnage',
+                        [
+                            'class' => 'yii\grid\DataColumn',
+                            'label' => "Tipo/Tamaño",
+                            'attribute' => 'container_id',
+                            'value'  => function($data)
+                            {
+                                return $data->container->code . $data->container->tonnage;
+                            },
+                        ],
                         'status',
                     ],
                 ]);

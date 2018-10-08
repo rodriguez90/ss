@@ -51,6 +51,27 @@ else if ($intVal === Process::PROCESS_EXPORT)
     {
         padding: 0px 15px 0px 15px; !important;
     }
+    #dialog-spinner
+    {
+        margin: 0px 0px 0px 0px; !important;
+    }
+    .fc-axis {
+        height: 30px; !important;
+    }
+
+    /*.fc-widget-header*/
+    /*{*/
+        /*margin: 0px 0px 0px 0px; !important;*/
+        /*padding: 0px 0px 0px 0px; !important;*/
+    /*}*/
+
+    /*table thead tr td.fc-head-container.fc-widget-header*/
+    /*{*/
+        /*!*display: none;: none; !important;*!*/
+
+        /*padding: 0px 0px 0px 0px; !important;*/
+    /*}*/
+
 </style>
 
 <div class="panel panel-inverse p-3">
@@ -81,8 +102,28 @@ else if ($intVal === Process::PROCESS_EXPORT)
                 </div>
             </div>
             <!-- end BL search-->
+
+            <!-- begin from line nav data-->
+            <div class="col-md-3">
+                <div class="panel panel-default m-1">
+                    <div id="blCodeHeading" class="panel-heading p-2">
+                        <h4 class="panel-title">Linea</h4>
+                    </div>
+                    <div class="panel-body p-5">
+                        <div class="col col-md-12">
+                            <div class="row">
+                                <span id="oce" class="label label-info f-s-12">OCE: -</span>
+                            </div>
+                            <div class="row">
+                                <span id="line" class="label label-info f-s-12">LINEA: -</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end line nav data-->
             <!-- begin wharehouse select-->
-            <div class="col-md-4">
+            <div class="col-md-2">
                 <div class="panel panel-default  m-1">
                     <div id="blCodeHeading" class="panel-heading p-2">
                         <h4 class="panel-title">Depósito Destino</h4>
@@ -98,7 +139,7 @@ else if ($intVal === Process::PROCESS_EXPORT)
             </div>
             <!-- end wharehouse select-->
             <!-- begin time-->
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div id="stop_watch_widget" class="widget widget-stats bg-green p-5">
                     <div class="stats-icon"><i class="fa fa-clock-o"></i></div>
                     <div class="stats-info">
@@ -123,23 +164,31 @@ else if ($intVal === Process::PROCESS_EXPORT)
                         <!-- begin wizard step-1 -->
                         <div class="wizard-step-1">
                             <fieldset>
-                                <!-- begin row -->
-                                <div class="row">
-                                    <div class="table-responsive">
-                                        <table id="data-table" class="table table-bordered nowrap" width="100%">
-                                            <thead>
-                                            <tr>
-                                                <th>Seleccione <input type="checkbox" name="select_all" value="1" id="select-all"></th>
-                                                <th>Contenedores</th>
-                                                <th>Tipo/Tamaño</th>
-                                                <th>Fecha Límite</th>
-                                                <th>Cliente</th>
-                                            </tr>
-                                            </thead>
-                                        </table>
+                                <div class="col col-md-12">
+                                    <!-- begin row -->
+                                    <div class="row">
+                                        <div class="table-responsive">
+                                            <table id="data-table" class="table table-bordered nowrap" width="100%">
+                                                <thead>
+                                                <tr>
+                                                    <th>Seleccione <input type="checkbox" name="select_all" value="1" id="select-all"></th>
+                                                    <th><?php echo $intVal == Process::PROCESS_IMPORT ? ' Contenedor': 'Booking/Contenedor'?></th>
+                                                    <th>Tipo/Tamaño</th>
+                                                    <th>Fecha Límite</th>
+                                                    <th>Estado</th>
+                                                </tr>
+                                                </thead>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <!-- end row -->
+                                    <div id="staticLinks" class="row" style="display: none;">
+                                        <div class="col-md-8 col-md-offset-4">
+                                            <a href="http://www.tpg.com.ec" >Solicitar crédito</a>
+                                            <a href="http://www.tpg.com.ec" >Factura en línea</a>
+                                        </div>
                                     </div>
                                 </div>
-                                <!-- end row -->
                             </fieldset>
                         </div>
                         <!-- end wizard step-1 -->
@@ -172,7 +221,7 @@ else if ($intVal === Process::PROCESS_EXPORT)
                                                 <thead>
                                                 <tr>
                                                     <th>Seleccione <input type="checkbox" name="select_all2" id="select_all2" value="1" ></th>
-                                                    <th>Contenedores</th>
+                                                    <th><?php echo $intVal == Process::PROCESS_IMPORT ? ' Contenedor': 'Booking/Contenedor'?></th>
                                                     <th>Tipo/Tamaño</th>
                                                     <th>Fecha Límite</th>
                                                     <th>Cliente</th>
@@ -221,11 +270,9 @@ else if ($intVal === Process::PROCESS_EXPORT)
 <!--                                        </div>-->
 <!--                                    </div>-->
 <!--                                </div>-->
-<!--                                <div class="row p-0 m-auto">-->
                                     <div class="checkbox">
-                                        <label>
-                                            <input id="confirming" type="checkbox"> Confirmar Información
-                                        </label>
+                                        <input id="confirming" type="checkbox" data-render="switchery" data-size="small" data-click="check-switchery-state" data-id="switchery-state" data-theme="blue"/>
+                                        <span id="confLabel" class="label label-success f-s-12">Confirmar Información</span>
                                     </div>
 <!--                                </div>-->
                                 <!-- end row -->
@@ -236,7 +283,6 @@ else if ($intVal === Process::PROCESS_EXPORT)
                         <div>
                             <div class="jumbotron m-b-0 text-center">
                                 <h1>Proceso Completado</h1>
-                                <p>Los datos han sido enviados al servidor.</p>
                             </div>
                         </div>
                         <!-- end wizard step-4 -->
@@ -249,6 +295,24 @@ else if ($intVal === Process::PROCESS_EXPORT)
     </div>
 </div>
 
+
+<!-- #modal-containers -->
+<div class="modal fade" id="modal-select-bussy" role="dialog" data-backdrop='static'>
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 id="modalTitle" class="modal-title">Proceso Completado</h4>
+            </div>
+            <div class="modal-body p-15">
+                <div class="jumbotron m-b-0 text-center">
+                    <span id="dialog-spinner" class="spinner"></span>
+                    <p>Los datos de la nueva <?php echo Process::PROCESS_LABEL[$type]?> han sido enviados al TPG.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script type="text/javascript">
     var agency = <?php echo json_encode(['name'=>$agency->name,
         'id'=>$agency->id  ]); ?>;
@@ -256,7 +320,7 @@ else if ($intVal === Process::PROCESS_EXPORT)
 </script>
 
 <?php $this->registerJsFile('@web/js/modules/rd/process/form-wizards-validation-create.js', ['depends' => ['app\assets\WizardAsset']]) ?>
-<?php $this->registerJsFile('@web/js/modules/rd/process/table-manage.js', ['depends' => ['app\assets\SystemAsset']]) ?>
-<?php $this->registerJsFile('@web/js/modules/rd/process/process-create.js', ['depends' => ['app\assets\SystemAsset', 'app\assets\FormAsset']]) ?>
+<?php $this->registerJsFile('@web/js/modules/rd/process/table-manage.js', ['depends' => ['app\assets\TableAsset']]) ?>
+<?php $this->registerJsFile('@web/js/modules/rd/process/process-create.js', ['depends' => ['app\assets\FormAsset']]) ?>
 
 

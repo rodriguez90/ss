@@ -134,7 +134,7 @@ class WarehouseController extends Controller
 
         if($model)
         {
-            $model->active = 0;
+            $model->active = -1;
             $model->save();
         }
 
@@ -150,7 +150,12 @@ class WarehouseController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = Warehouse::findOne(['id'=>$id, 'active'=>1])) !== null) {
+        $model = Warehouse::find()
+            ->where(['id'=>$id])
+            ->andWhere(['<>', 'active',-1])
+            ->one();
+
+        if ( $model !== null) {
             return $model;
         }
 

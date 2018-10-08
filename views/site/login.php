@@ -6,24 +6,18 @@
 
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
+use yii\helpers\Url;
 
 $this->title = 'Login';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-
-
-
-
-
-
-
 
 <!-- begin #page-loader -->
 <div id="page-loader" class="fade in"><span class="spinner"></span></div>
 <!-- end #page-loader -->
 
 <div class="login-cover">
-    <div class="login-cover-image"><img width="100%px" height="100%px" src=<?php echo \yii\helpers\Url::to("@web/img/login-bg/tpg-2.jpeg");?> data-id="login-cover-image" alt="" /></div>
+    <div class="login-cover-image"><img width="100%px" height="100%px" src=<?php echo \yii\helpers\Url::to("@web/img/login-bg/tpg-3.jpeg");?> data-id="login-cover-image" alt="" /></div>
     <div class="login-cover-bg"></div>
 </div>
 
@@ -58,12 +52,22 @@ $this->params['breadcrumbs'][] = $this->title;
                         <input type="checkbox" /> Recordarme
                     </label>
                 </div>
+
+
                 <div class="login-buttons">
                     <button type="submit" class="btn btn-success btn-block btn-lg">Entrar</button>
                 </div>
 
-            <?php ActiveForm::end(); ?>
+            <div class="m-t-20">
+              Regístrese <a href="http://www.tpg.com.ec/webtpg/webpages/wpg_preregistro.php" class="text-success">aquí</a>
+            </div>
 
+
+            <ul class="parsley-errors-list filled" style="text-align: center;" >
+                <li class="parsley-required"> <?php if(isset($msg)){ echo $msg; } ?></li>
+            </ul>
+
+            <?php ActiveForm::end(); ?>
 
         </div>
     </div>

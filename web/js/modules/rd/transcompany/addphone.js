@@ -11,7 +11,7 @@ $(function (){
        var newphone = $("<div id='group-"+ nphone+"' class='form-group phone' >" +
            " <label class='col-md-3 col-sm-3 control-label'>Teléfono</label>" +
            "<div class='col-md-7 col-sm-7'>" +
-           "<input name='telefono-"+nphone+"' type='text'  class='form-control' data-parsley-required='true' data-parsley-type='number' data-parsley-maxlength='12' data-parsley-minlength='12'/>" +
+           "<input name='telefono-"+nphone+"' type='text'  class='form-control' data-parsley-required='true' data-parsley-type='number' data-parsley-maxlength='10' data-parsley-minlength='9'/>" +
            " </div> " +
            "<div class='col-md-2 col-sm-2'>" +
            " <a id='btn-"+nphone+"' class='btn btn-danger'  title='Eliminar Teléfono' > " +

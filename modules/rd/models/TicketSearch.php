@@ -12,6 +12,12 @@ use app\modules\rd\models\Ticket;
  */
 class TicketSearch extends Ticket
 {
+    public $register_truck = '';
+    public $register_driver = '';
+    public $name_driver = '';
+    public $processType = '';
+    public $containerType = '';
+    public $dateTimeTicket = '';
     /**
      * {@inheritdoc}
      */
@@ -19,7 +25,7 @@ class TicketSearch extends Ticket
     {
         return [
             [['id', 'process_transaction_id', 'calendar_id', 'status', 'active'], 'integer'],
-            [['created_at'], 'safe'],
+            [['created_at','register_truck', 'register_driver', 'name_driver', 'processType', 'containerType', 'dateTimeTicket'], 'safe'],
         ];
     }
 
@@ -41,7 +47,15 @@ class TicketSearch extends Ticket
      */
     public function search($params)
     {
-        $query = Ticket::find()->where(['active'=>1]);
+        $query = Ticket::find()
+            ->leftJoin('calendar', 'calendar.id=ticket.calendar_id')
+            ->leftJoin('process_transaction', 'process_transaction.id=ticket.process_transaction_id')
+            ->leftJoin('process', 'process_transaction.process_id=process.id')
+            ->leftJoin('container', 'container.id=process_transaction.container_id')
+            ->leftJoin('container_type', 'container_type.id=container.type_id')
+            ->where(['process_transaction.active'=>1]);
+
+//            ->where(['ticket.active'=>1]);
 
         // add conditions that should always apply here
 
@@ -54,9 +68,18 @@ class TicketSearch extends Ticket
             'sort' => [
                 'defaultOrder' => [
                     'id' => SORT_ASC,
-                ]
+                ],
             ],
         ]);
+
+        $dataProvider->sort = [
+            'attributes' => [
+                'calendar_id' => [
+                    'asc' => ['calendar.start_datetime' => SORT_ASC],
+                    'desc' => ['calendar.start_datetime' => SORT_DESC],
+                ],
+            ]
+        ];
 
         $this->load($params);
 
@@ -79,28 +102,26 @@ class TicketSearch extends Ticket
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'process_transaction_id' => $this->process_transaction_id,
-            'calendar_id' => $this->calendar_id,
             'status' => $this->status,
-            'created_at' => $this->created_at,
-            'active' => $this->active,
+//            'created_at' => $this->created_at,
+            'ticket.active' => $this->active,
         ]);
 
-//        if(isset($this->trans_company_id))
-//        {
-//            $filter = TransCompany::find()->select('id')->where(['like', 'name', $this->trans_company_id]);
-//            $query->andFilterWhere(['trans_company_id'=>$filter]);
-////            $query->andFilterWhere(['like', 'trans_company.name', $this->trans_company_id]);
-//
-//        }
-////        var_dump($this->agency_id);die;
-//        if(isset($this->agency_id))
-//        {
-//
-////            $filter = TransCompany::find()->select('id')->where(['like', 'name', $this->agency_id]);
-//            $query->andFilterWhere(['like', 'agency.name', $this->agency_id]);
-//
-//        }
+        $query->andFilterWhere(['like','register_truck',$this->register_truck]);
+        $query->andFilterWhere(['like','register_driver',$this->register_driver]);
+        $query->andFilterWhere(['like','name_driver',$this->name_driver]);
+        $query->andFilterWhere(['process.type'=>$this->processType]);
+        $query->andFilterWhere(['like','container_type.name',$this->containerType]);
+        if($this->dateTimeTicket !== '')
+        {
+            $startDate = date_create($this->dateTimeTicket);
+            $endDate = date_create($this->dateTimeTicket);
+
+            date_add($endDate,date_interval_create_from_date_string("1 days"));
+
+            $query->andFilterWhere(['>=','calendar.start_datetime', $startDate->format('Y-m-d H:i')]);
+            $query->andFilterWhere(['<','calendar.start_datetime', $endDate->format('Y-m-d H:i')]);
+        }
 
         return $dataProvider;
     }

@@ -6,6 +6,7 @@
  * Time: 01:28 PM
  */
 use app\modules\rd\models\Process;
+use yii\helpers\Url;
 
 ?>
 
@@ -44,7 +45,7 @@ use app\modules\rd\models\Process;
 
         #datalle td {
             padding: 10px 10px 10px 10px;
-            width: 25%;
+            width: 33.333333%;
             border: 1px solid #DDD;
         }
 
@@ -84,12 +85,12 @@ use app\modules\rd\models\Process;
         <tr>
             <td>
                 <div id="logo">
-                    <img src="<?= Yii::$app->homeUrl ?>/../img/logo.png">
+                    <img src="<?php echo Yii::$app->homeUrl; ?>/../img/logo.png">
                 </div>
             </td>
             <td style="text-align: center"><h4 >NOTIFICACION DE NUEVO PROCESO</h4> </td>
             <td style="text-align: right"><div id="fecha">
-                    <label> <?= date('d/m/Y')?></label>
+                    <label> <?php echo date('d/m/Y');?></label>
                 </div>
             </td>
         </tr>
@@ -99,20 +100,17 @@ use app\modules\rd\models\Process;
     <table id="datalle">
         <thead>
         <tr>
-            <td class="title"><?php $model->type === Process::PROCESS_IMPORT ? "BL":"Booking"?> </td>
+            <td class="title"><?php echo $model->type == Process::PROCESS_IMPORT ? "BL":"Booking";?> </td>
             <td class="title">Fecha Límite</td>
             <td class="title">Agencia</td>
-            <td class="title">Activo</td>
-
         </tr>
 
         </thead>
         <tbody>
         <tr>
-            <td>  <?= $model->bl ?> </td>
-            <td> <?= (new \yii\i18n\Formatter())->asDate($model->delivery_date, 'dd/M/yyyy') ?> </td>
-            <td> <?= $model->agency->name ?> </td>
-            <td> <?php $model->active == 1? "Si":"No"?></td>
+            <td> <?php echo $model->bl; ?> </td>
+            <td> <?php echo  (new \yii\i18n\Formatter())->asDate($model->delivery_date, 'dd/M/yyyy');?> </td>
+            <td> <?php echo utf8_encode($model->agency->name); ?> </td>
         </tr>
         </tbody>
 
@@ -129,7 +127,7 @@ use app\modules\rd\models\Process;
             <td></td>
             <td></td>
             <td class="btn">
-                <a href="<?php echo Url::to(['/rd/reception/trans-company', 'id' => $model->id], true); ?>">Reservar
+                <a href="<?php echo Url::to(['/rd/ticket/create', 'id' => $model->id], true); ?>">Reservar
                     Cupos </a>
             </td>
             <td></td>
@@ -171,28 +169,31 @@ use app\modules\rd\models\Process;
         </tbody>
     </table>
 
+    <?php
+        if(count($containers) > 50)
+        {
+    ?>
+        <table id="links" width="100%">
 
-    <table id="links" width="100%">
-
-        <tbody>
-
-
-        <tr style="text-align: center">
-            <td></td>
-            <td></td>
-            <td class="btn">
-                <a href="<?php echo Url::to(['/rd/reception/trans-company', 'id' => $model->id], true); ?>">Reservar
-                    Cupos </a>
-            </td>
-            <td></td>
-            <td></td>
-        </tr>
-
-        </tbody>
-    </table>
+            <tbody>
 
 
+            <tr style="text-align: center">
+                <td></td>
+                <td></td>
+                <td class="btn">
+                    <a href="<?php echo Url::toRoute(['/rd/ticket/create', 'id' => $model->id], true); ?>">Reservar
+                        Cupos </a>
+                </td>
+                <td></td>
+                <td></td>
+            </tr>
+
+            </tbody>
+        </table>
+    <?php
+    }
+    ?>
 </div>
-
 </body>
 </html>

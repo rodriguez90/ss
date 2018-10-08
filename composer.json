@@ -29,7 +29,8 @@
         "yiimaker/yii2-email-templates": "^4.0@dev",
         "kartik-v/yii2-report": "^1.0@dev",
         "2amigos/qrcode-library": "^1.0@dev",
-        "tlangelani/sybase-database": "dev-master"
+        "tlangelani/sybase-database": "dev-master",
+        "kartik-v/yii2-widget-datetimepicker": "*"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

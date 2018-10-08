@@ -86,7 +86,7 @@ use app\modules\rd\models\Process;
     <table id="datalle" width="100%">
         <thead>
         <tr>
-            <td class="title" > <?= ( $model->type === Process::PROCESS_IMPORT ? 'BL':'Booking' ) ?> </td>
+            <td class="title" > <?= ( $model->type == Process::PROCESS_IMPORT ? 'BL':'Booking' ) ?> </td>
             <td class="title">No.</td>
             <td class="title" >Tipo de trámite</td>
             <td class="title">Fecha de Creación</td>
@@ -127,12 +127,13 @@ use app\modules\rd\models\Process;
         </thead>
         <tbody>
         <?php
-        foreach ($contenedores as $contenedor) {
+        foreach ($transactions as $transaction) {
+            $container = $transaction->container;
             echo "<tr >";
             echo "<td></td>";
-            echo "<td style='border: solid 1px #DDD;'>" . $contenedor['name'] . "</td>";
-            echo "<td style='border: solid 1px #DDD;'>" . $contenedor['code'] . $contenedor['tonnage'] . "</td>";
-            echo "<td style='border: solid 1px #DDD;'>" . $contenedor['status'] . "</td>";
+            echo "<td style='border: solid 1px #DDD;'>" . $container->name . "</td>";
+            echo "<td style='border: solid 1px #DDD;'>" . $container->code . $container->tonnage . "</td>";
+            echo "<td style='border: solid 1px #DDD;'>" . $transaction->status . "</td>";
             echo "<td></td>";
             echo "</tr>";
         }

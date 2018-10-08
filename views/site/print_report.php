@@ -111,7 +111,7 @@ use app\modules\rd\models\Process;
         echo "<tbody>";
         $type = $row['process']->type;
         echo "<tr>";
-        echo "<td  class='title' >" . ( $type === Process::PROCESS_IMPORT ? 'BL':'Booking' ) ."</td>";
+        echo "<td  class='title' >" . ( $type == Process::PROCESS_IMPORT ? 'BL':'Booking' ) ."</td>";
         echo "<td  class='title' >Tipo de trámite</td>";
         echo "<td class='title' >Fecha Límite</td>";
         echo "</tr>";

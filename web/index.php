@@ -1,6 +1,7 @@
 <?php
 
 error_reporting(E_ERROR);
+//ini_set('max_input_vars', 5000);
 // SET THE INTERNAL ENCODING
 //$charset = 'iso-8859-1';
 //$charset = 'latin1';
@@ -37,10 +38,13 @@ class SGTApplication extends yii\web\Application
 
         if ($this->user->isGuest)
         {
-            if (!in_array($this->controller->action->id, ['login', 'about']))
+            if (!in_array($this->controller->action->id, ['login', 'about','register','getagencias','getagenciastrans']))
             {
                 $_SESSION['redirect'] = Yii::$app->request->url;
                 return $this->controller->redirect(Url::toRoute('site/login'));
+            }
+            else{
+//                var_dump($this->controller->action->id);die;
             }
         }
         else

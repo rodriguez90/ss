@@ -121,7 +121,7 @@ class ContainerTypeController extends Controller
 
         if($model)
         {
-            $model->active = 0;
+            $model->active = -1;
             $model->save();
         }
 

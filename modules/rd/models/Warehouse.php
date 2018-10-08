@@ -29,7 +29,7 @@ class Warehouse extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['code_oce', 'name', 'ruc'], 'required'],
+            [['name', 'ruc'], 'required'],
             [['code_oce', 'name', 'ruc'], 'string'],
             [['active'], 'integer'],
         ];
