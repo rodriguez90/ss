@@ -304,8 +304,12 @@ class LoginForm extends Model
 
         try
         {
-            $sql = "exec disv..pa_login_disv '" . $user . "','" . $password . "'";
-            $result = Yii::$app->db3->createCommand($sql)->queryAll();
+//            $sql = "exec disv..pa_login_disv '" . $user . "','" . $password . "'";
+            $sql = "exec disv..pa_login_disv :user,:password";
+            $result = Yii::$app->db3->createCommand($sql)
+                ->bindValue(':user',$user)
+                ->bindValue(':password',$password)
+                ->queryAll();
             if(count($result) > 0)
             {
                 // $result['nombre'] = utf8_decode($result['nombre']);
