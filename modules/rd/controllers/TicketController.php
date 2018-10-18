@@ -755,7 +755,9 @@ class TicketController extends Controller
 
         try
         {
-            $sql = "exec  disv..sp_sgt_access_ins :processType,:registerTrunk,:registerDriver,:containerName,:dateTicket,:user,:bl";
+            $sql = "exec disv..sp_sgt_access_ins '";
+//            $sql = "exec  disv..sp_sgt_access_ins :processType,:registerTrunk,:registerDriver,:containerName,:dateTicket,:user,:bl";
+
 
             foreach ($tickets as $ticket)
             {
@@ -787,24 +789,24 @@ class TicketController extends Controller
                 $registerDriver = $processTransaction->register_driver;
                 $containerName = $container->name;
 
-//                $sql_complete = $sql . $processType . "','".
-//                                $registerTrunk . "','" .
-//                                $registerDriver . "','" .
-//                                $containerName . "','" .
-//                                $dateTicket . "','" .
-//                                $user . "','" .
-//                                $bl . "'";
+                $sql_complete = $sql . $processType . "','".
+                                $registerTrunk . "','" .
+                                $registerDriver . "','" .
+                                $containerName . "','" .
+                                $dateTicket . "','" .
+                                $user . "','" .
+                                $bl . "'";
 
-//                $result = \Yii::$app->db3->createCommand($sql_complete)->queryAll();
-                $result = Yii::$app->db3->createCommand($sql)
-                    ->bindValue(':processType', $processType)
-                    ->bindValue(':registerTrunk', $registerTrunk)
-                    ->bindValue(':registerDriver', $registerDriver)
-                    ->bindValue(':containerName', $containerName)
-                    ->bindValue(':dateTicket', $dateTicket)
-                    ->bindValue(':user', $user)
-                    ->bindValue(':bl', $bl)
-                    ->queryAll();
+                $result = \Yii::$app->db3->createCommand($sql_complete)->queryAll();
+//                $result = Yii::$app->db3->createCommand($sql)
+//                    ->bindValue(':processType', $processType)
+//                    ->bindValue(':registerTrunk', $registerTrunk)
+//                    ->bindValue(':registerDriver', $registerDriver)
+//                    ->bindValue(':containerName', $containerName)
+//                    ->bindValue(':dateTicket', $dateTicket)
+//                    ->bindValue(':user', $user)
+//                    ->bindValue(':bl', $bl)
+//                    ->queryAll();
 
                 if($result['err_code'] == "1")
                 {
@@ -846,20 +848,20 @@ class TicketController extends Controller
         try
         {
 //            exec disv..sp_sgt_access_elimina 7316061, 'test'
-//            $sql = "exec  disv..sp_sgt_access_elimina ";
-            $sql = "exec  disv..sp_sgt_access_elimina :accId,:user";
+            $sql = "exec disv..sp_sgt_access_elimina ";
+//            $sql = "exec  disv..sp_sgt_access_elimina :accId,:user";
 
             foreach ($tickets as $ticket)
             {
                 if($ticket->acc_id)
                 {
-//                    $sqlCompleted = $sql . $ticket->acc_id . ",'" . $user . "'";
+                    $sqlCompleted = $sql . $ticket->acc_id . ",'" . $user . "'";
 
-//                    $result = \Yii::$app->db3->createCommand($sqlCompleted)->queryAll();
-                    $result = \Yii::$app->db3->createCommand($sql)
-                        ->bindValue(':accId', $ticket->acc_id)
-                        ->bindValue(':user', $user)
-                        ->queryAll();
+                    $result = \Yii::$app->db3->createCommand($sqlCompleted)->queryAll();
+//                    $result = \Yii::$app->db3->createCommand($sql)
+//                        ->bindValue(':accId', $ticket->acc_id)
+//                        ->bindValue(':user', $user)
+//                        ->queryAll();
 
                     if($result['err_code'] == 1)
                     {

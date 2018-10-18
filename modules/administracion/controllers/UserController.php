@@ -538,10 +538,13 @@ class UserController extends Controller
 
         if($response['success'])
         {
-            $sql = "exec sp_sgt_empresa_cons :code";
-            $results = Yii::$app->db3->createCommand($sql)
-                ->bindValue(':code',$code)
-                ->queryAll();
+//            $sql = "exec sp_sgt_empresa_cons :code";
+//            $results = Yii::$app->db3->createCommand($sql)
+//                ->bindValue(':code',$code)
+//                ->queryAll();
+
+            $sql = "exec sp_sgt_empresa_cons '" . $code . "'";
+            $results = Yii::$app->db2->createCommand($sql)->queryAll();
 
             try{
                 $trasaction = Yii::$app->db->beginTransaction();
@@ -657,10 +660,13 @@ class UserController extends Controller
 
         if($response['success'])
         {
-            $sql = "exec sp_sgt_companias_cons :code";
-            $results = Yii::$app->db2->createCommand($sql)
-                ->bindValue(':code',$code)
-                ->queryAll();
+//            $sql = "exec sp_sgt_companias_cons :code";
+//            $results = Yii::$app->db2->createCommand($sql)
+//                ->bindValue(':code',$code)
+//                ->queryAll();
+
+            $sql = "exec sp_sgt_companias_cons '" . $code . "'";
+            $results = Yii::$app->db2->createCommand($sql)->queryAll();
 
             try{
                 $trasaction = TransCompany::getDb()->beginTransaction();

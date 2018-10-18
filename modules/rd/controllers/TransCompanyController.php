@@ -209,10 +209,13 @@ class TransCompanyController extends Controller
 
         if($response['success'])
         {
-            $sql = "exec sp_sgt_companias_cons :code";
-            $results = Yii::$app->db2->createCommand($sql)
-                ->bindValue(':code',$code)
-                ->queryAll();
+//            $sql = "exec sp_sgt_companias_cons :code";
+//            $results = Yii::$app->db2->createCommand($sql)
+//                ->bindValue(':code',$code)
+//                ->queryAll();
+
+            $sql = "exec sp_sgt_companias_cons '" . $code . "'";
+            $results = Yii::$app->db3->createCommand($sql)->queryAll();
 
             try{
                 $trasaction = TransCompany::getDb()->beginTransaction();
@@ -295,10 +298,13 @@ class TransCompanyController extends Controller
         {
             if($mode == 1)
             {
-                $sql = "exec sp_sgt_placa_cons :code";
-                $trunks = Yii::$app->db2->createCommand($sql)
-                    ->bindValue(':code',$code)
-                    ->queryAll();
+//                $sql = "exec sp_sgt_placa_cons :code";
+//                $trunks = Yii::$app->db2->createCommand($sql)
+//                    ->bindValue(':code',$code)
+//                    ->queryAll();
+
+                $sql = "exec sp_sgt_placa_cons '" .$code ."'";
+                $trunks = Yii::$app->db2->createCommand($sql)->queryAll();
             }
             else
             {
@@ -360,10 +366,13 @@ class TransCompanyController extends Controller
         {
             if($mode == 1)
             {
-                $sql = "exec sp_sgt_chofer_cons :code";
-                $drivers = Yii::$app->db2->createCommand($sql)
-                    ->bindValue(':code',$code)
-                    ->queryAll();
+//                $sql = "exec sp_sgt_chofer_cons :code";
+//                $drivers = Yii::$app->db2->createCommand($sql)
+//                    ->bindValue(':code',$code)
+//                    ->queryAll();
+
+                $sql = "exec sp_sgt_chofer_cons '" .$code ."'";
+                $drivers = Yii::$app->db2->createCommand($sql)->queryAll();
             }
             else
             {
