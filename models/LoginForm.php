@@ -304,12 +304,16 @@ class LoginForm extends Model
 
         try
         {
-//            $sql = "exec disv..pa_login_disv '" . $user . "','" . $password . "'";
-            $sql = "exec disv..pa_login_disv :user,:password";
+            $sql = "exec disv..pa_login_disv '" . $user . "','" . $password . "'";
+
+            //int(42000) string(18) "Database Exception" string(369) "SQLSTATE[42000]: Syntax error or access violation: 257 [Sybase][ODBC Driver][Adaptive Server Enterprise]Implicit conversion from datatype 'TEXT' to 'VARCHAR' is not allowed. Use the CONVERT function to run this query. (SQLExecute[257] at ext\pdo_odbc\odbc_stmt.c:260) The SQL being executed was: exec disv..pa_login_disv 'developer','FEA803DA71FE37CD278A4189ECA4752E'"
+//            $sql = "exec disv..pa_login_disv :user,:password";
+//            $result = Yii::$app->db3->createCommand($sql)
+//                ->bindValue(':user',$user)
+//                ->bindValue(':password',$password)
+//                ->queryAll();
             $result = Yii::$app->db3->createCommand($sql)
-                ->bindValue(':user',$user)
-                ->bindValue(':password',$password)
-                ->queryAll();
+                                    ->queryAll();
             if(count($result) > 0)
             {
                 // $result['nombre'] = utf8_decode($result['nombre']);
@@ -329,8 +333,10 @@ class LoginForm extends Model
             }
         }
         catch (Exception $ex)
-        {	
-			var_dump($ex->getCode());             var_dump($ex->getName());             var_dump($ex->getMessage()); die;		
+        {
+//            var_dump($ex->getCode());
+//            var_dump($ex->getName());
+//            var_dump($ex->getMessage()); die;
             $response['success'] = false;
             $response['msg'] = 'Ah occurrido un error al realizar el login hacia TPG.';
             $response['msg_dev'] = $ex->getMessage();
