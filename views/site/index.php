@@ -12,17 +12,12 @@ use yii\helpers\Url;
 use app\modules\administracion\models\AdmUser;
 use app\modules\administracion\models\AuthItem;
 use app\modules\rd\models\Process;
+use Yii;
 $this->title = 'SGT';
 
-//var_dump($this->params) ;die;
-//var_dump($rol);die;
-//echo $user;
-//echo json_encode($user);
-
-//var_dump($rol);die;
 
 
-$user = AdmUser::findOne(['id'=>Yii::$app->user->getId()]);
+$user = Yii::$app->user->identity;
 $rol = '';
 if($user)
 {

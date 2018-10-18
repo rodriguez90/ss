@@ -329,7 +329,8 @@ class LoginForm extends Model
             }
         }
         catch (Exception $ex)
-        {			
+        {	
+			var_dump($ex->getCode());             var_dump($ex->getName());             var_dump($ex->getMessage()); die;		
             $response['success'] = false;
             $response['msg'] = 'Ah occurrido un error al realizar el login hacia TPG.';
             $response['msg_dev'] = $ex->getMessage();
