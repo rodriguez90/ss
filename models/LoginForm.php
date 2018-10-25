@@ -90,11 +90,12 @@ class LoginForm extends Model
             return false;
         }
 
+        $newUser = AdmUser::findOne(['username'=>$this->username]); // find user in sgt
+
         $transaction = Yii::$app->db->beginTransaction();
 
         try {
 
-            $newUser = AdmUser::findOne(['username'=>$this->username]); // find user in sgt
             $auth =  Yii::$app->authManager;
             $resultLogin = true;
 
