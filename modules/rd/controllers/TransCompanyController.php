@@ -215,7 +215,7 @@ class TransCompanyController extends Controller
 //                ->queryAll();
 
             $sql = "exec sp_sgt_companias_cons '" . $code . "'";
-            $results = Yii::$app->db3->createCommand($sql)->queryAll();
+            $results = Yii::$app->db2->createCommand($sql)->queryAll();
 
             try{
                 $trasaction = TransCompany::getDb()->beginTransaction();
