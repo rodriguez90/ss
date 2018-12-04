@@ -373,7 +373,7 @@ var fetchContainerTypes = function (async) {
             result = false;
         }
     });
-}
+};
 
 var addContainer = function (table, dataContainer) {
 

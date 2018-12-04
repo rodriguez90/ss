@@ -69,10 +69,9 @@ class LoginForm extends Model
     public function login()
     {
         $customPassword = $this->makeTPGPassword($this->password);
-
         $response = $this->tpgLogin($this->username, $customPassword); // FIXME en produccion pasar el $customPassword
 //        $response = $this->tpgLoginOffLine($this->username, $customPassword);
-
+        
 		$userData = $response['user'];
 
         if(!$response['success'])
@@ -318,10 +317,10 @@ class LoginForm extends Model
                                     ->queryAll();
             if(count($result) > 0)
             {
-                // $result['nombre'] = utf8_decode($result['nombre']);
-                // $result['nombre_empresa'] = utf8_decode($result['nombre_empresa']);
+                 $result['nombre'] = utf8_encode($result['nombre']);
+                 $result['nombre_empresa'] = utf8_encode($result['nombre_empresa']);
 				// user_id,nombre,ruc,email,ruc_empresa,nombre_empresa,rol,estado
-
+				
                 $response['user'] = [
 						'user_id'=> $result[0]['user_id'],
 						'nombre'=> $result[0]['nombre'],
@@ -336,11 +335,9 @@ class LoginForm extends Model
         }
         catch (Exception $ex)
         {
-
 //            var_dump($ex->getCode());
 //            var_dump($ex->getName());
 //            var_dump($ex->getMessage()); die;
-
             $response['success'] = false;
             $response['msg'] = 'Ah occurrido un error al realizar el login hacia TPG.';
             $response['msg_dev'] = $ex->getMessage();

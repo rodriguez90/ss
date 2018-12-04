@@ -12,32 +12,99 @@ use app\modules\administracion\models\AuthItem;
 use Yii;
 use yii\console\Controller;
 use app\modules\administracion\models\AdmUser;
+use yii\helpers\VarDumper;
 
 class RbacController extends Controller
 {
-    public function actionInit22()
+    const user_perm = [
+            "admin_mod" => "Acceso al modulo administrción",
+            "user_create" => "Crear Usuario",
+            "user_update" => "Actualizar Usuarios",
+            "user_delete" => "Eliminar Usuarios",
+            "user_list" => "Listar Usuarios",
+            "user_view" => "Ver Usuarios"
+    ];
+
+    const warehouse_perm = [
+        "warehouse_create"=>"Crear Depósito",
+        "warehouse_update"=>"Actualizar Depósito",
+        "warehouse_delete" => "Eliminar Depósito",
+        "warehouse_list"=>"Listar Depósito",
+        "warehouse_view"=>"Detalle Depósito"
+    ];
+
+    const calendar_perm = [
+        "calendar_create"=>"Crear calendario",
+        "calendar_update"=>"Actualizar calendario",
+        "calendar_delete"=>"Eliminar calendario",
+        "calendar_list"=>"Listar calendario",
+        "calendar_view"=>"Detalle de calendario"
+    ];
+    const process_perm = [
+        "process_create"=>"Crear recepción",
+        "process_update"=>"Actualizar recepción",
+        "process_delete"=>"",
+        "process_list"=>"",
+        "process_view"=>""
+    ];
+    const agency_perm = ["agency_create"=>"",
+        "agency_update"=>"",
+        "agency_delete"=>"",
+        "agency_list"=>"",
+        "agency_view"=>""
+    ];
+    const ticket_perm = [
+        "ticket_create"=>"",
+        "ticket_update"=>"",
+        "ticket_delete"=>"",
+        "ticket_list"=>"",
+        "ticket_view"=>""
+    ];
+    const transcompany_perm = [
+        "trans_company_create"=>"",
+        "trans_company_update"=>"",
+        "trans_company_delete"=>"",
+        "trans_company_list"=>"",
+        "trans_company_view"=>""
+    ];
+    const container_perm = [
+        "container_create"=>"",
+        "container_update"=>"",
+        "container_delete"=>"",
+        "container_list"=>"",
+        "container_view"=>""
+    ];
+    const ciatrans_perm = [
+        "cia_trans_create"=>"",
+        "cia_trans_update"=>"",
+        "cia_trans_delete"=>"",
+        "cia_trans_list"=>"",
+        "cia_trans_view"=>""
+    ];
+
+    public function actionInit()
     {
         $msg = "!Error :";
         $ok = true;
         try {
 
-            if (!$this->createAdminUser()) {
-                $ok = false;
-                $msg = " No se pudo añadir el usuario administrador. ";
-            }
-
             if ($ok) {
                 if (!$this->actionCreateDefaulRoles()) {
                     $ok = false;
-                    $msg = " No se crearon los roles por defecto. ";
+                    $msg = " No se crearon los roles por defecto. \n";
                 }
             }
 
             if ($ok) {
-                if ($this->actionCreateDefaultPermisssion()) {
+                if (!$this->actionCreateDefaultPermisssion()) {
                     $ok = false;
-                    $msg = " No se crearon los permisos por defecto. ";
+                    $msg = " No se crearon los permisos por defecto. \n";
                 }
+            }
+
+            if (!$this->actionCreateAdminUser()) {
+                $ok = false;
+                $msg = " No se pudo añadir el usuario administrador. \n";
             }
 
         } catch (\Exception $ex) {
@@ -51,263 +118,185 @@ class RbacController extends Controller
             echo $msg;
     }
 
-
-    public function createAdminUser()
+    public function actionCreateAdminUser()
     {
+        $msg = "Init successfully \n";
+        $ok = true;
         $auth = Yii::$app->authManager;
+        $transaction  = Yii::$app->getDb()->beginTransaction();
 
-        $adminUser = new AdmUser();
-        $adminUser->username = 'root';
-        $adminUser->password = Yii::$app->security->generatePasswordHash("a");
-        $adminUser->auth_key = Yii::$app->security->generatePasswordHash("a");
-        $adminUser->email = 'root2@gmail.com';
-        $adminUser->nombre = 'root';
-        $adminUser->apellidos = 'root';
-        $adminUser->status = 1;
-        $adminUser->created_at = time();
-        $adminUser->updated_at = time();
-        $adminUser->cedula = "1111111111";
+        try{
 
-        if (AdmUser::findOne(['username' => $adminUser->username]) == null && $adminUser->save()) {
-            return true;
+            $adminUser = new AdmUser();
+            $adminUser->username = 'root';
+            $adminUser->password = Yii::$app->security->generatePasswordHash("a");
+            $adminUser->auth_key = $adminUser->password;
+            $adminUser->password_reset_token = $adminUser->password;
+            $adminUser->email = 'root2@gmail.com';
+            $adminUser->nombre = 'root';
+            $adminUser->apellidos = 'root';
+            $adminUser->status = 1;
+//            $adminUser->created_at = time();
+//            $adminUser->updated_at = time();
+            $adminUser->cedula = "1111111111";
+
+            if (AdmUser::findOne(['username' => $adminUser->username]) == null)
+            {
+                if ($adminUser->save())
+                {
+                    echo "User created \n";
+
+                    echo "Generating Access from admin role \n";
+                }
+                else
+                {
+                    $ok = false;
+                    $msg = 'Error generating admin user.';
+                }
+
+            }
+
+            if ($ok)
+            {
+                $permissions = array_merge(RbacController::user_perm,
+                    RbacController::warehouse_perm,
+                    RbacController::calendar_perm,
+                    RbacController::process_perm,
+                    RbacController::agency_perm,
+                    RbacController::ticket_perm,
+                    RbacController::transcompany_perm,
+                    RbacController::container_perm,
+                    RbacController::ciatrans_perm
+                );
+
+                $adminRol = $auth->getRole(AuthItem::ROLE_ADMIN);
+                if($adminRol == null)
+                {
+                    $adminRol = $auth->createRole(AuthItem::ROLE_ADMIN);
+                    $adminRol->description = "Administrador del sistema";
+                    if($auth->add($adminRol) == false)
+                    {
+                        $ok = false;
+                        $msg = 'Error al generar el rol administrador.';
+                    }
+                }
+
+                if ($ok) {
+                    foreach ($permissions as $name => $desc)
+                    {
+                        $pemission = $auth->getPermission($name);
+                        if($pemission == null)
+                        {
+                            $pemission = $auth->createPermission($name);
+                            $pemission->description = $desc;
+                            if($auth->add($pemission) == false)
+                            {
+                                $ok = false;
+                                $msg = 'Error al generar el permiso ' . $name;
+                                break;
+                            }
+                        }
+
+                        if ($ok)
+                        {
+                            if (!$auth->hasChild($adminRol, $pemission) && $auth->addChild($adminRol, $pemission) == false) {
+                                $ok = false;
+                                $msg = $msg . " No se pudo asignar el pemiso( " . $pemission->name . " al rol " . $adminRol->name . " )";
+                            }
+                        }
+                    }
+
+                }
+
+                if ($adminUser->getId() != null && !$auth->checkAccess($adminUser->getId(), $adminRol->name)) {
+                    $ok = $ok && $auth->assign($adminRol, $adminUser->getId());
+                } else {
+                    $ok = false;
+                    $msg = $msg . " No se pudo asignar el rol (" . $adminRol->name . " ) al usuario ( " . $adminUser->username . " )";
+                }
+            }
+        } catch (\Exception $ex) {
+            $ok = false;
+            $msg = $ex->getMessage() . "\n";
         }
 
-        return false;
-    }
+        if ($ok) $transaction->commit();
+        else $transaction->rollBack();
 
+        echo $msg;
+        return $ok;
+    }
 
     public function actionCreateDefaulRoles()
     {
         $auth = Yii::$app->authManager;
-        foreach (AuthItem::DEFAULT_ROLES as $role) {
-            $rolModel = $auth->createRole($role);
-            if ($auth->getRole($rolModel->name) === null) {
-                if (!$auth->add($rolModel)) {
+
+        foreach (AuthItem::DEFAULT_ROLES as $name) {
+            $role = $auth->createRole($name);
+            if ($auth->getRole($role->name) === null) {
+                if (!$auth->add($role)) {
                     return false;
                 }
             }
         }
+
+        echo 'Successfully generated default roles \n';
 
         return true;
     }
 
     public function actionCreateDefaultPermisssion()
     {
-        return true;
-    }
-
-    public function actionInit()
-    {
-        $msg = "!Error :";
-        $ok = true;
-        try{
-            $auth = Yii::$app->authManager;
-
-            $admin_perm = [];
-
-            $user_perm = ["admin_mod" => "Acceso al modulo administrción","user_create" => "Crear Usuario", "user_update" => "Actualizar Usuarios", "user_delete" => "Eliminar Usuarios", "user_list" => "Listar Usuarios", "user_view" => "Ver Usuarios"];
-            $warehouse_perm = ["warehouse_create"=>"Crear Depósito", "warehouse_update"=>"Actualizar Depósito", "warehouse_delete" => "Eliminar Depósito", "warehouse_list"=>"Listar Depósito", "warehouse_view"=>"Detalle Depósito"];
-            $calendar_perm = ["calendar_create"=>"Crear calendario", "calendar_update"=>"Actualizar calendario", "calendar_delete"=>"Eliminar calendario", "calendar_list"=>"Listar calendario", "calendar_view"=>"Detalle de calendario"];
-            $process_perm = ["process_create"=>"Crear recepción", "process_update"=>"Actualizar recepción", "process_delete"=>"", "process_list"=>"", "process_view"=>""];
-            $agency_perm = ["agency_create"=>"", "agency_update"=>"", "agency_delete"=>"", "agency_list"=>"", "agency_view"=>""];
-            $ticket_perm = ["ticket_create"=>"", "ticket_update"=>"", "ticket_delete"=>"", "ticket_list"=>"", "ticket_view"=>""];
-            $transcompany_perm = ["trans_company_create"=>"", "trans_company_update"=>"", "trans_company_delete"=>"", "trans_company_list"=>"", "trans_company_view"=>""];
-            $container_perm = ["container_create"=>"", "container_update"=>"", "container_delete"=>"", "container_list"=>"", "container_view"=>""];
-            $ciatrans_perm = ["cia_trans_create"=>"", "cia_trans_update"=>"", "cia_trans_delete"=>"", "cia_trans_list"=>"", "cia_trans_view"=>""];
-
-            $admin_perm [0] = $user_perm;
-            $admin_perm [1] = $warehouse_perm;
-            $admin_perm [2] = $calendar_perm;
-            $admin_perm [3] = $process_perm;
-            $admin_perm [4] = $agency_perm;
-            $admin_perm [5] = $ticket_perm;
-            $admin_perm [6] = $transcompany_perm;
-            $admin_perm [7] = $container_perm;
-            $admin_perm [8] = $ciatrans_perm;
-
-            //crealo independiente y asignar rolesy perms
-            $adminUser = AdmUser::findOne(['username' => 'root']) ;
-            if($adminUser == null)
-            {
-                if($this->createAdminUser() == false)
-                {
-                    $ok = false;
-                    $msg = 'Error al generar el usuario administrador.';
-                }
-            }
-
-            if ($ok)
-            {
-                $adminRol = $auth->createRole(AuthItem::ROLE_ADMIN);
-                $adminRol->description = "Administrador del sistema";
-                if ($auth->getRole($adminRol->name) == null) {
-                    $ok = $ok && $auth->add($adminRol);
-                    if ($ok) {
-                        echo "5";
-                        foreach ($admin_perm as $perms){
-                             echo "6";
-                            foreach ($perms as $key => $desc) {
-                                $pemiso = $auth->createPermission($key);
-                                $pemiso->description = $desc;
-                                echo "6.5";
-                                if ($auth->getPermission($pemiso->name) == null)
-                                    $ok = $ok && $auth->add($pemiso);
-                                if ($ok) {
-                                    echo "7";
-                                    if (!$auth->hasChild($adminRol, $pemiso)) {
-                                        $ok = $ok && $auth->addChild($adminRol, $pemiso);
-                                        if (!$ok) {
-                                            echo "8";
-                                            $msg = $msg . " No se pudo asignar el pemiso( " . $pemiso->name . " al rol " . $adminRol->name . " )";
-                                        }
-                                    }
-                                } else {
-
-                                    $msg =  $msg . " No se pudo añadir el permiso ( " . $pemiso->name . " )";
-                                }
-                            }
-                        }
-
-                    } else {
-                        $msg =   $msg . " No se pudo añadir el rol ( " . $adminRol->name . " )";
-                    }
-
-                    if ($adminUser->getId() != null && !$auth->checkAccess($adminUser->getId(), $adminRol->name)) {
-                        $ok = $ok && $auth->assign($adminRol, $adminUser->getId());
-                    } else {
-                        $ok = false;
-                        $msg = $msg . " No se pudo asignar el rol (" . $adminRol->name . " ) al usuario ( " . $adminUser->username . " )";
-                    }
-                }else{
-                    $ok = false;
-                    $msg = $msg . " Ya existe el rol ". $adminRol->name;
-                }
-            }
-
-
-        } catch (\Exception $ex) {
-            $ok = false;
-            $msg = $msg . " ex: " . $ex->getMessage();
-        }
-
-        if ($ok) {
-            echo "Migración OK...";
-        } else
-            echo $msg;
-
-    }
-
-    public function actionOn()
-    {
 
         $auth = Yii::$app->authManager;
         $ok= true;
 
-        $user_perm = ["admin_mod" => "Acceso al modulo administrción","user_create" => "Crear Usuario", "user_update" => "Actualizar Usuarios", "user_delete" => "Eliminar Usuarios", "user_list" => "Listar Usuarios", "user_view" => "Ver Usuarios"];
-        $warehouse_perm = ["warehouse_create"=>"Crear Depósito", "warehouse_update"=>"Actualizar Depósito", "warehouse_delete" => "Eliminar Depósito", "warehouse_list"=>"Listar Depósito", "warehouse_view"=>"Detalle Depósito"];
-        $calendar_perm = ["calendar_create"=>"Crear calendario", "calendar_update"=>"Actualizar calendario", "calendar_delete"=>"Eliminar calendario", "calendar_list"=>"Listar calendario", "calendar_view"=>"Detalle de calendario"];
-        $process_perm = ["process_create"=>"Crear recepción", "process_update"=>"Actualizar recepción", "process_delete"=>"", "process_list"=>"", "process_view"=>""];
-        $agency_perm = ["agency_create"=>"", "agency_update"=>"", "agency_delete"=>"", "agency_list"=>"", "agency_view"=>""];
-        $ticket_perm = ["ticket_create"=>"", "ticket_update"=>"", "ticket_delete"=>"", "ticket_list"=>"", "ticket_view"=>""];
-        $transcompany_perm = ["trans_company_create"=>"", "trans_company_update"=>"", "trans_company_delete"=>"", "trans_company_list"=>"", "trans_company_view"=>""];
-        $container_perm = ["container_create"=>"", "container_update"=>"", "container_delete"=>"", "container_list"=>"", "container_view"=>""];
-        $ciatrans_perm = ["cia_trans_create"=>"", "cia_trans_update"=>"", "cia_trans_delete"=>"", "cia_trans_list"=>"", "cia_trans_view"=>""];
+        $permissions = array_merge(RbacController::user_perm,
+            RbacController::warehouse_perm,
+            RbacController::calendar_perm,
+            RbacController::process_perm,
+            RbacController::agency_perm,
+            RbacController::ticket_perm,
+            RbacController::transcompany_perm,
+            RbacController::container_perm,
+            RbacController::ciatrans_perm
+        );
 
-
-        $admin_perm [0] = $user_perm;
-        $admin_perm [1] = $warehouse_perm;
-        $admin_perm [2] = $calendar_perm;
-        $admin_perm [3] = $process_perm;
-        $admin_perm [4] = $agency_perm;
-        $admin_perm [5] = $ticket_perm;
-        $admin_perm [6] = $transcompany_perm;
-        $admin_perm [7] = $container_perm;
-        $admin_perm [8] = $ciatrans_perm;
-
-
-        $adminRol = $auth->createRole("Administracion");
-
-        foreach ($admin_perm as $perms){
-            foreach ($perms as $key => $desc) {
-
-                if (!$auth->hasChild($adminRol,$auth->getPermission($key))) {
-                    $ok = $ok && $auth->addChild($adminRol, $auth->getPermission($key));
-
+        $transaction  = Yii::$app->getDb()->beginTransaction();
+        try {
+            foreach ($permissions as $name => $desc)
+            {
+                if($auth->getPermission($name) == null)
+                {
+                    $permission = $auth->createPermission($name);
+                    $permission->description = $desc;
+                    $ok = $auth->add($permission);
+                    if($ok == false)
+                    {
+                       echo 'Error when generating permission ' . $name;
+                       break;
+                    }
+                    else
+                    {
+                        echo 'Permission ' . $name . ' generated \n';
+                    }
                 }
             }
         }
-        /*
-
-        foreach ($warehouse_perm as $key => $desc) {
-            $pemiso = $auth->createPermission($key);
-            $pemiso->description = $desc;
-            echo "6.5";
-            if ($auth->getPermission($pemiso->name) == null)
-                $ok = $ok && $auth->add($pemiso);
+        catch (\Exception $ex)
+        {
+            $ok = false;
+            echo  $ex->getMessage();
         }
-
-        foreach ($calendar_perm as $key => $desc) {
-            $pemiso = $auth->createPermission($key);
-            $pemiso->description = $desc;
-            echo "6.5";
-            if ($auth->getPermission($pemiso->name) == null)
-                $ok = $ok && $auth->add($pemiso);
-        }
-
-        foreach ($process_perm as $key => $desc) {
-            $pemiso = $auth->createPermission($key);
-            $pemiso->description = $desc;
-            echo "6.5";
-            if ($auth->getPermission($pemiso->name) == null)
-                $ok = $ok && $auth->add($pemiso);
-        }
-
-        foreach ($agency_perm as $key => $desc) {
-            $pemiso = $auth->createPermission($key);
-            $pemiso->description = $desc;
-            echo "6.5";
-            if ($auth->getPermission($pemiso->name) == null)
-                $ok = $ok && $auth->add($pemiso);
-        }
-
-        foreach ($ticket_perm as $key => $desc) {
-            $pemiso = $auth->createPermission($key);
-            $pemiso->description = $desc;
-            echo "6.5";
-            if ($auth->getPermission($pemiso->name) == null)
-                $ok = $ok && $auth->add($pemiso);
-        }
-
-        foreach ($transcompany_perm as $key => $desc) {
-            $pemiso = $auth->createPermission($key);
-            $pemiso->description = $desc;
-            echo "6.5";
-            if ($auth->getPermission($pemiso->name) == null)
-                $ok = $ok && $auth->add($pemiso);
-        }
-        foreach ($container_perm as $key => $desc) {
-            $pemiso = $auth->createPermission($key);
-            $pemiso->description = $desc;
-            echo "6.5";
-            if ($auth->getPermission($pemiso->name) == null)
-                $ok = $ok && $auth->add($pemiso);
-        }
-
-        foreach ($ciatrans_perm as $key => $desc) {
-            $pemiso = $auth->createPermission($key);
-            $pemiso->description = $desc;
-            echo "6.5";
-            if ($auth->getPermission($pemiso->name) == null)
-                $ok = $ok && $auth->add($pemiso);
-        }
-
-
-        */
 
         if($ok)
-            echo "OK....";
-        else
-            "Error";
+        {
+            $transaction->commit();
+            echo "Successfully generated permissions";
+        }
+        else $transaction->rollBack();
+
+        return $ok;
     }
 
 }

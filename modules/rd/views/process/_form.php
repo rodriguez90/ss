@@ -314,7 +314,7 @@ else if ($intVal === Process::PROCESS_EXPORT)
 </div>
 
 <script type="text/javascript">
-    var agency = <?php echo json_encode(['name'=>$agency->name,
+    var agency = <?php echo json_encode(['name'=>utf8_encode($agency->name),
         'id'=>$agency->id  ]); ?>;
     var processType = '<?php echo $type;?>';
 </script>

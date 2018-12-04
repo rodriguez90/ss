@@ -679,7 +679,7 @@ class SiteController extends Controller
         {
             try{
 
-                $response['data'] = Process::find()
+                $results = Process::find()
                     ->select('process.id, 
                                     process.bl, 
                                     process.delivery_date, 
@@ -700,8 +700,14 @@ class SiteController extends Controller
 //                    ->orderBy(['process.id'=>SORT_DESC])
                     ->asArray()
                     ->all();
+
+                foreach ($results as $result)
+                {
+                    $result['agency_name'] = utf8_encode($result['agency_name']);
+                    array_push($response['data'], $result);
+                }
             }
-            catch ( Exception $e)
+            catch ( \Exception $e)
             {
                 if($e->getCode() !== '01000')
                 {

@@ -24,8 +24,6 @@ use Yii;
  */
 class AuthItem extends \yii\db\ActiveRecord
 {
-
-//    const ROLE_ADMIN = 'Administrador';
     const ROLE_ADMIN = 'Administracion';
     const ROLE_ADMIN_WHAREHOUSE = 'Administrador_deposito';
     const ROLE_WHAREHOUSE = 'Deposito';
@@ -47,7 +45,7 @@ class AuthItem extends \yii\db\ActiveRecord
         AuthItem::ROLE_SPECIAL_IMPORTER_EXPORTER=>'Importador-Exportador-Especial',
     ];
 
-    const DEFAULT_ROLES = [
+    const DEFAULT_ROLES = array(
         AuthItem::ROLE_ADMIN,
         AuthItem::ROLE_ADMIN_WHAREHOUSE,
         AuthItem::ROLE_WHAREHOUSE,
@@ -57,7 +55,7 @@ class AuthItem extends \yii\db\ActiveRecord
         AuthItem::ROLE_EXPORTER,
         AuthItem::ROLE_IMPORTER_EXPORTER,
         AuthItem::ROLE_SPECIAL_IMPORTER_EXPORTER
-    ];
+    );
 
     const MAP_TPG_ROLE_TO_SGT = [
         'ADMINISTRADOR'=>AuthItem::ROLE_ADMIN,
