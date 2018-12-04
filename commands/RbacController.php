@@ -21,7 +21,7 @@ class RbacController extends Controller
         $ok = true;
         try {
 
-            if (!$this->CreateAdminUser()) {
+            if (!$this->createAdminUser()) {
                 $ok = false;
                 $msg = " No se pudo añadir el usuario administrador. ";
             }
@@ -52,20 +52,21 @@ class RbacController extends Controller
     }
 
 
-    public function CreateAdminUser()
+    public function createAdminUser()
     {
         $auth = Yii::$app->authManager;
 
         $adminUser = new AdmUser();
         $adminUser->username = 'root';
         $adminUser->password = Yii::$app->security->generatePasswordHash("a");
+        $adminUser->auth_key = Yii::$app->security->generatePasswordHash("a");
         $adminUser->email = 'root2@gmail.com';
         $adminUser->nombre = 'root';
         $adminUser->apellidos = 'root';
         $adminUser->status = 1;
         $adminUser->created_at = time();
         $adminUser->updated_at = time();
-        $adminUser->cedula = "2012345678";
+        $adminUser->cedula = "1111111111";
 
         if (AdmUser::findOne(['username' => $adminUser->username]) == null && $adminUser->save()) {
             return true;
@@ -87,6 +88,11 @@ class RbacController extends Controller
             }
         }
 
+        return true;
+    }
+
+    public function actionCreateDefaultPermisssion()
+    {
         return true;
     }
 
@@ -119,32 +125,19 @@ class RbacController extends Controller
             $admin_perm [7] = $container_perm;
             $admin_perm [8] = $ciatrans_perm;
 
-            echo "1";
-
             //crealo independiente y asignar rolesy perms
-            $adminUser = new AdmUser();
-            $adminUser->username = 'root2';
-            $adminUser->password = Yii::$app->security->generatePasswordHash("a");
-            $adminUser->email = 'root2@gmail.com';
-            $adminUser->nombre = 'root2';
-            $adminUser->apellidos = 'root';
-            $adminUser->status = 1;
-            $adminUser->created_at = time();
-            $adminUser->updated_at = time();
-            $adminUser->cedula = "2012345678";
-
-            if (AdmUser::findOne(['username' => $adminUser->username]) == null && $adminUser->save()) {
-                $ok = true;
-                echo "2";
-            } else {
-                $ok = false;
-                $msg =  $msg . " No se pudo añadir el usuario administrador. ";
-                echo "3";
+            $adminUser = AdmUser::findOne(['username' => 'root']) ;
+            if($adminUser == null)
+            {
+                if($this->createAdminUser() == false)
+                {
+                    $ok = false;
+                    $msg = 'Error al generar el usuario administrador.';
+                }
             }
 
-            echo "4";
-            if ($ok) {
-                echo "4.5";
+            if ($ok)
+            {
                 $adminRol = $auth->createRole(AuthItem::ROLE_ADMIN);
                 $adminRol->description = "Administrador del sistema";
                 if ($auth->getRole($adminRol->name) == null) {
@@ -204,11 +197,8 @@ class RbacController extends Controller
 
     }
 
-
-
-
-    public function actionOn(){
-
+    public function actionOn()
+    {
 
         $auth = Yii::$app->authManager;
         $ok= true;
@@ -244,11 +234,8 @@ class RbacController extends Controller
                     $ok = $ok && $auth->addChild($adminRol, $auth->getPermission($key));
 
                 }
-
             }
         }
-
-
         /*
 
         foreach ($warehouse_perm as $key => $desc) {
