@@ -706,6 +706,7 @@ class SiteController extends Controller
                     $result['agency_name'] = utf8_encode($result['agency_name']);
                     array_push($response['data'], $result);
                 }
+
             }
             catch ( \Exception $e)
             {

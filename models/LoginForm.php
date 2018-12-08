@@ -317,8 +317,8 @@ class LoginForm extends Model
                                     ->queryAll();
             if(count($result) > 0)
             {
-                 $result['nombre'] = utf8_encode($result['nombre']);
-                 $result['nombre_empresa'] = utf8_encode($result['nombre_empresa']);
+//                 $result['nombre'] = utf8_encode($result['nombre']);
+//                 $result['nombre_empresa'] = utf8_encode($result['nombre_empresa']);
 				// user_id,nombre,ruc,email,ruc_empresa,nombre_empresa,rol,estado
 				
                 $response['user'] = [

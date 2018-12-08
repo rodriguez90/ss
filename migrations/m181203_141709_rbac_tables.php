@@ -30,20 +30,32 @@ class m181203_141709_rbac_tables extends Migration
             'updated_at' => $this->date()->defaultExpression('CURRENT_TIMESTAMP'),
         ]);
 
+//        $authAssignmentTable = Yii::$app->getDb()->getTableSchema('dbo.auth_assignment');
+//
+//        $schema = Yii::$app->getDb()->getSchema();
+//
+//        \yii\helpers\VarDumper::dump($schema->get)
+//
+//        \yii\helpers\VarDumper::dump($authAssignmentTable->primaryKey);
+//        \yii\helpers\VarDumper::dump($authAssignmentTable->foreignKeys);
+//        \yii\helpers\VarDumper::dump($authAssignmentTable->foreignKeys);
+//        \yii\helpers\VarDumper::dump($authAssignmentTable->sequenceName);die;
 
-        $this->dropPrimaryKey('PK__auth_ass__473EC9E6EF753F6F', 'dbo.auth_assignment');
+
+        $this->dropPrimaryKey('pk_auth_assignment', 'dbo.auth_assignment');
         $this->dropIndex('auth_assignment_user_id_idx', 'dbo.auth_assignment');
         $this->alterColumn('dbo.auth_assignment', 'user_id', $this->integer()->notNull()) ;
-        $this->addPrimaryKey('PK__auth_ass__473EC9E6EF753F6F', 'dbo.auth_assignment', ['user_id', 'item_name']);
+        $this->addPrimaryKey('pk_auth_assignment', 'dbo.auth_assignment', ['user_id', 'item_name']);
         $this->createIndex('auth_assignment_user_id_idx', 'dbo.auth_assignment', ['user_id', 'item_name']);
 
         $this->addForeignKey(
             'fk_auth_assignment_user_id',
-            'auth_assignment',
+            'dbo.auth_assignment',
             'user_id',
             'dbo.adm_user',
             'id'
         );
+
         $this->addForeignKey(
             'fk_adm_user_creado_por',
             'dbo.adm_user',
@@ -62,7 +74,7 @@ class m181203_141709_rbac_tables extends Migration
     public function safeDown()
     {
         $this->dropForeignKey('fk_auth_assignment_user_id', 'dbo.auth_assignment');
-        $this->dropForeignKey('fk_adm_user_creado_por', 'dbo.adm_user');
+//        $this->dropForeignKey('fk_adm_user_creado_por', 'dbo.adm_user');
         $this->dropTable('dbo.adm_user');
 
         return true;
